@@ -1,3 +1,8 @@
+This file is the documentation to lisp code by
+Mario S. Mommer. It does not concern the maxima
+interface.
+
+
 		  Common-Lisp implementations of the
 		  ==================================
 
