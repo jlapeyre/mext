@@ -1,0 +1,10 @@
+The maxdoc distribution requires that mext and defmfun1
+be built and installed.
+
+Build like this:
+
+load("./build.mac");
+mext_dist_user_install();
+
+In a new maxima session, maxdoc can be loaded with
+load(maxdoc);

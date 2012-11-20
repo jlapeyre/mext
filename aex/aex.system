@@ -1,0 +1,35 @@
+;; System definition file for building and installing aex
+
+(in-package :mext-maxima)
+
+(create-distribution "aex"
+  :loader "load-aex")
+
+(in-package :cl-user)
+
+(mk:defsystem aex
+  :source-extension "lisp"
+  :components
+   ((:file "aex-packages" :load-only t)
+    (:file "misc-util")
+    (:file "aex-core")
+    (:file "mext-predicates")
+    (:file "ifunctions")
+    (:file "system-essential")
+    (:file "mset")
+    (:file "combinatorics")
+    (:file "table")
+    (:file "partition-list")
+    (:file "take")
+    (:file "list")
+    (:file "strings")
+    (:file "number-functions")
+    (:file "lisp-numeric")
+    (:file "aex-util")))
+
+;; neither compile nor load when building
+(mk:defsystem load-aex
+  :source-extension "mac"
+  :components
+   ((:file "aex")))
+  

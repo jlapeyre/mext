@@ -1,0 +1,14 @@
+table(0,[3]);
+[0,0,0]$
+
+table(i,[i,3]);
+[1,2,3]$
+
+/* I broke this
+(errcatch( table(i) ), (is (error_code = args_too_few)));
+true$
+*/
+
+
+
+

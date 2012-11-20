@@ -1,0 +1,28 @@
+;; System definition file for building and installing nelder-mead
+;; nelder-mead depends on mext-system and defmfun1
+
+(in-package :mext-maxima)
+
+(create-distribution "nelder-mead"
+  :loader "load-nelder-mead"
+  :install-only "nelder-mead-text")
+
+(in-package :cl-user)
+
+(mk:defsystem nelder-mead
+  :source-extension "lisp"
+  :components
+   ((:file "nelder-mead-packages" :load-only t)
+    (:file "la")
+    (:file "neldermead")
+    (:file "nm-maxima")))
+
+(mk:defsystem nelder-mead-text
+   :components
+   ((:file "COPYING" :source-extension "txt")
+    (:file "README" :source-extension "txt")))
+
+(mk:defsystem load-nelder-mead
+  :source-extension "mac"
+  :components
+   ((:file "nelder-mead")))

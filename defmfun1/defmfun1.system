@@ -1,0 +1,29 @@
+;; System definition file for building and installing defmfun1
+
+(in-package :mext-maxima)
+
+(create-distribution "defmfun1"
+  :loader "load-defmfun1")
+
+(in-package :cl-user)
+
+(mk:defsystem defmfun1
+  :source-extension "lisp"
+  :components
+   ((:file "defmfun1-packages" :load-only t)
+    (:file "misc-util1")
+    (:file "doc-system")
+    (:file "maxima-dev-doc")
+    (:file "defmfun1")
+    (:file "max-doc")
+    (:file "max-doc-sections")
+    (:file "defmfun1-max")
+    (:file "examples")
+    (:file "infix-rule" :load-only t)))
+
+;; neither compile nor load when building
+(mk:defsystem load-defmfun1
+  :source-extension "mac"
+  :components
+   ((:file "defmfun1")))
+  

@@ -1,0 +1,50 @@
+/* test loading tests. */
+
+1;
+1;
+
+(kill(a),true)$
+true$
+
+/* set a, then load a file that sets a to another value */
+a:2;
+2;
+
+(load_in_subdir("t1",["rtests"]),0);
+0;
+
+a;
+1$
+
+/* Do the same but change to different working directory */
+a:2;
+2;
+
+(chdir("rtests"),1);
+1;
+
+(load_in_subdir("t1"),1);
+1;
+
+a;
+1$
+
+/* Return to previous directory */
+
+(updir(),true);
+true;
+
+a:2;
+2;
+
+(load_in_subdir("t1",["rtests"]),true);
+true;
+
+a;
+1$
+
+(kill(a),true)$
+true$
+
+
+

@@ -1,0 +1,24 @@
+mext_require("defmfun1");
+mext_require("maxdoc");
+
+mext_provide("aex",
+  [
+  "aex-packages",
+  "misc-util",
+  "aex-core",
+  "mext-predicates",
+  "ifunctions",
+  "system-essential",
+  "mset",
+  "combinatorics",
+  "table",
+  "partition-list",
+  "take",
+  "list",
+  "strings",
+  "number-functions",
+  "lisp-numeric",
+  "aex-util"] );
+
+
+

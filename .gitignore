@@ -1,0 +1,8 @@
+*~
+*.o
+*.fasl
+*.so
+hide2/
+hide/
+
+

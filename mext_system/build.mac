@@ -1,0 +1,2 @@
+load("mext-build.lisp");
+mext_dist_user_install();

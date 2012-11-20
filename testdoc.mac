@@ -1,0 +1,3 @@
+load(mext);
+mext_require(aex);
+print_max_doc_sections();

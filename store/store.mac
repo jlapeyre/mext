@@ -1,0 +1,10 @@
+mext_require("maxdoc");
+
+mext_provide("store",
+  [ "store-packages",
+    "load-cl-store",
+    "store-expression"]);
+
+
+
+

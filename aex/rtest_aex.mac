@@ -1,0 +1,309 @@
+/* Create empty list (ie mlist) represented by aex struct
+   with contents stored as vector.
+*/
+
+kill(q,e,e1,er,f,g,a,b,c,z);
+done$
+
+
+aex_p( aex() );
+true$
+
+/* length, op, and other maxima system functions can be modified.
+   But for now we use new functions prefixed with i. Mabye i for in, because
+   no reformatting is done.*/
+ilength( aex() );
+0$
+
+iop( aex() );
+"["$
+
+/* number and other atoms fall through */
+aex_p(aex(1));
+false$
+
+aex_p(aex(0b0));
+false$
+
+integerp(aex(1));
+true$
+
+bfloatp(aex(0b0));
+true$
+
+aex_p(aex(f));
+false$
+
+symbolp(aex(f));
+true$
+
+/* create aex with op (head) and args */
+( e : aex( f(1,2) ) , aex_p(e) );
+true$
+
+/* convert to lisp list (lex ?)  expression */
+lex(e);
+f(1,2)$
+
+ilength( e );
+2$
+
+/* could redefine reverse, or use ireverse */
+( er : ireverse( e , ot ->ar ), aex_p( er ));
+true$
+
+lex( er );
+f(2,1)$
+
+lex(e);
+f(1,2)$
+
+( nreverse( e ), aex_p(e) );
+true$
+
+lex(e);
+f(2,1)$
+
+iop( e );
+f$
+
+iop(lex(e));
+f$
+
+lex ( iargs( e ) );
+[2,1]$
+
+/* nreverse also works on lex */
+(kill(a), a:[1,2,3], a : nreverse(a) );
+[3,2,1]$
+
+/* contructor syntax */
+(kill(a), aex_p(  << [2,1] >> ));
+true$
+
+/* test for equality */
+is ( iargs( e ) =  << [2,1] >> );
+true$
+
+/* with multiple args to contructor, make mlist */
+is ( << 1,2 >> = << [1,2] >> );
+true$
+
+is( << f(1) >> = << f(1) >>);
+true$
+
+is( << f(1) >> = << g(1) >>);
+false$
+
+is( << f(1) >> = << f(1,2) >>);
+false$
+
+is( << f(a+b) >> = << f(a+b) >>);
+true$
+
+/* not clear what should happen here. They are the same
+  expression */
+is( <<1,2>> = [1,2]);
+false$
+
+
+/* try redefining other system functions */
+
+/* This could be reinserted later, but I want to remove these older implementions
+num(a/b);
+a$
+
+denom(a/b);
+b$
+
+is( num(<<a/b>>) = a );
+true$
+
+(kill(e1), e1: denom( <<a/b>> ), is (e1 = b));
+true$
+
+is( num(<<a+c>>/b) = <<a+c>>);
+true$
+
+*/
+/*
+ optional argument to functions to request output form.
+ smart functions will compute efficiently. num and
+ denom are dumb and use a wrapper to convert input
+ and output forms
+*/
+
+/* This uses the old option interface. 
+
+is( num(<<a+c>>/b, 'oml) = <<a+c>>);
+false$
+
+is( num(<<a+c>>/b, 'oml) = a+c);
+true$
+
+is( num((a+c)/b, 'oar) = <<a+c>>);
+true$
+
+*/
+
+/* this works with many fuctions */
+is ( ireverse([1,2,3]) = [3,2,1] );
+true$
+
+
+is ( ireverse([1,2,3], ot->ar) = <<3,2,1>> );
+true$
+
+is ( ireverse(<<1,2,3>>) = <<3,2,1>> );
+true$
+
+/* changed the interface on this
+is ( reverse(<<1,2,3>> , 'oml) = <<3,2,1>> );
+false$
+
+is ( reverse(<<1,2,3>> , 'oml) = [3,2,1] );
+true$
+*/
+
+kill(e1,e,er,f,g,a);
+done$
+
+( e : << 1,2,3 >>, aexg(e,2));
+2$
+
+(kill(e),  e : << 1,2,3,4 >>, aexs(e,2,'cat));
+cat$
+
+is( e =  << 1,'cat,3,4 >>);
+true$
+
+aex_shift(e);
+4$
+
+is( e =  << 1,'cat,3 >>);
+true$
+
+aex_unshift('zebra,e);
+3$
+
+is( e =  << 1,'cat,3,'zebra>>);
+true$
+
+kill(e);
+done$
+
+iapply("+", << 1,2,3 >>);
+6$
+
+/* don't know what it should return by default */
+is( iapply(f, << 1,2,3 >>) = <<f(1,2,3)>>);
+false$
+
+iapply(f, << 1,2,3 >>, ot->ml);
+f(1,2,3)$
+
+is( iapply(f, [ 1,2,3 ], ot->ar) = <<f(1,2,3)>>);
+true$
+
+/*
+  ipart(e,n1,n2,...) is like inpart somewhat.
+  it descends a tree of mixed ml an ar expressions.
+  aex() only converts the top level.
+*/  
+aex_p( ipart( aex( [1,[2,3]]), 2));
+false$
+
+/*  faex converts at all levels */
+aex_p( ipart( faex( [1,[2,3]]), 2));
+true$
+
+/* flex also converts to ml at all levels */
+aex_p( ipart( flex(faex( [1,[2,3]])), 2));
+false$
+
+/* recursively copy tree of mixed expressions */
+(kill(e,e1), e : << 1,2, [3,<<4,f(a,b)>>] >>, e1 : alex_copy_tree(e), is(e=e1));
+true$
+
+/* destructive set */
+ipart_set(e,q,3,2,2,1);
+q$
+
+/* part is changed */
+is(e =  << 1,2, [3,<<4,f(q,b)>>] >>);
+true$
+
+/* copy is not changed */
+ipart(e1,3,2,2,1);
+a$
+
+/* push to end of aex is as efficient as pushing to lisp adjustable array */
+( e : << f(a,b,c) >>, aex_unshift(z,e), is( e = <<f(a,b,c,z)>>) );
+true$
+
+aex_shift(e);
+z$
+
+is( e = <<f(a,b,c)>>);
+true$
+
+
+is(ipart([1,2],0)="[");
+true$
+
+is(ipart(<<[1,2]>>,0)="[");
+true$
+
+is ( ipart(a<b,0) = "<");
+true$
+
+is ( ipart( << a<b >> ,0) = "<");
+true$
+
+(e : [[[[c,c],[c,c]],[[c,c],[c,c]]],[[[c,c],[c,c]],[[c,c],[c,c]]]],0);
+0$
+
+/* convert just top level */
+is( raex(e) = << [[[[c,c],[c,c]],[[c,c],[c,c]]],[[[c,c],[c,c]],[[c,c],[c,c]]]] >>);
+true$
+
+is( raex(e,1) = raex(e) );
+true$
+
+is( raex(e,'inf) = faex(e) );
+true$
+
+/* only convert level 2 */
+(e1 : raex(e,[2]), aex_p(e1));
+false$
+
+aex_p( ipart(e1,1) );
+true$
+
+aex_p( ipart(e1,1,1) );
+false$
+
+aex_p( ipart(e1,1,1,1) );
+false$
+
+/*
+   similar function exists for conversion to ml.
+   begin by converting to aex at all levels.
+*/
+
+( e1 : faex(e), e2 : rlex(e1,[2]), aex_p(e2));
+true$
+
+aex_p( ipart(e2,1) );
+false$
+
+aex_p( ipart(e2,1,1) );
+true$
+
+/* fix error thrown. replace by better test later */
+(a : aex([1,2,[3,4]]),faex(a),0);
+0;
+
+kill(e,e1,a);
+done$
+

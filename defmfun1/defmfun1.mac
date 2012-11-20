@@ -1,0 +1,14 @@
+mext_provide(
+  "defmfun1",
+  [
+  "defmfun1-packages",
+  "misc-util1",
+  "doc-system",
+  "maxima-dev-doc",
+  "defmfun1",
+  "max-doc",
+  "max-doc-sections",
+  "defmfun1-max",
+  "examples",
+  "infix-rule"]);
+

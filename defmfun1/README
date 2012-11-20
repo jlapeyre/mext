@@ -1,0 +1,18 @@
+The defmfun1 distribution requires that mext
+be built and installed.
+
+Build like this:
+
+load("./build.mac");
+mext_dist_user_install();
+
+or this
+(%i1) load(mext);
+(%i2) load("./defmfun1.system");
+(%i3) mext_dist_clean();
+(%i4) mext_dist_load();
+(%i5) mext_dist_compile();
+(%i6) mext_dist_user_install();
+
+In a new maxima session, defmfun1 can be loaded with
+load(defmfun1);

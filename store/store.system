@@ -1,0 +1,20 @@
+;; System definition file for building and installing store
+(in-package :mext-maxima)
+
+(create-distribution "store"
+  :loader "store")
+
+(in-package :cl-user)
+
+(mk:defsystem store
+  :source-extension "lisp"
+  :components
+   ((:file "store-packages" :load-only t)
+    (:file "load-cl-store" :load-only t)
+    (:file "store-expression")))
+
+;; neither compile nor load when building
+(mk:defsystem load-store
+  :source-extension "mac"
+  :components
+   ((:file "store")))

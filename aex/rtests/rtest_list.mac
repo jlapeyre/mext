@@ -1,0 +1,25 @@
+kill(f,x);
+done$
+
+nest(f,x,3);
+f(f(f(x)))$
+
+nest_list(f,x,3);
+[f(x),f(f(x)),f(f(f(x)))]$
+
+/* should result be aex on one level or all ?  */
+is( nest(f,x,3,ot->ar) =  aex(f(f(f(x)))));
+true$
+
+nest(sqrt,100.0,100);
+1.0$
+
+/* automatic compiling of lambda. I guess this would run slowly with gcl. */
+nest(lambda([x],modedeclare(x,float),cos(x)),100.1,10^6);
+.7390851332151607$
+
+lrange(3);
+[1,2,3]$
+
+is(lrange(3,ot->ar)=<<1,2,3>>);
+true$

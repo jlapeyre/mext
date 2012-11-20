@@ -1,0 +1,38 @@
+;; System definition file for building and installing mext-maxima.
+;; This system used here is an extension of the defsystem that is built
+;; into maxima.
+
+(in-package :mext-maxima)
+
+;; Compile these systems. But, components marked load-only will not be compiled
+(setf *systems-to-compile* "mext-system" )
+
+(setf *systems-to-load* "mext-system" )
+
+;; These will be installed with both mext_dist_user_install_binary
+;; and mext_dist_user_install_source
+(setf *systems-to-install*  "mext-system" )
+
+;; removed binaries and intermediate files for these systems
+(setf *systems-to-clean* "mext-system")
+
+; A list of copy specifications. Each element is a list of 6 elemnts.
+; name,type,dir for source file and name,type,dir for target file
+(setf *user-install-explicit*
+  (list (list  "mext-user" "lisp" mext::*dist-dir*
+               "mext" "lisp"  mext::*userdir-pathname*)
+        (list  "mext-maxima-packages" "lisp" mext::*dist-dir*
+               "mext-maxima-packages" "lisp"  mext::*userdir-pathname*)))
+
+(in-package :cl-user)
+
+(mk:defsystem mext-system
+  :source-extension "lisp"
+  :components
+   ((:file "mext-maxima-packages" :load-only t)
+    #+openmcl (:file "defsystem")
+    (:file "operate-on-system2")
+    (:file "gjl-lisp-util")
+    (:file "pathname-library")
+    (:file "mext-component-operations")
+    (:file "mext-maxima-system")))

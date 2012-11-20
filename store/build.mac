@@ -1,0 +1,10 @@
+load(mext);
+
+if  member(lispname, ["gcl", "ecl" ]) then
+  print("The maxima package store does not work under ", lispname,".")
+  else (
+    mext_require("maxdoc"),
+    load_in_subdir(["store","system"]),
+    mext_dist_clean(),
+    mext_dist_build());
+
