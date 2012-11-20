@@ -1,3 +1,4 @@
+;;-*- Mode: Lisp -*-
 ;; System definition file for building and installing aex
 
 (in-package :mext-maxima)

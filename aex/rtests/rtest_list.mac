@@ -23,3 +23,7 @@ lrange(3);
 
 is(lrange(3,ot->ar)=<<1,2,3>>);
 true$
+
+/* bug fix. */
+lex(lrange(2,5,2,ot->ar));
+[2,4]$

@@ -1,3 +1,4 @@
+;;-*- Mode: Lisp -*-
 ;; System definition file for building and installing store
 (in-package :mext-maxima)
 

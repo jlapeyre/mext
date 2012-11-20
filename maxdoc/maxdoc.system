@@ -1,3 +1,4 @@
+;;-*- Mode: Lisp -*-
 ;; System definition file for building and installing maxdoc
 ;; maxdoc depends on mext-system and defmfun1
 (in-package :mext-maxima)

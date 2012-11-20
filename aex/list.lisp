@@ -44,6 +44,11 @@
 ;;;    #+sbcl (defmacro our-aref (&rest args) `(aref ,@args))
 ;;;#-sbcl (defmacro our-aref (&rest args) `(svref ,@args))
 
+;; fixed bug by removing 'n' from first fixnum declaration.
+;; if incr is not 1
+;; then division is causing n to take rational value and floor does
+;; not fix this.
+;; Tried a fix, which is apparantly working using floor with 2 arguments
 (defmacro def-num-range-ar-type ( name type )
   (dbind (dec1 dec2)
          (if (eq type 'fixnum) '( ((declare (fixnum imin imax incr n))) ((declare (fixnum val))))
@@ -51,9 +56,12 @@
          (progn
            `(defun ,name (adj-type imin imax incr &aux oar (n 0))
               ,@dec1
-           (setf n (/ (- imax imin) incr))
+;           (setf n (/ (- imax imin) incr))
+;           (if (< n 0) (setf n 0))
+;           (setf n (floor n))
+           (setf n (- imax imin))
            (if (< n 0) (setf n 0))
-           (setf n (floor n))
+           (setf n (floor n incr))
            (if (= 0 n)
                (setf oar (make-array 0 :adjustable adj-type :fill-pointer adj-type))
              (setf oar (make-array (+ n 1) :element-type t :adjustable adj-type :fill-pointer adj-type)))

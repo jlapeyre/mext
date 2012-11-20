@@ -3,10 +3,11 @@
 # build mext and all mext packages for several versions of maxima
 # compiled with different lisps
 
-#maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-maximas="smaxima"
+maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
+#maximas="smaxima"
 #maximas="cmumaxima"
 
+# Build just the mext_system
 build_mext () {
  for maxima in $maximas
    do
@@ -15,6 +16,9 @@ build_mext () {
  done
 }
 
+# build packages packaged with the mext system
+# Which packages are built is specified in the
+# file buildall.mac
 build_mext_packages () {
  for maxima in $maximas
      do
@@ -23,6 +27,7 @@ build_mext_packages () {
  done
 }
 
+# print the big document page
 print_max_doc () {
  for maxima in $maximas
      do
@@ -30,6 +35,7 @@ print_max_doc () {
  done
 }
 
+# run rtests in the distribution folders
 mext_tests () {
  for maxima in $maximas
      do

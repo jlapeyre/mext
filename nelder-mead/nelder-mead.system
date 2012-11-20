@@ -1,3 +1,4 @@
+;;-*- Mode: Lisp -*-
 ;; System definition file for building and installing nelder-mead
 ;; nelder-mead depends on mext-system and defmfun1
 
