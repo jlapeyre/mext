@@ -309,6 +309,8 @@
   ;; This is only used as a boolean.
   changed)
 
+;; gjl: Compilers complain because this is an eval-when situation that has no
+;; use. But this is copied from defsystem.
 (eval-when (load eval)
 (component-operation2 :compile  'compile-and-load-operation2)
 (component-operation2 'compile  'compile-and-load-operation2)
@@ -333,6 +335,7 @@
 
 (defun compile-file-operation2 (name component force data)
   ;; Returns T if the file had to be compiled.
+  (declare (ignore name data))  
   (let ((must-compile
 	 ;; For files which are :load-only T, loading the file
 	 ;; satisfies the demand to recompile.
@@ -484,6 +487,7 @@
 )
 
 (defun delete-binaries-operation2 (name component force data)
+  (declare (ignore name data))
   (when (or (eq force :all)
 	    (eq force t)
 	    (and (find force '(:new-source :new-source-and-dependents

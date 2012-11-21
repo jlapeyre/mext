@@ -36,11 +36,13 @@
 (component-operation2 :mext-clean-intermediate  'mext-clean-intermediate)
 
 (defun mext-clean-intermediate (name component force data)
+  (declare (ignore name data))
   (mext-clean-files component force '("LISP" "UNLISP")))
 
 (component-operation2 :mext-clean-lisp-compilation  'mext-clean-lisp-compilation)
 
 (defun mext-clean-lisp-compilation (name component force data)
+  (declare (ignore name data))
   (mext-clean-files component force mext-maxima::*extensions-to-clean* ))
 
 ;;; I am leaving print statements here, because there are recuring bugs.
@@ -62,9 +64,7 @@
    (when (or (eq force :all) (eq force t)  
             (and (find force '(:new-source :new-source-and-dependents :new-source-all) :test #'eq)
 		 (needs-compilation component nil)))
-    (let* ((sname (component-pathname component file-type))
-           (sdir  (mext:fpathname-directory (mext:pathname-as-directory *default-pathname-defaults*)))
-           (sext  (component-extension component file-type))
+    (let* ((sdir  (mext:fpathname-directory (mext:pathname-as-directory *default-pathname-defaults*)))
            (install-dir 
             (if (getf data :mext-root) mext::*mext-user-dir-as-list*
               (append mext::*mext-user-dir-as-list* 
@@ -83,6 +83,8 @@
                   (mext:fensure-directories-exist target-full-pathname)
                   (format t "mext-user-install: copying ~s to ~s~%" source-full-pathname target-full-pathname)
                   (mext::copy-file source-full-pathname target-full-pathname :overwrite t)))))))))
+
+#|
 
 (defun old-mext-user-install-one (component force file-type data)
    (when (or (eq force :all) (eq force t)  
@@ -130,18 +132,23 @@
             ))))))
 ;            (mext::copy-file-from-dir-to-dir sname sext sdir install-dir)))))))
 
+|#
+
 ;;; install source files to a subdir of user dir
 (component-operation2 :mext-user-install-source  'mext-user-install-source)
 (defun mext-user-install-source (name component force data)
+  (declare (ignore name))
     (mext-user-install-one component force :source data))
 
 (component-operation2 :mext-user-install-binary 'mext-user-install-binary)
 (defun mext-user-install-binary (name component force data)
+  (declare (ignore name))
   (mext-user-install-one component force :binary data))
 
 ;; install binary, unless load-only is true, in which case, install source
 (component-operation2 :mext-user-install-pref-binary 'mext-user-install-pref-binary)
 (defun mext-user-install-pref-binary (name component force data)
+  (declare (ignore name))
   (let ((file-type (if (component-load-only component) :source :binary)))
     (mext-user-install-one component force file-type data)))
 
