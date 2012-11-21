@@ -5,18 +5,13 @@ load(mext);
 */ 
 
 buildall_mext (package) := (
-  print( " build_all: pwd ", pwd()),
   chdir(package),
-  print( " build_all: after chdir pwd ", pwd()),
   load_in_dsubdir(["ibuild","mac"]),
-  print( " build_all: after load build pwd ", pwd()),
   chdir());
 
 for package in [ "defmfun1", "maxdoc", "aex", "store" ] do
   buildall_mext(package);
 
 /* other third party packages adapted to mext */
-for package in [ "nelder_mead" ] do
+for package in [ "nelder_mead", "alt_eigen" ] do
   buildall_mext(package);
-
-
