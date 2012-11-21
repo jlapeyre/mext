@@ -127,7 +127,9 @@ This was copied from maxima source init-cl.lisp.")
 
 (defun create-distribution (name &rest body-form)
   (setf *dist-name* name)
-  (setf *systems-to-compile* name)
+  (setf *systems-to-compile*
+        (if (getf body-form :no-compile-dist-name) nil
+          name))
   (setf *systems-to-load* name)
 ;        (if (getf body-form :no-load-name) nil
 ;            name))

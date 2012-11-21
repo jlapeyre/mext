@@ -13,6 +13,7 @@
 (mk:defsystem alt_eigen
   :source-extension "mac"
   :language :mext-maxima
+  :load-only nil
   :components
    ((:file "alt_eigen_code")))
 

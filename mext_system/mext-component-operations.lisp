@@ -158,6 +158,9 @@
 ;; language definition for translating and compiling maxima source files
 (mk:define-language :mext-maxima
     :compiler #'(lambda (x y z) (declare (ignore y z)) (maxima::$compile_file x))
-    :loader #'identity
+    :loader #'(lambda (x) 
+                (format t "mext-system build: loading  ~s~%" x) (maxima::$load x))
+;;    :loader #'identity
     :source-extension "mac"
     :binary-extension mext::*binary-ext*)
+
