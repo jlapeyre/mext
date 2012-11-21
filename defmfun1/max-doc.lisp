@@ -35,6 +35,7 @@
   (def-type nil)
   (protocol nil)
   (section nil)
+  (distribution nil)
   (implementation nil)
   (call-desc-list '() :type list)
   (author nil)
@@ -184,7 +185,11 @@ ia a list of three elements: hame, protoco, contents."
   (setf *max-doc-top* (make-sections))
   (set-cur-sec nil))
 
+;; current (default) manual section
 (defvar *current-section* nil)
+
+;; current (default) mext distribution
+(defvar *current-distribution* nil)
 
 (defvar *ignore-silently* t)
 
@@ -205,6 +210,16 @@ ia a list of three elements: hame, protoco, contents."
          (setf *current-section* (get-doc-sec sec-tag)))
         (t
          (maxima::merror1 (intl:gettext "max-doc::set-cur-sec Can't set current section to ~m. Not a section struct or tag.") sec-tag))))
+
+(defun set-cur-dist (dist-name)
+  (cond ((stringp dist-name)
+         (if (gethash dist-name mext-maxima::*installed-dist-table*)
+             (setf *current-distribution* dist-name)
+           (maxima::merror1 (intl:gettext "max-doc::set-cur-dist 
+ Can't set current distribution to ~m. The distribution does not exist.") dist-name)))
+        (t
+         (maxima::merror1 (intl:gettext "max-doc::set-cur-dist 
+ Can't set current distribution to ~m. Not a string.") dist-name))))
 
 (defun exists-section (sec-tag)
   (gethash sec-tag (sections-hash *max-doc-top*)))
@@ -238,7 +253,7 @@ ia a list of three elements: hame, protoco, contents."
       (maxima::merror1 "max-doc::get-doc-sec: argument ~a not a section tag." sec-tag)))
 
 ; add-doc-entry is more convenient
-(defun add-doc-entry1 (&key e  (section *current-section*))
+(defun add-doc-entry1 (&key e  (section *current-section*) (distribution *current-distribution*))
   "add an entry, eg for a function. if *ignore-silently* is true
    then do nothing but return true if the entry already exists. this
    to accomodate loading code several times."
@@ -251,12 +266,11 @@ ia a list of three elements: hame, protoco, contents."
         (let ((nsec (get-doc-sec section)))
           (if nsec
               (setf section nsec)
-              (maxima::merror1 "max-doc::add-doc-entry1: can't find section for tag ~a." section))))
+            (maxima::merror1 "max-doc::add-doc-entry1: can't find section for tag ~a." section))))
     (setf (entry-section entry) (section-name section))
-;;    (vector-push-extend  name (section-list section)) not used
+    (if *current-distribution* (setf (entry-distribtion entry) *current-distribution*))
     (setf (gethash name (section-hash section)) entry)
     (setf (gethash name max-doc::*max-doc-deffn-defvr-hashtable*) entry)))
-
 
 (defun delete-doc-entry (e)
   (unless (stringp e)

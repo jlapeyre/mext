@@ -4,8 +4,9 @@ mext_provide( "maxdoc",
   [ "maxdoc-packages",
     "descr1",
     "info-database",
-    "max-doc-entries",
-    "max-doc-max",
+    "maxdoc-entries",
+    "mext-maxdoc-entries",
+    "maxdoc-max",
     "simple-doc",
     "simple-doc-max"]);
 

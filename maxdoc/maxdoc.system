@@ -14,8 +14,9 @@
    ((:file "maxdoc-packages" :load-only t)
     (:file "descr1")
     (:file "info-database")
-    (:file "max-doc-entries")
-    (:file "max-doc-max")
+    (:file "maxdoc-entries")
+    (:file "mext-maxdoc-entries")
+    (:file "maxdoc-max")
     (:file "simple-doc")
     (:file "simple-doc-max")))
 

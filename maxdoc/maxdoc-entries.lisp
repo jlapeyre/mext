@@ -73,3 +73,4 @@ with certain lisp implementations."))
                  :contents "This option takes values of true or false. If true, then the output aex expression is
  adjustable, that is, the underlying array can be extended in size. If false, then the output aex expression is not
  adjustable. The non-adjustable array may have some advantanges in efficiency."))
+

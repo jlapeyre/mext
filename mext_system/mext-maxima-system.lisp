@@ -415,5 +415,9 @@ This was copied from maxima source init-cl.lisp.")
 (defmfun $truename (filespec)
   (namestring (truename filespec)))
 
+(defmfun $probe_file (filespec)
+  (let ((res (probe-file filespec)))
+    (if res (namestring res) nil)))
+
 (defmfun $mkdir (filespec &optional (mode "0770"))
   (mext::mkdir filespec mode))

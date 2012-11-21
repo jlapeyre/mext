@@ -89,6 +89,10 @@
 
 (add-doc-sec '( :tag equations-fandv :name "Functions and Variables for Equations"))
 
+(add-doc-sec '( :tag runtime-fandv :name "Functions and Variables for Runtime Environment"))
+
+
+
 
 
 
