@@ -402,15 +402,15 @@ This was copied from maxima source init-cl.lisp.")
                                                 (append mext::*mext-user-dir-as-list*
                                                         (list ($sconcat dist) "rtests")))))
                (t  (list "rtests")))))
-    (loop for testdir in testdirs do 
-          (let ((inlist (mext:list-directory testdir))
-                (testdir-list))
-            (loop for file in inlist do
-                  (let ((posn (search "rtest" (pathname-name file))))
-              (if (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
-                  (setf testdir-list (cons (namestring file) testdir-list)))))
-            (setf $testsuite_files (cons '(mlist simp) testdir-list))
-            ($run_testsuite)))))
+    (let ((testdir-list))
+      (loop for testdir in testdirs do 
+            (let ((inlist (mext:list-directory testdir)))
+              (loop for file in inlist do
+                    (let ((posn (search "rtest" (pathname-name file))))
+                      (if (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
+                          (setf testdir-list (cons (namestring file) testdir-list)))))))
+      (setf $testsuite_files (cons '(mlist simp) testdir-list)))
+    ($run_testsuite)))
 
 (defmfun $truename (filespec)
   (namestring (truename filespec)))
