@@ -1,5 +1,5 @@
 (in-package :maxima)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (max-doc::set-cur-sec 'max-doc::strings-fandv)
 
 (defmspec $with_output_to_string (arg)
