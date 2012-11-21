@@ -3,9 +3,12 @@
 # build mext and all mext packages for several versions of maxima
 # compiled with different lisps
 
-maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-#maximas="smaxima"
-#maximas="cmumaxima"
+# Tests with each one
+# aex : smaxima ok, gmaxima no tests found, clmaxima 1 failed, emaxima ok, 
+#   cmumaxima ok, ccmaxima ok
+
+#maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
+maximas="gmaxima"
 
 # Build just the mext_system
 build_mext () {

@@ -72,17 +72,28 @@
                             (if (null res) nil 
                               (if (listp res) res (list res))))
                           (list mext::*system-name*)))))
-           (source-full-pathname (probe-file (component-full-pathname component file-type))))
+           (source-full-pathname (probe-file 
+                                  #-gcl (component-full-pathname component file-type)
+                                  #+gcl (merge-pathnames (component-full-pathname component file-type)
+                                     (mext:pathname-as-directory *default-pathname-defaults*)))))
+;      (format t "!!!!! rootdir ~s~%" (component-root-dir component file-type))
+;      (format t "!!!!! cpn ~s~%" (component-pathname component file-type))
+;      (format t "!!!!! cfpn ~s~%" (component-pathname component file-type))
+;      (format t "!!!!! cspn ~s~%" (component-source-pathname component ))
+;      (format t "!!!!! dfpnd ~s~%" (mext:pathname-as-directory *default-pathname-defaults*))
       (if source-full-pathname
           (progn
             (let ((target-full-pathname (mext:change-root-pathname source-full-pathname 
                            (mext:fmake-pathname :directory sdir :defaults *default-pathname-defaults*)
                            (mext:fmake-pathname :directory install-dir :defaults *default-pathname-defaults*))))
-              (unless (equal source-full-pathname target-full-pathname)
+              (if (equal source-full-pathname target-full-pathname)
+                  (maxima::merror (format nil "mext-install: Bug. Source and pathname are the same: ~s" source-full-pathname))
                 (progn
                   (mext:fensure-directories-exist target-full-pathname)
-                  (format t "mext-user-install: copying ~s to ~s~%" source-full-pathname target-full-pathname)
-                  (mext::copy-file source-full-pathname target-full-pathname :overwrite t)))))))))
+                  (format t "mext-install: copying ~s to ~s~%" source-full-pathname target-full-pathname)
+                  (mext::copy-file source-full-pathname target-full-pathname :overwrite t)))))
+        (maxima::merror (format nil "mext-install: file in the distribution does not exist: ~s"
+                                (component-full-pathname component file-type)))))))
 
 #|
 
