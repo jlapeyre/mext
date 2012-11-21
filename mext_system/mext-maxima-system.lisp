@@ -129,12 +129,15 @@ This was copied from maxima source init-cl.lisp.")
   (setf *dist-name* name)
   (setf *systems-to-compile* name)
   (setf *systems-to-load* name)
+;        (if (getf body-form :no-load-name) nil
+;            name))
   (setf *systems-to-clean* name)
   (setf *systems-to-install* name)
   (setf *systems-to-install-to-mext-root*
         (getf body-form :loader))
   (setf *systems-to-install-other*
         (getf body-form :install-only)))
+
 
 ;; return a list of all symbols in package named by
 ;; string 'package'

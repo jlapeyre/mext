@@ -87,6 +87,7 @@
 
 (add-doc-sec '( :tag number-theory-fandv :name "Functions and Variables for Number Theory"))
 
+(add-doc-sec '( :tag equations-fandv :name "Functions and Variables for Equations"))
 
 
 

@@ -161,5 +161,3 @@
     :loader #'identity
     :source-extension "mac"
     :binary-extension mext::*binary-ext*)
-
-

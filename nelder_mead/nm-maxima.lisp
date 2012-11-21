@@ -1,3 +1,5 @@
+(max-doc::set-cur-sec 'max-doc::equations-fandv)
+
 (defmfun1 ($nelder_mead :doc) (expr (vars :symbol-listof) (init :number-listof) )
   "The Nelder-Mead optimization algorithm."
   (let* ((fun (coerce-float-fun expr vars))
@@ -11,7 +13,6 @@
 			       (cdr vars)
 			       (loop for i across xk collect i))))))
 
-;(examples::clear-examples "nelder_mead")
 (examples::clear-add-example "nelder_mead"
                        '( :pretext "Find the minimum of a function at a non-analytic point."
                          :vars "[x]"
