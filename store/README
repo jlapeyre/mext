@@ -1,0 +1,6 @@
+Store: mext distribution for maxima.
+Store is a maxima interface to a serializtion package for
+ansi common lisp. Building and using this package requireds that
+the asdf package cl-store be installed on your system.
+
+Store reads and writes nested maxima objects in a binary format.
