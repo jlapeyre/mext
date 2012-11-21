@@ -1,5 +1,10 @@
 (in-package :mext-maxima)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+;(declaim (optimize (speed 3) (space 0) (safety 0) #-gcl (debug 0)))
+
+;;; Code for building, loading, installing a maxima
+;;; distribution.  Here, 'distribution' means some third
+;;; party code; maybe one file, or several files. Here,
+;;; 'distribution' corresponds roughly to a linux 'package'.
 
 (defparameter *binary-ext*
               #+gcl "o"
@@ -64,9 +69,30 @@ This was copied from maxima source init-cl.lisp.")
 
 #+(or clisp cmu) (setf *default-pathname-defaults* (ext:default-directory))
 #+openmcl (setf *default-pathname-defaults* (ccl::current-directory))
-; following doesn't look portable, but it seems to be what happens in the gcl source
-#+gcl (setf *default-pathname-defaults* (pathname-as-directory (truename ".")))
+
+;; gcl initializes *default-pathname-defaults* to an empty pathname and does not
+;; provide any extension to find the current or working directory. Other lisps
+;; either initialize *default-pathname-defaults* to a useful pathname or provide
+;; another facility to get the current directory.
+;;
+;; This can cause big headaches. I spent hours tracking down a bug resulting from
+;; mext reinitializing *dpnd* only in gcl.
+;; I found the form (truename ".") in the gcl source, where it was used to get
+;; the current directory. It seems to work here with linux.
+;; But, I go a bit further and take it from environment variable PWD, if it
+;; exists. This probably makes no difference, but maybe it is more portable.
+;; But *dpnd* should be initialized by *dpnd* only once, we have mext.lisp
+;; check if the package :mext-maxima exists already.
+;; I don't know why the eval-when is necessary, but it is only for the
+;; form (si:getenv "PWD"), not (truename ".")
+#+gcl (eval-when (:compile-toplevel :load-toplevel :execute)
+        (setf *default-pathname-defaults* (mext::pathname-as-directory 
+                                           (or (si:getenv "PWD") (truename ".")))))
+
+;; for chdir() to return to initial directory
 (defvar *initial-default-pathname* *default-pathname-defaults*)
+
+;; for registering which mext distributions have been loaded.
 (defvar *installed-dist-table* (make-hash-table :test 'equal))
 
 ; for use in directory names. We hope the result is a valid and painless directory name on all platforms.
@@ -223,7 +249,7 @@ This was copied from maxima source init-cl.lisp.")
   ($mext_dist_build dist-names)
   ($mext_dist_user_install dist-names))
 
-;; use  *default-pathname-defaults*
+;; load in a subdir dir, or use *default-pathname-defaults*
 (defmfun $load_in_dsubdir (file &optional dir)
   (if (and dir ($listp dir)) (setf dir (cdr dir)))
   (let* ((abs-dir (mext:fpathname-directory *default-pathname-defaults*))

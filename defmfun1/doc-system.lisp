@@ -7,7 +7,7 @@
 
 
 (in-package :doc-system)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (defvar *doc-systems* nil)
 

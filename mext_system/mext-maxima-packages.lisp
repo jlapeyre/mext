@@ -37,6 +37,8 @@
              :fpathname-directory
              :fwild-pathname-p
              :fensure-directories-exist
+             :fenough-namestring
+             :change-root-pathname
              :directory-pathname-p
 )))
 ;    (:import-from :gjl.lisp-util :ensure-list)))

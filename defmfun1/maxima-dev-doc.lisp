@@ -6,7 +6,7 @@
 ;;; (at your option) any later version.
 
 (in-package :maxima-dev-doc)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (defstruct (doc-item)
   (name nil)

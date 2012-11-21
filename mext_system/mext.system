@@ -19,9 +19,12 @@
 
 ; A list of copy specifications. Each element is a list of 6 elemnts.
 ; name,type,dir for source file and name,type,dir for target file
+;; We could really use something better than this.
 (setf *user-install-explicit*
   (list (list  "mext-user" "lisp" mext::*dist-dir*
                "mext" "lisp"  mext::*userdir-pathname*)
+        (list  "mext_load-user" "lisp" mext::*dist-dir*
+               "mext_load" "lisp"  mext::*userdir-pathname*)
         (list  "mext-maxima-packages" "lisp" mext::*dist-dir*
                "mext-maxima-packages" "lisp"  mext::*userdir-pathname*)))
 

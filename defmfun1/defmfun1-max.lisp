@@ -7,7 +7,7 @@
 
 (in-package :maxima)
 (use-package :gjl.lisp-util)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (max-doc::set-cur-sec 'max-doc::misc-fandv)
 

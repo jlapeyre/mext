@@ -1,5 +1,6 @@
-(in-package #-gcl #:mk  #+gcl :mk )
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+(in-package :mk)
+
+; (declaim (optimize (speed 3) (space 0) (safety 0) #-gcl (debug 0)))
 
 ;;; oos2: copies of data and functions for oos with
 ;;; addition arguments passed to operation functions
@@ -131,7 +132,7 @@
 	    (ensure-external-system-def-loaded component))
 
 	  (when (or (eq type :defsystem) (eq type :system))
-	    (operate-on-system-dependencies2 name component operation force :data data))
+	    (operate-on-system-dependencies2 name component operation :force force :data data))
 
 	  ;; Do any compiler proclamations
 	  (when (component-proclamations component)
@@ -210,7 +211,8 @@
 (defvar *providing-blocks-load-propagation* t
   "If T, if a system dependency exists on *modules*, it is not loaded.")
 
-(defun operate-on-system-dependencies2 (name component operation &optional force &key data ) ; NEW gjl
+(defun operate-on-system-dependencies2 (name component operation &key force data ) ; NEW gjl
+  (declare (ignore name))
   (when *system-dependencies-delayed*
     (let ((*force* force))
       (dolist (system (component-depends-on component))

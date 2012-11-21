@@ -49,7 +49,7 @@
 ;; or 'gcl-funcname1 together with 'gcl-funcname2. But, do not mix them.
 
 (in-package :mext-maxima)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+;(declaim (optimize (speed 3) (space 0) (safety 0) #-gcl (debug 0)))
 
 #-gcl  (defmacro fmake-pathname (&rest body)
         `(make-pathname ,@body))
@@ -75,12 +75,18 @@
 #+gcl (defmacro fensure-directories-exist (&rest body)
         `(gcl-ensure-directories-exist ,@body))
 
-
 #-gcl (defmacro fphysicalize-pathname (&rest body)
         `(physicalize-pathname ,@body))
 
 #+gcl (defmacro fphysicalize-pathname (&rest body)
         `(gcl-physicalize-pathname ,@body))
+
+
+#-gcl (defmacro fenough-namestring (&rest body)
+        `(cl:enough-namestring ,@body))
+
+#+gcl (defmacro fenough-namestring (&rest body)
+        `(gcl-enough-namestring ,@body))
 
 ;; This should probably be done with truename ??
 ;; For pathnames like "/a/b/.." or "a/b/..",
@@ -127,6 +133,13 @@
         (if (> count 0) (setf dir (nthcdr count dir))))
       (setf odir (cons (car dir) odir)))
     (fmake-pathname :directory odir :defaults pname)))
+
+
+;; This is from Peter Seibel's Practical Common Lisp 
+;; chapter on Files and File I/O.
+(defun change-root-pathname (full-source-pathname source-dir target-dir)
+  (merge-pathnames
+   (fenough-namestring full-source-pathname source-dir) target-dir))
 
 ;; copied from  sbcl. We have no good use for this now.
 #-gcl(defun physicalize-pathname (possibly-logical-pathname)
@@ -191,6 +204,45 @@
             (let ((res (mext-maxima::pathname-component pathname field-key)))
               (or (eq :wild res) (and (stringp res) (find #\* res)))))))
 
+;; The cl function 'enough-namestring' is broken in gcl. We write one that is un-broken
+;; enough for our purposes. This is copied almost exactly from the clozure lisp source.
+;; But, host and device are probably not treated correctly.
+#+gcl (defun neq (a b)  ; could use flet here.
+  (not (eq a b)))
+
+#+gcl (defun gcl-enough-namestring (path
+                          &optional
+                          (defaults0 *default-pathname-defaults*))
+        (if (null defaults0)
+            (namestring path)
+          (let* ((dir (fpathname-directory path))
+                 (nam (pathname-name path))
+                 (typ (pathname-type path))
+                 (ver (pathname-version path))
+                 (host (pathname-host path))
+                 (device (pathname-device path))
+                 (logical-p (neq host :unspecific))
+                 (defaults (pathname-as-directory defaults0))
+                 (default-dir (fpathname-directory defaults)))
+            (cond ((equalp dir default-dir)
+                   (setq dir '(:relative)))
+                  ((and dir default-dir
+                        (eq (car dir) :absolute) (eq (car default-dir) :absolute))
+                   ;; maybe make it relative to defaults             
+                   (do ((p1 (cdr dir) (cdr p1))
+                        (p2 (cdr default-dir) (cdr p2)))
+                       ((or (null p2) (null p1) (not (equalp (car p1) (car p2))))
+                        (when (and (null p2) (or t (neq p1 (cdr dir))))
+                          (setq dir (cons :relative p1)))))))
+            (when (or (equalp ver (pathname-version defaults))
+                      (not logical-p))
+              (setq ver nil))
+            (when (and (null ver) (equalp typ (pathname-type defaults)))
+              (setq typ nil))
+            (when (and (null typ) (equalp nam (pathname-name defaults)))
+              (setq nam nil))
+            (namestring (fmake-pathname :name nam :type typ :version ver 
+                            :host host :device device :directory dir)))))
 
 (defun mkdir (dir &optional (mode "0770"))
   (let ((adir (merge-pathnames dir *default-pathname-defaults*)))

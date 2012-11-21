@@ -1,5 +1,5 @@
 (in-package :examples)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (doc-system::set-source-file-name "aex-examples.lisp")
 (doc-system::set-source-package "aex-maxima")

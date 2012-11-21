@@ -3,7 +3,7 @@
 (in-package :mext-maxima)
 
 (create-distribution "store"
-  :loader "store")
+  :loader "load-store")
 
 (in-package :cl-user)
 

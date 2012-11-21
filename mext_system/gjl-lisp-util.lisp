@@ -9,7 +9,7 @@
 ;; libraries. It would be better to learn an organized way to use those libraries
 
 (in-package "COMMON-LISP-USER")
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+;(declaim (optimize (speed 3) (space 0) (safety 0) #-gcl (debug 0)))
 
 ;; probably need to do this differently for different lisps.
 

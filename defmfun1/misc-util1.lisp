@@ -8,7 +8,7 @@
 
 ;;; Some of the functions in here are documented in  max-doc-entries.lisp.
 (in-package :maxima)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (use-package :gjl.lisp-util)
 
 (defvar $pager_command "/usr/bin/less")
