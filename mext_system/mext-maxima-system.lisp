@@ -381,16 +381,31 @@ This was copied from maxima source init-cl.lisp.")
 (defmfun $list_directory ( &optional dirname)
   (cons '(mlist simp) (mext:list-directory (if dirname dirname *default-pathname-defaults*))))
 
-;; test in distribution directory
-(defmfun $mext_test  ()
-  (let ((inlist (mext:list-directory "rtests"))
-        (testdir-list))
-   (loop for file in inlist do
-         (let ((posn (search "rtest" (pathname-name file))))
-           (if (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
-               (setf testdir-list (cons (namestring file) testdir-list)))))
-   (setf $testsuite_files (cons '(mlist simp) testdir-list))
-   ($run_testsuite)))
+;; run rtests. If dists is nil then look only in dir "rtests"
+;; Otherwise dists is a symbol or string naming a  mext dist,
+;; or a list of these. We search for a folder 'rtests' in the
+;; installation directory of each dist, then for files rtest*.mac
+;; in this folder. We set testsuite_files and run run_testsuite.
+(defmfun $mext_test  ( &optional dists )
+  (let ((testdirs
+         (cond (dists
+                (setf dists 
+                      (if ($listp dists) (cdr dists)
+                        (list ($sconcat dists))))
+                (loop for dist in dists collect
+                            (mext:fmake-pathname :directory
+                                                (append mext::*mext-user-dir-as-list*
+                                                        (list ($sconcat dist) "rtests")))))
+               (t  (list "rtests")))))
+    (loop for testdir in testdirs do 
+          (let ((inlist (mext:list-directory testdir))
+                (testdir-list))
+            (loop for file in inlist do
+                  (let ((posn (search "rtest" (pathname-name file))))
+              (if (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
+                  (setf testdir-list (cons (namestring file) testdir-list)))))
+            (setf $testsuite_files (cons '(mlist simp) testdir-list))
+            ($run_testsuite)))))
 
 (defmfun $truename (filespec)
   (namestring (truename filespec)))
