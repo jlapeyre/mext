@@ -448,6 +448,20 @@ directory form - see PATHNAME-AS-DIRECTORY."
   #-(or :sbcl :cmu :scl :gcl :lispworks :openmcl :allegro :clisp :cormanlisp :ecl :abcl :digitool)
   (error "LIST-DIRECTORY not implemented"))
 
+(defun pathname-as-file (pathspec)
+  "Converts the non-wild pathname designator PATHSPEC to file form."
+  (let ((pathname (pathname pathspec)))
+    (when (wild-pathname-p pathname)
+      (error "Can't reliably convert wild pathnames."))
+    (cond ((directory-pathname-p pathspec)
+           (let* ((directory (pathname-directory pathname))
+                  (name-and-type (pathname (first (last directory)))))
+             (make-pathname :directory (butlast directory)
+                            :name (pathname-name name-and-type)
+                            :type (pathname-type name-and-type)
+                            :defaults pathname)))
+          (t pathname))))
+
 ;; This is broken with clisp
 ;;  This (mext-maxima::file-exists-p (pathname "/home/jlapeyre/.maxima/mext.lisp"))
 ;;   returns  nil and a function when the file in fact does exist

@@ -3,8 +3,8 @@
 # build mext and all mext packages for several versions of maxima
 # compiled with different lisps
 
-maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-#maximas="smaxima"
+#maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
+maximas="smaxima"
 #maximas="cmumaxima"
 
 # Build just the mext_system
