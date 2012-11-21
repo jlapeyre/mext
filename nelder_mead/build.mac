@@ -1,5 +1,5 @@
 load(mext);
 mext_require("maxdoc");
-load_in_subdir(["nelder-mead","system"]);
+load_in_subdir(["nelder_mead","system"]);
 mext_dist_clean();
 mext_dist_build();

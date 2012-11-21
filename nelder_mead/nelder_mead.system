@@ -4,13 +4,13 @@
 
 (in-package :mext-maxima)
 
-(create-distribution "nelder-mead"
+(create-distribution "nelder_mead"
   :loader "load-nelder-mead"
   :install-only "nelder-mead-text")
 
 (in-package :cl-user)
 
-(mk:defsystem nelder-mead
+(mk:defsystem nelder_mead
   :source-extension "lisp"
   :components
    ((:file "nelder-mead-packages" :load-only t)
@@ -26,4 +26,4 @@
 (mk:defsystem load-nelder-mead
   :source-extension "mac"
   :components
-   ((:file "nelder-mead")))
+   ((:file "nelder_mead")))
