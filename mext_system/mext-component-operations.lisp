@@ -55,7 +55,7 @@
 ;; file-type -- must be :binary or :source. We interpret these as we like.
 ;; data   -- we use this for additional info on where to install.
 (defun mext-user-install-one (component force file-type data)
-  (when (or (eq force :all) (eq force t)  
+   (when (or (eq force :all) (eq force t)  
             (and (find force '(:new-source :new-source-and-dependents :new-source-all) :test #'eq)
 		 (needs-compilation component nil)))
     (let* ((sname (component-pathname component file-type))
@@ -83,8 +83,10 @@
               (format t " target dir ~s~%" (mext:fmake-pathname :directory install-dir :defaults *default-pathname-defaults*))
 ;            (mext:fensure-directories-exist (mext:pathname-as-directory (mext:fmake-pathname 
 ;                                        :name nil :directory install-dir)))
-            (mext:fensure-directories-exist target-full-pathname)
-            (mext::copy-file source-full-pathname target-full-pathname :overwrite t)))))))
+;            (mext:fensure-directories-exist target-full-pathname)
+              (unless (equal source-full-pathname target-full-pathname)
+                (mext::copy-file source-full-pathname target-full-pathname :overwrite t))
+            ))))))
 ;            (mext::copy-file-from-dir-to-dir sname sext sdir install-dir)))))))
 
 ;;; install source files to a subdir of user dir
