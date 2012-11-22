@@ -556,5 +556,20 @@
                           :vars "[a,b]"         
                           :code ("a : lrange(10), b : nreverse(a)" "a : lrange(10,ot->ar), b : nreverse(a)")))
 
+
+
+;; This does not recognize lambda functions unlesss compile is t
+(defmfun1 ($count :doc) ( (list :ae-list) item &opt ($compile t :bool))
+  "Counts the number of items in <list> matching <item>. If <item>
+ is a lambda function then compile must be true."
+  (if (mapatom list) 0
+    (progn
+      (option-compile-lambda item)
+      (setf list  (if (aex-p list) (aex-arr list)
+                    (cdr list)))
+      (if (functionp item)
+          (count-if item list)
+        (count item list)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
