@@ -268,7 +268,7 @@ ia a list of three elements: hame, protoco, contents."
               (setf section nsec)
             (maxima::merror1 "max-doc::add-doc-entry1: can't find section for tag ~a." section))))
     (setf (entry-section entry) (section-name section))
-    (if *current-distribution* (setf (entry-distribtion entry) *current-distribution*))
+    (if *current-distribution* (setf (entry-distribution entry) *current-distribution*))
     (setf (gethash name (section-hash section)) entry)
     (setf (gethash name max-doc::*max-doc-deffn-defvr-hashtable*) entry)))
 

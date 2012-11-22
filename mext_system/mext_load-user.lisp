@@ -78,13 +78,19 @@ This was copied from maxima source init-cl.lisp.")
   (append (#-gcl pathname-directory #+gcl gcl-pathname-directory #-gcl *load-pathname* #+gcl sys:*load-pathname*)
                                     (list "mext" *maxima-and-lisp-version* "mext-system")))
 
-(load (#-gcl make-pathname #+gcl gcl-make-pathname :name "mext-maxima-packages" :type "lisp"
-    :directory *mext-installation-dir*))
+(let ((file 
+      (#-gcl make-pathname #+gcl gcl-make-pathname :name "mext-maxima-packages" :type "lisp"
+        :directory *mext-installation-dir*)))
+  (load file))
 
 (loop for file in (list #+openmcl "defsystem"
          "operate-on-system2" "gjl-lisp-util" "pathname-library" "mext-maxima-system") do
-      (load (#-gcl make-pathname #+gcl gcl-make-pathname :name file :type *binary-ext*
-          :directory *mext-installation-dir*)))
+       (let ((file
+             (#-gcl make-pathname #+gcl gcl-make-pathname :name file :type *binary-ext*
+               :directory *mext-installation-dir*)))
+         (load file)))
 
 (loop for file in (list "mext-component-operations")  do
-      (load (#-gcl make-pathname #+gcl gcl-make-pathname :name file  :directory *mext-installation-dir*)))
+  (let ((file
+        (#-gcl make-pathname #+gcl gcl-make-pathname :name file  :directory *mext-installation-dir*)))
+    (load file)))

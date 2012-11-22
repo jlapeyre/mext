@@ -336,6 +336,16 @@ This was copied from maxima source init-cl.lisp.")
             (merror "Unable to find '~a'." name)))
       t)))
 
+;; identical. I want to switch to this name
+(defmfun $require (name &optional force)
+  (setf name ($sconcat name))
+  (let ((registered (gethash name mext-maxima::*installed-dist-table*)))
+    (if (or (not registered) force)
+        (let ((file (mext-maxima::mext-file-search name)))
+          (if file (progn (format t "loading ~a~%" file) ($load file))
+            (merror "Unable to find '~a'." name)))
+      t)))
+
 ;; declare that a mext package has been loaded. mext_require will see
 ;; that it has been loaded
 (defmfun $mext_provided (name)
