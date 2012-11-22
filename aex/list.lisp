@@ -559,17 +559,28 @@
 
 
 ;; This does not recognize lambda functions unlesss compile is t
-(defmfun1 ($count :doc) ( (list :ae-list) item &opt ($compile t :bool))
-  "Counts the number of items in <list> matching <item>. If <item>
+(defmfun1 ($count :doc) ( (expr :non-atom-ae-list) item &opt ($compile t :bool))
+  "Counts the number of items in <expr> matching <item>. If <item>
  is a lambda function then compile must be true."
-  (if (mapatom list) 0
-    (progn
-      (option-compile-lambda item)
-      (setf list  (if (aex-p list) (aex-arr list)
-                    (cdr list)))
-      (if (functionp item)
-          (count-if item list)
-        (count item list)))))
+  (setf expr (if (aex-p expr) (aex-arr expr)
+               (cdr expr)))
+  (option-compile-lambda item)
+  (if (functionp item)
+      (count-if item expr)
+    (count item expr :test 'equal)))
+
+(examples::clear-add-example "count"
+                  '( :code ("count([1,2,\"dog\"], 'numberp)" "count([1,2,\"dog\"], \"dog\")"
+                            "count(lrange(10^4), lambda([x], is(mod(x,3) = 0)))"
+                            "count( %%ff(1,2,\"dog\"), \"dog\")"
+                            "count(lrange(100,ot->ar), 'evenp)")))
+
+
+
+
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

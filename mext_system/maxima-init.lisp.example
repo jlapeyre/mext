@@ -1,0 +1,3 @@
+;; use this as an init file in your home folder
+;; to load mext if it is present.
+(if ($file_search "mext") ($load "mext") t)

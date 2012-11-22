@@ -12,10 +12,13 @@
 
 ;; These will be installed with both mext_dist_user_install_binary
 ;; and mext_dist_user_install_source
-(setf *systems-to-install*  "mext-system" )
+(setf *systems-to-install*  "mext-system")
 
 ;; removed binaries and intermediate files for these systems
 (setf *systems-to-clean* "mext-system")
+
+(create-distribution "mext-system"
+  :install-only "mext-inst-loader")
 
 ; A list of copy specifications. Each element is a list of 6 elemnts.
 ; name,type,dir for source file and name,type,dir for target file
@@ -24,9 +27,10 @@
   (list (list  "mext-user" "lisp" mext::*dist-dir*
                "mext" "lisp"  mext::*userdir-pathname*)
         (list  "mext_load-user" "lisp" mext::*dist-dir*
-               "mext_load" "lisp"  mext::*userdir-pathname*)
-        (list  "mext-maxima-packages" "lisp" mext::*dist-dir*
-               "mext-maxima-packages" "lisp"  mext::*userdir-pathname*)))
+               "mext_load" "lisp"  mext::*userdir-pathname*)))
+
+;        (list  "mext-maxima-packages" "lisp" mext::*dist-dir*
+;               "mext-maxima-packages" "lisp"  mext::*userdir-pathname*)))
 
 (in-package :cl-user)
 
@@ -40,3 +44,9 @@
     (:file "pathname-library")
     (:file "mext-component-operations")
     (:file "mext-maxima-system")))
+
+
+(mk:defsystem mext-inst-loader
+  :source-extension "lisp"
+  :components
+   ((:file "load_mext_maxima1" :load-only t)))

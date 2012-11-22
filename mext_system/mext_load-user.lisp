@@ -1,41 +1,8 @@
-;; This huge mess finds the mext files and loads them.
+(if (find-package :mext-maxima-load ) t  
+  (defpackage :mext-maxima-load (:use common-lisp )))
 
-;;  Define path functions for gcl that are more like ansi common lisp
-#+gcl (in-package :cl)
+(in-package :mext-maxima-load)
 
-#+gcl (defun gcl-make-pathname (&rest args)
-        (let ((dir-spec (getf args :directory)))
-          (if dir-spec
-              (cond ( (stringp dir-spec)
-                      (setf (getf args :directory) (list :root dir-spec)))
-                    ( (listp dir-spec)
-                      (let ((word1 (car dir-spec)))
-                        (cond ( (eq :absolute word1)
-                                (setf (getf args :directory)
-                                      (cons :root (cdr dir-spec))))
-                              ( (eq :relative word1)
-                                (setf (getf args :directory)
-                                      (cdr dir-spec)))
-                              (t
-                       (error "List of directory components must start with :ABSOLUTE or :RELATIVE."))))))))
-        (apply 'make-pathname args))
-
-#+gcl (defun gcl-pathname-directory (&rest args)
-        (let ((dir-spec (apply 'pathname-directory args)))
-          (if (and (listp dir-spec) (not (null dir-spec)))
-            (let ((word1 (car dir-spec)))
-              (if (and (symbolp word1) (eq :ROOT word1))
-                  (setf dir-spec (cons :ABSOLUTE (cdr dir-spec)))
-                (setf dir-spec (cons :RELATIVE dir-spec)))))
-          dir-spec))
-
-#+gcl (export 'gcl-make-pathname)
-#+gcl (export 'gcl-pathname-directory)
-
-(load (make-pathname :name "mext-maxima-packages" :type "lisp"
-           :defaults  #-gcl *load-pathname* #+gcl sys:*load-pathname*))
-
-; this appears in too many places. Is it available from within maxima ?
 (defparameter *binary-ext*
               #+gcl "o"
 	      #+(or cmu scl) (c::backend-fasl-file-type c::*target-backend*)
@@ -75,22 +42,11 @@ This was copied from maxima source init-cl.lisp.")
 
 ; this is a list starting with ABSOLUTE. not a path object
 (defparameter *mext-installation-dir*
-  (append (#-gcl pathname-directory #+gcl gcl-pathname-directory #-gcl *load-pathname* #+gcl sys:*load-pathname*)
-                                    (list "mext" *maxima-and-lisp-version* "mext-system")))
+  (append (pathname-directory #-gcl *load-pathname* #+gcl sys:*load-pathname*)
+          (list "mext" *maxima-and-lisp-version* "mext-system")))
 
 (let ((file 
-      (#-gcl make-pathname #+gcl gcl-make-pathname :name "mext-maxima-packages" :type "lisp"
+      (make-pathname :name "load_mext_maxima1" :type "lisp"
         :directory *mext-installation-dir*)))
-  (load file))
-
-(loop for file in (list #+openmcl "defsystem"
-         "operate-on-system2" "gjl-lisp-util" "pathname-library" "mext-maxima-system") do
-       (let ((file
-             (#-gcl make-pathname #+gcl gcl-make-pathname :name file :type *binary-ext*
-               :directory *mext-installation-dir*)))
-         (load file)))
-
-(loop for file in (list "mext-component-operations")  do
-  (let ((file
-        (#-gcl make-pathname #+gcl gcl-make-pathname :name file  :directory *mext-installation-dir*)))
-    (load file)))
+  (if (probe-file file) (maxima::$load file)
+    (format t "Warning: cant find mext installation directory ~s~%" file)))

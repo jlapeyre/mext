@@ -388,6 +388,8 @@
                                 (not (maxima::$mapatom e)))
                      (:non-atom-list "non-atomic and represented by a lisp list"
                                 (and (not (maxima::$mapatom e)) (listp e)))
+                     (:non-atom-ae-list "non-atomic and either aex or represented by a lisp list."
+                                (and (not (maxima::$mapatom e)) (or (maxima::aex-p e) (listp e))))
                      (:or-pos-int-string ("a string" "a positive integer")
                                              (or (stringp e) (and (integerp e) (> e 0))))
                      (:or-non-atom-subvar  ("a subscripted variable" "non-atomic")
