@@ -1,0 +1,29 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing pw
+;; pw depends on mext-system
+
+(in-package :mext-maxima)
+
+(create-distribution "pw"
+  :loader "load-pw"
+  :install-only "pw-rtests")
+
+(in-package :cl-user)
+
+(mk:defsystem pw
+  :source-extension "mac"
+  :language :mext-maxima
+  :load-only t
+  :components
+   ((:file "pw_code")))
+
+(mk:defsystem load-pw
+  :source-extension "mac"
+  :components
+   ((:file "pw")))
+
+(mk:defsystem pw-rtests
+  :source-extension "mac"
+  :source-pathname "rtests"
+  :components
+    ( (:file "rtest_pw")))

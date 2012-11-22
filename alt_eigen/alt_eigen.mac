@@ -2,4 +2,3 @@ mext_require("maxdoc");
 
 mext_provide( "alt_eigen",
   [ "alt_eigen_code"]);
-
