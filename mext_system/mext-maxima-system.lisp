@@ -140,6 +140,18 @@ This was copied from maxima source init-cl.lisp.")
   (setf *systems-to-install-other*
         (getf body-form :install-only)))
 
+;; not finished
+(defmacro defdistribution (name &rest definition-body)
+  (unless (find :source-pathname definition-body)
+    (setf definition-body
+	  (list* :source-pathname
+		 '(when #-gcl *load-pathname* #+gcl si::*load-pathname*
+		        (make-pathname :name nil
+			               :type nil
+			               :defaults #-gcl *load-pathname* 
+			                         #+gcl si::*load-pathname*))
+		 definition-body)))
+ `(create-distribution ',name ,@definition-body))
 
 ;; return a list of all symbols in package named by
 ;; string 'package'

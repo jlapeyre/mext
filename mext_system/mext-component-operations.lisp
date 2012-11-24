@@ -76,15 +76,17 @@
                                   #-gcl (component-full-pathname component file-type)
                                   #+gcl (merge-pathnames (component-full-pathname component file-type)
                                      (mext:pathname-as-directory *default-pathname-defaults*)))))
-;      (format t "!!!!! rootdir ~s~%" (component-root-dir component file-type))
-;      (format t "!!!!! cpn ~s~%" (component-pathname component file-type))
-;      (format t "!!!!! cfpn ~s~%" (component-pathname component file-type))
-;      (format t "!!!!! cspn ~s~%" (component-source-pathname component ))
-;      (format t "!!!!! dfpnd ~s~%" (mext:pathname-as-directory *default-pathname-defaults*))
+      (format t "!!!!! rootdir ~s~%" (component-root-dir component file-type))
+      (format t "!!!!! cpn ~s~%" (component-pathname component file-type))
+      (format t "!!!!! cfpn ~s~%" (component-pathname component file-type))
+      (format t "!!!!! cspn ~s~%" (component-source-pathname component ))
+      (format t "!!!!! dfpnd ~s~%" (mext:pathname-as-directory *default-pathname-defaults*))
+      (format t "!!!!! sdir ~s~%" sdir)
       (if source-full-pathname
           (progn
             (let ((target-full-pathname (mext:change-root-pathname source-full-pathname 
-                           (mext:fmake-pathname :directory sdir :defaults *default-pathname-defaults*)
+;                           (mext:fmake-pathname :directory sdir :defaults *default-pathname-defaults*)
+                           (directory-namestring source-full-pathname)
                            (mext:fmake-pathname :directory install-dir :defaults *default-pathname-defaults*))))
               (if (equal source-full-pathname target-full-pathname)
                   (maxima::merror (format nil "mext-install: Bug. Source and pathname are the same: ~s" source-full-pathname))
