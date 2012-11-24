@@ -25,9 +25,9 @@
 ;; We could really use something better than this.
 (setf *user-install-explicit*
   (list (list  "mext-user" "lisp" mext::*dist-dir*
-               "mext" "lisp"  mext::*userdir-pathname*)
+               "mext" "lisp"  mext::*userdir-pathname-as-list*)
         (list  "mext_load-user" "lisp" mext::*dist-dir*
-               "mext_load" "lisp"  mext::*userdir-pathname*)))
+               "mext_load" "lisp"  mext::*userdir-pathname-as-list*)))
 
 ;        (list  "mext-maxima-packages" "lisp" mext::*dist-dir*
 ;               "mext-maxima-packages" "lisp"  mext::*userdir-pathname*)))

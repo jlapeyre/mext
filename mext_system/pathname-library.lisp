@@ -352,11 +352,12 @@
                 (t (error (format nil "Pathname component ~a~% is not of type ~a" field-key
                                   '(:HOST :DEVICE :DIRECTORY :NAME :TYPE :VERSION)))))))
 
-;; causes error in gcl
+;; causes error in gcl, both windows and linux
+;; gcl win32 device returns ("C:")
 (defun print-pathname-components (pathname-in)
         (let ((pathname (pathname pathname-in)))
           (loop for component in 
-                (list '("name" pathname-name) '("directory" fpathname-directory)
+                (list (list "name" #'pathname-name) (list "directory" #'fpathname-directory)
                       '("type" pathname-type) '("host" pathname-host) '("device" pathname-device)
                       '("version" pathname-version)) do
                 (format t "~a : ~s~%" (car component) (funcall (cadr component) pathname))))
@@ -374,6 +375,8 @@
                                              target-file target-ext target-dir)
 ; next line needed by clisp maxima. and must not be present for sbcl,ecl,gcl.  we should look into a general approach.
 #+clisp  (if (stringp target-dir) (setf target-dir (pathname-as-directory target-dir)))
+  (format t "sf ~s, se ~s, sd ~s, tf ~s, te ~s, td ~s~%" source-file source-ext source-dir 
+                                                         target-file target-ext target-dir)
   (let ((source-path (fmake-pathname :name source-file :type source-ext :directory source-dir))
         (target-path (fmake-pathname :name target-file :type target-ext :directory target-dir)))
     (format t "Copying '~a' to '~a'~%" source-path target-path)
@@ -556,7 +559,7 @@ by PATHNAME-AS-DIRECTORY."
   #+:lispworks
   (and (lw:file-directory-p pathspec)
        (pathname-as-directory (truename pathspec)))
-  #+gcl
+  #+gcl ; does not work in win32. returns nil will valid path
   (eq :directory (first (si:stat pathspec)))
   #-(or :allegro :lispworks :gcl )
   (let ((result (file-exists-p pathspec)))

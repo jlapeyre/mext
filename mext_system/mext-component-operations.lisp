@@ -31,18 +31,21 @@
 ;          (let* ((pname (component-pathname component :source))
 ;           (pname-to-clean (mext:fmake-pathname :name pname :type ext :defaults *default-pathname-defaults*)))
 ;            (format t " pwd '~s'~%" (maxima::$pwd))
-          (when (probe-file pname-to-clean)
-            (or *oos-test*
-                (progn 
-                  (format t " Cleaning '~s'~%" pname-to-clean)
-                  (delete-file pname-to-clean))))))))
+	  (let ((probed-to-clean (probe-file pname-to-clean)))
+	    (when (and probed-to-clean (not (equal probed-to-clean source-full-pathname)))
+	      (or *oos-test*
+		  (progn 
+		    (format t "cleaning probed: ~s, source: ~s~%" probed-to-clean source-full-pathname)
+		    (format t " Cleaning '~s'~%" pname-to-clean)
+		    (delete-file pname-to-clean)))))))))
 
 ;; Clean LISP and UNLISP from compilation of .mac
 (component-operation2 :mext-clean-intermediate  'mext-clean-intermediate)
 
 (defun mext-clean-intermediate (name component force data)
-  (declare (ignore name data))
-  (mext-clean-files component force '("LISP" "UNLISP")))
+  (declare (ignore name data)
+     #+win32 (format t "Don't know how to distinguish LISP from lisp~%")
+	   #-win32 (mext-clean-files component force '("LISP" "UNLISP")) ))
 
 (component-operation2 :mext-clean-lisp-compilation  'mext-clean-lisp-compilation)
 

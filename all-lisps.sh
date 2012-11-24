@@ -7,8 +7,8 @@
 # aex : smaxima ok, gmaxima no tests found, clmaxima 1 failed, emaxima ok, 
 #   cmumaxima ok, ccmaxima ok
 
-maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-#maximas="smaxima"
+#maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
+maximas="cmumaxima"
 
 # Build just the mext_system
 build_mext () {

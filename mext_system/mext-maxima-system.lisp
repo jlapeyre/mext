@@ -67,6 +67,9 @@ This was copied from maxima source init-cl.lisp.")
           #-gcl *load-pathname* #+gcl sys:*load-pathname* ))
 (defvar *userdir-pathname* maxima::*maxima-userdir*)
 
+(defvar *userdir-pathname-as-list* (mext::fpathname-directory 
+				    (mext::pathname-as-directory  maxima::*maxima-userdir*)))
+
 #+(or clisp cmu) (setf *default-pathname-defaults* (ext:default-directory))
 #+openmcl (setf *default-pathname-defaults* (ccl::current-directory))
 
@@ -212,9 +215,11 @@ This was copied from maxima source init-cl.lisp.")
              ,@body))))
 
 (mk-mext-all-operation $mext_dist_compile mext-maxima::*systems-to-compile*
+       (setf mk::*bother-user-if-no-binary* nil)
        (mk:oos2 dist-name :compile))
 
 (mk-mext-all-operation $mext_dist_load mext-maxima::*systems-to-load*
+       (setf mk::*bother-user-if-no-binary* nil)
        (setf make::*load-source-if-no-binary* t)
        (mk:oos2 dist-name :load)
        (setf make::*load-source-if-no-binary* nil))
@@ -379,7 +384,8 @@ This was copied from maxima source init-cl.lisp.")
            (setf *default-pathname-defaults* mext-maxima::*initial-default-pathname*)
            #+clisp (ext:cd *default-pathname-defaults*)  ; necessary
            #+cmu (setf (ext:default-directory) *default-pathname-defaults*)
-           #+openmcl (setf (ccl::current-directory) *default-pathname-defaults*))
+           #+openmcl (setf (ccl::current-directory) *default-pathname-defaults*)
+	   (namestring *default-pathname-defaults*))
           ((= len 1) 
            (let* ((dir (mext:fpathname-directory (mext:pathname-as-directory (car dirs))))
                   (fdir 
@@ -388,9 +394,12 @@ This was copied from maxima source init-cl.lisp.")
                           (append
                            (mext:fpathname-directory *default-pathname-defaults*)
                            (cdr dir)))))))
-             (if (mext:directory-exists-p fdir)
+;; disabled this check for gcl win32. but, the driveletter, or volumen or whatever
+;; is lost with updir
+             (if (or t (mext:directory-exists-p fdir))
                  (progn (setf *default-pathname-defaults*
-                              (mext:compact-pathname fdir))
+			      (truename fdir))
+;                              (mext:compact-pathname fdir))
                         #+clisp (ext:cd *default-pathname-defaults*)
                         #+cmu (setf (ext:default-directory) *default-pathname-defaults*)
                         #+openmcl (setf (ccl::current-directory) *default-pathname-defaults*)
