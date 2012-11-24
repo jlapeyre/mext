@@ -9,9 +9,6 @@
 ;;; in particular directory.
 (in-package :maxima)
 
-;(format t "Load pathname is ~a~%" $load_pathname)
-;(format t "Load dirname is ~a~%" (pathname-directory (probe-file $load_pathname)))
-
 ;;; Load the three lisp files and maxima file.
 (defvar *load-mext-maxima-load-pathname* (pathname-directory (probe-file $load_pathname)))
 
