@@ -216,6 +216,7 @@ This was copied from maxima source init-cl.lisp.")
 
 (mk-mext-all-operation $mext_dist_compile mext-maxima::*systems-to-compile*
        (setf mk::*bother-user-if-no-binary* nil)
+       (format t "compiling systems~%")
        (mk:oos2 dist-name :compile))
 
 (mk-mext-all-operation $mext_dist_load mext-maxima::*systems-to-load*

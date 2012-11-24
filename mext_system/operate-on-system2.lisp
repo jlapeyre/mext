@@ -80,10 +80,13 @@
 	    (declare (special *compile-verbose* #-MCL *compile-file-verbose*)
 		     #-openmcl (ignore *compile-verbose*
 				       #-MCL *compile-file-verbose*)
-		     #-openmcl (optimize (inhibit-warnings 3)))
+                     #-openmcl (optimize (inhibit-warnings 3)))
+            (format t "Performing operation ~s~%" operation)
 	    (unless (component-operation2 operation)
 	      (error "Operation ~A undefined." operation))
-	    (operate-on-component2 name system operation force :data data)))) ; changed gjl
+	    (operate-on-component2 name system operation force :data data)
+            (format t "Done with one operation ~s~%" operation)
+                                   ))) ; changed gjl
     (when dribble (dribble))))
 
 (defun operate-on-component2 (name component operation force &key data  &aux changed) ; NEW gjl
@@ -93,7 +96,8 @@
 ;  (format t "   data is  ~a~%" data)
   (let ((type (component-type component))
 	(old-package (package-name *package*)))
-
+    (format t "Performing operation ~s on component ~a~%" operation component)
+    (format t "component pathname is ~a~%" (component-pathname component :source))
     (unwind-protect
 	;; Protect old-package.
 	(progn

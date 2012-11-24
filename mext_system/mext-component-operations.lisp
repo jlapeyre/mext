@@ -43,9 +43,10 @@
 (component-operation2 :mext-clean-intermediate  'mext-clean-intermediate)
 
 (defun mext-clean-intermediate (name component force data)
-  (declare (ignore name data)
-     #+win32 (format t "Don't know how to distinguish LISP from lisp~%")
-	   #-win32 (mext-clean-files component force '("LISP" "UNLISP")) ))
+  (declare (ignore name data))
+     #+win32 (format t "In gcl win32, I can't distinguish .LISP from .lisp.~%
+  Not cleaning ~a.LISP~%" (component-pathname component))
+	   #-win32 (mext-clean-files component force '("LISP" "UNLISP")))
 
 (component-operation2 :mext-clean-lisp-compilation  'mext-clean-lisp-compilation)
 
@@ -186,7 +187,12 @@
 
 ;; language definition for translating and compiling maxima source files
 (mk:define-language :mext-maxima
-    :compiler #'(lambda (x y z) (declare (ignore y z)) (maxima::$compile_file x))
+    :compiler #'(lambda (&rest args) 
+                  (format t "defsystem compiling maxima code: args are ~s~%" args)
+                  (maxima::$compile_file (car args)))
+;    :compiler #'(lambda (x y z) (declare (ignore y z)) 
+;                  (format t "compiling maxima in defsys, file ~s~%" x)
+;                  (maxima::$compile_file x))
     :loader #'(lambda (x) 
                 (format t "mext-system build: loading  ~s~%" x) (maxima::$load x))
 ;;    :loader #'identity
