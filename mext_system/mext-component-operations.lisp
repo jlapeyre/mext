@@ -23,14 +23,19 @@
 		       :test #'eq)
 		 (needs-compilation component nil)))
     (loop for ext in file-types do
-          (let* ((pname (component-pathname component :source))
-           (pname-to-clean (mext:fmake-pathname :name pname :type ext :defaults *default-pathname-defaults*)))
+        (let* ((source-full-pathname (probe-file 
+                                  #-gcl (component-full-pathname component :source)
+                                  #+gcl (merge-pathnames (component-full-pathname component :source)
+                                     (mext:pathname-as-directory *default-pathname-defaults*))))
+               (pname-to-clean (mext:fmake-pathname  :type ext :defaults source-full-pathname)))
+;          (let* ((pname (component-pathname component :source))
+;           (pname-to-clean (mext:fmake-pathname :name pname :type ext :defaults *default-pathname-defaults*)))
 ;            (format t " pwd '~s'~%" (maxima::$pwd))
-;            (format t " Cleaning '~s'~%" pname-to-clean)
-;            (format t "Attempting clean file ~s, directory ~s.~%" pname *default-pathname-defaults*)
-            (when (probe-file pname-to-clean)
-              (or *oos-test*
-                  (delete-file pname-to-clean)))))))
+          (when (probe-file pname-to-clean)
+            (or *oos-test*
+                (progn 
+                  (format t " Cleaning '~s'~%" pname-to-clean)
+                  (delete-file pname-to-clean))))))))
 
 ;; Clean LISP and UNLISP from compilation of .mac
 (component-operation2 :mext-clean-intermediate  'mext-clean-intermediate)
