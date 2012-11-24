@@ -69,7 +69,7 @@
    (when (or (eq force :all) (eq force t)  
             (and (find force '(:new-source :new-source-and-dependents :new-source-all) :test #'eq)
 		 (needs-compilation component nil)))
-    (let* ((sdir  (mext:fpathname-directory (mext:pathname-as-directory *default-pathname-defaults*)))
+    (let* ((sdir  mext::*dist-dir*)
            (install-dir 
             (if (getf data :mext-root) mext::*mext-user-dir-as-list*
               (append mext::*mext-user-dir-as-list* 
@@ -77,30 +77,38 @@
                             (if (null res) nil 
                               (if (listp res) res (list res))))
                           (list mext::*system-name*)))))
-           (source-full-pathname (probe-file 
-                                  #-gcl (component-full-pathname component file-type)
-                                  #+gcl (merge-pathnames (component-full-pathname component file-type)
-                                     (mext:pathname-as-directory *default-pathname-defaults*)))))
+           (cfpn (component-full-pathname component file-type))
+           (trial-source-full-pathname 
+            (merge-pathnames cfpn
+                             (mext:pathname-as-directory (mext:fmake-pathname :directory sdir))))
+           (source-full-pathname (probe-file trial-source-full-pathname)))
       (format t "!!!!! rootdir ~s~%" (component-root-dir component file-type))
       (format t "!!!!! cpn ~s~%" (component-pathname component file-type))
-      (format t "!!!!! cfpn ~s~%" (component-pathname component file-type))
+      (format t "!!!!! cfpn ~s~%" cfpn)
+      (format t "!!!!! tsfp ~s~%" trial-source-full-pathname)
+      (format t "!!!!! sfpn ~s~%" source-full-pathname)
       (format t "!!!!! cspn ~s~%" (component-source-pathname component ))
       (format t "!!!!! dfpnd ~s~%" (mext:pathname-as-directory *default-pathname-defaults*))
       (format t "!!!!! sdir ~s~%" sdir)
+      (format t "!!!!! install-dir ~s~%" install-dir)
       (if source-full-pathname
           (progn
-            (let ((target-full-pathname (mext:change-root-pathname source-full-pathname 
-;                           (mext:fmake-pathname :directory sdir :defaults *default-pathname-defaults*)
+            (let ((target-full-pathname (if
+                    (eq :relative (car (mext:fpathname-directory cfpn)))
+                                            (merge-pathnames cfpn (mext:fmake-pathname :directory install-dir :defaults *default-pathname-defaults*))
+                                          (mext:change-root-pathname source-full-pathname 
                            (directory-namestring source-full-pathname)
-                           (mext:fmake-pathname :directory install-dir :defaults *default-pathname-defaults*))))
+                           (mext:fmake-pathname :directory install-dir :defaults *default-pathname-defaults*)))))
               (if (equal source-full-pathname target-full-pathname)
                   (maxima::merror (format nil "mext-install: Bug. Source and pathname are the same: ~s" source-full-pathname))
                 (progn
                   (mext:fensure-directories-exist target-full-pathname)
                   (format t "mext-install: copying ~s to ~s~%" source-full-pathname target-full-pathname)
                   (mext::copy-file source-full-pathname target-full-pathname :overwrite t)))))
-        (maxima::merror (format nil "mext-install: file in the distribution does not exist: ~s"
-                                (component-full-pathname component file-type)))))))
+        (maxima::merror (format nil "mext-install: file in the distribution ~s does not exist.~%
+ Full source pathname ~s~%" cfpn
+                           trial-source-full-pathname))))))
+                              
 
 #|
 
