@@ -70,6 +70,7 @@ This was copied from maxima source init-cl.lisp.")
 (defvar *userdir-pathname-as-list* (mext::fpathname-directory 
 				    (mext::pathname-as-directory  maxima::*maxima-userdir*)))
 
+;; These are nil when the first maxima prompt is printed.
 #+(or clisp cmu) (setf *default-pathname-defaults* (ext:default-directory))
 #+openmcl (setf *default-pathname-defaults* (ccl::current-directory))
 
@@ -182,12 +183,9 @@ This was copied from maxima source init-cl.lisp.")
 ;; clisp part is hacked in, it will raise error if a directory is given.
 ;; bug file-exists-p is broken for clisp
 (defun file-search (name exts paths &aux file )
-;  (format t "got: name:~a exts:~a paths ~s~%" name exts paths)  
   (loop for ext in exts while (not file) do
         (loop for path in paths while (not file) do
-;              (format t "trying: name:~a ext:~a path ~s~%" name ext path)
               (let ((trial (fmake-pathname :name name :type ext :directory path)))
-;                (format t " trial ~a~%" trial)
                 (setf file (#-(or clisp gcl) file-exists-p #+(or clisp gcl) probe-file trial)))))
   file)
 
@@ -216,7 +214,6 @@ This was copied from maxima source init-cl.lisp.")
 
 (mk-mext-all-operation $mext_dist_compile mext-maxima::*systems-to-compile*
        (setf mk::*bother-user-if-no-binary* nil)
-       (format t "compiling systems~%")
        (mk:oos2 dist-name :compile))
 
 (mk-mext-all-operation $mext_dist_load mext-maxima::*systems-to-load*
@@ -395,9 +392,10 @@ This was copied from maxima source init-cl.lisp.")
                           (append
                            (mext:fpathname-directory *default-pathname-defaults*)
                            (cdr dir)))))))
-;; disabled this check for gcl win32. but, the driveletter, or volumen or whatever
+;; disabled this check for gcl win32. but, the driveletter, or volume or whatever
 ;; is lost with updir
-             (if (or t (mext:directory-exists-p fdir))
+             (if #+(and :win32 :gcl) t
+                 #-(and :win32 :gcl) (mext:directory-exists-p fdir) 
                  (progn (setf *default-pathname-defaults*
 			      (truename fdir))
 ;                              (mext:compact-pathname fdir))
@@ -455,3 +453,7 @@ This was copied from maxima source init-cl.lisp.")
 
 (defmfun $mkdir (filespec &optional (mode "0770"))
   (mext::mkdir filespec mode))
+
+;; return name of current distribution.
+(defmfun $mext_dist_name ()
+  mext::*dist-name*)
