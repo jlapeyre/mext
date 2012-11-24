@@ -357,7 +357,7 @@
 (defun print-pathname-components (pathname-in)
         (let ((pathname (pathname pathname-in)))
           (loop for component in 
-                (list (list "name" #'pathname-name) (list "directory" #'fpathname-directory)
+                (list (list "name" 'pathname-name) (list "directory" 'fpathname-directory)
                       '("type" pathname-type) '("host" pathname-host) '("device" pathname-device)
                       '("version" pathname-version)) do
                 (format t "~a : ~s~%" (car component) (funcall (cadr component) pathname))))
