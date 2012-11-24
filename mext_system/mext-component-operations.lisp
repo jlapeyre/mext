@@ -86,15 +86,15 @@
             (merge-pathnames cfpn
                              (mext:pathname-as-directory (mext:fmake-pathname :directory sdir))))
            (source-full-pathname (probe-file trial-source-full-pathname)))
-      (format t "!!!!! rootdir ~s~%" (component-root-dir component file-type))
-      (format t "!!!!! cpn ~s~%" (component-pathname component file-type))
-      (format t "!!!!! cfpn ~s~%" cfpn)
-      (format t "!!!!! tsfp ~s~%" trial-source-full-pathname)
-      (format t "!!!!! sfpn ~s~%" source-full-pathname)
-      (format t "!!!!! cspn ~s~%" (component-source-pathname component ))
-      (format t "!!!!! dfpnd ~s~%" (mext:pathname-as-directory *default-pathname-defaults*))
-      (format t "!!!!! sdir ~s~%" sdir)
-      (format t "!!!!! install-dir ~s~%" install-dir)
+;      (format t "!!!!! rootdir ~s~%" (component-root-dir component file-type))
+;      (format t "!!!!! cpn ~s~%" (component-pathname component file-type))
+;      (format t "!!!!! cfpn ~s~%" cfpn)
+;      (format t "!!!!! tsfp ~s~%" trial-source-full-pathname)
+;      (format t "!!!!! sfpn ~s~%" source-full-pathname)
+;      (format t "!!!!! cspn ~s~%" (component-source-pathname component ))
+;      (format t "!!!!! dfpnd ~s~%" (mext:pathname-as-directory *default-pathname-defaults*))
+;      (format t "!!!!! sdir ~s~%" sdir)
+;      (format t "!!!!! install-dir ~s~%" install-dir)
       (if source-full-pathname
           (progn
             (let ((target-full-pathname (if

@@ -375,8 +375,8 @@
                                              target-file target-ext target-dir)
 ; next line needed by clisp maxima. and must not be present for sbcl,ecl,gcl.  we should look into a general approach.
 #+clisp  (if (stringp target-dir) (setf target-dir (pathname-as-directory target-dir)))
-  (format t "sf ~s, se ~s, sd ~s, tf ~s, te ~s, td ~s~%" source-file source-ext source-dir 
-                                                         target-file target-ext target-dir)
+;  (format t "sf ~s, se ~s, sd ~s, tf ~s, te ~s, td ~s~%" source-file source-ext source-dir 
+;                                                         target-file target-ext target-dir)
   (let ((source-path (fmake-pathname :name source-file :type source-ext :directory source-dir))
         (target-path (fmake-pathname :name target-file :type target-ext :directory target-dir)))
     (format t "Copying '~a' to '~a'~%" source-path target-path)
