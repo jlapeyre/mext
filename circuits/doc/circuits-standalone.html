@@ -1,0 +1,439 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created on June 14, 2011 by texi2html 5.0
+texi2html was written by: 
+            Lionel Cons <Lionel.Cons@cern.ch> (original author)
+            Karl Berry  <karl@freefriends.org>
+            Olaf Bachmann <obachman@mathematik.uni-kl.de>
+            and many others.
+Maintained by: Many creative people.
+Send bugs and suggestions to <texi2html-bug@nongnu.org>
+-->
+<head>
+<title>circuits</title>
+
+<meta name="description" content="circuits">
+<meta name="keywords" content="circuits">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2html 5.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+pre.display {font-family: serif}
+pre.format {font-family: serif}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: serif; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: serif; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nocodebreak {white-space:pre}
+span.nolinebreak {white-space:pre}
+span.roman {font-family:serif; font-weight:normal}
+span.sansserif {font-family:sans-serif; font-weight:normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+
+<h1 class="settitle" align="center">circuits</h1>
+<hr>
+<a name="Top"></a>
+<table class="header" cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[ &lt; ]</td>
+<td valign="middle" align="left">[<a href="#circuits" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[Contents]</td>
+<td valign="middle" align="left">[<a href="#Function-and-variable-index" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<a name="SEC_Top"></a>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="#Introduction-to-circuits">1.1 Introduction to circuits</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="#Definitions-for-circuits">1.2 Definitions for circuits</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="#Function-and-variable-index">Appendix A Function and variable index</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+<hr size="6">
+<a name="circuits"></a>
+<table class="header" cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#Top" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Top" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="#Introduction-to-circuits" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Function-and-variable-index" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[Contents]</td>
+<td valign="middle" align="left">[<a href="#Function-and-variable-index" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1 class="chapter">1 circuits</h1>
+
+<hr>
+<a name="Introduction-to-circuits"></a>
+<table class="header" cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#circuits" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#circuits" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#circuits" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="#Definitions-for-circuits" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Function-and-variable-index" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[Contents]</td>
+<td valign="middle" align="left">[<a href="#Function-and-variable-index" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<a name="Introduction-to-circuits-1"></a>
+<h2 class="section">1.1 Introduction to circuits</h2>
+
+<p><code>circuits</code> is an package for analyzing electric circuits.
+</p>
+<hr>
+<a name="Definitions-for-circuits"></a>
+<table class="header" cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#circuits" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Introduction-to-circuits" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#circuits" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[<a href="#Function-and-variable-index" title="Next section in reading order"> &gt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Function-and-variable-index" title="Next chapter"> &gt;&gt; </a>]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[Contents]</td>
+<td valign="middle" align="left">[<a href="#Function-and-variable-index" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<a name="Definitions-for-circuits-1"></a>
+<h2 class="section">1.2 Definitions for circuits</h2>
+
+<dl>
+<dt><a name="index-kirchhoff_005flaws"></a>Function: <strong>kirchhoff_laws</strong><em> (<var>I</var>, <var>net</var>)</em></dt>
+<dd>
+<p>Returns a list with equations by Kirchhoff&rsquo;s current conservation laws.
+The argument <var>I</var> is used as indexed variable representing each terminal current.
+</p>
+<p>For more information about terminal, see <code>load_netlist</code>.
+</p>
+</dd></dl>
+
+<dl>
+<dt><a name="index-load_005fnetlist"></a>Function: <strong>load_netlist</strong><em> (<var>filename</var>)</em></dt>
+<dd>
+<p>Returns a list with three elements
+that are generated from netlist file <var>filename</var>.
+The first element is a number of total terminals,
+the second is part-list, and the third is node-list.
+Consecutive numbers are automatically generated for all terminals.
+</p>
+<p>Currently, only PSIM netlist format (.cct file) is supported.
+An example of PSIM netlist format.
+</p><div class="example">
+<pre class="example">.TIME 1E-005 0.01 0 1 0 0 0 0 0
+R R1 1 2 8k 0 
+R R2 3 4 500 0 
+R R3 1 5 50 0 
+C C1 4 2 0.1u 0 0 
+C C2 4 1 0.1u 0 0 
+OP_AMP U1 0 2 1 5 -5 
+C C3 5 6 1000p 0 0 
+OP_AMP U2 6 7 7 5 -5 
+C C4 5 7 0.01u 0 0 
+R R4 6 0 1k 0 
+VP V2 7 
+VSIN V1 3 0 220 50 0 0 0 
+</pre></div>
+<p>The first element of each rows means a kind of part of row,
+which implies a number of terminal of the part in the view point of netlist,
+the second means a part number,
+the third means a node number connected with the first terminal,
+and similar correspondences follow by the number of rest of terminals.
+Other extra elements are part/simulation characteristics such as parameters, initial condition, and current flag.
+The node indexed by 0 means ground IN THIS FORMAT.
+</p>
+<p>The returned part-list is a list of part information.
+Each element is also a list with kind, symbol(part number),
+a list of terminal number(s)
+a list of part characteristics.
+</p>
+<p>Terminal numbers are generated automatically and consecutively from 1.
+</p>
+<p>The returned node-list is a list of lists of terminals.
+Each element is a list of terminal numbers which are connected with a same node.
+</p>
+</dd></dl>
+
+<dl>
+<dt><a name="index-parts_005flaws"></a>Function: <strong>parts_laws</strong><em> (<var>V</var>, <var>I</var>, <var>parts</var>, <var>net</var>)</em></dt>
+<dd>
+<p>Returns a list of equations by current conservation laws in each part
+and impedance laws such as Ohm&rsquo;s law.
+<var>I</var> is used indexed variable representing each terminal current.
+<var>V</var> is used indexed variable representing each node voltage.
+</p>
+<p>NOTE: The index for voltage indexed variable starts from 1
+rather than 0 because of compatibility with Maxima list.
+The index 1 means ground
+and the equation <var>V[1]=0</var> is included in the returned value.
+</p>
+<p>Currently, only sin voltage source is recognized in various sources,
+and its output (voltage between terminals) is normalized to 1
+rather than sin wave.
+You can get a gain of each node against the source as a result
+after solving equations.
+</p>
+</dd></dl>
+
+<dl>
+<dt><a name="index-part_005fparameters"></a>Function: <strong>part_parameters</strong><em> (<var>parts</var>)</em></dt>
+<dd>
+<p>Returns a list of equations between a part symbol and its value,
+such as R1=8e3.
+</p>
+<p>It is useful when substituting concrete values for symbols
+in related equations.
+</p>
+</dd></dl>
+
+<dl>
+<dt><a name="index-kind_005findex"></a>Variable: <strong>kind_index</strong></dt>
+<dd><p>Default value: 1
+</p>
+<p>Index of the kind of part in PSIM netlist.
+</p>
+</dd></dl>
+
+<dl>
+<dt><a name="index-node_005findex"></a>Variable: <strong>node_index</strong></dt>
+<dd><p>Default value: 3
+</p>
+<p>Index of the head of connected nodes in PSIM netlist.
+</p>
+</dd></dl>
+
+<dl>
+<dt><a name="index-symbol_005findex"></a>Variable: <strong>symbol_index</strong></dt>
+<dd><p>Default value: 2
+</p>
+<p>Index of the part number in PSIM netlist.
+</p>
+</dd></dl>
+
+<hr>
+<a name="Function-and-variable-index"></a>
+<table class="header" cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#circuits" title="Beginning of this chapter or previous chapter"> &lt;&lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Definitions-for-circuits" title="Previous section in reading order"> &lt; </a>]</td>
+<td valign="middle" align="left">[<a href="#Top" title="Up section"> Up </a>]</td>
+<td valign="middle" align="left">[ &gt; ]</td>
+<td valign="middle" align="left">[ &gt;&gt; ]</td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left"> &nbsp; </td>
+<td valign="middle" align="left">[<a href="#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[Contents]</td>
+<td valign="middle" align="left">[<a href="#Function-and-variable-index" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<a name="Function-and-variable-index-1"></a>
+<h1 class="appendix">Appendix A Function and variable index</h1>
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index-1_fn_letter-K"><b>K</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Function-and-variable-index-1_fn_letter-L"><b>L</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Function-and-variable-index-1_fn_letter-P"><b>P</b></a>
+ &nbsp; 
+</td></tr></table>
+<table class="index-fn" border="0">
+<tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Function-and-variable-index-1_fn_letter-K">K</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-kirchhoff_005flaws"><code>kirchhoff_laws</code></a></td><td>&nbsp;</td><td valign="top"><a href="#Definitions-for-circuits">1.2 Definitions for circuits</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Function-and-variable-index-1_fn_letter-L">L</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-load_005fnetlist"><code>load_netlist</code></a></td><td>&nbsp;</td><td valign="top"><a href="#Definitions-for-circuits">1.2 Definitions for circuits</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Function-and-variable-index-1_fn_letter-P">P</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-parts_005flaws"><code>parts_laws</code></a></td><td>&nbsp;</td><td valign="top"><a href="#Definitions-for-circuits">1.2 Definitions for circuits</a></td></tr>
+<tr><td></td><td valign="top"><a href="#index-part_005fparameters"><code>part_parameters</code></a></td><td>&nbsp;</td><td valign="top"><a href="#Definitions-for-circuits">1.2 Definitions for circuits</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+</table>
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index-1_fn_letter-K"><b>K</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Function-and-variable-index-1_fn_letter-L"><b>L</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Function-and-variable-index-1_fn_letter-P"><b>P</b></a>
+ &nbsp; 
+</td></tr></table>
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index-1_vr_letter-K"><b>K</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Function-and-variable-index-1_vr_letter-N"><b>N</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Function-and-variable-index-1_vr_letter-S"><b>S</b></a>
+ &nbsp; 
+</td></tr></table>
+<table class="index-vr" border="0">
+<tr><td></td><th align="left">Index Entry</th><td>&nbsp;</td><th align="left"> Section</th></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Function-and-variable-index-1_vr_letter-K">K</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-kind_005findex"><code>kind_index</code></a></td><td>&nbsp;</td><td valign="top"><a href="#Definitions-for-circuits">1.2 Definitions for circuits</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Function-and-variable-index-1_vr_letter-N">N</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-node_005findex"><code>node_index</code></a></td><td>&nbsp;</td><td valign="top"><a href="#Definitions-for-circuits">1.2 Definitions for circuits</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+<tr><th><a name="Function-and-variable-index-1_vr_letter-S">S</a></th><td></td><td></td></tr>
+<tr><td></td><td valign="top"><a href="#index-symbol_005findex"><code>symbol_index</code></a></td><td>&nbsp;</td><td valign="top"><a href="#Definitions-for-circuits">1.2 Definitions for circuits</a></td></tr>
+<tr><td colspan="4"> <hr></td></tr>
+</table>
+<table><tr><th valign="top">Jump to: &nbsp; </th><td><a class="summary-letter" href="#Function-and-variable-index-1_vr_letter-K"><b>K</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Function-and-variable-index-1_vr_letter-N"><b>N</b></a>
+ &nbsp; 
+<a class="summary-letter" href="#Function-and-variable-index-1_vr_letter-S"><b>S</b></a>
+ &nbsp; 
+</td></tr></table>
+
+<hr size="6">
+<a name="SEC_About"></a>
+<table class="header" cellpadding="1" cellspacing="1" border="0">
+<tr><td valign="middle" align="left">[<a href="#Top" title="Cover (top) of document">Top</a>]</td>
+<td valign="middle" align="left">[Contents]</td>
+<td valign="middle" align="left">[<a href="#Function-and-variable-index" title="Index">Index</a>]</td>
+<td valign="middle" align="left">[<a href="#SEC_About" title="About (help)"> ? </a>]</td>
+</tr></table>
+<h1>About This Document</h1>
+
+<p>
+  This document was generated on <i>June 14, 2011</i> using <a href="http://www.nongnu.org/texi2html/"><i>texi2html 5.0</i></a>.
+</p>
+<p>
+  The buttons in the navigation panels have the following meaning:
+</p>
+<table border="1">
+  <tr>
+    <th> Button </th>
+    <th> Name </th>
+    <th> Go to </th>
+    <th> From 1.2.3 go to</th>
+  </tr>
+  <tr>
+    <td align="center"> [ &lt;&lt; ] </td>
+    <td align="center">FastBack</td>
+    <td>Beginning of this chapter or previous chapter</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td align="center"> [ &lt; ] </td>
+    <td align="center">Back</td>
+    <td>Previous section in reading order</td>
+    <td>1.2.2</td>
+  </tr>
+  <tr>
+    <td align="center"> [ Up ] </td>
+    <td align="center">Up</td>
+    <td>Up section</td>
+    <td>1.2</td>
+  </tr>
+  <tr>
+    <td align="center"> [ &gt; ] </td>
+    <td align="center">Forward</td>
+    <td>Next section in reading order</td>
+    <td>1.2.4</td>
+  </tr>
+  <tr>
+    <td align="center"> [ &gt;&gt; ] </td>
+    <td align="center">FastForward</td>
+    <td>Next chapter</td>
+    <td>2</td>
+  </tr>
+  <tr>
+    <td align="center"> [Top] </td>
+    <td align="center">Top</td>
+    <td>Cover (top) of document</td>
+    <td> &nbsp; </td>
+  </tr>
+  <tr>
+    <td align="center"> [Contents] </td>
+    <td align="center">Contents</td>
+    <td>Table of contents</td>
+    <td> &nbsp; </td>
+  </tr>
+  <tr>
+    <td align="center"> [Index] </td>
+    <td align="center">Index</td>
+    <td>Index</td>
+    <td> &nbsp; </td>
+  </tr>
+  <tr>
+    <td align="center"> [ ? ] </td>
+    <td align="center">About</td>
+    <td>About (help)</td>
+    <td> &nbsp; </td>
+  </tr>
+</table>
+
+<p>
+  where the <strong> Example </strong> assumes that the current position is at <strong> Subsubsection One-Two-Three </strong> of a document of the following structure:
+</p>
+
+<ul>
+  <li> 1. Section One
+    <ul>
+      <li>1.1 Subsection One-One
+        <ul>
+          <li>...</li>
+        </ul>
+      </li>
+      <li>1.2 Subsection One-Two
+        <ul>
+          <li>1.2.1 Subsubsection One-Two-One</li>
+          <li>1.2.2 Subsubsection One-Two-Two</li>
+          <li>1.2.3 Subsubsection One-Two-Three &nbsp; &nbsp;
+            <strong>&lt;== Current Position </strong></li>
+          <li>1.2.4 Subsubsection One-Two-Four</li>
+        </ul>
+      </li>
+      <li>1.3 Subsection One-Three
+        <ul>
+          <li>...</li>
+        </ul>
+      </li>
+      <li>1.4 Subsection One-Four</li>
+    </ul>
+  </li>
+</ul>
+
+<hr>
+<p>
+ <font size="-1">
+  This document was generated on <i>June 14, 2011</i> using <a href="http://www.nongnu.org/texi2html/"><i>texi2html 5.0</i></a>.
+ </font>
+ <br>
+
+</p>
+</body>
+</html>

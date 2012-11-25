@@ -1,0 +1,136 @@
+/*
+ * electric circuit analysis package
+ * author: ICHIKAWA, Yuji
+ * date: 2011/06/07
+ * version: 0.1
+ * Copyright (C) 2011 ICHIKAWA, Yuji
+ */
+
+
+part_parameters(parts) := block([result : []],
+  for e in parts do (
+    if member(e[kind_index], two_terminal_parts)
+    then result : endcons(e[symbol_index] = e[value_index][1], result)),
+  return(result))$
+
+
+kirchhoff_laws(I, net) ::= buildq([I, net],
+  block([result : [], net_without_gnd],
+    net_without_gnd : rest(net, 1),
+    for e in net_without_gnd do (
+      result : endcons(lsum(I[i], i, e) = 0, result)),
+    return(result)))$
+
+
+parts_laws(V, I, parts, net) ::= buildq([V, I, parts, net],
+  block([result : [V[1] = 0]], /* Ground voltage = 0 */
+    for e in parts do (
+      if e[kind_index] = VP then
+      /* Probes should have infinite impedance. */
+      result : endcons(I[e[terminal_index][1]] = 0, result)
+      elseif member(e[kind_index], two_terminal_parts)
+      then block([nodes, Z],
+        result : endcons(lsum(I[i], i, e[terminal_index]) = 0, result),
+        nodes : terminals_to_nodes(e[terminal_index], net),
+        if e[kind_index] = VSIN
+        then result : endcons(V[nodes[1]] - V[nodes[2]] = 1, result)
+        else (
+          Z : if e[kind_index] = R then e[symbol_index]
+          elseif e[kind_index] = C then 1/(%i*omega*e[symbol_index])
+          elseif e[kind_index] = L then %i*omega*e[symbol_index],
+          result : endcons(V[nodes[1]] - V[nodes[2]] = Z*I[e[terminal_index][1]], result)))
+      elseif e[kind_index] = OP_AMP
+      then block([nodes],
+        result : append(result, [I[e[terminal_index][1]] = 0, I[e[terminal_index][2]] = 0]),
+        nodes : terminals_to_nodes(e[terminal_index], net),
+        result : endcons(V[nodes[1]] = V[nodes[2]], result))),
+    return(result)))$
+
+
+load_netlist(file) := block([fs, parts : [], n, nodes, line, terminal : 0],
+  fs : openr(file),
+  n : length(node_list(fs)),
+  close(fs),
+  nodes : makelist([], i, 1, n),
+  fs : openr(file),
+  while (line : readline(fs)) # false do block([pl],
+    pl : parse_line(line),
+    if pl # [] then block([terminals : []],
+      for i in pl[terminal_index] do (
+        terminal : terminal + 1,
+        nodes[i + 1] : endcons(terminal, nodes[i + 1]),
+        terminals : endcons(terminal, terminals)
+        ),
+      pl[terminal_index] : terminals,
+      parts : endcons(pl, parts))),
+  close(fs),
+  return([terminal, parts, nodes]))$
+
+
+/* functions for internal use */
+
+/* PSIM netlist (.cct) constants */
+node_index : 3 $
+
+/* parts list constants */
+terminal_index : 3 $
+value_index : 4 $
+
+/* common parts list constants */
+symbol_index : 2 $
+kind_index : 1 $
+
+
+two_terminal_parts : [R, C, L, VSIN]$
+three_terminal_parts : [OP_AMP]$
+one_terminal_parts : [VP]$
+
+number_of_terminals(kind) := 
+  if member(kind, two_terminal_parts) then 2
+  elseif member(kind, three_terminal_parts) then 3
+  elseif member(kind, one_terminal_parts) then 1
+  else error("unknown part")$
+
+psim_value_index(kind) := node_index + number_of_terminals(kind)$
+
+/* example: [R, R1, [0, 1], [1e3]] */
+parse_line(str) := block([ts, result : [], value_i],
+  ts : tokens(str),
+  if charat(ts[kind_index], 1) = "." then return([]),
+  for i : 1 thru symbol_index do
+    result : endcons(parse_string(ts[i]), result),
+  value_i : psim_value_index(result[kind_index]),
+  result : endcons(makelist(parse_string(ts[i]), i, node_index, value_i - 1), result),
+  result : endcons(makelist(prefix_to_number(ts[i]), i, value_i, length(ts)), result),
+  return(result)
+  )$
+
+/* transform prefix of unit to number */
+prefix_to_number(str) := block([last_char : charat(str,slength(str))],
+  if digitcharp(last_char) then parse_string(str)
+  else
+    parse_string(substring(str, 1, slength(str))) *
+    assoc(last_char, ["k"=1e3, "m"=1e-3, "u"=1e-6, "n"=1e-9, "p"=1e-12], 1))$
+
+node_list(file_stream) := block([nodes : {}, line],
+  while (line : readline(file_stream)) # false do block([ts],
+    ts : parse_line(line),
+    if ts # [] then nodes : union(setify(ts[node_index]), nodes)),
+  return (listify(nodes)))$
+
+terminals_to_nodes(terminals, net) := block([result : []],
+  for e in terminals do (
+    for i : 1 thru length(net) do (
+      if member(e, net[i]) then (result : endcons(i, result), return()))),
+  return(result))$
+
+/* unit test */
+circuits_unit_test() := (
+  if prefix_to_number("10") # 10 then error(),
+  if prefix_to_number("10m") # 10*1e-3 then error(),
+  if prefix_to_number("10u") # 10*1e-6 then error(),
+  if prefix_to_number("10n") # 10*1e-9 then error(),
+  if prefix_to_number("10p") # 10*1e-12 then error(),
+  if parse_line("C C1 1 0 100u 0 0") # [C, C1, [1, 0], [100*1e-6, 0, 0]] then error(),
+  if number_of_terminals(R) # 2 then error(),
+  'done)$

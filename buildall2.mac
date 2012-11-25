@@ -3,8 +3,9 @@ load(mext);
 /* Alternate way to build without using chdir */
 
 for package in [ "defmfun1", "maxdoc", "aex", "store" ] do
-  load_in_dsubdir(["ibuild","mac"],[package]);
+      load_in_dsubdir(["ibuild","mac"],[package]);
 
 /* other third party packages adapted to mext */
-for package in [ "nelder_mead", "alt_eigen", "pw" ] do
-  load_in_dsubdir(["ibuild","mac"],[package]);
+for package in [ "nelder_mead", "alt_eigen", "pw", "discrete",
+          "coma", "circuits" ] do
+          load_in_dsubdir(["ibuild","mac"],[package]);

@@ -1,0 +1,42 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing circuits
+
+(in-package :mext-maxima)
+
+(create-distribution "circuits"
+  :loader "load-circuits"
+  :install-only (list "circuits-demo" "circuits-doc"))
+
+(in-package :cl-user)
+
+(mk:defsystem circuits
+  :source-extension "mac"
+  :language :mext-maxima
+  :load-only t
+  :components
+   ((:file "circuits_code")))
+
+(mk:defsystem load-circuits
+  :source-extension "mac"
+  :components
+   ((:file "circuits")))
+
+(mk:defsystem circuits-demo
+   :source-pathname "demo"
+   :components
+   ((:file "active_filter" :source-extension "cct")
+    (:file "active_filter" :source-extension "png")
+    (:file "active_filter" :source-extension "psimsch")
+    (:file "circuits_demo" :source-extension "mac")))
+
+(mk:defsystem circuits-doc
+   :source-pathname "doc"
+   :components
+   ((:file "circuits-standalone" :source-extension "html")
+    (:file "circuits-standalone" :source-extension "texi")))
+
+;(mk:defsystem circuits-rtests
+;  :source-extension "mac"
+;  :source-pathname "rtests"
+;  :components
+;    ( (:file "rtest_circuits")))

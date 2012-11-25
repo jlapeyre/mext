@@ -1,0 +1,151 @@
+\input texinfo
+
+@c NOTE: This template-standalone.texi shows how to create a texinfo file
+@c that yields a stand-alone MYTOPIC.info file.
+@c See template.texi for a texinfo file which is to be part of maxima.info.
+
+@c NOTE: The content of this file was determined by tedious trial and error.
+@c My advice is to keep all elements of this template, from \input to @bye,
+@c otherwise you'll experience cryptic error messages, hair loss, etc.
+
+@c makeinfo MYTOPIC.texi         to make .info
+@c texi2html MYTOPIC.texi        to make .html
+@c texi2pdf MYTOPIC.texi         to make .pdf
+
+@setfilename circuits.info
+@settitle circuits
+
+@ifinfo 
+@macro var {expr}
+<\expr\>
+@end macro
+@end ifinfo
+
+@node Top, Introduction to circuits, (dir), (dir)
+@top
+@menu
+* Introduction to circuits::
+* Definitions for circuits::
+* Function and variable index::
+@end menu
+@chapter circuits
+
+@node Introduction to circuits, Definitions for circuits, Top, Top
+@section Introduction to circuits
+
+@code{circuits} is an package for analyzing electric circuits.
+
+@node Definitions for circuits, Function and variable index, Introduction to circuits, Top
+@section Definitions for circuits
+
+@deffn {Function} kirchhoff_laws (@var{I}, @var{net})
+
+Returns a list with equations by Kirchhoff's current conservation laws.
+The argument @var{I} is used as indexed variable representing each terminal current.
+
+For more information about terminal, see @code{load_netlist}.
+
+@end deffn
+
+@deffn {Function} load_netlist (@var{filename})
+
+Returns a list with three elements
+that are generated from netlist file @var{filename}.
+The first element is a number of total terminals,
+the second is part-list, and the third is node-list.
+Consecutive numbers are automatically generated for all terminals.
+
+Currently, only PSIM netlist format (.cct file) is supported.
+An example of PSIM netlist format.
+@example
+.TIME 1E-005 0.01 0 1 0 0 0 0 0
+R R1 1 2 8k 0 
+R R2 3 4 500 0 
+R R3 1 5 50 0 
+C C1 4 2 0.1u 0 0 
+C C2 4 1 0.1u 0 0 
+OP_AMP U1 0 2 1 5 -5 
+C C3 5 6 1000p 0 0 
+OP_AMP U2 6 7 7 5 -5 
+C C4 5 7 0.01u 0 0 
+R R4 6 0 1k 0 
+VP V2 7 
+VSIN V1 3 0 220 50 0 0 0 
+@end example
+The first element of each rows means a kind of part of row,
+which implies a number of terminal of the part in the view point of netlist,
+the second means a part number,
+the third means a node number connected with the first terminal,
+and similar correspondences follow by the number of rest of terminals.
+Other extra elements are part/simulation characteristics such as parameters, initial condition, and current flag.
+The node indexed by 0 means ground IN THIS FORMAT.
+
+The returned part-list is a list of part information.
+Each element is also a list with kind, symbol(part number),
+a list of terminal number(s)
+a list of part characteristics.
+
+Terminal numbers are generated automatically and consecutively from 1.
+
+The returned node-list is a list of lists of terminals.
+Each element is a list of terminal numbers which are connected with a same node.
+
+@end deffn
+
+@deffn {Function} parts_laws (@var{V}, @var{I}, @var{parts}, @var{net})
+
+Returns a list of equations by current conservation laws in each part
+and impedance laws such as Ohm's law.
+@var{I} is used indexed variable representing each terminal current.
+@var{V} is used indexed variable representing each node voltage.
+
+NOTE: The index for voltage indexed variable starts from 1
+rather than 0 because of compatibility with Maxima list.
+The index 1 means ground
+and the equation @var{V[1]=0} is included in the returned value.
+
+Currently, only sin voltage source is recognized in various sources,
+and its output (voltage between terminals) is normalized to 1
+rather than sin wave.
+You can get a gain of each node against the source as a result
+after solving equations.
+
+@end deffn
+
+@deffn {Function} part_parameters (@var{parts})
+
+Returns a list of equations between a part symbol and its value,
+such as R1=8e3.
+
+It is useful when substituting concrete values for symbols
+in related equations.
+
+@end deffn
+
+@defvr {Variable} kind_index
+Default value: 1
+
+Index of the kind of part in PSIM netlist.
+
+@end defvr
+
+@defvr {Variable} node_index
+Default value: 3
+
+Index of the head of connected nodes in PSIM netlist.
+
+@end defvr
+
+@defvr {Variable} symbol_index
+Default value: 2
+
+Index of the part number in PSIM netlist.
+
+@end defvr
+
+@node Function and variable index,  , Definitions for circuits, Top
+@appendix Function and variable index
+@printindex fn
+@printindex vr
+
+@bye

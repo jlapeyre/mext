@@ -1,0 +1,17 @@
+/*
+ * demonstration of circuits package
+ * author: ICHIKAWA, Yuji
+ * date: 2011/06/07
+ * version: 0.1
+ * Copyright (C) 2011 ICHIKAWA, Yuji
+ * reference: Richard Crandall, "Mathematica for the Sciences"
+ */
+/* load("circuits"); */
+
+[t, parts, net] : load_netlist("active_filter.cct");
+
+eqns : append(kirchhoff_laws(I, net), parts_laws(V, I, parts, net));
+solutions : solve(eqns, append(makelist(V[i], i, 1, length(net)), makelist(I[i], i, 1, t)));
+ratsimp(V[8]), solutions;
+v8s : ratsimp(V[8]), solutions, part_parameters(parts);
+plot2d(cabs(v8s), [omega, 0, 20000]);
