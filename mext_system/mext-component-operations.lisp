@@ -112,57 +112,6 @@
         (maxima::merror (format nil "mext-install: file in the distribution ~s does not exist.~%
  Full source pathname ~s~%" cfpn
                            trial-source-full-pathname))))))
-                              
-
-#|
-
-(defun old-mext-user-install-one (component force file-type data)
-   (when (or (eq force :all) (eq force t)  
-            (and (find force '(:new-source :new-source-and-dependents :new-source-all) :test #'eq)
-		 (needs-compilation component nil)))
-    (let* ((sname (component-pathname component file-type))
-;     this was good      (sdir  (mext:fpathname-directory (component-root-dir component file-type)))
-           (sdir  (mext:fpathname-directory (mext:pathname-as-directory *default-pathname-defaults*)))
-           (sext  (component-extension component file-type))
-           (install-dir 
-            (if (getf data :mext-root) mext::*mext-user-dir-as-list*
-              (append mext::*mext-user-dir-as-list* 
-                      (or (let ((res (getf data :inst-dir)))
-                            (if (null res) nil 
-                              (if (listp res) res (list res))))
-                          (list mext::*system-name*)))))
-           (source-full-pathname (probe-file (component-full-pathname component file-type))))
-      (if source-full-pathname
-          (progn
-            (format t "** Source Full pathname ~s~%" source-full-pathname)
-;            (format t " no probe Full pathname ~s~%" (component-full-pathname component file-type))
- ;           (format t "Just pathname ~s~%" (component-pathname component file-type))
-            (format t " sdir is ~s~%" sdir)
-            (format t " sdir is ~s~%" sdir)
-            (format t " def-pn-def is ~s~%" *default-pathname-defaults*)
-            (format t " sdir is ~s~%" sdir)
-            (format t " pwd is ~s~%" (maxima::$pwd))
-            (format t " install dir is ~s~%" install-dir)
-            (format t " default path is ~s~%" *default-pathname-defaults*)
-;            (format t " enoggh df is ~s~%" 
-            (let ((target-full-pathname (mext:change-root-pathname source-full-pathname 
-                           (mext:fmake-pathname :directory sdir :defaults *default-pathname-defaults*)
-                           (mext:fmake-pathname :directory install-dir :defaults *default-pathname-defaults*))))
-              (format t "** Target path ~s~%" target-full-pathname)
-              (format t " source dir ~s~%" (mext:fmake-pathname :directory sdir :defaults *default-pathname-defaults*))
-              (format t " target dir ~s~%" (mext:fmake-pathname :directory install-dir :defaults *default-pathname-defaults*))
-;            (mext:fensure-directories-exist (mext:pathname-as-directory (mext:fmake-pathname 
-;                                        :name nil :directory install-dir)))
-;            (mext:fensure-directories-exist target-full-pathname)
-              (unless (equal source-full-pathname target-full-pathname)
-                (progn
-                  (mext:fensure-directories-exist target-full-pathname)
-                  (format t "Copying ~s to ~s~%" source-full-pathname target-full-pathname)
-                  (mext::copy-file source-full-pathname target-full-pathname :overwrite t)))
-            ))))))
-;            (mext::copy-file-from-dir-to-dir sname sext sdir install-dir)))))))
-
-|#
 
 ;;; install source files to a subdir of user dir
 (component-operation2 :mext-user-install-source  'mext-user-install-source)
@@ -187,12 +136,9 @@
 
 ;; language definition for translating and compiling maxima source files
 (mk:define-language :mext-maxima
-    :compiler #'(lambda (&rest args) 
+    :compiler #'(lambda (&rest args) ; sometimes 3 args are passed, sometimes 7
                   (format t "defsystem compiling maxima code: args are ~s~%" args)
                   (maxima::$compile_file (car args)))
-;    :compiler #'(lambda (x y z) (declare (ignore y z)) 
-;                  (format t "compiling maxima in defsys, file ~s~%" x)
-;                  (maxima::$compile_file x))
     :loader #'(lambda (x) 
                 (format t "mext-system build: loading maxima file ~s~%" x) (maxima::$load x))
 ;;    :loader #'identity

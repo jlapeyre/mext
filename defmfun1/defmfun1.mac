@@ -11,4 +11,3 @@ mext_provide(
   "defmfun1-max",
   "examples",
   "infix-rule"]);
-

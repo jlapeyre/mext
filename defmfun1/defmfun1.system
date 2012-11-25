@@ -5,6 +5,7 @@
 
 (create-distribution "defmfun1"
   :loader "load-defmfun1")
+;  :install-only "defmfun1-system")
 
 (in-package :cl-user)
 
@@ -28,3 +29,7 @@
   :components
    ((:file "defmfun1")))
   
+;(mk:defsystem defmfun1-system
+;  :source-extension "system"
+;  :components
+;  ((:file "defmfun1")))

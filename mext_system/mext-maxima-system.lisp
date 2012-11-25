@@ -1,6 +1,5 @@
 (in-package :mext-maxima)
 
-
 ;; This is not working. gcl is seeing (debug 0) even when the
 ;; form is preceeded by #-gcl
 ;; 
@@ -156,11 +155,9 @@ This was copied from maxima source init-cl.lisp.")
   (setf *dist-dir* (fpathname-directory
           #-gcl *load-pathname* #+gcl sys:*load-pathname* ))
   (setf *systems-to-compile*
-        (if (getf body-form :no-compile-dist-name) nil
+        (if (getf body-form :dont-compile-dist-name) nil
           name))
   (setf *systems-to-load* name)
-;        (if (getf body-form :no-load-name) nil
-;            name))
   (setf *systems-to-clean* name)
   (setf *systems-to-install* name)
   (setf *systems-to-install-to-mext-root*
@@ -214,6 +211,10 @@ This was copied from maxima source init-cl.lisp.")
 ;; find lisp or mac file in mext installation directories (only user now)
 (defun mext-file-search (name)
   (file-search name *lisp-and-max-exts* (list *mext-user-dir-as-list*)))
+
+
+(defun install-mext-description (dist-name)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -275,22 +276,25 @@ This was copied from maxima source init-cl.lisp.")
         (funcall func))
   t)
 
-;; This installs binaries of each component, or source if load-only was true.
-;; It also installs things through special hooks.
-;; To install source as well, call as well $mext_dist_user_install_source.
-(defmfun $mext_dist_user_install (&optional dist-names)
-  ($mext_dist_user_install_pref_binary dist-names)
+(defmfun $mext_dist_user_install_remaining (&optional dist-names)
+  (mext:install-mext-description ($mext_dist_name))
   ($mext_dist_user_install_other dist-names)
   ($mext_dist_user_install_mext_root dist-names)
   ($mext_dist_user_install_additional))
 
+;; This installs binaries of each component, or source if load-only was true.
+;; It also installs things through special hooks.
+;; To install source as well, call as well $mext_dist_user_install_source.
+(defmfun $mext_dist_user_install (&optional dist-names)
+  ($mext_dist_user_install_remaining dist-names)
+  ($mext_dist_user_install_pref_binary dist-names))
+
+
 ;; This installs everything, but with source, rather than binary
 ;; note the similar name of the first function called.
 (defmfun $mext_dist_user_source_install (&optional dist-names)
-  ($mext_dist_user_install_source dist-names)
-  ($mext_dist_user_install_other dist-names)
-  ($mext_dist_user_install_mext_root dist-names)
-  ($mext_dist_user_install_additional))
+  ($mext_dist_user_install_remaining dist-names)
+  ($mext_dist_user_install_source dist-names))
 
 (defmfun $mext_dist_build (&optional dist-names)
   ($mext_dist_clean dist-names)
