@@ -45,7 +45,7 @@
 (defun mext-clean-intermediate (name component force data)
   (declare (ignore name data))
      #+win32 (format t "In gcl win32, I can't distinguish .LISP from .lisp.~%
-  Not cleaning ~a.LISP~%" (component-pathname component))
+  Not cleaning ~a.LISP~%" (component-pathname component :source))
 	   #-win32 (mext-clean-files component force '("LISP" "UNLISP")))
 
 (component-operation2 :mext-clean-lisp-compilation  'mext-clean-lisp-compilation)

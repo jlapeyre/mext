@@ -9,7 +9,7 @@
 
 ;; for testing
 (defmacro mext-optimize ()
-  `(declaim (optimize (compilation-speed 0) (speed 0) (space 0) (safety 3) #-gcl (debug 3))))
+  `(declaim (optimize (compilation-speed 0) (speed 3) (space 0) (safety 0) #-gcl (debug 3))))
 
 ;; turn off optimization
 ;(defmacro mext-optimize ()
@@ -105,6 +105,12 @@ This was copied from maxima source init-cl.lisp.")
 ;; check if the package :mext-maxima exists already.
 ;; I don't know why the eval-when is necessary, but it is only for the
 ;; form (si:getenv "PWD"), not (truename ".")
+;; Need to add condition for win32 gcl.
+;; (si:getenv "PWD") returns nil.  (si:getenv "HOME") returns
+;; a string representing the user home folder in windows syntax, ie with
+;; backslashes: "C:\\Users\\Tom\somedir"  pathnames and strings in gcl in win32 use unix-like forward
+;; slashes.
+;; but gcl/win32 pwd and chdir use "C:/Users/Tom/somedir"
 #+gcl (eval-when (:compile-toplevel :load-toplevel :execute)
         (setf *default-pathname-defaults* (mext::pathname-as-directory 
                                            (or (si:getenv "PWD") (truename ".")))))
@@ -445,6 +451,8 @@ This was copied from maxima source init-cl.lisp.")
                 (setf dists 
                       (if ($listp dists) (cdr dists)
                         (list ($sconcat dists))))
+		(loop for dist in dists do
+		      ($require dist))
                 (loop for dist in dists collect
                             (mext:fmake-pathname :directory
                                                 (append mext::*mext-user-dir-as-list*
