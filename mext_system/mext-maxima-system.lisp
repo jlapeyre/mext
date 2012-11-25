@@ -78,6 +78,7 @@ This was copied from maxima source init-cl.lisp.")
 (defvar *systems-required-source* nil) ; probably remove
 (defvar *user-install-explicit* nil)
 (defvar *post-user-install-hooks*  nil)
+;; distribution directory
 (defvar *dist-dir* (fpathname-directory
           #-gcl *load-pathname* #+gcl sys:*load-pathname* ))
 (defvar *userdir-pathname* maxima::*maxima-userdir*)
@@ -120,6 +121,9 @@ This was copied from maxima source init-cl.lisp.")
 ;; for registering which mext distributions have been loaded.
 (defvar *installed-dist-table* (make-hash-table :test 'equal))
 
+;; descriptions of distributions
+(defvar *dist-descr-table* (make-hash-table :test 'equal))
+
 ; for use in directory names. We hope the result is a valid and painless directory name on all platforms.
 (defparameter *maxima-and-lisp-version*
   (substitute #\- #\Space (remove #\) (remove #\( (concatenate 'string "v" maxima::*autoconf-version* "-" 
@@ -150,10 +154,17 @@ This was copied from maxima source init-cl.lisp.")
 (defparameter *search-path-lisp-mext-user*
   (concatenate 'string *mext-user-dir-as-string* *lisp-patterns*))
 
+(defun find-mext-description (dist-name)
+  (fmake-pathname :name dist-name :type "mxt" :directory *dist-dir*))
+
 (defun create-distribution (name &rest body-form)
   (setf *dist-name* name)
   (setf *dist-dir* (fpathname-directory
           #-gcl *load-pathname* #+gcl sys:*load-pathname* ))
+  (let ((mxtfile (find-mext-description name)))
+    (unless (probe-file mxtfile)
+      (maxima::merror (intl:gettext "create-distribution: The distribution ~s is missing the description file
+      ~s.~%") name mxtfile)))
   (setf *systems-to-compile*
         (if (getf body-form :dont-compile-dist-name) nil
           name))
@@ -212,9 +223,99 @@ This was copied from maxima source init-cl.lisp.")
 (defun mext-file-search (name)
   (file-search name *lisp-and-max-exts* (list *mext-user-dir-as-list*)))
 
+(defun find-trial-source-full-pathname (cfpn)
+  (let* ((sdir  *dist-dir*)
+         (trial-source-full-pathname 
+          (merge-pathnames cfpn
+    (pathname-as-directory (fmake-pathname :directory sdir)))))
+;      (format t "!!!!! sdir ~s~%" sdir)
+;      (format t "!!!!! tsfp ~s~%" trial-source-full-pathname)
+    trial-source-full-pathname))
 
-(defun install-mext-description (dist-name) t )
+(defun find-source-full-pathname (tsfpn)
+  (let  ((source-full-pathname (probe-file tsfpn)))
+;      (format t "!!!!! sfpn ~s~%" source-full-pathname)
+    (unless source-full-pathname
+      (maxima::merror (intl:gettext "mext-install: file in the source distribution ~s does not exist.~%")
+                              tsfpn))
+    source-full-pathname))
 
+(defun old-find-install-dir (target-info)
+  (let ((install-dir 
+         (if (getf target-info :mext-root) *mext-user-dir-as-list*
+           (append *mext-user-dir-as-list* 
+                   (or (let ((res (getf target-info :inst-dir)))
+                         (if (null res) nil 
+                           (if (listp res) res (list res))))
+                       (list *system-name*))))))
+    (format t "!!!!! install-dir ~s~%" install-dir)
+    install-dir))
+
+(defun find-install-dir (target-info)
+  (format t "finding install dir: sytem name is ~s~%" *system-name*)
+  (let ((install-dir 
+         (if (getf target-info :mext-root) *mext-user-dir-as-list*
+           (append *mext-user-dir-as-list* 
+                   (or (let ((res (getf target-info :inst-dir)))
+                         (if (null res) nil 
+                           (if (listp res) res (list res))))
+                       (list *system-name*))))))
+;    (format t "!!!!! install-dir ~s~%" install-dir)
+    install-dir))
+
+(defun find-target-full-pathname (cfpn install-dir source-full-pathname)
+  (let ((target-full-pathname 
+     (if (eq :relative (car (fpathname-directory cfpn)))
+         (merge-pathnames cfpn (fmake-pathname :directory install-dir :defaults *default-pathname-defaults*))
+       (change-root-pathname source-full-pathname 
+                                  (directory-namestring source-full-pathname)
+                                  (fmake-pathname :directory install-dir :defaults *default-pathname-defaults*)))))
+    target-full-pathname))
+
+(defun install-source-to-target (sfpn tfpn)
+  (when (equal sfpn tfpn)
+    (maxima::merror (intl:gettext
+    "mext-install: Bug. Source and pathname are the same: ~s") sfpn))
+  (fensure-directories-exist tfpn)
+  (format t "mext-install: copying ~s to ~s~%" sfpn tfpn)
+  (copy-file sfpn tfpn :overwrite t))
+
+(defun install-file (pathname target-info)
+  (let* ((install-dir (find-install-dir target-info))
+         (trial-source-full-pathname (find-trial-source-full-pathname pathname))
+         (source-full-pathname (find-source-full-pathname trial-source-full-pathname))
+         (target-full-pathname (find-target-full-pathname pathname install-dir source-full-pathname)))
+;    (format t "!!!!! pathname ~s~%" pathname)
+;    (format t "!!!!! target-info ~s~%" target-info)
+;    (format t "!!!!! install-dir ~s~%" install-dir)
+;    (format t "!!!!! trial-source-full-pathname ~s~%" trial-source-full-pathname)
+;    (format t "!!!!! source-full-pathname)~s~%" source-full-pathname)
+;    (format t "!!!!! target-full-pathname ~s~%" target-full-pathname)
+    (install-source-to-target source-full-pathname target-full-pathname)))
+
+(defun install-mext-description (dist-name)
+  (let ((mxt-file (find-mext-description dist-name))
+        (*system-name* dist-name))
+;    (format t "Installing mxt description file for ~s~%" dist-name)
+;    (format t "Dist directory is ~s~%" *dist-dir*)
+;    (format t "source pathname is ~s~%" mxt-file)
+    (install-file mxt-file nil)))
+
+(defun distribution-description (&rest descr)
+  (let ((name (getf descr :name)))
+    (format t "distribution-description name ~s~%" name)
+    (setf (gethash (maxima::$sconcat name) *dist-descr-table*) descr)))
+
+(defun print-dist-info-record (info txt key)
+  (format t " ~a: ~a~%" txt (getf info key)))
+
+(defun print-dist-info (info)
+  (print-dist-info-record info "Name" :name)
+  (print-dist-info-record info "Description" :long-description)
+  (print-dist-info-record info "Version" :version)
+  (print-dist-info-record info "Author" :author)
+  (print-dist-info-record info "License" :license)
+  (print-dist-info-record info "Maintainer" :maintainer))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -276,6 +377,10 @@ This was copied from maxima source init-cl.lisp.")
         (funcall func))
   t)
 
+;; return name of current distribution.
+(defmfun $mext_dist_name ()
+  mext::*dist-name*)
+
 (defmfun $mext_dist_user_install_remaining (&optional dist-names)
   (mext::install-mext-description ($mext_dist_name))
   ($mext_dist_user_install_other dist-names)
@@ -286,9 +391,8 @@ This was copied from maxima source init-cl.lisp.")
 ;; It also installs things through special hooks.
 ;; To install source as well, call as well $mext_dist_user_install_source.
 (defmfun $mext_dist_user_install (&optional dist-names)
-  ($mext_dist_user_install_remaining dist-names)
-  ($mext_dist_user_install_pref_binary dist-names))
-
+  ($mext_dist_user_install_pref_binary dist-names)
+  ($mext_dist_user_install_remaining dist-names))
 
 ;; This installs everything, but with source, rather than binary
 ;; note the similar name of the first function called.
@@ -320,7 +424,8 @@ This was copied from maxima source init-cl.lisp.")
             ((= 2 nfile)
              ($load (namestring (mext:fmake-pathname :name (first file) :type (second file) :directory new-dir))))
             (t
-             (merror "File specification ~a is neither a string nor a list of one or two strings.~%"))))))
+             (merror 
+              (intl:gettext "File specification ~a is neither a string nor a list of one or two strings.~%")))))))
 
 ;; use load_pathname if defined, else *default-pathname-defaults*
 (defmfun $load_in_subdir (file &optional dir)
@@ -338,8 +443,7 @@ This was copied from maxima source init-cl.lisp.")
             ((= 2 nfile)
              ($load (namestring (mext:fmake-pathname :name (first file) :type (second file) :directory new-dir))))
             (t
-             (merror "File specification ~a is neither a string nor a list of one or two strings.~%"))))))
-  
+             (merror (intl:gettext "File specification ~a is neither a string nor a list of one or two strings.~%")))))))
 
 (defmfun $load_files_in_subdir (files &optional dir)
   (unless ($listp files)
@@ -366,6 +470,7 @@ This was copied from maxima source init-cl.lisp.")
 ;; satisfy a mext_require call
 (defmfun $mext_provide (name files &optional dir)
   (let ((dir (if dir dir (cons '(mlist simp) (list ($sconcat name))))))
+    ($load_files_in_subdir (list '(mlist simp) (list '(mlist simp) name "mxt")) dir)
     ($load_files_in_subdir files dir)
     ($mext_provided name)))
 
@@ -447,7 +552,7 @@ This was copied from maxima source init-cl.lisp.")
       ($chdir (namestring (mext:fmake-pathname :directory 
             (cons :relative (make-list n :initial-element :up ))
                                          :name nil :type nil :defaults *default-pathname-defaults*)))
-    (merror "Invalid number to updir.")))
+    (merror (intl:gettext "Invalid number to updir."))))
 
 (defmfun $list_directory ( &optional dirname)
   (cons '(mlist simp) (mext:list-directory (if dirname dirname *default-pathname-defaults*))))
@@ -490,6 +595,12 @@ This was copied from maxima source init-cl.lisp.")
 (defmfun $mkdir (filespec &optional (mode "0770"))
   (mext::mkdir filespec mode))
 
-;; return name of current distribution.
-(defmfun $mext_dist_name ()
-  mext::*dist-name*)
+;; not optional! but otherwise, I don't know how to trap no argument
+(defmfun $mext_info ( &optional (dist-name nil))
+;  (format t "distnae is '~s'~%" dist-name)
+  (if (null dist-name)
+      (merror (intl:gettext "mext_info: mext_info requires an argument.~%"))
+    (let* ((sname ($sconcat dist-name))
+           (info (gethash sname mext::*dist-descr-table*)))
+      (if info (mext::print-dist-info info)
+        (merror (intl:gettext "*** Unknown distribtuion '~a'.~%") sname)))))

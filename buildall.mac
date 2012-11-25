@@ -13,6 +13,8 @@ for package in [ "defmfun1", "maxdoc", "aex", "store" ] do
   buildall_mext(package);
 
 /* other third party packages adapted to mext */
+/*
 for package in [ "nelder_mead", "alt_eigen", "pw", "discrete",
           "coma" ] do
   buildall_mext(package);
+*/
