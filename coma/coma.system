@@ -1,0 +1,33 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing coma
+
+(in-package :mext-maxima)
+
+(create-distribution "coma"
+   :loader "load-coma"
+   :install-only "coma-wxm")
+;  :install-only "coma-rtests"
+
+(in-package :cl-user)
+
+(mk:defsystem coma
+  :source-extension "mac"
+  :language :mext-maxima
+  :load-only t
+  :components
+   ((:file "coma_code")))
+
+(mk:defsystem load-coma
+  :source-extension "mac"
+  :components
+   ((:file "coma")))
+
+(mk:defsystem coma-wxm
+   :components
+   ((:file "coma" :source-extension "wxm")))
+
+;; (mk:defsystem coma-rtests
+;;   :source-extension "mac"
+;;   :source-pathname "rtests"
+;;   :components
+;;     ( (:file "rtest_coma")))

@@ -1,0 +1,4 @@
+load(mext);
+load_in_subdir(["coma","system"]);
+mext_dist_clean();
+mext_dist_build();

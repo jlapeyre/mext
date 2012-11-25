@@ -284,6 +284,14 @@ This was copied from maxima source init-cl.lisp.")
   ($mext_dist_user_install_mext_root dist-names)
   ($mext_dist_user_install_additional))
 
+;; This installs everything, but with source, rather than binary
+;; note the similar name of the first function called.
+(defmfun $mext_dist_user_source_install (&optional dist-names)
+  ($mext_dist_user_install_source dist-names)
+  ($mext_dist_user_install_other dist-names)
+  ($mext_dist_user_install_mext_root dist-names)
+  ($mext_dist_user_install_additional))
+
 (defmfun $mext_dist_build (&optional dist-names)
   ($mext_dist_clean dist-names)
   ($mext_dist_load dist-names)

@@ -1,0 +1,12 @@
+This is the 'discrete' pacakge packaged for
+the mext system.
+
+load("./ibuild.mac"); builds and installs compiled
+code
+
+load("./ibuild.mac"); builds and installs source
+code only.
+
+This can be fine-tuned further by putting :load-only t
+in the appropriate places in the 'discrete.system'.
+

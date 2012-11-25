@@ -1,0 +1,2 @@
+mext_provide( "coma",
+  [ "coma_code"]);

@@ -1,0 +1,711 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 0.8.7 ] */
+
+/* [wxMaxima: title   start ]
+Maxima Control Engineering Package COMA
+("COntrol engineering with MAxima")
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+Wilhelm Haager, 2011-03-14 (wilhelm.haager@htlstp.ac.at)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: section start ]
+Plot-Routines
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+List "plot_defaults" holds default options for graphic functions
+in the style of an assiciative array:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+plot_defaults;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Plot of FOUR functions with ONE variable each:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+plot([sin(5*x)**2,0.8*sin(5*y)**2,x,0.8*y],xrange=[-0.5,1.5],
+color=[red,green,brown,blue],line_type=[solid,solid,dots,dots])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Plot of TWO functions with TWO variables each:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+plot([sin(5*x)**2+0.8*sin(5*y)**2,x+0.8*y],
+xrange=[-0.5,1.5],surface_hide=true,color=[red,green,brown,blue])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Plot of the damping of a transfer function with respect to the parameter "a":
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f:(s+a)/(s^3+a*s^2+2*s+a);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+plot('damping(f),xrange=[0,5]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+plot('damping(f),logx=true,logy=true,xrange=[0.05,50]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Isolines of the damping of a transfer function with respect to two parameters "a" and "b":
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f:1/(s^5+s^4+6*s^3+a*s^2+b*s+1);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+contourplot('damping(f),a,b,
+xrange=[0,10], yrange=[0,10],
+contours=[0.10,0.05,0,-0.05,-0.1,-0.15],
+color=[green,green,black,red,red,red])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Transfer Functions:
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+List of transfer functions with random coefficients:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fli:makelist(rantranf(3),k,1,4);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Checking the stability of the transfer functions:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+stablep(fli);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+List of stable transfer functions with random coefficients:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fli:makelist(stable_rantranf(3),k,1,4);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Checking the stability of the transfer functions:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+stablep(fli);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+List with open loop transfer functions:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fo:[k/s,5/(s*(s+3)),1-b/s];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculatioen of the closed loop transfer functions:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fw:closed_loop(fo);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Derermining the types of the transfer functions:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+tranftype(fo);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+tranftype(fw);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+open_loop(fw);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+"Generic" transfer function with symbolic coefficients:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+gentranf(a,3,b,5);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Transfer function of an impedance chain with series resistances and traverse capacitors:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+impedance_chain(R,1/(s*C),4);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Fifth order Pade approximation of a time delay:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+time_delay(T,5);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+3. Laplace-Transform, Step Response
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+Laplace transform and inverse Laplace transform are part of Maxima:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+laplace(t^2*sin(a*t),t,s);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ilt(1/(s^3+2*s^2+2*s+1),s,t);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ilt(1/((s+a)^2*(s+b)),s,t);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Inverse Laplace transform fails at higher order transfer functions:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ilt(1/(s^3+2*s^2+3*s+1),s,t);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the Inverse Laplace transform with numeric calculation of the poles:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+nilt(1/(s^3+2*s^2+3*s+1),s,t);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+List of second order systems:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+pt2li:create_list(1/(s^2+2*d*s+1), d,
+      [0.0001,0.1,0.2,0.3,0.4,0.5]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Unit step responses of the second order systems:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+step_response(pt2li)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+List of time delay systems:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+dli:makelist(time_delay(k,15)/(1+s),k,1,6)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Unit step responses of the time delay systems (using 15th-order Pade-approximations ):
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+step_response(dli,yrange=[-0.3,1.3])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Frequency Response
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+Magintude plots of second order systems:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+magnitude_plot(pt2li, yrange=[0.1,10])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Phase plots of second order systems:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+phase_plot(pt2li)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Bode plot (magnitude plot and phase plot together:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bode_plot(pt2li,yrange=[[0.1,10],[-180,0]])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Nyquist plots (frequency response locus) of second order systems:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+nyquist_plot(pt2li, xrange=[-3,3], yrange=[-5,1],
+    dimensions=[400,400], nticks=2000)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the phase shift of a frequency response in degrees:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f:5*(1+5*s)/((1+3*s)*(1+s));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+phase(f);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Investigations in the s-Plane
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: input   start ] */
+fli:makelist(stable_rantranf(5),k,1,2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculating the zeros and poles of a list of transfer functions:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+zeros(fli);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+poles(fli);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Zeros and poles of a list of transfer functions in the complex plane:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+poles_and_zeros(fli,xrange=[-10,1],yrange=[-3,3])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of closed loop transfer functions:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fli:closed_loop(makelist(k*((s-a)*(s+1))
+    /(s*(s-2)*(s+7)),a,-11,-8));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Root locus plots with respect to the open loop gain of a list
+of transfer functions in the complex plane:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+root_locus(fli,xrange=[-17,3],
+     yrange=[-6,6],nticks=5000)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Root locus plots with respect to the damping ratio of a
+second order of transfer function:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+root_locus(1/(s**2+a*s+1),xrange=[-4,1],
+     trange=[1e-4,3],nticks=5000);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Stability Behaviour
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+Fifth order transfer function and closed loop transfer function (with additional open loop gain k):
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f:(4*s^2+9*s+6)/(2*s^5+6*s^4+9*s^3+10*s^2+5*s+1);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+fw:closed_loop(k*f);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Stability limit with respect to the open loop gain k:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lim:stability_limit(fw,k);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the stability using the Hurwitz criterion:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(hurwitz(denom(fw)));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+List of three transfer functions: below, at and above the stability limit:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+kli:ev([1.1*k,k,0.9*k],lim,eval,numer);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+foli:create_list(k*f,k,kli);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+fwli:closed_loop(foli)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Checking the stability using the predicate function "stablep":
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+stablep(fwli);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+step_response(fwli,xrange=[0,50])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+foli;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the gain crossover frequencies:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+float(gain_crossover(foli));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the phase margin (unstable closed loop systems have a negative value):
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+phase_margin(foli);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the phase crossover frequencies:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+float(phase_crossover(foli));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the gain margin (unstable closed loop systems have a value less than one):
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+gain_margin(foli);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the (absolute) damping (unstable systems have a negative value):
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+damping(fwli);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the (relative) damping (i.e. damping ratio),
+unstable systems have a negative value:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+damping_ratio(fwli);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+List of transfer functions with two symbolic coefficients a and b
+and another varying coefficient:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fli:makelist(1/(s^5+3*s^4+k*s^3+a*s^2+b*s+1),k,2,6);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Graphical representation of the stability limit with respect to the two coefficients a and b:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+stable_area(fli,a,b,xrange=[0,20],yrange=[0,10]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Controller Design
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+Transfer function of a plant to be controlled:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fs:2/((1+5*s)*(1+s)**2*(1+0.3*s));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+List with three controllers: I-, PI- and PID-controller:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[fri,frpi,frpid]:[1/(s*Ti),
+kr*(1+1/(s*Tn)),(1+s*Ta)*(1+s*Tb)/(s*Tc)];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the I-controller according to the gain optimum:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g1:gain_optimum(fs,fri);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the PI-controller according to the gain optimum:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g2:gain_optimum(fs,frpi);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the PID-controller according to the gain optimum:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g3:gain_optimum(fs,frpid);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+List with all three dimensioned controllers:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reli:float(ev([fri,frpi,frpid],[g1,g2,g3]));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Comparison of the closed loop step responses of the controlled systems:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+step_response(float(ev(closed_loop(reli*fs),res)));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Transfer function of a plant with symbolic coefficients:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fs:2/((1+a*s)*(1+s**2)*(1+b*s));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Gain optimum also handles plants with symbolic coefficients:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+gain_optimum(fs,frpi);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+Optimization
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+Transfer function with two symbolic parameters a and b:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f:1/(s**3+a*s**2+b*s+1);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Deviation from the stationary value in response to an input step:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+x:ratsimp((1-f)/s);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Integral of squared error (ISE-criterion):
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+iise:ise(x);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Optimization of the two symbolic parameters a and b:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+abl:ratsimp(jacobian([iise],[a,b]));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+realonly:true;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+res:solve(abl[1],[a,b]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Optimum transfer function:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fopt:ev(f,res);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: section start ]
+State Space Methods
+   [wxMaxima: section end   ] */
+
+/* [wxMaxima: comment start ]
+System matrix A of an RLC-circuit:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+A:matrix([-R/L,0,-1/L,0],[0,-R/L,1/L,-1/L],
+[1/C1,-1/C1,0,0],[0,1/C1,0,0]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Input matrix B of an RLC-circuit:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+B:matrix([1/L],[0],[0],[0]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Output matrix C of an RLC-circuit:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+C:matrix([0,0,0,1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+A list of the state matrices A, B, and C forms a "system", which
+can be checked with the predicate functions "systemp" and "nsystemp":
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+circuit:[A,B,C];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+systemp(circuit);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+nsystemp(circuit);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the transfer function from the state matrices A, B and C,
+which can be performed in several ways:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f:transfer_function(circuit);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+transfer_function(A,B,C);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calcualtion of the transfer function of the circuit using "impedance_chain"
+gives the same result, expectedly:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f:impedance_chain(R+s*L,1/(s*C1),2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Transformation of the state matrices into the controller canonical form:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+circ1:controller_canonical_form(f);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Transformation of the state matrices into the observer canonical form:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+circ2:observer_canonical_form(f);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the controllability matrix:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+h1:ratsimp(controllability_matrix(A,B));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Calculation of the observability matrix:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+h2:observability_matrix(circuit);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+The rank of those matrices show, whether the system is controllable
+and observable:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[rank(h1),rank(h2)];
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

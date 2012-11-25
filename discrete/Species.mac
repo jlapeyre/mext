@@ -1328,9 +1328,10 @@ ratfun_to_diffeq(ratfun, fun) := block(
  * algeqtodiffeq
  ****/
 
+/* gjl 2012, changed Y to YY */
 algeq_to_diffeq(eq, fun) := block(
-  [x,y,g,u,v,deg,Y,A,i],
-  local(Y),
+  [x,y,g,u,v,deg,YY,A,i],
+  local(YY),
   eq: expand(num(ratsimp(rhs(eq)-lhs(eq)))),
   if hipow(eq, fun)=1 then return(eq),
   y: op(fun),
@@ -1339,15 +1340,15 @@ algeq_to_diffeq(eq, fun) := block(
   [u,v,g]: gcdex(diff(eq,y),eq,y),
   if not freeof(y, g) then return(algeq_to_diffeq(ratsimp(eq/g), fun)),
   deg: hipow(eq,y),
-  Y[1]: ratsimp(remainder(-u*g*diff(eq,x),eq,y)),
+  YY[1]: ratsimp(remainder(-u*g*diff(eq,x),eq,y)),
   for d:2 thru deg-1 do (
-    Y[d]: ratsimp(remainder(diff(Y[d-1],x)+diff(Y[d-1],y)*Y[1], eq, y))),
+    YY[d]: ratsimp(remainder(diff(YY[d-1],x)+diff(YY[d-1],y)*YY[1], eq, y))),
   A: [append([1,0], makelist(0, deg-2), [1]),
       append([0,1], makelist(0, deg-2), [y(x)])],
   for d:1 thru deg-1 do (
     A: append(A,[
       append(
-        makelist(ratcoef(Y[d], y, i), i, 0, deg-1),
+        makelist(ratcoef(YY[d], y, i), i, 0, deg-1),
         [diff(y(x), x, d)])])),
   A: _gaussElim(apply('matrix, A)),
   i:1,
