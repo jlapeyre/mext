@@ -1,0 +1,141 @@
+mext maxima third party code installation system.
+
+This folder tree contains the mext system, as well
+as several 'packages' from the maxima third party code
+repository (currently, we refer to these as 'distribtutions'
+rather than 'packages'.)
+
+The mext system packages the distributions in a more-or-less
+uniform way. They are built and installed using only maxima,
+rather than depending directly on any system tool.
+
+Features:
+
+* Only one subdirectory of the user directory is added to
+the maxima search paths. This directory contains files that
+load the distributions. Actually the subdirectory is named
+for the maxima version and the lisp implementation and
+the lisp version. So different maxima and lisps can be
+used in parallel.
+
+* A distribution can be loaded with require('distname);
+or require("distname");
+The distribution is registered for the session and subsequent
+calls to require('distname) do nothing.
+
+* Installing binary only, source only, or a combination is
+supported.
+
+* Building is done mostly with defsystem. There are some
+other parts. Much of the distribution definition follows
+defsystem or asdf exactly. This might make it easier to
+move to asdf in the future.
+
+* Functions for dealing with pathnames, files, and directories
+are included in mext. This includes cl-fad, a portable pathname
+library, hacked to support gcl somewhat. Some functions in gcl
+are missing, not ansi-compliant, or broken. mext uses an
+interface to many of the ansi pathname functions and cl-fad functions,
+implemented as macros with the ansi name preceeded with an 'f'.
+For behavior not specified by the standard, I standarized on
+sbcl. Most macros for most lisps expand to just the standard
+function. This is far from robust and well tested, but
+currently works for installing distributions with six lisp
+implementations under linux and gcl under win32.
+
+Non-features:
+ Not much documentation. But here are some examples (with some
+ lines edited out.)
+
+(%i1) showtime:true$
+Evaluation took 0.0000 seconds (0.0000 elapsed) using 0 bytes.
+(%i2) load(mext);
+Evaluation took 0.0300 seconds (0.0330 elapsed) using 4.570 MB.
+(%o2)                  /home/jlapeyre/.maxima/mext.lisp
+(%i3) require(aex);
+loading /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/aex.mac
+loading /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/defmfun1.mac
+loading /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/maxdoc.mac
+Evaluation took 0.4800 seconds (0.4680 elapsed) using 92.449 MB.
+(%o3)  /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/aex.mac
+(%i4) require(aex);
+Evaluation took 0.0000 seconds (0.0000 elapsed) using 0 bytes.
+(%o4)                                true
+(%i5) require(nelder_mead);
+loading /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/nelder_mead.mac
+Evaluation took 0.0600 seconds (0.0550 elapsed) using 11.157 MB.
+(%o5) /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/nelder_mead.mac
+(%i6) require(pw);
+loading /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/pw.mac
+Evaluation took 0.8900 seconds (0.9070 elapsed) using 135.455 MB.
+(%o6)  /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/pw.mac
+(%i7) mext_info(aex);
+ Name: aex
+ Description: array representation for maxima expressions
+ Version: 0.0.1
+ Author: John Lapeyre
+ License: GPL
+ Maintainer: John Lapeyre
+(%o7)                                done
+(%i8) mext_info(nelder_mead);
+ Name: nelder_mead
+ Description: Nelder-Mead optimization algorithms
+ Version: 
+ Author: Mario S. Mommer
+ License: in_dist
+ Maintainer: John Lapeyre
+(%o8)                                done
+(%i9) mext_info(pw);
+ Name: pw
+ Description: functions for symbolic work with piecewise functions
+ Version: 6.5
+ Author: Richard V. Hennessy <rich.hennessy@verizon.net>
+ License: GPL2
+ Maintainer: John Lapeyre
+(%o9)                                done
+(%i10) mext_test(aex);
+Running tests in /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/aex/rtests/rtest_take.mac: 30/30 tests passed
+Running tests in /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/aex/rtests/rtest_table.mac: 2/2 tests passed
+Running tests in /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/aex/rtests/rtest_list.mac: 9/9 tests passed
+Running tests in /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/aex/rtests/rtest_afuncs.mac: 2/2 tests passed
+No unexpected errors found out of 43 tests....
+(%o10)                               done
+(%i11) mext_test(nelder_mead);
+No unexpected errors found out of 0 tests.
+(%o11)                               done
+(%i12) mext_test(pw);
+Running tests in /home/jlapeyre/.maxima/mext/v5.28.0-sbcl-v1.0.57.0.debian/pw/rtests/rtest_pw.mac: 226/226 tests passed
+No unexpected errors found out of 226 tests.
+(%o12)                               done
+(%i13) pwd();
+(%o13)                    /home/jlapeyre/maxima/mext/
+(%i14) list_directory();
+          .... 
+(%i15) ?? nelder
+
+------------------------------------------------
+ -- Function: nelder_mead: nelder_mead(<expr>, <vars>, <init>)
+    Section: Functions and Variables for Equations
+
+Description:
+   The Nelder-Mead optimization algorithm. 
+Arguments:
+   nelder_mead requires three arguments.
+    The second argument <vars> must be a list of symbols.
+    The third argument <init> must be a list of numbers.
+
+Examples:
+
+   Find the minimum of a function at a non-analytic point. 
+(%i1) nelder_mead(if x<0 then -x else x^2, [x], [4]);
+(%o1) [x = 9.536387892694629e-11]
+(%i1) f(x) := if x<0 then -x else x^2$
+(%i2) nelder_mead(f, [x], [4]);
+(%o2) [x = 9.536387892694628e-11]
+(%i3) nelder_mead(f(x), [x], [4]);
+(%o3) [x = 9.536387892694628e-11]
+(%i1) nelder_mead(x^4+y^4-2*x*y-4*x-3*y, [x,y], [2,2]);
+(%o1) [x = 1.157212489168102,y = 1.099342680267472]
+
+
+  Author: Mario S. Mommer.
