@@ -194,7 +194,7 @@
 ;                  (format t "compiling maxima in defsys, file ~s~%" x)
 ;                  (maxima::$compile_file x))
     :loader #'(lambda (x) 
-                (format t "mext-system build: loading  ~s~%" x) (maxima::$load x))
+                (format t "mext-system build: loading maxima file ~s~%" x) (maxima::$load x))
 ;;    :loader #'identity
     :source-extension "mac"
     :binary-extension mext::*binary-ext*)

@@ -1,0 +1,9 @@
+load(mext);
+
+for package in [ "defmfun1", "maxdoc", "aex", "store" ] do
+  load_in_subdir(["ibuild","mac"], [package]);
+
+/* other third party packages adapted to mext */
+
+for package in [ "nelder_mead", "alt_eigen", "pw", "discrete" ] do
+  load_in_subdir(["ibuild","mac"], [package]);

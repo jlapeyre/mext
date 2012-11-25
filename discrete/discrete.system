@@ -1,0 +1,39 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing 
+;; package 'discrete'
+
+(in-package :mext-maxima)
+
+(create-distribution "discrete"
+  :loader "load-discrete"
+;;  :install-only "discrete-rtests"
+  )
+
+(in-package :cl-user)
+
+(mk:defsystem discrete
+  :source-extension "mac"
+  :language :mext-maxima
+  :components
+   (
+    (:file "Species")
+    (:file "logic_ops" :load-only t) ; do not compile
+    (:file "boolmin" :source-extension "lisp"
+            :language :lisp)
+    (:file "logic")
+;    (:file "discrete_nocompile" :load-only t)
+    (:file "discrete_code")
+    (:file "group" :source-extension "lisp"
+           :language :lisp)))
+
+;; neither compile nor load when building
+(mk:defsystem load-discrete
+  :source-extension "mac"
+  :components
+   ((:file "discrete")))
+  
+ ;; (mk:defsystem discrete-rtests
+ ;;  :source-extension "mac"
+ ;;  :source-pathname "rtests"
+ ;;  :components
+ ;;    ( (:file "rtest_discrete")))

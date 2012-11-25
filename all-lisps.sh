@@ -1,12 +1,12 @@
-#
+#!/bin/sh
 
-# build mext and all mext packages for several versions of maxima
-# compiled with different lisps
+# Build mext and all mext packages for several versions of maxima
+# compiled with different lisps. For unix-like OS's.
 
-# Tests with each one
-# aex : smaxima ok, gmaxima no tests found, clmaxima 1 failed, emaxima ok, 
-#   cmumaxima ok, ccmaxima ok
-
+# Names of the executable maxima programs. These are soft
+# links in /usr/local/bin to builds of maxima with differenct
+# lisp implementations. Allegro worked with an earlier version
+# of this software, as well.
 maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
 #maximas="gmaxima"
 
@@ -32,14 +32,6 @@ build_mext_packages () {
 
 # print the big document page
 print_max_doc () {
- for maxima in $maximas
-     do
-      $maxima -b testdoc.mac
- done
-}
-
-# run rtests in the distribution folders
-mext_tests () {
  for maxima in $maximas
      do
       $maxima -b testdoc.mac

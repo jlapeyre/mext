@@ -1,0 +1,12 @@
+/* require("maxdoc"); */
+
+if get('graphs, 'version)=false then load(graphs)$
+
+mext_provide("discrete",
+  ["Species",
+   "logic_ops",
+   "boolmin",
+   "logic",
+   "discrete_code",
+   "group"]);
+ 
