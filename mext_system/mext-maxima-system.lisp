@@ -1,5 +1,21 @@
 (in-package :mext-maxima)
-;(declaim (optimize (speed 3) (space 0) (safety 0) #-gcl (debug 0)))
+
+
+;; This is not working. gcl is seeing (debug 0) even when the
+;; form is preceeded by #-gcl
+;; 
+;(defmacro mext-optimize ()
+;  `(declaim (optimize (compilation-speed 0) (speed 3) (space 0) (safety 0) #-gcl (debug 0))))
+
+;; for testing
+(defmacro mext-optimize ()
+  `(declaim (optimize (compilation-speed 0) (speed 0) (space 0) (safety 3) #-gcl (debug 3))))
+
+;; turn off optimization
+;(defmacro mext-optimize ()
+;       )
+
+(mext-optimize)
 
 ;;; Code for building, loading, installing a maxima
 ;;; distribution.  Here, 'distribution' means some third

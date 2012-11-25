@@ -40,5 +40,6 @@
              :fenough-namestring
              :change-root-pathname
              :directory-pathname-p
+             :mext-optimize
 )))
 ;    (:import-from :gjl.lisp-util :ensure-list)))

@@ -11,7 +11,8 @@
 ;;; right now, they are for debugging.
 
 (in-package :maxima)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+(mext:mext-optimize)
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (use-package :gjl.lisp-util :max-doc)
 
 (max-doc::set-cur-sec 'max-doc::doc-fandv)

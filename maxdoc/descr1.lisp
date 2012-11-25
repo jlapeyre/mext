@@ -6,7 +6,8 @@
 ;;; (at your option) any later version.
 
 (in-package :descr1)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+(mext:mext-optimize)
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (defvar *prompt-prefix* "")
 (defvar *prompt-suffix* "")

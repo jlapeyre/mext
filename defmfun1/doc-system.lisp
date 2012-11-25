@@ -7,6 +7,7 @@
 
 
 (in-package :doc-system)
+(mext:mext-optimize)
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (defvar *doc-systems* nil)

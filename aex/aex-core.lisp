@@ -6,6 +6,7 @@
 ;;; (at your option) any later version.
 
 (in-package :maxima)
+(mext:mext-optimize)
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (use-package :gjl.lisp-util)
 (use-package :max-doc)

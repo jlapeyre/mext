@@ -7,7 +7,8 @@
 
 (if (find-package :defmfun1 ) t (defpackage :defmfun1 (:use :common-lisp :gjl.lisp-util )))
 (in-package :defmfun1)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+
+(mext:mext-optimize)
 
 (use-package :gjl.lisp-util :maxima)
 (use-package :maxima-dev-doc)

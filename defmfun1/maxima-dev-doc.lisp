@@ -6,6 +6,7 @@
 ;;; (at your option) any later version.
 
 (in-package :maxima-dev-doc)
+(mext:mext-optimize)
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (defstruct (doc-item)

@@ -1,3 +1,7 @@
+(in-package :maxima)
+
+(mext:mext-optimize)
+
 (max-doc::set-cur-sec 'max-doc::equations-fandv)
 
 (defmfun1 ($nelder_mead :doc) (expr (vars :symbol-listof) (init :number-listof) )

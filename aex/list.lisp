@@ -1,5 +1,5 @@
 (in-package :max-list)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+(mext:mext-optimize)
 
 ;; this is worthless at the moment. For some reason, the functions are not imported,
 ;; so I have to qualify calls to all max-doc functions

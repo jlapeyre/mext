@@ -3,7 +3,8 @@
 ;; potentially break maxima, but test suite passes till now.
 
 (in-package :maxima)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+(mext:mext-optimize)
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 ;; Document this!!
 
 ;; [1,2] not alike <<1,2>>, but it probably should be

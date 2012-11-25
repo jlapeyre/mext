@@ -1,4 +1,5 @@
 (in-package :neldermead)
+(mext:mext-optimize)
 
 (defclass cached-simplex-data ()
   ((pseudopivot	:initform nil)

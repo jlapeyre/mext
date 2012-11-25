@@ -7,6 +7,7 @@
 
 (in-package :maxima)
 (use-package :gjl.lisp-util)
+(mext:mext-optimize)
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (max-doc::set-cur-sec 'max-doc::misc-fandv)
@@ -137,7 +138,6 @@
             (let* ,(defmfun1-write-let-bindings name nargs all-args supplied-p-hash rest)
               (declare (ignorable defmfun1-func-name))
               (declare (fixnum ,nargs))
-              (declare (optimize speed (debug 0) (safety 0)))
               ,@declare-form ; moved out of body, because it must occur after parameter list
               (,@(if opt `(dbind (,opt-args ,restarg) (defmfun1::collect-opt-args ,args ,nreq))
                       `(let ((,restarg ,args))))

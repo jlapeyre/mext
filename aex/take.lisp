@@ -1,6 +1,7 @@
 (if (find-package :maxima-take ) t (defpackage :maxima-take (:use :common-lisp )))
 (in-package :maxima-take)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+(mext:mext-optimize)
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (use-package :gjl.lisp-util)
 (use-package :max-doc)

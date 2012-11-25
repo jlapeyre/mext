@@ -1,5 +1,6 @@
 (in-package :info-database)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+(mext:mext-optimize)
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (defun autoload-maxima-index ()
   ;; Autoload the index, but make sure we use a sensible *read-base*.

@@ -6,7 +6,8 @@
 ;;; (at your option) any later version.
 
 (in-package :maxima)
-(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+(mext:mext-optimize)
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 ;;  The functions manage a hash table of documenation strings keyed by strings.
 ;;  The data is not persistant.
 ;;  The data is accesible via maxima describe(), and ? and ??
