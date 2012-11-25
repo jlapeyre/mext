@@ -213,8 +213,8 @@ This was copied from maxima source init-cl.lisp.")
   (file-search name *lisp-and-max-exts* (list *mext-user-dir-as-list*)))
 
 
-(defun install-mext-description (dist-name)
-  )
+(defun install-mext-description (dist-name) t )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -277,7 +277,7 @@ This was copied from maxima source init-cl.lisp.")
   t)
 
 (defmfun $mext_dist_user_install_remaining (&optional dist-names)
-  (mext:install-mext-description ($mext_dist_name))
+  (mext::install-mext-description ($mext_dist_name))
   ($mext_dist_user_install_other dist-names)
   ($mext_dist_user_install_mext_root dist-names)
   ($mext_dist_user_install_additional))

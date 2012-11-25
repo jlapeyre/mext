@@ -69,6 +69,17 @@
 ;; file-type -- must be :binary or :source. We interpret these as we like.
 ;; data   -- we use this for additional info on where to install.
 
+(defun make-source-full-pathname (cfpn)
+  (let* ((sdir  mext::*dist-dir*)
+         (trial-source-full-pathname 
+          (merge-pathnames cfpn
+             (mext:pathname-as-directory (mext:fmake-pathname :directory sdir))))
+           (source-full-pathname (probe-file trial-source-full-pathname)))
+;      (format t "!!!!! sdir ~s~%" sdir)
+;      (format t "!!!!! tsfp ~s~%" trial-source-full-pathname)
+;      (format t "!!!!! sfpn ~s~%" source-full-pathname)
+    source-full-pathname))
+
 (defun mext-user-install-one (component force file-type data)
    (when (or (eq force :all) (eq force t)  
             (and (find force '(:new-source :new-source-and-dependents :new-source-all) :test #'eq)
@@ -89,11 +100,8 @@
 ;      (format t "!!!!! rootdir ~s~%" (component-root-dir component file-type))
 ;      (format t "!!!!! cpn ~s~%" (component-pathname component file-type))
 ;      (format t "!!!!! cfpn ~s~%" cfpn)
-;      (format t "!!!!! tsfp ~s~%" trial-source-full-pathname)
-;      (format t "!!!!! sfpn ~s~%" source-full-pathname)
 ;      (format t "!!!!! cspn ~s~%" (component-source-pathname component ))
 ;      (format t "!!!!! dfpnd ~s~%" (mext:pathname-as-directory *default-pathname-defaults*))
-;      (format t "!!!!! sdir ~s~%" sdir)
 ;      (format t "!!!!! install-dir ~s~%" install-dir)
       (if source-full-pathname
           (progn

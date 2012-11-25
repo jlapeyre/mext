@@ -7,8 +7,8 @@
 # links in /usr/local/bin to builds of maxima with differenct
 # lisp implementations. Allegro worked with an earlier version
 # of this software, as well.
-maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-#maximas="smaxima"
+#maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
+maximas="smaxima"
 
 # Build just the mext_system
 build_mext () {
