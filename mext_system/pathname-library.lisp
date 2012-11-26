@@ -463,9 +463,9 @@ the directory named by the non-wild pathname designator DIRNAME."
   (when (fwild-pathname-p dirname)
     (error "Can only make wildcard directories from non-wildcard directories."))
   (fmake-pathname :name #-:cormanlisp :wild #+:cormanlisp "*"
-                 :type #-(or :clisp :cormanlisp :gcl) :wild
+                 :type #-(or :clisp :cormanlisp (and :gcl (not :win32))) :wild
                        #+:clisp nil
-                       #+gcl nil
+                       #+(and :gcl (not :win32)) nil
                        #+:cormanlisp "*"
                  :defaults (pathname-as-directory dirname)))
 
