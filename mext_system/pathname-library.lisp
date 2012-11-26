@@ -477,7 +477,7 @@ sub-directories are returned by DIRECTORY."
                  :type nil
                  :defaults wildcard))
 
-;;; gjl added :gcl to this function
+;;; gjl added support for gcl to this function
 (defun list-directory (dirname)
   "Returns a fresh list of pathnames corresponding to the truenames of
 all files within the directory named by the non-wild pathname
@@ -493,7 +493,13 @@ directory form - see PATHNAME-AS-DIRECTORY."
   #-:ecl 
   (let ((wildcard (directory-wildcard dirname)))
     #+:abcl (system::list-directory dirname)
-    #+(or :sbcl :cmu :scl :lispworks :gcl) (directory wildcard)
+    #+(or :sbcl :cmu :scl :lispworks 
+          (and :gcl (not :win32) )) (directory wildcard)
+    #+(and :gcl :win32) ; probably ok for linux, too
+    (let ((entries (directory wildcard)))
+      (loop for entry in entries collect
+            (if (eq (car (si:stat entry)) :directory)
+                (pathname-as-directory entry) entry)))
     #+(or :openmcl :digitool) (directory wildcard :directories t)
     #+:allegro (directory wildcard :directories-are-files nil)
     #+:clisp (nconc (directory wildcard :if-does-not-exist :keep)

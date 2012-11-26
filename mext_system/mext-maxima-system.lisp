@@ -138,7 +138,7 @@ This was copied from maxima source init-cl.lisp.")
 ;; note that trailing slash is present
 ;; For example: /home/joeuser/.maxima/mext/v5.28.0-gcl-vGCL2.6.7/
 (defparameter *mext-user-dir-as-string* 
-  (namestring (fmake-pathname :directory mext-maxima::*mext-user-dir-as-list*)))
+  (namestring (pathname-as-directory (fmake-pathname :directory mext-maxima::*mext-user-dir-as-list*))))
 
 ;; this is taken from  init-cl.lisp
 (defparameter *maxima-patterns* "$$$.{mac,mc}")
@@ -340,6 +340,73 @@ This was copied from maxima source init-cl.lisp.")
   (print-dist-info-record info "License" :license)
   (print-dist-info-record info "Maintainer" :maintainer))
 
+
+(defun pwd ()
+  (namestring *default-pathname-defaults*))
+
+(defun chdir (&rest dirs)
+  (let ((len (length dirs)))
+    (cond ((= len 0)
+           (setf *default-pathname-defaults* *initial-default-pathname*)
+           #+clisp (ext:cd *default-pathname-defaults*)  ; necessary
+           #+cmu (setf (ext:default-directory) *default-pathname-defaults*)
+           #+openmcl (setf (ccl::current-directory) *default-pathname-defaults*)
+	   (namestring *default-pathname-defaults*))
+          ((= len 1) 
+           (let* ((dir (fpathname-directory (pathname-as-directory (car dirs))))
+                  (fdir 
+                   (pathname-as-directory 
+                    (fmake-pathname :directory (if (eq (car dir) :absolute) dir
+                          (append
+                           (fpathname-directory *default-pathname-defaults*)
+                           (cdr dir)))))))
+;; disabled this check for gcl win32. but, the driveletter, or volume or whatever
+;; is lost with updir
+             (if #+(and :win32 :gcl) t
+                 #-(and :win32 :gcl) (directory-exists-p fdir) 
+                 (progn (setf *default-pathname-defaults*
+			      (truename fdir))
+;                              (mext:compact-pathname fdir))
+                        #+clisp (ext:cd *default-pathname-defaults*)
+                        #+cmu (setf (ext:default-directory) *default-pathname-defaults*)
+                        #+openmcl (setf (ccl::current-directory) *default-pathname-defaults*)
+                        (namestring *default-pathname-defaults*))
+               (maxima::merror "chdir: ~a: not a directory." fdir)))))))
+
+(defun mext-test  ( &optional dists )
+  (let ((testdirs
+         (cond (dists
+                (setf dists 
+                      (if (maxima::$listp dists) (cdr dists)
+                        (list (maxima::$sconcat dists))))
+		(loop for dist in dists do
+		      (maxima::$require dist))
+                (loop for dist in dists collect
+                            (fmake-pathname :directory
+                                            (append *mext-user-dir-as-list*
+                                                    (list (maxima::$sconcat dist) "rtests")))))
+               (t  (list "rtests")))))
+    (let ((testdir-list))
+      (loop for testdir in testdirs do 
+            (let ((inlist (list-directory testdir)))
+              (loop for file in inlist do
+                    (let ((posn (search "rtest" (pathname-name file))))
+                      (if (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
+                          (setf testdir-list (cons (namestring file) testdir-list)))))))
+      (setf maxima::$testsuite_files (cons '(maxima::mlist maxima::simp) testdir-list)))
+    (maxima::$run_testsuite)))
+
+(defun updir (&optional (n 1))
+  (if (and (numberp n) (> n 0))
+      (chdir (namestring (fmake-pathname :directory 
+            (cons :relative (make-list n :initial-element :up ))
+                                         :name nil :type nil :defaults *default-pathname-defaults*)))
+    (maxima::merror (intl:gettext "Invalid number to updir."))))
+
+(defun maxima-list-directory ( &optional dirname)
+  (cons '(maxima::mlist maxima::simp) 
+        (list-directory (if dirname dirname *default-pathname-defaults*))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (in-package :maxima)
@@ -530,55 +597,21 @@ This was copied from maxima source init-cl.lisp.")
 (defmfun $mext_provided (name)
   (setf (gethash ($sconcat name) mext-maxima::*installed-dist-table*) t))
 
-;; broken in gcl
-;; returns absolute pathname
-;; I want to use the word directory, because it is a
-;; directory
 (defmfun $pwd ()
-  (namestring *default-pathname-defaults*))
+  (mext::pwd))
 
 ;; change the default directory for lisp *default-pathname-defaults*
 (defmfun $chdir (&rest dirs)
-  (let ((len (length dirs)))
-    (cond ((= len 0)
-           (setf *default-pathname-defaults* mext-maxima::*initial-default-pathname*)
-           #+clisp (ext:cd *default-pathname-defaults*)  ; necessary
-           #+cmu (setf (ext:default-directory) *default-pathname-defaults*)
-           #+openmcl (setf (ccl::current-directory) *default-pathname-defaults*)
-	   (namestring *default-pathname-defaults*))
-          ((= len 1) 
-           (let* ((dir (mext:fpathname-directory (mext:pathname-as-directory (car dirs))))
-                  (fdir 
-                   (mext:pathname-as-directory 
-                    (mext:fmake-pathname :directory (if (eq (car dir) :absolute) dir
-                          (append
-                           (mext:fpathname-directory *default-pathname-defaults*)
-                           (cdr dir)))))))
-;; disabled this check for gcl win32. but, the driveletter, or volume or whatever
-;; is lost with updir
-             (if #+(and :win32 :gcl) t
-                 #-(and :win32 :gcl) (mext:directory-exists-p fdir) 
-                 (progn (setf *default-pathname-defaults*
-			      (truename fdir))
-;                              (mext:compact-pathname fdir))
-                        #+clisp (ext:cd *default-pathname-defaults*)
-                        #+cmu (setf (ext:default-directory) *default-pathname-defaults*)
-                        #+openmcl (setf (ccl::current-directory) *default-pathname-defaults*)
-                        (namestring *default-pathname-defaults*))
-               (merror "chdir: ~a: not a directory." fdir)))))))
+  (apply #'mext::chdir dirs))
 
 ;; chdir up n parent dirs.
 ;; This is probably not too portable. But it is better to use this than to
 ;; have '..' in user code.
 (defmfun $updir (&optional (n 1))
-  (if (and (numberp n) (> n 0))
-      ($chdir (namestring (mext:fmake-pathname :directory 
-            (cons :relative (make-list n :initial-element :up ))
-                                         :name nil :type nil :defaults *default-pathname-defaults*)))
-    (merror (intl:gettext "Invalid number to updir."))))
+  (mext::updir n))
 
 (defmfun $list_directory ( &optional dirname)
-  (cons '(mlist simp) (mext:list-directory (if dirname dirname *default-pathname-defaults*))))
+  (mext::maxima-list-directory dirname))
 
 ;; run rtests. If dists is nil then look only in dir "rtests"
 ;; Otherwise dists is a symbol or string naming a  mext dist,
@@ -586,27 +619,7 @@ This was copied from maxima source init-cl.lisp.")
 ;; installation directory of each dist, then for files rtest*.mac
 ;; in this folder. We set testsuite_files and run run_testsuite.
 (defmfun $mext_test  ( &optional dists )
-  (let ((testdirs
-         (cond (dists
-                (setf dists 
-                      (if ($listp dists) (cdr dists)
-                        (list ($sconcat dists))))
-		(loop for dist in dists do
-		      ($require dist))
-                (loop for dist in dists collect
-                            (mext:fmake-pathname :directory
-                                                (append mext::*mext-user-dir-as-list*
-                                                        (list ($sconcat dist) "rtests")))))
-               (t  (list "rtests")))))
-    (let ((testdir-list))
-      (loop for testdir in testdirs do 
-            (let ((inlist (mext:list-directory testdir)))
-              (loop for file in inlist do
-                    (let ((posn (search "rtest" (pathname-name file))))
-                      (if (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
-                          (setf testdir-list (cons (namestring file) testdir-list)))))))
-      (setf $testsuite_files (cons '(mlist simp) testdir-list)))
-    ($run_testsuite)))
+  (mext::mext-test dists))
 
 (defmfun $truename (filespec)
   (namestring (truename filespec)))
