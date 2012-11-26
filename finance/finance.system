@@ -1,0 +1,23 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing finance
+
+(in-package :mext-maxima)
+
+(create-distribution "finance"
+  :loader "load-finance")
+
+(in-package :cl-user)
+
+(mk:defsystem finance
+  :source-extension "mac"
+  :language :mext-maxima
+  :source-pathname (mext::subdir-of-shared "finance")
+  :binary-pathname *default-pathname-defaults* ;
+  :load-only t
+  :components
+   ((:file "finance")))
+
+(mk:defsystem load-finance
+  :source-extension "mac"
+  :components
+   ((:file "finance")))

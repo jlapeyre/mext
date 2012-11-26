@@ -42,6 +42,7 @@
     (:file "operate-on-system2")
     (:file "gjl-lisp-util")
     (:file "pathname-library")
+    (:file "compile")
     (:file "mext-component-operations")
     (:file "mext-maxima-system")))
 

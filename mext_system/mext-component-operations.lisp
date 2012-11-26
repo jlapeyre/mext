@@ -99,14 +99,22 @@
   (let ((file-type (if (component-load-only component) :source :binary)))
     (mext-user-install-one component force file-type data)))
 
+; sometimes 3 args are passed, sometimes 7
+(defun mext-maxima-compile (&rest args)
+  (format t "defsystem compiling maxima code: args are ~s~%" args)
+  (let* ((source-file (car args))
+         (args (cdr args))
+         (output-file (getf args :OUTPUT-FILE)))
+    (format t "Got output file ~s~%" output-file)
+    (if output-file   (maxima::$mext_compile_file source-file output-file)
+      (maxima::$mext_compile_file source-file))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (in-package :cl-user)
 
 ;; language definition for translating and compiling maxima source files
 (mk:define-language :mext-maxima
-    :compiler #'(lambda (&rest args) ; sometimes 3 args are passed, sometimes 7
-                  (format t "defsystem compiling maxima code: args are ~s~%" args)
-                  (maxima::$compile_file (car args)))
+    :compiler #'mk::mext-maxima-compile
     :loader #'(lambda (x) 
                 (format t "mext-system build: loading maxima file ~s~%" x) (maxima::$load x))
 ;;    :loader #'identity

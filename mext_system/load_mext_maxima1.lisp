@@ -9,6 +9,6 @@
   (load-one "mext-maxima-packages" "lisp")
   (loop for file in (list  #+openmcl "defsystem" "operate-on-system2"
       "gjl-lisp-util" "pathname-library" "mext-maxima-system"
-      "mext-component-operations") do
+      "mext-component-operations" "compile") do
     (load-one file mext-maxima-load::*binary-ext*)))
 

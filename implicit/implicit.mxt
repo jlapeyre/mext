@@ -8,4 +8,4 @@
    :version ""
    :license ""
    :description "Asymptotic expansion of implicit functions"
-   :long-description "Asuymptotic expansion of implicit functions: Taylor, Puiseux and Newton")
+   :long-description "Asymptotic expansion of implicit functions: Taylor, Puiseux and Newton")

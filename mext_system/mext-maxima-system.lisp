@@ -209,6 +209,11 @@ This was copied from maxima source init-cl.lisp.")
 (add-dir-to-file-search *search-path-maxima-mext-user* maxima::$file_search_maxima)
 (add-dir-to-file-search *search-path-lisp-mext-user* maxima::$file_search_lisp)
 
+;; subdir is a namestring
+(defun subdir-of-shared (subdir)
+  (merge-pathnames subdir (mext:pathname-as-directory maxima::*maxima-sharedir*)))
+
+
 ;; use defaults here as well ?
 ;; clisp part is hacked in, it will raise error if a directory is given.
 ;; bug file-exists-p is broken for clisp
@@ -239,17 +244,6 @@ This was copied from maxima source init-cl.lisp.")
       (maxima::merror (intl:gettext "mext-install: file in the source distribution ~s does not exist.~%")
                               tsfpn))
     source-full-pathname))
-
-(defun old-find-install-dir (target-info)
-  (let ((install-dir 
-         (if (getf target-info :mext-root) *mext-user-dir-as-list*
-           (append *mext-user-dir-as-list* 
-                   (or (let ((res (getf target-info :inst-dir)))
-                         (if (null res) nil 
-                           (if (listp res) res (list res))))
-                       (list *system-name*))))))
-    (format t "!!!!! install-dir ~s~%" install-dir)
-    install-dir))
 
 (defun find-install-dir (target-info)
   (format t "finding install dir: sytem name is ~s~%" *system-name*)
