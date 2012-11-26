@@ -37,7 +37,10 @@
   `((,nargs 0) ; count args passed when calling
    (defmfun1-func-name ',name) ; save this name for echeck-arg macro below. Wasteful as most funcs never use it.
    ,@(loop for n in all-args collect ; write default bindings for req and &optional
-          (if (listp (car n)) `,(cons (cadar n) (cdr n)) (if (length1p n) `,(car n) `,n)))
+           (if (null (car n)) 
+               (merror1 (intl:gettext "defmfun1: null argument name in definition of ~a.
+ Did you omit a pair of parens?~%") name)
+          (if (listp (car n)) `,(cons (cadar n) (cdr n)) (if (length1p n) `,(car n) `,n))))
    ,@(loop for n in (get-hash-keys supplied-p-hash) collect `,(gethash n supplied-p-hash))
    ,@(if rest (cdr rest)))) ; binding for &rest arg
 

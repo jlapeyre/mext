@@ -9,7 +9,7 @@ buildall_mext (package) := (
   load_in_dsubdir(["ibuild","mac"]),
   chdir());
 
-for package in [ "defmfun1", "maxdoc", "aex", "store" ] do
+for package in [ "defmfun1", "maxdoc", "mext_defmfun1", "aex", "store" ] do
   buildall_mext(package);
 
 /* other third party packages adapted to mext */

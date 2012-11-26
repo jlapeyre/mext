@@ -15,7 +15,7 @@ Features:
 the maxima search paths. This directory contains files that
 load the distributions. Actually the subdirectory is named
 for the maxima version and the lisp implementation and
-the lisp version. So different maxima and lisps can be
+the lisp version. So, different maxima and lisps can be
 used in parallel.
 
 * A distribution can be loaded with require('distname);
@@ -26,15 +26,23 @@ calls to require('distname) do nothing.
 * Installing binary only, source only, or a combination is
 supported.
 
-* Building is done mostly with defsystem. There are some
-other parts. Much of the distribution definition follows
-defsystem or asdf exactly. This might make it easier to
-move to asdf in the future.
+* Installation and running of rtests is standarized.
+
+* Building and installation is done mostly with defsystem. There are
+some other parts. Much of the distribution definition follows
+defsystem or asdf exactly. This might make it easier to move to asdf
+in the future.
+
+* Building from the maxima share and contrib directories is supported.
+That is, a mext defintion is written that optionally compiles and
+installs source from the maxima share directory to the user mext
+directory.
 
 * Functions for dealing with pathnames, files, and directories
 are included in mext. This includes cl-fad, a portable pathname
 library, hacked to support gcl somewhat. Some functions in gcl
-are missing, not ansi-compliant, or broken. mext uses an
+are missing, not ansi-compliant, or broken. (but, gcl also
+found an error that 5 other lisps missed!)  mext uses an
 interface to many of the ansi pathname functions and cl-fad functions,
 implemented as macros with the ansi name preceeded with an 'f'.
 For behavior not specified by the standard, I standarized on
@@ -49,6 +57,12 @@ Non-features:
  in the sense of a linux package maintainer or asdf maintainer:
  It refers to the person who packaged the code with the packaging
  system.
+
+ There is a mext package called 'mext_defmfun1'. This redefines some
+of the mext functions with documentation and errors checking. If this
+package is installed, then online help is available via '?' for
+chdir, mext_test, mext_list, mext_info, truename, probe_file,
+and pwd.
 
 (%i1) showtime:true$
 Evaluation took 0.0000 seconds (0.0000 elapsed) using 0 bytes.

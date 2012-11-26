@@ -25,10 +25,10 @@ specified by the string <filespec>."))
 (max-doc::add-call-desc '( "pwd" ()
                            ("returns the current working directory.")))
 
-(add-doc-entry '( :name "chdir" ))
-(max-doc::add-call-desc '( "chdir" ()
-                           ("Sets the current working directory to the directory that was
- current when mext was loaded."))
-                        '( "chdir" ("pathspec")
-                           ("Sets the current working directory to the directory 
- specified by " arg "pathspec" ".")))
+;; (add-doc-entry '( :name "chdir" ))
+;; (max-doc::add-call-desc '( "chdir" ()
+;;                            ("Sets the current working directory to the directory that was
+;;  current when mext was loaded."))
+;;                         '( "chdir" ("pathspec")
+;;                            ("Sets the current working directory to the directory 
+;;  specified by " arg "pathspec" ".")))

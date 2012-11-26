@@ -371,7 +371,8 @@ This was copied from maxima source init-cl.lisp.")
                         #+cmu (setf (ext:default-directory) *default-pathname-defaults*)
                         #+openmcl (setf (ccl::current-directory) *default-pathname-defaults*)
                         (namestring *default-pathname-defaults*))
-               (maxima::merror "chdir: ~a: not a directory." fdir)))))))
+                 nil))))))
+;               (maxima::merror "chdir: ~a: not a directory." fdir)))))))
 
 (defun mext-test  ( &optional dists )
   (let ((testdirs
@@ -406,6 +407,20 @@ This was copied from maxima source init-cl.lisp.")
 (defun maxima-list-directory ( &optional dirname)
   (cons '(maxima::mlist maxima::simp) 
         (list-directory (if dirname dirname *default-pathname-defaults*))))
+
+;; not optional! but otherwise, I don't know how to trap no argument
+(defun mext-info (dist-name)
+  (let* ((sname (maxima::$sconcat dist-name))
+         (info (gethash sname *dist-descr-table*)))
+      (if info (progn (print-dist-info info) 'maxima::$done)
+        nil)))
+;        (merror (intl:gettext "*** Unknown distribtuion '~a'.~%") sname)))))
+
+;; list installed distributions
+(defun mext-list ()
+  (scan-installed-distributions)
+  (cons '(maxima::mlist maxima::simp) (list-installed-distributions)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -632,16 +647,11 @@ This was copied from maxima source init-cl.lisp.")
   (mext::mkdir filespec mode))
 
 ;; not optional! but otherwise, I don't know how to trap no argument
-(defmfun $mext_info ( &optional (dist-name nil))
-;  (format t "distnae is '~s'~%" dist-name)
-  (if (null dist-name)
-      (merror (intl:gettext "mext_info: mext_info requires an argument.~%"))
-    (let* ((sname ($sconcat dist-name))
-           (info (gethash sname mext::*dist-descr-table*)))
-      (if info (progn (mext::print-dist-info info) '$done)
-        (merror (intl:gettext "*** Unknown distribtuion '~a'.~%") sname)))))
+;; removed arg check.
+(defmfun $mext_info ( dist-name )
+  (or (mext::mext-info dist-name)
+        (merror (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") dist-name)))
 
 ;; list installed distributions
 (defmfun $mext_list ()
-  (mext::scan-installed-distributions)
-  (cons '(mlist simp) (mext::list-installed-distributions)))
+  (mext::mext-list))
