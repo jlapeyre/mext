@@ -1,0 +1,6 @@
+This is an example of a mext distribution that
+uses source files in the maxima contrib directory.
+The .mac source is copied from the shared tree to the
+user's mext tree. The lisp is compiled from shared
+to the mext distribution directory. The binary
+is then copied to the user's mext tree.

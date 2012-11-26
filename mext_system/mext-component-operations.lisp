@@ -46,8 +46,8 @@
                   (or *oos-test*
                       (progn 
                         (format t "cleaning probed: ~s, source: ~s~%" probed-to-clean source-full-pathname)
-                        (format t " Not Cleaning '~s'~%" bpname-to-clean))))))))))
-;		    (delete-file pname-to-clean)))))))))
+                        (format t " * Cleaning '~s'~%" bpname-to-clean)
+                        (delete-file bpname-to-clean))))))))))
 
 ;; Clean LISP and UNLISP from compilation of .mac
 (component-operation2 :mext-clean-intermediate  'mext-clean-intermediate)
