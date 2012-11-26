@@ -19,8 +19,8 @@
 					   :new-source-all)
 		       :test #'eq)
 		 (needs-compilation component nil)))
-    (format t "binary component isss ~s~%" (component-full-pathname component :binary))
-    (format t " probed binary component isss ~s~%" (probe-file (component-full-pathname component :binary)))
+;    (format t "binary component isss ~s~%" (component-full-pathname component :binary))
+;    (format t " probed binary component isss ~s~%" (probe-file (component-full-pathname component :binary)))
     (loop for ext in file-types do
         (let* ((source-full-pathname (probe-file 
                                   #-gcl (component-full-pathname component :source)
@@ -32,7 +32,7 @@
                                   #+gcl (merge-pathnames (component-full-pathname component :binary)
                                      (mext:pathname-as-directory *default-pathname-defaults*))))
                (bpname-to-clean (if binary-full-pathname (mext:fmake-pathname  :type ext :defaults binary-full-pathname))))
-          (format t "bpamestee  ~s~%" bpname-to-clean)
+;          (format t "bpamestee  ~s~%" bpname-to-clean)
 	  (let ((probed-to-clean (probe-file pname-to-clean)))
 	    (when (and probed-to-clean (not (equal probed-to-clean source-full-pathname)))
 	      (or *oos-test*
