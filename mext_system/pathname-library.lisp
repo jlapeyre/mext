@@ -456,14 +456,16 @@ form."
                           :defaults pathname))
           (t pathname))))
 
+;; gjl changed gcl to work with linux, hope it does not break under win32
 (defun directory-wildcard (dirname)
   "Returns a wild pathname designator that designates all files within
 the directory named by the non-wild pathname designator DIRNAME."
   (when (fwild-pathname-p dirname)
     (error "Can only make wildcard directories from non-wildcard directories."))
-  (#-gcl make-pathname #+gcl gcl-make-pathname :name #-:cormanlisp :wild #+:cormanlisp "*"
-                 :type #-(or :clisp :cormanlisp) :wild
+  (fmake-pathname :name #-:cormanlisp :wild #+:cormanlisp "*"
+                 :type #-(or :clisp :cormanlisp :gcl) :wild
                        #+:clisp nil
+                       #+gcl nil
                        #+:cormanlisp "*"
                  :defaults (pathname-as-directory dirname)))
 
@@ -493,10 +495,12 @@ directory form - see PATHNAME-AS-DIRECTORY."
   #-:ecl 
   (let ((wildcard (directory-wildcard dirname)))
     #+:abcl (system::list-directory dirname)
-    #+(or :sbcl :cmu :scl :lispworks 
-          (and :gcl (not :win32) )) (directory wildcard)
-    #+(and :gcl :win32) ; probably ok for linux, too
+    #+(or :sbcl :cmu :scl :lispworks) (directory wildcard) 
+    #+:gcl
     (let ((entries (directory wildcard)))
+;      (format t "Wildcard is ~s~%" wildcard)
+;      (loop for entry in entries do
+;            (format t "stat is ~s~%" (si:stat entry)))
       (loop for entry in entries collect
             (if (eq (car (si:stat entry)) :directory)
                 (pathname-as-directory entry) entry)))
@@ -572,4 +576,3 @@ by PATHNAME-AS-DIRECTORY."
     (and result
          (directory-pathname-p result)
          result)))
-

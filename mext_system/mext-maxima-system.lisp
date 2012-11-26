@@ -300,14 +300,16 @@ This was copied from maxima source init-cl.lisp.")
 
 ;; return list of pathnames to directories of installed distributions
 (defun list-distribution-dirs ()
+;  (loop for name in (list-directory *mext-user-dir-as-string*) do
+;        (format t "Entry name is ~s~%" name))
   (loop for name in (list-directory *mext-user-dir-as-string*) 
         when (directory-pathname-p name) collect it))
 
 ;; list of names of installed distributions. (names are the same as the installation directory
 ;; name
 (defun list-installed-distributions ()
-  (loop for dir in (list-distribution-dirs) 
-        collect (car (last (mext::FPATHNAME-DIRECTORY dir)))))
+  (loop for dir in (list-distribution-dirs)
+        collect (car (last (fpathname-directory dir)))))
 
 (defun scan-installed-distributions ()
   (loop for name in (list-installed-distributions) do
