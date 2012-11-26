@@ -14,8 +14,8 @@ can use different versions of maxima and implementations
 and versions of lisp in parallel.
 
 We use the word 'distribution' to mean a piece of
-third party software. This might be called a package
-too. The code in the distribution might consist of
+third party software. This might also be called a package.
+The code in the distribution might consist of
 one file, or of several files. Several, but not all
 of the packages from the maxima third party code site
 are pacakged here.

@@ -1,0 +1,135 @@
+/*==========================
+X - list of variables
+F - one expression (d=1) or a list of expressions of the variables X, d:length(F)
+A - a fixed point, the value of X, F(A)=0
+n - the order of the expansion
+
+Let m:length(X). List X splits into two parts: X[1],...,X[m-d] - the independent variables, X[m-d+1],...,X[m] - the dependent variables. If F at point A satisfies the implicit function theorem, the imp_taylor(F,X,A,n) returns a single expansion or a list of expansions for X[m-d+1],...,X[m] in powers of the differences (X[1]-A[1]), ..., (X[m-d]-A[m-d]) up to degree n inclusive.
+
+Description of the method:
+Let F: R^{m-d} * R^d -> R^d, F(A)=0. Let D is the Jacobian (matrix) of F at A. Then the only solution y(x) to the equation F(x,y)=0 can be found by the method of successive approximations: y_{k+1}(x)=y_k(x)-D^{-1}F(x,y_k(x))
+
+Examples:
+imp_taylor(x-asin(y),[x,y],[%pi/6,1/2],5);
+imp_taylor(x+s*sin(x+t)-x*exp(x-s),[t,s,x],[%pi,1,0],3);
+imp_taylor([x[1]-log(y[1]),x[2]-exp(y[2])],[x[1],x[2],y[1],y[2]],[0,1,1,0],5);
+===========================*/
+
+imp_taylor(F,X,A,n):=block(
+    [D,df,k],
+	if listp(F) then block(
+		[i,j,m:length(X),d:length(F)],
+		if subst(map("=",X,A),F)#makelist(0,d) then
+			error("Unable to compute: ",'at(F,X=A),"#",makelist(0,d)),
+		D:subst(map("=",X,A), genmatrix(lambda([i,j],diff(F[i],X[m-d+j])),d,d)),
+		if determinant(D)=0 then
+			error("Unable to compute: determinant(D)=0"),
+		F:rest(X,m-d)-transpose(invert(D).map(ratdisrep, taylor(subst(map("=",X,A+X),F),X,0,n) ))[1],
+		df:makelist(0,d),
+		for k:1 thru n do 
+			df:map(ratdisrep, taylor(subst(map("=",rest(X,m-d),df),F),rest(X,-d),0,k) ),
+		map("=",rest(X,m-d)-rest(A,m-d),map(trunc,subst(map("=",X,X-A),df)))
+	) else (
+		if subst(map("=",X,A),F)#0 then
+			error("Unable to compute: ",'at(F,X=A),"#0"), 
+		D:subst(map("=",X,A), diff(F,last(X))),
+		if D=0 then
+			error("Unable to compute: ",'at('diff(F,last(X)),X=A),"=0"),
+		F:last(X)-1/D*ratdisrep(taylor(subst(map("=",X,A+X),F),X,0,n)),
+		df:0,
+		for k:1 thru n do 
+			df:ratdisrep(taylor(subst(last(X)=df,F),rest(X,-1),0,k)),
+		last(X)-last(A)=trunc(subst(map("=",X,X-A),df))
+	)
+)$
+
+/*==============================
+X - list of 2 variables
+F - an expression of the variables X
+A - a fixed point, the value of X, F(A)=0
+n - the order of the Puiseux expansion
+
+Let F: R * R -> R satisfies the Taylor's theorem of n-th order. Let for simplicity X=[x,y]. Further suppose that:
+
+at(F,[x=a,y=b])=0
+at(diff(F,y,i),y=b)=0 for i=1,...,p-1
+D: 1/p!* at(diff(F,y,p),[x=a,y=b])#0
+
+Then the Puiseux's expansions of y(x) in a neighborhood of x=a can be found by the method of successive approximations: y_{k+1}^p(x)=y_k^p(x)-D^{-1}F(x,y_k(x))
+
+Examples:
+imp_puiseux(x-y*exp(y),[x,y],[-%e^-1,-1],5);
+imp_puiseux(y-2*sin(y/2)-sin(x)*(y^4+y^5)+cos(x)*(y^3-y^4),[x,y],[0,0],7);
+===============================*/
+
+imp_puiseux(F,X,A,n):=block(
+    [df,F0,D,p:0,k,a,t],
+    F0:subst(X[1]=A[1],F),
+    while (D:subst(X[2]=A[2],F0)/p!)=0 do (F0:diff(F0,X[2]), p:p+1),
+    if p=0 then
+        error("Unable to compute: ",'at(F,[X[1]=A[1],X[2]=A[2]]),"#0"),
+    F0:ratdisrep(taylor(X[2]^p-1/D*subst([X[1]=A[1]+X[1],X[2]=A[2]+X[2]],F),[X[1],0,n/p],[X[2],0,n])),
+    if lopow(F0-subst(X[2]=0,F0),X[2])<p then
+        error("Unable to compute: ",[X[1]=A[1],X[2]=A[2]]," is a singular point of ",F),
+    df:0,
+    for k:1 thru n do(
+        ratdisrep(taylor(a*subst(X[2]=df,F0)^(1/p),X[1],0,k/p)),
+        map(lambda([t],ratsubst(1,a^p,t)),%%),
+        df:ratsimp(%%)
+    ),
+    [X[2]-A[2]=trunc(subst(X[1]=X[1]+A[1],expand(df))), a^p-1=0]
+)$
+
+/*==============================
+X - list of 2 variables
+F - an irreducible polynomial of the variables X
+A - a fixed point, the value of X, F(A)=0
+n - the number of terms in the Puiseux expansion
+
+Newton's diagram method for Puiseux's expansions of all branches of the algebraic function y(x)
+
+Examples:
+imp_newton(x^2+y^2-1,[x,y],[1/2,sqrt(3)/2],5);
+imp_newton(2*x^7-x^8-x^3*y+(4*x^2+x^3)*y^2+(x^3-x^4)*y^3-4*x*y^4+7*x^5*y^5+(1-x^2)*y^6+5*x^6*y^7+x^3*y^8,[x,y],[0,0],3);
+imp_newton(ratdisrep(taylor(x-asin(y),y,0,9)),[x,y],[0,0],5);
+===============================*/
+
+imp_newton(F,X,A,n):=block(
+    [F0,L,P,h,i,r:[]],
+    local(S),
+
+    S(L,P):=block(
+        [i,j,a,b,q,k,m,t,p:[],c:[],Q:[],D:[],d,P0,l],
+        for i:1 thru h+1 do 
+            if P[i]#0 then (a:lopow(P[i],X[1]), p:endcons([a,i-1],p), c:endcons(coeff(P[i],X[1],a),c)),
+        i:1,
+        while i<length(p) do (
+            q:[], a:minf, 
+            for j:length(p) step -1 thru i+1 do (
+                b:(p[i][1]-p[j][1])/(p[j][2]-p[i][2]),
+                if b=a then q:cons(j,q) elseif b>a then (a:b, q:[j])
+            ),
+            q:cons(i,q),
+            Q:endcons(q,Q),
+            D:endcons(a,D),
+            i:last(q)
+        ),
+        if length(L)=0 then d:minf else d:last(L)[1],
+        for i:1 thru length(Q) while (D[i]>d and D[i]#0) do
+            for b in map(rhs,solve( sum(c[Q[i][j]]*m^(p[Q[i][j]][2]-p[Q[i][1]][2]),j,1,length(Q[i])) ,m)) do (
+                P0:makelist(expand(sum(k!/(j!*(k-j)!)*b^(k-j)*X[1]^(D[i]*(k-j))*P[k+1],k,j,h)),j,0,h),
+                l:endcons([D[i],b],L),
+                if length(l)<n then S(l,P0) else r:endcons(X[2]-A[2]=trunc(lsum(t[2]*(X[1]-A[1])^t[1],t,l)),r)
+            )
+    ),
+    
+    if subst([X[1]=A[1],X[2]=A[2]],F)#0 then
+        error("Unable to compute: ",'at(F,[X[1]=A[1],X[2]=A[2]]),"#0"),
+
+    F0:expand(subst([X[1]=A[1]+X[1],X[2]=A[2]+X[2]],F)),
+    h:hipow(F0,X[2]),
+    P:makelist(coeff(F0,X[2],i),i,0,h),
+
+    S([],P),
+	r
+)$
