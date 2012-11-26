@@ -209,14 +209,22 @@ This was copied from maxima source init-cl.lisp.")
 (add-dir-to-file-search *search-path-maxima-mext-user* maxima::$file_search_maxima)
 (add-dir-to-file-search *search-path-lisp-mext-user* maxima::$file_search_lisp)
 
+(defvar *maxima-contribdir* (merge-pathnames "contrib" 
+                  (pathname-as-directory maxima::*maxima-sharedir*)))
+
 ;; subdir is a namestring
 (defun subdir-of-shared (subdir)
   (merge-pathnames subdir (mext:pathname-as-directory maxima::*maxima-sharedir*)))
+
+(defun subdir-of-contrib (subdir)
+  (merge-pathnames subdir (mext:pathname-as-directory *maxima-contribdir*)))
 
 
 ;; use defaults here as well ?
 ;; clisp part is hacked in, it will raise error if a directory is given.
 ;; bug file-exists-p is broken for clisp
+;; Search for name with various exts in paths.
+;; paths is a  list of directories each in list form
 (defun file-search (name exts paths &aux file )
   (loop for ext in exts while (not file) do
         (loop for path in paths while (not file) do
@@ -227,6 +235,9 @@ This was copied from maxima source init-cl.lisp.")
 ;; find lisp or mac file in mext installation directories (only user now)
 (defun mext-file-search (name)
   (file-search name *lisp-and-max-exts* (list *mext-user-dir-as-list*)))
+
+(defun mext-mxt-file-search (name)
+  (file-search name (list "mxt") (list (append *mext-user-dir-as-list* (list name)))))
 
 (defun find-trial-source-full-pathname (cfpn)
   (let* ((sdir  *dist-dir*)
@@ -286,6 +297,25 @@ This was copied from maxima source init-cl.lisp.")
 ;    (format t "!!!!! source-full-pathname)~s~%" source-full-pathname)
 ;    (format t "!!!!! target-full-pathname ~s~%" target-full-pathname)
     (install-source-to-target source-full-pathname target-full-pathname)))
+
+;; return list of pathnames to directories of installed distributions
+(defun list-distribution-dirs ()
+  (loop for name in (list-directory *mext-user-dir-as-string*) 
+        when (directory-pathname-p name) collect it))
+
+;; list of names of installed distributions. (names are the same as the installation directory
+;; name
+(defun list-installed-distributions ()
+  (loop for dir in (list-distribution-dirs) 
+        collect (car (last (mext::FPATHNAME-DIRECTORY dir)))))
+
+(defun scan-installed-distributions ()
+  (loop for name in (list-installed-distributions) do
+        (let ((file (mext-mxt-file-search name)))
+;          (format t "File is ~s~%" file)
+          (if file (load file))))
+  t)
+
 
 (defun install-mext-description (dist-name)
   (let ((mxt-file (find-mext-description dist-name))
@@ -490,7 +520,7 @@ This was copied from maxima source init-cl.lisp.")
   (setf name ($sconcat name))
   (let ((registered (gethash name mext-maxima::*installed-dist-table*)))
     (if (or (not registered) force)
-        (let ((file (mext-maxima::mext-file-search name)))
+        (let ((file (mext::mext-file-search name)))
           (if file (progn (format t "loading ~a~%" file) ($load file))
             (merror "Unable to find '~a'." name)))
       t)))
@@ -597,3 +627,8 @@ This was copied from maxima source init-cl.lisp.")
            (info (gethash sname mext::*dist-descr-table*)))
       (if info (progn (mext::print-dist-info info) '$done)
         (merror (intl:gettext "*** Unknown distribtuion '~a'.~%") sname)))))
+
+;; list installed distributions
+(defmfun $mext_list ()
+  (mext::scan-installed-distributions)
+  (cons '(mlist simp) (mext::list-installed-distributions)))

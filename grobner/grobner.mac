@@ -1,0 +1,2 @@
+mext_provide( "grobner",
+  ["grobner"]);

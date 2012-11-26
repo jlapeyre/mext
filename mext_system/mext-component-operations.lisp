@@ -12,6 +12,7 @@
 ;; otherwise in clisp, we get annoying interactive.
 (setf mk::*bother-user-if-no-binary* nil)
 
+;; refactor this
 (defun mext-clean-files (component force file-types)
   (when (or (eq force :all)
 	    (eq force t)
@@ -19,33 +20,35 @@
 					   :new-source-all)
 		       :test #'eq)
 		 (needs-compilation component nil)))
-;    (format t "binary component isss ~s~%" (component-full-pathname component :binary))
-;    (format t " probed binary component isss ~s~%" (probe-file (component-full-pathname component :binary)))
+;    (format t "binary component is ~s~%" (component-full-pathname component :binary))
+;    (format t " probed binary component is ~s~%" (probe-file (component-full-pathname component :binary)))
     (loop for ext in file-types do
         (let* ((source-full-pathname (probe-file 
                                   #-gcl (component-full-pathname component :source)
                                   #+gcl (merge-pathnames (component-full-pathname component :source)
                                      (mext:pathname-as-directory *default-pathname-defaults*))))
-               (pname-to-clean (mext:fmake-pathname  :type ext :defaults source-full-pathname))
+               (pname-to-clean (if source-full-pathname (mext:fmake-pathname  :type ext :defaults source-full-pathname)))
                (binary-full-pathname (probe-file 
                                   #-gcl (component-full-pathname component :binary)
                                   #+gcl (merge-pathnames (component-full-pathname component :binary)
                                      (mext:pathname-as-directory *default-pathname-defaults*))))
                (bpname-to-clean (if binary-full-pathname (mext:fmake-pathname  :type ext :defaults binary-full-pathname))))
-;          (format t "bpamestee  ~s~%" bpname-to-clean)
-	  (let ((probed-to-clean (probe-file pname-to-clean)))
-	    (when (and probed-to-clean (not (equal probed-to-clean source-full-pathname)))
-	      (or *oos-test*
-		  (progn 
-		    (format t "cleaning probed: ~s, source: ~s~%" probed-to-clean source-full-pathname)
-		    (format t " Cleaning '~s'~%" pname-to-clean)
-		    (delete-file pname-to-clean)))))
-          (if bpname-to-clean 
-              (let ((probed-to-clean (probe-file bpname-to-clean)))
+;          (format t "bpname-to-clean 1 ~s~%" bpname-to-clean)
+;          (format t " pname-to-clean 1 ~s~%" pname-to-clean)
+          (if pname-to-clean
+              (let ((probed-to-clean (probe-file pname-to-clean)))
                 (when (and probed-to-clean (not (equal probed-to-clean source-full-pathname)))
                   (or *oos-test*
                       (progn 
                         (format t "cleaning probed: ~s, source: ~s~%" probed-to-clean source-full-pathname)
+                        (format t " Cleaning '~s'~%" pname-to-clean)
+                        (delete-file pname-to-clean))))))
+          (if (not (null bpname-to-clean))
+              (let ((bprobed-to-clean (probe-file bpname-to-clean)))
+                (when (and bprobed-to-clean (not (equal bprobed-to-clean source-full-pathname)))
+                  (or *oos-test*
+                      (progn 
+                        (format t "cleaning probed: ~s, source: ~s~%" bprobed-to-clean source-full-pathname)
                         (format t " * Cleaning '~s'~%" bpname-to-clean)
                         (delete-file bpname-to-clean))))))))))
 

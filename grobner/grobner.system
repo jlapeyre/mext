@@ -1,0 +1,28 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing 
+;; package 'grobner'
+
+(in-package :mext-maxima)
+
+(create-distribution "grobner"
+  :loader "load-grobner")
+
+(in-package :cl-user)
+
+(mk:defsystem grobner
+  :source-pathname (mext::subdir-of-contrib "Grobner")
+  :binary-pathname *default-pathname-defaults*
+  :source-extension "lisp"
+  :components
+   ((:file "grobner" :source-extension "lisp")))
+
+(mk:defsystem load-grobner
+  :source-extension "mac"
+  :components
+   ((:file "grobner")))
+  
+;; (mk:defsystem grobner-rtests
+;;  :source-extension "mac"
+;;  :source-pathname "rtests"
+;;  :components
+;;  ( (:file "rtest_grobner")))

@@ -15,5 +15,7 @@ for package in [ "defmfun1", "maxdoc", "aex", "store" ] do
 /* other third party packages adapted to mext */
 
 for package in [ "nelder_mead", "alt_eigen", "pw", "discrete",
-          "coma", "circuits", "implicit" ,"bernstein"] do
+          "coma", "circuits", "implicit" ,"bernstein", "grobner"] do
   buildall_mext(package);
+
+/* "finance" loads rather slowly */

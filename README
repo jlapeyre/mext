@@ -45,7 +45,10 @@ implementations under linux and gcl under win32.
 
 Non-features:
  Not much documentation. But here are some examples (with some
- lines edited out.)
+ lines edited out.) Note that the key :maintainer below is used
+ in the sense of a linux package maintainer or asdf maintainer:
+ It refers to the person who packaged the code with the packaging
+ system.
 
 (%i1) showtime:true$
 Evaluation took 0.0000 seconds (0.0000 elapsed) using 0 bytes.
