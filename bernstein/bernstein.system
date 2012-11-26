@@ -1,0 +1,33 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing 
+;; package 'bernstein'
+
+(in-package :mext-maxima)
+
+(create-distribution "bernstein"
+  :loader "load-bernstein"
+  :install-only "bernstein-rtests")
+
+(in-package :cl-user)
+
+(mk:defsystem bernstein
+  :source-pathname (mext::subdir-of-shared "bernstein")
+  :binary-pathname *default-pathname-defaults* ;
+  :components
+   (
+    (:file "bernstein" :source-extension "lisp")
+    (:file "bernstein_utilities" :source-extension "mac"
+           :language :mext-maxima
+           :load-only t)))
+
+;; neither compile nor load when building
+(mk:defsystem load-bernstein
+  :source-extension "mac"
+  :components
+   ((:file "bernstein")))
+  
+(mk:defsystem bernstein-rtests
+ :source-extension "mac"
+ :source-pathname "rtests"
+ :components
+ ( (:file "rtest_bernstein")))

@@ -1,7 +1,4 @@
-(in-package #-gcl #:mext-maxima #+gcl :mext-maxima)
-(in-package #-gcl #:mk  #+gcl :mk )
-
-;(declaim (optimize (speed 0) (space 0) (safety 0) (debug 0)))
+(in-package :mk )
 
 ;;; component operation definitions for defsystem to support
 ;;; third party maxima packages.
@@ -22,22 +19,35 @@
 					   :new-source-all)
 		       :test #'eq)
 		 (needs-compilation component nil)))
+    (format t "binary component isss ~s~%" (component-full-pathname component :binary))
+    (format t " probed binary component isss ~s~%" (probe-file (component-full-pathname component :binary)))
     (loop for ext in file-types do
         (let* ((source-full-pathname (probe-file 
                                   #-gcl (component-full-pathname component :source)
                                   #+gcl (merge-pathnames (component-full-pathname component :source)
                                      (mext:pathname-as-directory *default-pathname-defaults*))))
-               (pname-to-clean (mext:fmake-pathname  :type ext :defaults source-full-pathname)))
-;          (let* ((pname (component-pathname component :source))
-;           (pname-to-clean (mext:fmake-pathname :name pname :type ext :defaults *default-pathname-defaults*)))
-;            (format t " pwd '~s'~%" (maxima::$pwd))
+               (pname-to-clean (mext:fmake-pathname  :type ext :defaults source-full-pathname))
+               (binary-full-pathname (probe-file 
+                                  #-gcl (component-full-pathname component :binary)
+                                  #+gcl (merge-pathnames (component-full-pathname component :binary)
+                                     (mext:pathname-as-directory *default-pathname-defaults*))))
+               (bpname-to-clean (if binary-full-pathname (mext:fmake-pathname  :type ext :defaults binary-full-pathname))))
+          (format t "bpamestee  ~s~%" bpname-to-clean)
 	  (let ((probed-to-clean (probe-file pname-to-clean)))
 	    (when (and probed-to-clean (not (equal probed-to-clean source-full-pathname)))
 	      (or *oos-test*
 		  (progn 
 		    (format t "cleaning probed: ~s, source: ~s~%" probed-to-clean source-full-pathname)
 		    (format t " Cleaning '~s'~%" pname-to-clean)
-		    (delete-file pname-to-clean)))))))))
+		    (delete-file pname-to-clean)))))
+          (if bpname-to-clean 
+              (let ((probed-to-clean (probe-file bpname-to-clean)))
+                (when (and probed-to-clean (not (equal probed-to-clean source-full-pathname)))
+                  (or *oos-test*
+                      (progn 
+                        (format t "cleaning probed: ~s, source: ~s~%" probed-to-clean source-full-pathname)
+                        (format t " Not Cleaning '~s'~%" bpname-to-clean))))))))))
+;		    (delete-file pname-to-clean)))))))))
 
 ;; Clean LISP and UNLISP from compilation of .mac
 (component-operation2 :mext-clean-intermediate  'mext-clean-intermediate)
@@ -53,16 +63,6 @@
 (defun mext-clean-lisp-compilation (name component force data)
   (declare (ignore name data))
   (mext-clean-files component force mext-maxima::*extensions-to-clean* ))
-
-;;; I am leaving print statements here, because there are recuring bugs.
-
-(defun old-change-root-pathname (full-source-pathname source-dir target-dir)
-;  (format t " In Change root fspn: ~s  sd: ~s td: ~s~%" full-source-pathname source-dir target-dir)
-;  (format t " ENOUGH-NAMESTRING ~s ~%" (mext:fenough-namestring full-source-pathname source-dir))
-;  (format t " MERGE-PATHNAMES ~s~%" (merge-pathnames
-;   (mext:fenough-namestring full-source-pathname source-dir) target-dir))
-  (merge-pathnames
-   (mext:fenough-namestring full-source-pathname source-dir) target-dir))
 
 ;; Copy a file specified in a system definition to an installation location
 ;; component -- the structure specifying the file.

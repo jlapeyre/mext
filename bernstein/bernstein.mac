@@ -1,0 +1,2 @@
+mext_provide( "bernstein",
+  ["bernstein", "bernstein_utilities"]);
