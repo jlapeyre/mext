@@ -1,8 +1,5 @@
 (in-package :mext-maxima)
 
-;; This is not working. gcl is seeing (debug 0) even when the
-;; form is preceeded by #-gcl
-;; 
 ;(defmacro mext-optimize ()
 ;  `(declaim (optimize (compilation-speed 0) (speed 3) (space 0) (safety 0) #-gcl (debug 0))))
 
@@ -11,8 +8,7 @@
   `(declaim (optimize (compilation-speed 0) (speed 3) (space 0) (safety 0) #-gcl (debug 3))))
 
 ;; turn off optimization
-;(defmacro mext-optimize ()
-;       )
+;(defmacro mext-optimize ())
 
 (mext-optimize)
 
@@ -79,8 +75,8 @@ This was copied from maxima source init-cl.lisp.")
 (defvar *user-install-explicit* nil)
 (defvar *post-user-install-hooks*  nil)
 ;; distribution directory
-(defvar *dist-dir* (fpathname-directory
-          #-gcl *load-pathname* #+gcl sys:*load-pathname* ))
+(defvar *dist-dir* (fpathname-directory (fload-pathname)))
+
 (defvar *userdir-pathname* maxima::*maxima-userdir*)
 
 (defvar *userdir-pathname-as-list* (mext::fpathname-directory 
@@ -140,6 +136,8 @@ This was copied from maxima source init-cl.lisp.")
 (defparameter *mext-user-dir-as-string* 
   (namestring (pathname-as-directory (fmake-pathname :directory mext-maxima::*mext-user-dir-as-list*))))
 
+(defparameter maxima::$mext_userdir *mext-user-dir-as-string*)
+
 ;; this is taken from  init-cl.lisp
 (defparameter *maxima-patterns* "$$$.{mac,mc}")
 (defparameter *lisp-patterns* (concatenate 'string "$$$.{" *binary-ext* ",lisp,lsp}"))
@@ -159,9 +157,9 @@ This was copied from maxima source init-cl.lisp.")
   (fmake-pathname :name dist-name :type "mxt" :directory *dist-dir*))
 
 (defun create-distribution (name &rest body-form)
+  "Define a distribution. This is called at the top of a .mxt file."
   (setf *dist-name* name)
-  (setf *dist-dir* (fpathname-directory
-          #-gcl *load-pathname* #+gcl sys:*load-pathname* ))
+  (setf *dist-dir* (fpathname-directory (fload-pathname)))
   (let ((mxtfile (find-mext-description name)))
     (unless (probe-file mxtfile)
       (maxima::merror (intl:gettext "create-distribution: The distribution ~s is missing the description file
@@ -182,11 +180,10 @@ This was copied from maxima source init-cl.lisp.")
   (unless (find :source-pathname definition-body)
     (setf definition-body
 	  (list* :source-pathname
-		 '(when #-gcl *load-pathname* #+gcl si::*load-pathname*
+		 '(when (fload-pathname)
 		        (make-pathname :name nil
 			               :type nil
-			               :defaults #-gcl *load-pathname* 
-			                         #+gcl si::*load-pathname*))
+			               :defaults (fload-pathname)))
 		 definition-body)))
  `(create-distribution ',name ,@definition-body))
 
@@ -213,11 +210,12 @@ This was copied from maxima source init-cl.lisp.")
 (defvar *maxima-contribdir* (merge-pathnames "contrib" 
                   (pathname-as-directory maxima::*maxima-sharedir*)))
 
-;; subdir is a namestring
 (defun subdir-of-shared (subdir)
+ "Return pathname of a directory under the maxima share directory."
   (merge-pathnames subdir (mext:pathname-as-directory maxima::*maxima-sharedir*)))
 
 (defun subdir-of-contrib (subdir)
+ "Return pathname of a directory under the maxima contrib directory."
   (merge-pathnames subdir (mext:pathname-as-directory *maxima-contribdir*)))
 
 ;; use defaults here as well ?
@@ -232,11 +230,12 @@ This was copied from maxima source init-cl.lisp.")
                 (setf file (#-(or clisp gcl) file-exists-p #+(or clisp gcl) probe-file trial)))))
   file)
 
-;; find lisp or mac file in mext installation directories (only user now)
 (defun mext-file-search (name)
+ "Find lisp or mac file in mext installation directories (only user now)."
   (file-search name *lisp-and-max-exts* (list *mext-user-dir-as-list*)))
 
 (defun mext-mxt-file-search (name)
+ "Find the .mxt file in the installation directory of a mext distribution."
   (file-search name (list "mxt") (list (append *mext-user-dir-as-list* (list name)))))
 
 (defun find-trial-source-full-pathname (cfpn)
@@ -298,21 +297,19 @@ This was copied from maxima source init-cl.lisp.")
 ;    (format t "!!!!! target-full-pathname ~s~%" target-full-pathname)
     (install-source-to-target source-full-pathname target-full-pathname)))
 
-;; return list of pathnames to directories of installed distributions
 (defun list-distribution-dirs ()
-;  (loop for name in (list-directory *mext-user-dir-as-string*) do
-;        (format t "Entry name is ~s~%" name))
+  "Return list of pathnames to directories of installed distributions."
   (loop for name in (list-directory *mext-user-dir-as-string*) 
         when (directory-pathname-p name) collect it))
 
-;; list of names of installed distributions. (names are the same as the installation directory
-;; name
 (defun list-installed-distributions ()
+ "Return list of names of installed distributions. (names are the same as the installation directory
+   name."
   (loop for dir in (list-distribution-dirs)
         collect (car (last (fpathname-directory dir)))))
 
 (defun scan-installed-distributions ()
-"Read the .mxt files from all installted distributions. This
+"Read the .mxt files from all installed distributions. This
  rebuilds the data-base of installed .mxt packages. (packages
  or distributions ?"
   (loop for name in (list-installed-distributions) do
@@ -327,8 +324,8 @@ This was copied from maxima source init-cl.lisp.")
     (install-file mxt-file nil)))
 
 (defun distribution-description (&rest descr)
- "Record the distribtuion information in the list descr. This function
- is called in a .mxt file."
+ "Record the distribtuion information in the table of distribution
+ descriptions. This is called in a .mxt file."
   (let ((name (getf descr :name)))
       (setf (gethash (maxima::$sconcat name) *dist-descr-table*) descr)))
 
@@ -342,7 +339,6 @@ This was copied from maxima source init-cl.lisp.")
   (print-dist-info-record info "Author" :author)
   (print-dist-info-record info "License" :license)
   (print-dist-info-record info "Maintainer" :maintainer))
-
 
 (defun pwd ()
   (namestring *default-pathname-defaults*))
@@ -377,6 +373,8 @@ This was copied from maxima source init-cl.lisp.")
 ;               (maxima::merror "chdir: ~a: not a directory." fdir)))))))
 
 (defun mext-test  ( &optional dists )
+ "Run regression tests in the sub-directories of the installed distributions.
+ Dists is name or list of names of distributions."
   (let ((testdirs
          (cond (dists
                 (setf dists 
@@ -407,21 +405,21 @@ This was copied from maxima source init-cl.lisp.")
     (maxima::merror (intl:gettext "Invalid number to updir."))))
 
 (defun maxima-list-directory ( &optional dirname)
+ "A directory list function that is meant to be called from maxima."
   (cons '(maxima::mlist maxima::simp) 
         (list-directory (if dirname dirname *default-pathname-defaults*))))
 
 (defun mext-info (dist-name)
+  "Print the description of a distribution."
   (let* ((sname (maxima::$sconcat dist-name))
          (info (gethash sname *dist-descr-table*)))
       (if info (progn (print-dist-info info) 'maxima::$done)
         nil)))
-;        (merror (intl:gettext "*** Unknown distribtuion '~a'.~%") sname)))))
 
-;; list installed distributions
 (defun mext-list ()
+  "List installed distributions."
   (scan-installed-distributions)
   (cons '(maxima::mlist maxima::simp) (list-installed-distributions)))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -515,7 +513,7 @@ This was copied from maxima source init-cl.lisp.")
   ($mext_dist_build dist-names)
   ($mext_dist_user_install dist-names))
 
-;; load in a subdir dir, or use *default-pathname-defaults*
+;; load file in a subdir dir, or use *default-pathname-defaults*
 (defmfun $load_in_dsubdir (file &optional dir)
   (if (and dir ($listp dir)) (setf dir (cdr dir)))
   (let* ((abs-dir (mext:fpathname-directory *default-pathname-defaults*))

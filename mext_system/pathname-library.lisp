@@ -1,5 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Portable pathname library, modified for our purpose.
+;; cl-fad. Portable pathname library, modified for our purpose,
+;; mostly by supporting gcl.
 
 ;;; Copyright (c) 2012  John Lapeyre. All rights reserved.
 ;;;
@@ -36,6 +37,14 @@
 ;; end copyright information from cl-fad
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Note: we are trying functions instead of macros.
+;; The following macros, each beginning with 'f', are meant to be replacements
+;; for the corresponding ansi function. These are here because these functions
+;; can be 1) missing, 2) broken, 3) not completely specified by the standard.
+;; In cl-fad, some of the missing ansi functions are interned in :cl. I had
+;; problems unlocking the package for some lisps. In the end, I opted for the
+;; 'f' macros.
+
 ;; cl-fad does not support gcl, so we must change some things.
 ;; First, try to fix some missing or non-ansi-compliant gcl functions.
 ;; Sometimes, the ansi standard function 'funcname exists in gcl, but is not compliant.
@@ -51,56 +60,73 @@
 (in-package :mext-maxima)
 ;(declaim (optimize (speed 3) (space 0) (safety 0) #-gcl (debug 0)))
 
-#-gcl  (defmacro fmake-pathname (&rest body)
-        `(make-pathname ,@body))
 
-#+gcl (defmacro fmake-pathname (&rest body)
-        `(gcl-make-pathname ,@body))
+#-gcl  (defun fmake-pathname (&rest body)
+        (apply #'make-pathname body))
+#+gcl  (defun fmake-pathname (&rest body)
+        (apply #'gcl-make-pathname body))
+;#-gcl  (defmacro fmake-pathname (&rest body)
+;        `(make-pathname ,@body))
+;#+gcl (defmacro fmake-pathname (&rest body)
+;        `(gcl-make-pathname ,@body))
 
-#-gcl (defmacro fpathname-directory (&rest body)
-        `(pathname-directory ,@body))
+#-gcl (defun fpathname-directory (&rest body)
+        (apply #'pathname-directory body))
+#+gcl (defun fpathname-directory (&rest body)
+        (apply #'gcl-pathname-directory body))
+;#-gcl (defmacro fpathname-directory (&rest body)
+;        `(pathname-directory ,@body))
+;#+gcl (defmacro fpathname-directory (&rest body)
+;        `(gcl-pathname-directory ,@body))
 
-#+gcl (defmacro fpathname-directory (&rest body)
-        `(gcl-pathname-directory ,@body))
+#-gcl (defun fwild-pathname-p (&rest body)
+        (apply #'cl:wild-pathname-p body))
+#-gcl (defun fwild-pathname-p (&rest body)
+        (apply #'gcl-wild-pathname-p body))
+;#-gcl (defmacro fwild-pathname-p (&rest body)
+;        `(cl:wild-pathname-p ,@body))
+;#+gcl (defmacro fwild-pathname-p (&rest body)
+;        `(gcl-wild-pathname-p ,@body))
 
-#-gcl (defmacro fwild-pathname-p (&rest body)
-        `(cl:wild-pathname-p ,@body))
+#-gcl (defun fensure-directories-exist (&rest body)
+        (apply #'cl:ensure-directories-exist body))
+#+gcl (defun fensure-directories-exist (&rest body)
+        (apply #'gcl-ensure-directories-exist body))
+;#-gcl (defmacro fensure-directories-exist (&rest body)
+;        `(cl:ensure-directories-exist ,@body))
+;#+gcl (defmacro fensure-directories-exist (&rest body)
+;        `(gcl-ensure-directories-exist ,@body))
 
-#+gcl (defmacro fwild-pathname-p (&rest body)
-        `(gcl-wild-pathname-p ,@body))
+#-gcl (defun fphysicalize-pathname (&rest body)
+        (apply #'physicalize-pathname body))
+#+gcl (defun fphysicalize-pathname (&rest body)
+        (apply #'gcl-physicalize-pathname body))
+;#-gcl (defmacro fphysicalize-pathname (&rest body)
+;        `(physicalize-pathname ,@body))
+;#+gcl (defmacro fphysicalize-pathname (&rest body)
+;        `(gcl-physicalize-pathname ,@body))
 
-#-gcl (defmacro fensure-directories-exist (&rest body)
-        `(cl:ensure-directories-exist ,@body))
+#-gcl (defun fenough-namestring (&rest body)
+        (apply #'cl:enough-namestring body))
+#+gcl (defun fenough-namestring (&rest body)
+        (apply #gcl-enough-namestring body))
+;#-gcl (defmacro fenough-namestring (&rest body)
+;        `(cl:enough-namestring ,@body))
+;#+gcl (defmacro fenough-namestring (&rest body)
+;        `(gcl-enough-namestring ,@body))
 
-#+gcl (defmacro fensure-directories-exist (&rest body)
-        `(gcl-ensure-directories-exist ,@body))
+(defun fload-pathname ()
+   #-gcl *load-pathname* #+gcl sys:*load-pathname* )
 
-#-gcl (defmacro fphysicalize-pathname (&rest body)
-        `(physicalize-pathname ,@body))
-
-#+gcl (defmacro fphysicalize-pathname (&rest body)
-        `(gcl-physicalize-pathname ,@body))
-
-
-#-gcl (defmacro fenough-namestring (&rest body)
-        `(cl:enough-namestring ,@body))
-
-#+gcl (defmacro fenough-namestring (&rest body)
-        `(gcl-enough-namestring ,@body))
-
-;; This should probably be done with truename ??
-;; For pathnames like "/a/b/.." or "a/b/..",
+;; fix-trailing-updir -- This is for dealing with  pathnames like "/a/b/.." or "a/b/..",
 ;; The component :name is non-nil. Eg for sbcl, it is ".".
-;; Here, we convert to a
-;; pathname with :name equal nil and :up instead of '..'.
-;;
+;; Here, we convert to a pathname with :name equal nil and :up instead
+;; of '..'. That is, pathname, is converted to a directory.
 ;; fix-trailing-updir will fail if ".." is a valid filename.
 ;; But, in the year 2012, on mac OS X, *nix, and win32, this would
 ;;  be at best a pathological case.
 ;; Non-portable features:  1) we assume :up means parent dir in lisp
 ;;  2) we assume ".." means parent dir in platform.
-;; Tested on:
-;;   sbcl,linux
 (defun fix-trailing-updir (pname)
   (if (stringp pname) (setf pname (parse-namestring pname)))  
   (let* ((posdir (fpathname-directory (pathname-as-directory pname)))
@@ -110,9 +136,10 @@
           (fmake-pathname :name nil :type nil :directory new-dir :defaults pname))
       pname)))
 
-;; probably can be done with truename ?? No! truename only works for files that exist.
-;; compact-pathname: remove :up's and associated parent directories from
-;; pathname.
+;; compact-pathname -- remove :up's and associated parent directories
+;; from pathname.
+;; probably can be done with truename ?? 
+;; No! truename only works for files that exist.
 ;; pname must be a pathspec.
 ;; Returns a pathname object
 ;; Does not remove ".".
@@ -142,6 +169,7 @@
    (fenough-namestring full-source-pathname source-dir) target-dir))
 
 ;; copied from  sbcl. We have no good use for this now.
+;; maybe comment this out.
 #-gcl(defun physicalize-pathname (possibly-logical-pathname)
   (if (typep possibly-logical-pathname 'logical-pathname)
       (translate-logical-pathname possibly-logical-pathname)
@@ -151,7 +179,7 @@
 (defun gcl-physicalize-pathname (possibly-logical-pathname)
       possibly-logical-pathname)
 
-;; built-in is not ansi compliant
+;; gcl make-pathname is not ansi compliant. I model the error message on sbcl
 #+gcl (defun gcl-make-pathname (&rest args)
         (let ((dir-spec (getf args :directory)))
           (if dir-spec
@@ -175,10 +203,10 @@
         (apply 'cl::make-pathname args)))
 
 ;; built-in is not ansi compliant
-;; To specify relative directory: gcl has nothing, ansi has :relative
-;;            absolute directory: gcl has :root, ansi has :absolute
-;;  parent directory: apparantly not specified by standard.b
-;;  parent directory: gcl has :parent other implementations have :up
+;; To specify relative directory: gcl has nothing, ansi requires :relative
+;; To specify absolute directory: gcl has :root,   ansi requires :absolute
+;;  Denoting parent directory is apparently not specified by the standard.
+;;  For parent directory, gcl has :parent. Most other implementations have :up
 ;;  We choose :up
 #+gcl (defun gcl-pathname-directory (&rest args)
         (let ((dir-spec (apply 'cl::pathname-directory args)))
@@ -255,6 +283,7 @@
       cmd)))
 
 ;; This is based on code from defsystem.lisp. Code by andrejv and rtoy.
+;; I also can't see how to do it better.
 #+gcl
 (defun gcl-ensure-directories-exist (pathspec &key verbose)
  (declare (ignore verbose))
@@ -291,13 +320,19 @@
 ;; causes error in gcl, both windows and linux
 ;; gcl win32 device returns ("C:")
 (defun print-pathname-components (pathname-in)
-        (let ((pathname (pathname pathname-in)))
-          (loop for component in 
-                (list (list "name" 'pathname-name) (list "directory" 'fpathname-directory)
-                      '("type" pathname-type) '("host" pathname-host) '("device" pathname-device)
-                      '("version" pathname-version)) do
-                (format t "~a : ~s~%" (car component) (funcall (cadr component) pathname))))
-        t)
+  (let* ((pathname (pathname pathname-in))
+         (name (pathname-name pathname))
+         (directory (fpathname-directory pathname))
+         (type (pathname-type pathname))
+         (version (pathname-version pathname))
+         (host (pathname-host pathname))
+         (device (pathname-device pathname)))
+    (loop for component in 
+          (list (list "name" name) (list "directory" directory)
+                (list "type" type) (list "host" host) (list "device" device)
+                (list "version" version)) do
+                (format t "~a : ~s~%" (car component) (second component))))
+  t)
 
 ;; need to put in key overwrite
 (defun copy-file-from-dir-to-dir (file ext source-dir target-dir)
@@ -307,12 +342,11 @@
     (format t "Copying '~a' to '~a'~%" source-file target-file)
     (copy-file source-file target-file :overwrite t)))
 
+;; This is crappy. But I am still using it in one place.
 (defun copy-file-all-components (source-file source-ext source-dir 
                                              target-file target-ext target-dir)
 ; next line needed by clisp maxima. and must not be present for sbcl,ecl,gcl.  we should look into a general approach.
 #+clisp  (if (stringp target-dir) (setf target-dir (pathname-as-directory target-dir)))
-;  (format t "sf ~s, se ~s, sd ~s, tf ~s, te ~s, td ~s~%" source-file source-ext source-dir 
-;                                                         target-file target-ext target-dir)
   (let ((source-path (fmake-pathname :name source-file :type source-ext :directory source-dir))
         (target-path (fmake-pathname :name target-file :type target-ext :directory target-dir)))
     (format t "Copying '~a' to '~a'~%" source-path target-path)
@@ -339,7 +373,7 @@ checked for compatibility of their types."
   (values))
 
 ;; example (copy-file (pathname "aex.mac") (pathname "../aex1.mac") :overwrite t)
-
+;; This could probably be replaced by system copy commands, but this is from cl-fad
 (defun copy-file (from to &key overwrite)
   "Copies the file designated by the non-wild pathname designator FROM
 to the file designated by the non-wild pathname designator TO.  If
@@ -377,7 +411,7 @@ directory designated by PATHSPEC does actually exist."
     (not (component-present-p (pathname-type pathspec)))
     pathspec))
 
-;; a lot of mext code has been working with directory-pathname-p,
+;; a lot of mext code has been working under gcl with directory-pathname-p,
 ;; but some needs this. look into using this everywhere.
 #+gcl
 (defun gcl-directory-pathname-p (pathspec)
@@ -443,9 +477,6 @@ directory form - see PATHNAME-AS-DIRECTORY."
     #+(or :sbcl :cmu :scl :lispworks) (directory wildcard) 
     #+:gcl
     (let ((entries (directory wildcard)))
-;      (format t "Wildcard is ~s~%" wildcard)
-;      (loop for entry in entries do
-;            (format t "stat is ~s~%" (si:stat entry)))
       (loop for entry in entries collect
             (if (gcl-directory-pathname-p entry)
                 (pathname-as-directory entry) entry)))
