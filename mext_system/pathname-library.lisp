@@ -275,70 +275,6 @@
    ;; (Would NIL be better?)
    (values pathspec t)))
 
-(defun native-namestring (pathname)
-  (namestring pathname))
-
-;; This does not work. I am not sure how much work it would take to fix it.
-;; copied from sbcl source
-#+gcl (defun test-ensure-directories-exist (pathspec &key verbose (mode "0777"))
-  (let ((pathname (gcl-physicalize-pathname (merge-pathnames (pathname pathspec))))
-        (created-p nil))
-;    (format t "here ~a" pathspec)
-    (when (fwild-pathname-p pathname)
-      (error ;  'simple-file-error
-             :format-control "bad place for a wild pathname"
-             :pathname pathspec))
-    (let* ((dir (fpathname-directory pathname))
-           ;; *d-p-d* can have name and type components which would prevent
-           ;; PROBE-FILE below from working
-           (*default-pathname-defaults*
-             (fmake-pathname :directory dir :device (pathname-device pathname))))
-      (loop for i from 1 upto (length dir)
-            do
-            (let* ((newpath (fmake-pathname
-                             :host (pathname-host pathname)
-                             :device (pathname-device pathname)
-                             :directory (subseq dir 0 i)))
-                   (probed (probe-file newpath)))
-              (unless (directory-pathname-p probed)
-                (let ((namestring (coerce (native-namestring newpath)
-                                          'string)))
-                  (when verbose
-                    (format *standard-output*
-                            "~&creating directory: ~A~%"
-                            namestring))
-;                  (sb!unix:unix-mkdir namestring mode)
-                  (mkdir namestring mode)
-                  (unless (directory-pathname-p (probe-file newpath))
-                    (restart-case
-                        (error
-                         ; 'simple-file-error
-;                         :pathname pathspec
-;                         :format-control
-                         (if (and probed
-                                  (not (directory-pathname-p probed)))
-                             "Can't create directory ~A,~
-                                 ~%a file with the same name already exists."
-                             "Can't create directory ~A")
-                         (list namestring))
-                      (retry ()
-                        :report "Retry directory creation."
-                        (test-ensure-directories-exist
-                         pathspec
-                         :verbose verbose :mode mode))
-                      (continue ()
-                        :report
-                        "Continue as if directory creation was successful."
-                        nil)))
-                  (setf created-p t)))))
-      (values pathspec created-p))))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;  Much of this was taken/modified from the  cl-fad library.
-;;; But we added several things
-
 ;; helper function for gcl-wild-pathname-p
 (defun pathname-component (pathname-in field-key)
         (let ((pathname (pathname pathname-in)))
@@ -441,6 +377,15 @@ directory designated by PATHSPEC does actually exist."
     (not (component-present-p (pathname-type pathspec)))
     pathspec))
 
+;; a lot of mext code has been working with directory-pathname-p,
+;; but some needs this. look into using this everywhere.
+#+gcl
+(defun gcl-directory-pathname-p (pathspec)
+  "Returns NIL if PATHSPEC \(a pathname designator) does not designate
+a directory, PATHSPEC otherwise.  It is irrelevant whether file or
+directory designated by PATHSPEC actually does exist."
+  (eq :directory (car (si:stat pathspec))))
+
 (defun pathname-as-directory (pathspec)
   "Converts the non-wild pathname designator PATHSPEC to directory
 form."
@@ -502,7 +447,7 @@ directory form - see PATHNAME-AS-DIRECTORY."
 ;      (loop for entry in entries do
 ;            (format t "stat is ~s~%" (si:stat entry)))
       (loop for entry in entries collect
-            (if (eq (car (si:stat entry)) :directory)
+            (if (gcl-directory-pathname-p entry)
                 (pathname-as-directory entry) entry)))
     #+(or :openmcl :digitool) (directory wildcard :directories t)
     #+:allegro (directory wildcard :directories-are-files nil)
@@ -563,7 +508,6 @@ exists and if it is a directory.  Returns its truename if this is the
 case, NIL otherwise.  The truename is returned in directory form as if
 by PATHNAME-AS-DIRECTORY."
 ;  (format t "pathspec: ~s~%" pathspec)
-;  (format t " true pathspec: ~s~%" (truename pathspec))
 ;  (format t " probe pathspec: ~s~%" (probe-file pathspec))
 ;  (format t " name: ~s~%" (pathname-name pathspec))
 ;  (format t " dir: ~s~%" (pathname-directory pathspec))
@@ -577,14 +521,9 @@ by PATHNAME-AS-DIRECTORY."
   (and (lw:file-directory-p pathspec)
        (pathname-as-directory (truename pathspec)))
   #+gcl
-  (let ((pname (compact-pathname pathspec))) ; works better than truename and probefile
-;    (format t " pname: ~s~%" pname)
+  (let ((pname (compact-pathname pathspec))) ; can use neither truename nor probefile
     (if pname 
-	(eq :directory (first (si:stat (pathname-as-file pname))))))
-;      (let ((pname2 (pathname-as-file pathspec)))
-;	(format t " pname2: ~s~%" pname2)
-;	(if pname2 
-;	    (eq :directory (first (si:stat pname2)))))))
+        (gcl-directory-pathname-p (pathname-as-file pname))))
   #-(or :allegro :lispworks :gcl )
   (let ((result (file-exists-p pathspec)))
     (and result

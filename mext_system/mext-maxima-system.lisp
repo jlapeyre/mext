@@ -219,7 +219,6 @@ This was copied from maxima source init-cl.lisp.")
 (defun subdir-of-contrib (subdir)
   (merge-pathnames subdir (mext:pathname-as-directory *maxima-contribdir*)))
 
-
 ;; use defaults here as well ?
 ;; clisp part is hacked in, it will raise error if a directory is given.
 ;; bug file-exists-p is broken for clisp

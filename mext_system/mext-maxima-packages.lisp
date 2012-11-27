@@ -25,7 +25,7 @@
    :string-ends-with-pos 
    :wrap-text)))
 
-;; I think this must be synced with mext-user.lisp
+
 (if (find-package :mext-maxima ) t  
   (defpackage :mext-maxima (:use common-lisp :gjl.lisp-util)
     (:nicknames :mext)
@@ -41,5 +41,7 @@
              :change-root-pathname
              :directory-pathname-p
              :mext-optimize
+             :subdir-of-shared
+             :subdir-of-contrib
 )))
 ;    (:import-from :gjl.lisp-util :ensure-list)))
