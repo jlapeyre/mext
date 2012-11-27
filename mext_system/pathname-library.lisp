@@ -110,7 +110,7 @@
           (fmake-pathname :name nil :type nil :directory new-dir :defaults pname))
       pname)))
 
-;; probably can be done with truename ?? truename only works for files that exist.
+;; probably can be done with truename ?? No! truename only works for files that exist.
 ;; compact-pathname: remove :up's and associated parent directories from
 ;; pathname.
 ;; pname must be a pathspec.
@@ -516,7 +516,7 @@ directory form - see PATHNAME-AS-DIRECTORY."
 (defun pathname-as-file (pathspec)
   "Converts the non-wild pathname designator PATHSPEC to file form."
   (let ((pathname (pathname pathspec)))
-    (when (wild-pathname-p pathname)
+    (when (fwild-pathname-p pathname)
       (error "Can't reliably convert wild pathnames."))
     (cond ((directory-pathname-p pathspec)
            (let* ((directory (pathname-directory pathname))
@@ -556,11 +556,18 @@ directory is returned as if by PATHNAME-AS-DIRECTORY."
 
 ;; copied from cl-fad, clisp thing is still broken, so I disabled
 ;; it for the moment
+;; seems to be working for gcl now.
 (defun directory-exists-p (pathspec)
   "Checks whether the file named by the pathname designator PATHSPEC
 exists and if it is a directory.  Returns its truename if this is the
 case, NIL otherwise.  The truename is returned in directory form as if
 by PATHNAME-AS-DIRECTORY."
+;  (format t "pathspec: ~s~%" pathspec)
+;  (format t " true pathspec: ~s~%" (truename pathspec))
+;  (format t " probe pathspec: ~s~%" (probe-file pathspec))
+;  (format t " name: ~s~%" (pathname-name pathspec))
+;  (format t " dir: ~s~%" (pathname-directory pathspec))
+;  (format t "stat: ~s~%" (si:stat (pathname-as-file pathspec)))
 ;  #+:clisp (and (ext:probe-directory (pathname-as-directory pathspec)) ; gjl 2012
 ;                (pathname-as-directory (truename pathspec)))
   #+:allegro
@@ -569,8 +576,15 @@ by PATHNAME-AS-DIRECTORY."
   #+:lispworks
   (and (lw:file-directory-p pathspec)
        (pathname-as-directory (truename pathspec)))
-  #+gcl ; does not work in win32. returns nil will valid path
-  (eq :directory (first (si:stat pathspec)))
+  #+gcl
+  (let ((pname (compact-pathname pathspec))) ; works better than truename and probefile
+;    (format t " pname: ~s~%" pname)
+    (if pname 
+	(eq :directory (first (si:stat (pathname-as-file pname))))))
+;      (let ((pname2 (pathname-as-file pathspec)))
+;	(format t " pname2: ~s~%" pname2)
+;	(if pname2 
+;	    (eq :directory (first (si:stat pname2)))))))
   #-(or :allegro :lispworks :gcl )
   (let ((result (file-exists-p pathspec)))
     (and result

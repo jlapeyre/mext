@@ -364,8 +364,7 @@ This was copied from maxima source init-cl.lisp.")
                            (cdr dir)))))))
 ;; disabled this check for gcl win32. but, the driveletter, or volume or whatever
 ;; is lost with updir
-             (if #+(and :win32 :gcl) t
-                 #-(and :win32 :gcl) (directory-exists-p fdir) 
+             (if (directory-exists-p fdir) 
                  (progn (setf *default-pathname-defaults*
 			      (truename fdir))
 ;                              (mext:compact-pathname fdir))
