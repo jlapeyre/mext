@@ -44,10 +44,10 @@ library, hacked to support gcl somewhat. Some functions in gcl
 are missing, not ansi-compliant, or broken. (but, gcl also
 found an error that 5 other lisps missed!)  mext uses an
 interface to many of the ansi pathname functions and cl-fad functions,
-implemented as macros with the ansi name preceeded with an 'f'.
+implemented as functions with the ansi name preceeded with an 'f'.
 For behavior not specified by the standard, I standarized on
-sbcl. Most macros for most lisps expand to just the standard
-function. This is far from robust and well tested, but
+sbcl. Most of these functions for most lisps call the standard
+function. The result is not well tested, but
 currently works for installing distributions with six lisp
 implementations under linux and gcl under win32.
 
