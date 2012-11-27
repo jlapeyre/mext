@@ -52,6 +52,11 @@ currently works for installing distributions with six lisp
 implementations under linux and gcl under win32.
 
 Non-features:
+
+ Much of the underlying code and more seems to be implemented in asdf
+ and related tools. But, this serves as a stop-gap as long as maxima
+ on gcl/win32 is widely used.
+
  Not much documentation. But here are some examples (with some
  lines edited out.) Note that the key :maintainer below is used
  in the sense of a linux package maintainer or asdf maintainer:

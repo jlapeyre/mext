@@ -155,6 +155,7 @@ This was copied from maxima source init-cl.lisp.")
   (concatenate 'string *mext-user-dir-as-string* *lisp-patterns*))
 
 (defun find-mext-description (dist-name)
+  "Find the .mxt file in the distribution directory. (not installed)"
   (fmake-pathname :name dist-name :type "mxt" :directory *dist-dir*))
 
 (defun create-distribution (name &rest body-form)
@@ -311,22 +312,23 @@ This was copied from maxima source init-cl.lisp.")
         collect (car (last (fpathname-directory dir)))))
 
 (defun scan-installed-distributions ()
+"Read the .mxt files from all installted distributions. This
+ rebuilds the data-base of installed .mxt packages. (packages
+ or distributions ?"
   (loop for name in (list-installed-distributions) do
         (let ((file (mext-mxt-file-search name)))
-;          (format t "File is ~s~%" file)
           (if file (load file))))
   t)
 
-
 (defun install-mext-description (dist-name)
+ "Copy the .mxt file from the distribution to the installation directory."
   (let ((mxt-file (find-mext-description dist-name))
         (*system-name* dist-name))
-;    (format t "Installing mxt description file for ~s~%" dist-name)
-;    (format t "Dist directory is ~s~%" *dist-dir*)
-;    (format t "source pathname is ~s~%" mxt-file)
     (install-file mxt-file nil)))
 
 (defun distribution-description (&rest descr)
+ "Record the distribtuion information in the list descr. This function
+ is called in a .mxt file."
   (let ((name (getf descr :name)))
       (setf (gethash (maxima::$sconcat name) *dist-descr-table*) descr)))
 
