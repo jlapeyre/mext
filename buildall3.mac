@@ -7,5 +7,5 @@ for package in [ "defmfun1", "maxdoc", "mext_defmfun1", "aex", "store" ] do
 
 /* other third party packages adapted to mext */
 for package in [ "nelder_mead", "alt_eigen", "pw", "discrete",
-          "coma", "circuits", "implicit" ] do
+       "coma", "circuits", "implicit", "bernstein", "grobner" ] do
           load_in_subdir(["ibuild","mac"],[package]);
