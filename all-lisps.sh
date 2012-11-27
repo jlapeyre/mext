@@ -11,7 +11,7 @@
 # of this software, as well.
 
 maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-#maximas="smaxima"
+#maximas="gmaxima"
 
 # Build just the mext_system
 build_mext () {

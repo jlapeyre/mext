@@ -81,7 +81,7 @@
 
 #-gcl (defun fwild-pathname-p (&rest body)
         (apply #'cl:wild-pathname-p body))
-#-gcl (defun fwild-pathname-p (&rest body)
+#+gcl (defun fwild-pathname-p (&rest body)
         (apply #'gcl-wild-pathname-p body))
 ;#-gcl (defmacro fwild-pathname-p (&rest body)
 ;        `(cl:wild-pathname-p ,@body))

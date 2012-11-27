@@ -421,6 +421,10 @@ This was copied from maxima source init-cl.lisp.")
   (scan-installed-distributions)
   (cons '(maxima::mlist maxima::simp) (list-installed-distributions)))
 
+(defun mext-clear ()
+ "Clear list of loaded mext distributions."
+ (clrhash *installed-dist-table*))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (in-package :maxima)
@@ -658,4 +662,8 @@ This was copied from maxima source init-cl.lisp.")
 (defmfun $mext_list ()
   (mext::mext-list))
 
+(defmfun $mext_clear ()
+  (mext::mext-clear))
+
 ($mext_provided "mext_system")
+

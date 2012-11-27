@@ -53,9 +53,9 @@ implementations under linux and gcl under win32.
 
 Non-features:
 
- Much of the underlying code and more seems to be implemented in asdf
- and related tools. But, this serves as a stop-gap as long as maxima
- on gcl/win32 is widely used.
+ Much of the underlying code and more seems to be implemented as well
+ in asdf and related tools. But, this serves as a stop-gap as long as
+ maxima on gcl/win32 is widely used.
 
  Not much documentation. But here are some examples (with some
  lines edited out.) Note that the key :maintainer below is used
@@ -64,10 +64,10 @@ Non-features:
  system.
 
  There is a mext package called 'mext_defmfun1'. This redefines some
-of the mext functions with documentation and errors checking. If this
-package is installed, then online help is available via '?' for
-chdir, mext_test, mext_list, mext_info, truename, probe_file,
-and pwd.
+ of the mext functions with documentation and error checking. If this
+ package is installed, then online help is available via '?' for
+ chdir, mext_test, mext_list, mext_info, truename, probe_file, and
+ pwd.
 
 (%i1) showtime:true$
 Evaluation took 0.0000 seconds (0.0000 elapsed) using 0 bytes.
