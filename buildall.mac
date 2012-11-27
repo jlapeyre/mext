@@ -14,6 +14,7 @@ for package in [ "defmfun1", "maxdoc", "mext_defmfun1", "aex", "store" ] do
 
 /* other third party packages adapted to mext */
 
+
 for package in [ "nelder_mead", "alt_eigen", "pw", "discrete",
           "coma", "circuits", "implicit" ,"bernstein", "grobner"] do
   buildall_mext(package);

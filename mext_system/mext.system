@@ -2,27 +2,30 @@
 ;; System definition file for building and installing mext-maxima.
 ;; This system used here is an extension of the defsystem that is built
 ;; into maxima.
-
 (in-package :mext-maxima)
 
+;; We can probably update this file to use the newer system
 ;; Compile these systems. But, components marked load-only will not be compiled
-(setf *systems-to-compile* "mext-system" )
+(setf *systems-to-compile* "mext_system" )
 
-(setf *systems-to-load* "mext-system" )
+(setf *systems-to-load* "mext_system" )
 
 ;; These will be installed with both mext_dist_user_install_binary
 ;; and mext_dist_user_install_source
-(setf *systems-to-install*  "mext-system")
+(setf *systems-to-install*  "mext_system")
 
 ;; removed binaries and intermediate files for these systems
-(setf *systems-to-clean* "mext-system")
+(setf *systems-to-clean* "mext_system")
 
-(create-distribution "mext-system"
-  :install-only "mext-inst-loader")
+(create-distribution "mext_system"
+  :install-only (list "mext-inst-loader"
+                      "mext_system-rtests")
+  :loader "dummy-load-mext_system")
 
-; A list of copy specifications. Each element is a list of 6 elemnts.
-; name,type,dir for source file and name,type,dir for target file
-;; We could really use something better than this.
+;; A list of copy specifications. Each element is a list of 6 elemnts.
+;; name,type,dir for source file and name,type,dir for target file
+;; We could really use something better than this, but it
+;; is only used here.
 (setf *user-install-explicit*
   (list (list  "mext-user" "lisp" mext::*dist-dir*
                "mext" "lisp"  mext::*userdir-pathname-as-list*)
@@ -34,7 +37,7 @@
 
 (in-package :cl-user)
 
-(mk:defsystem mext-system
+(mk:defsystem mext_system
   :source-extension "lisp"
   :components
    ((:file "mext-maxima-packages" :load-only t)
@@ -51,3 +54,19 @@
   :source-extension "lisp"
   :components
    ((:file "load_mext_maxima1" :load-only t)))
+
+(mk:defsystem dummy-load-mext_system
+  :source-extension "mac"
+  :components
+   ((:file "mext_system")))
+
+(mk:defsystem mext_system-rtests
+  :source-extension "mac"
+  :source-pathname "rtests"
+  :components
+    ( (:file "rtest_load_in_subdir")
+      (:file "t1")
+      (:module adir
+               :source-pathname "adir"
+               :components
+               ((:file "dummy" :source-extension "txt")))))

@@ -43,7 +43,7 @@ This was copied from maxima source init-cl.lisp.")
 ; this is a list starting with ABSOLUTE. not a path object
 (defparameter *mext-installation-dir*
   (append (pathname-directory #-gcl *load-pathname* #+gcl sys:*load-pathname*)
-          (list "mext" *maxima-and-lisp-version* "mext-system")))
+          (list "mext" *maxima-and-lisp-version* "mext_system")))
 
 (let ((file 
       (make-pathname :name "load_mext_maxima1" :type "lisp"

@@ -24,7 +24,7 @@
                          (format t " load_mext Loading ~a~%" file-path)
                          (load file-path))))
 
-(defvar mext-maxima::*dist-name* "mext-system")
+(defvar mext-maxima::*dist-name* "mext_system")
 
 (let ((dir *load-mext-maxima-load-pathname*))
   (loop for file in (list  "mext")

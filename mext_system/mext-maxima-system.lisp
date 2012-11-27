@@ -328,7 +328,7 @@ This was copied from maxima source init-cl.lisp.")
 
 (defun distribution-description (&rest descr)
   (let ((name (getf descr :name)))
-    (setf (gethash (maxima::$sconcat name) *dist-descr-table*) descr)))
+      (setf (gethash (maxima::$sconcat name) *dist-descr-table*) descr)))
 
 (defun print-dist-info-record (info txt key)
   (format t " ~a: ~a~%" txt (getf info key)))
@@ -408,7 +408,6 @@ This was copied from maxima source init-cl.lisp.")
   (cons '(maxima::mlist maxima::simp) 
         (list-directory (if dirname dirname *default-pathname-defaults*))))
 
-;; not optional! but otherwise, I don't know how to trap no argument
 (defun mext-info (dist-name)
   (let* ((sname (maxima::$sconcat dist-name))
          (info (gethash sname *dist-descr-table*)))
@@ -600,15 +599,17 @@ This was copied from maxima source init-cl.lisp.")
 ;; identical. I want to switch to this name
 (defmfun $require (name &optional force)
   (setf name ($sconcat name))
-  (let ((registered (gethash name mext-maxima::*installed-dist-table*)))
-    (if (or (not registered) force)
-        (let ((file (mext::mext-file-search name)))
-          (if file (progn (format t "loading ~a~%" file) ($load file))
-            (merror "Unable to find '~a'." name)))
-      t)))
+  (if (string= "mext_system" name) t
+    (let ((registered (gethash name mext-maxima::*installed-dist-table*)))
+      (if (or (not registered) force)
+          (let ((file (mext::mext-file-search name)))
+            (if file (progn (format t "loading ~a~%" file) ($load file))
+              (merror "Unable to find '~a'." name)))
+        t))))
 
 ;; declare that a mext package has been loaded. mext_require will see
 ;; that it has been loaded
+;; This should only be called from mext_provide
 (defmfun $mext_provided (name)
   (setf (gethash ($sconcat name) mext-maxima::*installed-dist-table*) t))
 
@@ -650,8 +651,11 @@ This was copied from maxima source init-cl.lisp.")
 ;; removed arg check.
 (defmfun $mext_info ( dist-name )
   (or (mext::mext-info dist-name)
-        (merror (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") dist-name)))
+        (merror (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") 
+                ($sconcat dist-name))))
 
 ;; list installed distributions
 (defmfun $mext_list ()
   (mext::mext-list))
+
+($mext_provided "mext_system")

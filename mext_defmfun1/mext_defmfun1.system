@@ -1,13 +1,12 @@
 ;;-*- Mode: Lisp -*-
 ;; System definition file for building and installing mext_defmfun1
-
 (in-package :mext-maxima)
 
 (create-distribution "mext_defmfun1"
   :loader "load-mext_defmfun1")
 ;  :install-only "mext_defmfun1-rtests")
 
-(in-package :cl-user)
+;(in-package :cl-user)
 
 (mk:defsystem mext_defmfun1
   :source-extension "lisp"

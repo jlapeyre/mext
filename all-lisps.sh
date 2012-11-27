@@ -2,13 +2,15 @@
 
 # Build mext and all mext packages for several versions of maxima
 # compiled with different lisps. For unix-like OS's.
+# An alternative for a single lisp is to use the maxima
+# scripts in buildallx.mac
 
 # Names of the executable maxima programs. These are soft
 # links in /usr/local/bin to builds of maxima with differenct
 # lisp implementations. Allegro worked with an earlier version
 # of this software, as well.
 #maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-maximas="gmaxima"
+maximas="smaxima"
 
 # Build just the mext_system
 build_mext () {

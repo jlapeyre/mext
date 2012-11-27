@@ -6,7 +6,7 @@
 (create-distribution "maxdoc"
   :loader "load-maxdoc")
 
-(in-package :cl-user)
+;(in-package :cl-user)
 
 (mk:defsystem maxdoc
   :source-extension "lisp"

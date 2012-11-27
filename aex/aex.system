@@ -7,7 +7,7 @@
   :loader "load-aex"
   :install-only "aex-rtests")
 
-(in-package :cl-user)
+;(in-package :cl-user)
 
 (mk:defsystem aex
   :source-extension "lisp"

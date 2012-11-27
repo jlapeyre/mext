@@ -10,5 +10,5 @@
   (loop for file in (list  #+openmcl "defsystem" "operate-on-system2"
       "gjl-lisp-util" "pathname-library" "mext-maxima-system"
       "mext-component-operations" "compile") do
-    (load-one file mext-maxima-load::*binary-ext*)))
-
+    (load-one file mext-maxima-load::*binary-ext*))
+  (load-one "mext_system" "mxt"))
