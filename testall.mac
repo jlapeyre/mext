@@ -1,0 +1,8 @@
+load(mext);
+
+/* pw test is rather slow */
+mext_test([implicit,aex,lists_aex]);
+
+/*
+ mext_test([implicit,aex,lists_aex,pw]);
+*/

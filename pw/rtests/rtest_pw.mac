@@ -1,4 +1,5 @@
-(extra_integration_methods:[], extra_definite_integration_methods:[],0);
+( kill(a,b,c,e,h,j,f,_f,_fa,p,x,y,s,t,u,v),
+  extra_integration_methods:[], extra_definite_integration_methods:[],0);
 0;
 
 pwint(signum(x^5+x^4+x^3+9),x);
@@ -248,8 +249,9 @@ ratsimp(pwsimp(u-v,y));
 (remvalue(s,t,u,v),0);
 0;
 
-assume(a>0,b<0,c>0);
-[a > 0,b < 0,c > 0];
+(assume(a>0,b<0,c>0),0);
+0;
+/* gjl changed this [a > 0,b < 0,c > 0]; */
  
 (define(p(x),(((3*b*x^2+3*c)*(signum(x+a)-signum(x-a))/2/(6*a*c+2*a^3*b)))),
 	define(dc(x), ratsimp(pwint(p(p)*p(x-p),p,minf,inf))),
@@ -689,3 +691,5 @@ true;
 (forget(c>0), remvalue(a,b,c,d,s,t,_f,_fa), 0);
 0;
 
+( kill(a,b,c,e,h,j,f,_f,_fa,p,x,y,s,t,u,v),0);
+0;

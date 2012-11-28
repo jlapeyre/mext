@@ -1,14 +1,20 @@
 /* test loading tests. */
 
-1;
-1;
-
-(kill(a),true)$
+(kill(a,our_curdir),true)$
 true$
 
 /* set a, then load a file that sets a to another value */
 a:2;
 2;
+
+(our_curdir : pwd(), 0);
+0;
+
+(chdir(mext_userdir),0);
+0;
+
+(chdir("mext_system"),0);
+0;
 
 (load_in_subdir("t1",["rtests"]),0);
 0;
@@ -43,5 +49,8 @@ true;
 a;
 1$
 
-(kill(a),true)$
+popdir(4);
+''our_curdir;
+
+(kill(a,our_curdir),true)$
 true$

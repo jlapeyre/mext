@@ -5,6 +5,7 @@ mext_provide(
   "misc-util1",
   "doc-system",
   "maxima-dev-doc",
+  "arg-spec-definitions",
   "defmfun1",
   "max-doc",
   "max-doc-sections",

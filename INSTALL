@@ -9,7 +9,7 @@ distributions for several lisps.)
 
 Currently only installation to the user maxima folder is
 supported. A separate subfolder is created for each combination
-of maxima version and lisp implementation-version. So you
+of maxima version and lisp implementation/version. So you
 can use different versions of maxima and implementations
 and versions of lisp in parallel.
 
@@ -31,6 +31,10 @@ Click 'Make New Folder'. Name the folder 'mext'. You should
 see a path something like:
      C:\Users\Bill\mext
 Click 'Extract.
+  
+  Warning: if the timestamps of the extracted files are in the future
+   with respect to your system, defsystem will compile in semi-infinite
+   loops, repeatedly ask questions, and ignore the answers.
 
 * Intstall the mext_system distribution (package) to your
 user maxima folder.  All other distributions packaged for
@@ -53,14 +57,19 @@ the file 'ibuild.mac' in this folder to build and install
 the distribution.
 
 Dependencies:  A depends on B is written A -> B
+All distributions depend on mext_system.
 Any distribution not listed here depends only on mext_system.
 
-  aex -> maxdoc -> defmfun1
+  maxdoc -> defmfun1
+  aex -> maxdoc
+  lists_aex -> aex
+  discrete_aex -> aex
   alt_eigen -> maxdoc
   nelder_mead -> maxdoc
-  store -> maxdoc  (store requires that the asdf library cl-store be installed)
+  store -> maxdoc  (store also requires that the asdf library cl-store be installed)
 
-* To install all distribtutions. First install mext_system as described
+* To install all distribtutions, instead of installing them one by one as
+described above.  First install mext_system as described
 above. Then open a new wxmaxima session.  Type the following:
 
   load(mext);

@@ -10,6 +10,18 @@ mext_provide("aex",
   "ifunctions",
   "system-essential",
   "mset",
+  "lisp-numeric"]);
+
+/*
+mext_provide("aex",
+  [
+  "aex-packages",
+  "misc-util",
+  "aex-core",
+  "mext-predicates",
+  "ifunctions",
+  "system-essential",
+  "mset",
   "combinatorics",
   "table",
   "partition-list",
@@ -19,6 +31,6 @@ mext_provide("aex",
   "number-functions",
   "lisp-numeric",
   "aex-util"] );
-
+*/
 
 

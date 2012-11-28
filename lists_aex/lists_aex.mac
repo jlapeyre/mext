@@ -1,0 +1,8 @@
+mext_require("aex");
+mext_provide("lists_aex",
+  [ "lists_aex-packages",
+     "table",
+     "partition-list",
+     "take",
+     "list",
+     "strings"]);

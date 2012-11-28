@@ -1,0 +1,26 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing discrete_aex
+
+(in-package :mext-maxima)
+
+(create-distribution "discrete_aex"
+  :loader "load-discrete_aex")
+;  :install-only "discrete_aex-rtests")
+
+(mk:defsystem discrete_aex
+  :source-extension "lisp"
+  :components
+   ((:file "combinatorics")
+    (:file "number-functions")))
+
+;; neither compile nor load when building
+(mk:defsystem load-discrete_aex
+  :source-extension "mac"
+  :components
+   ((:file "discrete_aex")))
+  
+;; (mk:defsystem discrete_aex-rtests
+;;   :source-extension "mac"
+;;   :source-pathname "rtests"
+;;   :components
+;;     ( (:file "")))

@@ -263,7 +263,8 @@
                           :code "select(lrange(100),abundant_p)"))
 
 (defmfun1 ($aliquot_sum :doc) ((n :pos-int))
-  "Returns the aliquot sum of <n>."
+  "Returns the aliquot sum of <n>. The aliquot sum
+ of <n> is the sum of the proper divisors of <n>."
   (- ($divisor_function n 1) n))
 
 (defmfun1 ($amicable_p :doc) ((n :pos-int) (m :pos-int))
@@ -313,5 +314,3 @@
                           (setf sum (+ sum (* (+ k (/ nx k)) (floor (/ nx k))))))
                     (- sum (* u u))))
 |#
-
-

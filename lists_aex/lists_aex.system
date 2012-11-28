@@ -1,0 +1,33 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing lists_aex
+
+(in-package :mext-maxima)
+
+(create-distribution "lists_aex"
+  :loader "load-lists_aex"
+  :install-only "lists_aex-rtests")
+
+(mk:defsystem lists_aex
+  :source-extension "lisp"
+  :components
+   ((:file "lists_aex-packages" :load-only t)
+    (:file "table")
+    (:file "partition-list")
+    (:file "take")
+    (:file "list")
+    (:file "list")
+    (:file "strings")))
+
+;; neither compile nor load when building
+(mk:defsystem load-lists_aex
+  :source-extension "mac"
+  :components
+   ((:file "lists_aex")))
+  
+(mk:defsystem lists_aex-rtests
+  :source-extension "mac"
+  :source-pathname "rtests"
+  :components
+    ( (:file "rtest_list")
+      (:file "rtest_table")
+      (:file "rtest_take")))

@@ -7,8 +7,6 @@
   :loader "load-aex"
   :install-only "aex-rtests")
 
-;(in-package :cl-user)
-
 (mk:defsystem aex
   :source-extension "lisp"
   :components
@@ -19,15 +17,7 @@
     (:file "ifunctions")
     (:file "system-essential")
     (:file "mset")
-    (:file "combinatorics")
-    (:file "table")
-    (:file "partition-list")
-    (:file "take")
-    (:file "list")
-    (:file "strings")
-    (:file "number-functions")
-    (:file "lisp-numeric")
-    (:file "aex-util")))
+    (:file "lisp-numeric")))
 
 ;; neither compile nor load when building
 (mk:defsystem load-aex
@@ -39,8 +29,4 @@
   :source-extension "mac"
   :source-pathname "rtests"
   :components
-    ( (:file "rtest_afuncs")
-      (:file "rtest_list")
-      (:file "rtest_table")
-      (:file "rtest_take")))
-
+    ((:file "rtest_afuncs")))

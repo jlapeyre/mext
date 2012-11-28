@@ -2,7 +2,8 @@ load(mext);
 
 /* Alternate way to build without using chdir */
 
-for package in [ "defmfun1", "maxdoc", "mext_defmfun1", "aex", "store" ] do
+for package in [ "defmfun1", "maxdoc", "mext_defmfun1", "aex",
+         "lists_aex", "discrete_aex", "store" ] do
       load_in_subdir(["ibuild","mac"],[package]);
 
 /* other third party packages adapted to mext */

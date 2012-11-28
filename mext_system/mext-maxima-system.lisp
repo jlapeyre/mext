@@ -114,6 +114,9 @@ This was copied from maxima source init-cl.lisp.")
 ;; for chdir() to return to initial directory
 (defvar *initial-default-pathname* *default-pathname-defaults*)
 
+;; for use with chdir
+(defvar *pwd-directory-stack* '())
+
 ;; for registering which mext distributions have been loaded.
 (defvar *installed-dist-table* (make-hash-table :test 'equal))
 
@@ -343,34 +346,37 @@ This was copied from maxima source init-cl.lisp.")
 (defun pwd ()
   (namestring *default-pathname-defaults*))
 
-(defun chdir (&rest dirs)
-  (let ((len (length dirs)))
-    (cond ((= len 0)
+(defun chdir ( &key dir (push t) )
+  (let ((curdir *default-pathname-defaults*))
+    (cond ((null dir)
            (setf *default-pathname-defaults* *initial-default-pathname*)
            #+clisp (ext:cd *default-pathname-defaults*)  ; necessary
            #+cmu (setf (ext:default-directory) *default-pathname-defaults*)
            #+openmcl (setf (ccl::current-directory) *default-pathname-defaults*)
+           (when push (push curdir *pwd-directory-stack*))
 	   (namestring *default-pathname-defaults*))
-          ((= len 1) 
-           (let* ((dir (fpathname-directory (pathname-as-directory (car dirs))))
+          (t 
+           (let* ((dir (fpathname-directory (pathname-as-directory dir)))
                   (fdir 
                    (pathname-as-directory 
                     (fmake-pathname :directory (if (eq (car dir) :absolute) dir
                           (append
                            (fpathname-directory *default-pathname-defaults*)
                            (cdr dir)))))))
-;; disabled this check for gcl win32. but, the driveletter, or volume or whatever
-;; is lost with updir
              (if (directory-exists-p fdir) 
                  (progn (setf *default-pathname-defaults*
-			      (truename fdir))
+			      (truename fdir)) ; we want exception ?
 ;                              (mext:compact-pathname fdir))
                         #+clisp (ext:cd *default-pathname-defaults*)
                         #+cmu (setf (ext:default-directory) *default-pathname-defaults*)
                         #+openmcl (setf (ccl::current-directory) *default-pathname-defaults*)
+                        (when push (push curdir *pwd-directory-stack*))
                         (namestring *default-pathname-defaults*))
                  nil))))))
-;               (maxima::merror "chdir: ~a: not a directory." fdir)))))))
+
+(defun popdir (&optional (n 1))
+  (chdir :dir 
+         (loop for i from 1 to n do (pop *pwd-directory-stack*)) :push nil))
 
 (defun mext-test  ( &optional dists )
  "Run regression tests in the sub-directories of the installed distributions.
@@ -399,9 +405,10 @@ This was copied from maxima source init-cl.lisp.")
 
 (defun updir (&optional (n 1))
   (if (and (numberp n) (> n 0))
-      (chdir (namestring (fmake-pathname :directory 
+      (chdir :dir (namestring (fmake-pathname :directory 
             (cons :relative (make-list n :initial-element :up ))
-                                         :name nil :type nil :defaults *default-pathname-defaults*)))
+                                         :name nil :type nil :defaults *default-pathname-defaults*))
+             :push t)
     (maxima::merror (intl:gettext "Invalid number to updir."))))
 
 (defun maxima-list-directory ( &optional dirname)
@@ -621,8 +628,14 @@ This was copied from maxima source init-cl.lisp.")
   (mext::pwd))
 
 ;; change the default directory for lisp *default-pathname-defaults*
-(defmfun $chdir (&rest dirs)
-  (apply #'mext::chdir dirs))
+(defmfun $chdir (&optional dir)
+  (mext::chdir :dir dir :push t ))
+
+(defmfun $popdir ( &optional (n 1) )
+  (mext::popdir n))
+
+(defmfun $dirstack ()
+  (cons '(mlist simp) mext::*pwd-directory-stack*))
 
 ;; chdir up n parent dirs.
 ;; This is probably not too portable. But it is better to use this than to

@@ -1,4 +1,5 @@
-#!/bin/sh
+#
+# Use bash for now
 
 # Build mext and all mext packages for several versions of maxima
 # compiled with different lisps. For unix-like OS's.
@@ -11,36 +12,62 @@
 # of this software, as well.
 
 maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-#maximas="gmaxima"
+#maximas="emaxima"
 
 # Build just the mext_system
 build_mext () {
- for maxima in $maximas
-   do
-    echo Building mext_system for $maxima
-    cd ./mext_system; $maxima -b ibuild.mac; cd ..
- done
+    for maxima in $maximas
+    do
+        echo Building mext_system for $maxima
+        cd ./mext_system; $maxima -b ibuild.mac &> ../logfiles/$maxima.mextsyslog; cd ..
+    done
 }
 
 # build packages packaged with the mext system
 # Which packages are built is specified in the
 # file buildall.mac
 build_mext_packages () {
- for maxima in $maximas
-     do
-      echo Building all packages for $maxima
-      $maxima -b buildall.mac
- done
+    for maxima in $maximas
+    do
+        echo Building all packages for $maxima
+        $maxima -b buildall.mac &> logfiles/$maxima.mextlog
+    done
 }
+
+test_mext_packages () {
+    for maxima in $maximas
+    do
+      echo Testing packages for $maxima
+      $maxima -b testall.mac &> logfiles/$maxima.testlog
+    done
+}
+
+parse_test_logs () {
+    for maxima in $maximas
+    do
+      echo Parsing tests for $maxima
+      ./parse_testlog.pl test logfiles/$maxima.testlog
+    done
+}
+
+parse_build_logs () {
+    for maxima in $maximas
+    do
+      echo Parsing tests for $maxima
+      ./parse_testlog.pl build logfiles/$maxima.mextlog
+    done
+}
+
 
 # print the big document page
 print_max_doc () {
  for maxima in $maximas
      do
-      $maxima -b testdoc.mac
+      echo $maxima -b testdoc.mac 
  done
 }
 
 build_mext
 build_mext_packages
-#print_max_doc
+test_mext_packages
+parse_test_logs

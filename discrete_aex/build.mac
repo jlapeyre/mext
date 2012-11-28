@@ -1,0 +1,5 @@
+load(mext);
+mext_require("aex");
+load_in_subdir(["discrete_aex","system"]);
+mext_dist_clean();
+mext_dist_build();

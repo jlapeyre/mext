@@ -16,7 +16,7 @@
   :language :mext-maxima
   :components
    (
-    (:file "Species")
+    (:file "Species" :load-only t)
     (:file "logic_ops" :load-only t) ; do not compile
     (:file "boolmin" :source-extension "lisp"
             :language :lisp)

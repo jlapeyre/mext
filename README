@@ -51,10 +51,15 @@ function. The result is not well tested, but
 currently works for installing distributions with six lisp
 implementations under linux and gcl under win32.
 
+* I tried as much as possible to keep the pathname code portable. That
+is, I avoided '.\/'. This makes the maintainer level code, ie calls
+to provide and require a bit more verbose, as paths are specified as
+lists rather than strings with directory separators.
+
 Non-features:
 
- Much of the underlying code and more seems to be implemented as well
- in asdf and related tools. But, this serves as a stop-gap as long as
+ Much of the underlying code and more seems to be provided as well
+ by asdf and related tools. But, this serves as a stop-gap as long as
  maxima on gcl/win32 is widely used.
 
  Not much documentation. But here are some examples (with some

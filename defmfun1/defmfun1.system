@@ -15,6 +15,7 @@
     (:file "misc-util1")
     (:file "doc-system")
     (:file "maxima-dev-doc")
+    (:file "arg-spec-definitions")
     (:file "defmfun1")
     (:file "max-doc")
     (:file "max-doc-sections")

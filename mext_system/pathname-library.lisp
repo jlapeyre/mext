@@ -109,7 +109,7 @@
 #-gcl (defun fenough-namestring (&rest body)
         (apply #'cl:enough-namestring body))
 #+gcl (defun fenough-namestring (&rest body)
-        (apply #gcl-enough-namestring body))
+        (apply #'gcl-enough-namestring body))
 ;#-gcl (defmacro fenough-namestring (&rest body)
 ;        `(cl:enough-namestring ,@body))
 ;#+gcl (defmacro fenough-namestring (&rest body)

@@ -34,6 +34,7 @@
              :compact-pathname
              :pathname-as-directory
              :fmake-pathname
+             :fload-pathname
              :fpathname-directory
              :fwild-pathname-p
              :fensure-directories-exist
