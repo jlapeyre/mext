@@ -67,7 +67,7 @@ print_max_doc () {
  done
 }
 
-build_mext
-build_mext_packages
+#build_mext
+#build_mext_packages
 test_mext_packages
 parse_test_logs

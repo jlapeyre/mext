@@ -12,7 +12,6 @@
            (setq result (meval* v)))
           result))))
 
-
 #|  Don't know how this works.
 
 (defmacro with-output-to-list ((out) &body body)

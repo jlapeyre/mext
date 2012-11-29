@@ -1,6 +1,6 @@
 /* test loading tests. */
 
-(kill(a,our_curdir),true)$
+(kill(a,our_curdir,alen),true)$
 true$
 
 /* set a, then load a file that sets a to another value */
@@ -52,5 +52,28 @@ a;
 popdir(4);
 ''our_curdir;
 
-(kill(a,our_curdir),true)$
+listp(mext_list());
 true$
+
+(alen:length(mext_list()), is(alen > 0));  
+true$
+
+stringp(first(mext_list()));
+true$
+
+stringp(pwd());
+true$
+
+listp(list_directory());
+true$
+
+listp(dirstack());
+true$
+
+mext_info(mext_system);
+done$
+
+/**********************************/
+(kill(a,our_curdir,alen),true)$
+true$
+

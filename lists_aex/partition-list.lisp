@@ -1,7 +1,6 @@
 (if (find-package :partition-list ) t (defpackage :partition-list (:use :common-lisp )))
 (in-package :partition-list)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (use-package :gjl.lisp-util)
 
 (max-doc::set-cur-sec 'max-doc::lists-fandv)

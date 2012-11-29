@@ -89,11 +89,6 @@
                '( "lrange" ("start" "stop" "incr")
                   ("returns a list of expressions from " arg "start" " through " arg "stop" " in steps of " arg "incr")))
 
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun canon-depth-spec (spec)
@@ -160,9 +155,6 @@
                        '(:pretext "Symbols can be used for limits or increments."
                          :vars "[x,a]"
                          :code ("lrange(x,x+4)" "lrange(x,x+4*a,a)")))
-                      
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -558,7 +550,7 @@
 
 
 
-;; This does not recognize lambda functions unlesss compile is t
+;; This does not recognize lambda functions unless compile is t
 (defmfun1 ($count :doc) ( (expr :non-atom-ae-list) item &opt ($compile t :bool))
   "Counts the number of items in <expr> matching <item>. If <item>
  is a lambda function then compile must be true."
@@ -574,13 +566,3 @@
                             "count(lrange(10^4), lambda([x], is(mod(x,3) = 0)))"
                             "count( %%ff(1,2,\"dog\"), \"dog\")"
                             "count(lrange(100,ot->ar), 'evenp)")))
-
-
-
-
-
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
