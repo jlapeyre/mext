@@ -212,15 +212,15 @@ ia a list of three elements: hame, protoco, contents."
         (t
          (maxima::merror1 (intl:gettext "max-doc::set-cur-sec Can't set current section to ~m. Not a section struct or tag.") sec-tag))))
 
-(defun set-cur-dist (dist-name)
-  (cond ((stringp dist-name)
-         (if (gethash dist-name mext-maxima::*installed-dist-table*)
-             (setf *current-distribution* dist-name)
+(defun set-cur-dist (distname)
+  (cond ((stringp distname)
+         (if (gethash distname mext-maxima::*installed-dist-table*)
+             (setf *current-distribution* distname)
            (maxima::merror1 (intl:gettext "max-doc::set-cur-dist 
- Can't set current distribution to ~m. The distribution does not exist.") dist-name)))
+ Can't set current distribution to ~m. The distribution does not exist.") distname)))
         (t
          (maxima::merror1 (intl:gettext "max-doc::set-cur-dist 
- Can't set current distribution to ~m. Not a string.") dist-name))))
+ Can't set current distribution to ~m. Not a string.") distname))))
 
 (defun exists-section (sec-tag)
   (gethash sec-tag (sections-hash *max-doc-top*)))

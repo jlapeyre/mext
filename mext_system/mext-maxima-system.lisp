@@ -60,7 +60,7 @@ This was copied from maxima source init-cl.lisp.")
 
 ;; name of the distribution. this is the top level name. similar to
 ;;  a linux package name
-(defvar *dist-name* nil)
+(defvar *distname* nil)
 ; current defsystem system name. There can be multiple systems in a distribution
 (defvar *system-name* nil)
 ;; Following are set to either a string or a list of strings specifying
@@ -155,20 +155,20 @@ This was copied from maxima source init-cl.lisp.")
 (defparameter *search-path-lisp-mext-user*
   (concatenate 'string *mext-user-dir-as-string* *lisp-patterns*))
 
-(defun find-mext-description (dist-name)
+(defun find-mext-description (distname)
   "Find the .mxt file in the distribution directory. (not installed)"
-  (fmake-pathname :name dist-name :type "mxt" :directory *dist-dir*))
+  (fmake-pathname :name distname :type "mxt" :directory *dist-dir*))
 
 (defun create-distribution (name &rest body-form)
   "Define a distribution. This is called at the top of a .mxt file."
-  (setf *dist-name* name)
+  (setf *distname* name)
   (setf *dist-dir* (fpathname-directory (fload-pathname)))
   (let ((mxtfile (find-mext-description name)))
     (unless (probe-file mxtfile)
       (maxima::merror (intl:gettext "create-distribution: The distribution ~s is missing the description file
       ~s.~%") name mxtfile)))
   (setf *systems-to-compile*
-        (if (getf body-form :dont-compile-dist-name) nil
+        (if (getf body-form :dont-compile-distname) nil
           name))
   (setf *systems-to-load* name)
   (setf *systems-to-clean* name)
@@ -320,10 +320,10 @@ This was copied from maxima source init-cl.lisp.")
           (if file (load file))))
   t)
 
-(defun install-mext-description (dist-name)
+(defun install-mext-description (distname)
  "Copy the .mxt file from the distribution to the installation directory."
-  (let ((mxt-file (find-mext-description dist-name))
-        (*system-name* dist-name))
+  (let ((mxt-file (find-mext-description distname))
+        (*system-name* distname))
     (install-file mxt-file nil)))
 
 (defun distribution-description (&rest descr)
@@ -416,9 +416,9 @@ This was copied from maxima source init-cl.lisp.")
   (cons '(maxima::mlist maxima::simp) 
         (list-directory (if dirname dirname *default-pathname-defaults*))))
 
-(defun mext-info (dist-name)
+(defun mext-info (distname)
   "Print the description of a distribution."
-  (let* ((sname (maxima::$sconcat dist-name))
+  (let* ((sname (maxima::$sconcat distname))
          (info (gethash sname *dist-descr-table*)))
       (if info (progn (print-dist-info info) 'maxima::$done)
         nil)))
@@ -439,49 +439,49 @@ This was copied from maxima source init-cl.lisp.")
 (defparameter $lispname *maxima-lispname*)
 
 (defmacro mk-mext-operation (name default-system body)
-  `(defmfun ,name ( &optional dist-names )
-     (unless dist-names (setf dist-names ,default-system))
-     (unless (listp dist-names) (setf dist-names (list dist-names)))
+  `(defmfun ,name ( &optional distnames )
+     (unless distnames (setf distnames ,default-system))
+     (unless (listp distnames) (setf distnames (list distnames)))
      ,body
      '$done))
 
 (defmacro mk-mext-all-operation (name default-system &rest body)
   `(mk-mext-operation ,name ,default-system
-     (loop for dist-name in dist-names do
-           (let ((mext-maxima::*system-name* dist-name))
+     (loop for distname in distnames do
+           (let ((mext-maxima::*system-name* distname))
              ,@body))))
 
 (mk-mext-all-operation $mext_dist_compile mext-maxima::*systems-to-compile*
        (setf mk::*bother-user-if-no-binary* nil)
-       (mk:oos2 dist-name :compile))
+       (mk:oos2 distname :compile))
 
 (mk-mext-all-operation $mext_dist_load mext-maxima::*systems-to-load*
        (setf mk::*bother-user-if-no-binary* nil)
        (setf make::*load-source-if-no-binary* t)
-       (mk:oos2 dist-name :load)
+       (mk:oos2 distname :load)
        (setf make::*load-source-if-no-binary* nil))
 
 (mk-mext-all-operation $mext_dist_clean mext-maxima::*systems-to-clean*
-     (mk:oos2 dist-name :mext-clean-lisp-compilation)
-     (mk:oos2 dist-name :mext-clean-intermediate))
+     (mk:oos2 distname :mext-clean-lisp-compilation)
+     (mk:oos2 distname :mext-clean-intermediate))
 
 (mk-mext-all-operation $mext_dist_user_install_pref_binary mext-maxima::*systems-to-install*
-      (mk:oos2 dist-name :mext-user-install-pref-binary))
+      (mk:oos2 distname :mext-user-install-pref-binary))
 
 (mk-mext-all-operation $mext_dist_user_install_binary mext-maxima::*systems-to-install*
-    (mk:oos2 dist-name :mext-user-install-binary))
+    (mk:oos2 distname :mext-user-install-binary))
 
 (mk-mext-all-operation $mext_dist_user_install_source mext-maxima::*systems-to-install*
-     (mk:oos2 dist-name :mext-user-install-source))
+     (mk:oos2 distname :mext-user-install-source))
 
 ;; these are arbitrary non-code fileds; not really source files
 ;; In the system definition, give eg, :source-extension "txt",
 ;; and include this system in *systems-to-install-other*
 (mk-mext-all-operation $mext_dist_user_install_other mext::*systems-to-install-other*
-     (mk:oos2 dist-name :mext-user-install-source :data (list :inst-dir mext::*dist-name*)))
+     (mk:oos2 distname :mext-user-install-source :data (list :inst-dir mext::*distname*)))
 
 (mk-mext-all-operation $mext_dist_user_install_mext_root mext::*systems-to-install-to-mext-root*
-     (mk:oos2 dist-name :mext-user-install-source :data '( :mext-root t )))
+     (mk:oos2 distname :mext-user-install-source :data '( :mext-root t )))
 
 (defmfun $mext_dist_user_install_additional ()
   (format t "installing additional files.~%")
@@ -493,36 +493,36 @@ This was copied from maxima source init-cl.lisp.")
   t)
 
 ;; return name of current distribution.
-(defmfun $mext_dist_name ()
-  mext::*dist-name*)
+(defmfun $mext_distname ()
+  mext::*distname*)
 
-(defmfun $mext_dist_user_install_remaining (&optional dist-names)
-  (mext::install-mext-description ($mext_dist_name))
-  ($mext_dist_user_install_other dist-names)
-  ($mext_dist_user_install_mext_root dist-names)
+(defmfun $mext_dist_user_install_remaining (&optional distnames)
+  (mext::install-mext-description ($mext_distname))
+  ($mext_dist_user_install_other distnames)
+  ($mext_dist_user_install_mext_root distnames)
   ($mext_dist_user_install_additional))
 
 ;; This installs binaries of each component, or source if load-only was true.
 ;; It also installs things through special hooks.
 ;; To install source as well, call as well $mext_dist_user_install_source.
-(defmfun $mext_dist_user_install (&optional dist-names)
-  ($mext_dist_user_install_pref_binary dist-names)
-  ($mext_dist_user_install_remaining dist-names))
+(defmfun $mext_dist_user_install (&optional distnames)
+  ($mext_dist_user_install_pref_binary distnames)
+  ($mext_dist_user_install_remaining distnames))
 
 ;; This installs everything, but with source, rather than binary
 ;; note the similar name of the first function called.
-(defmfun $mext_dist_user_source_install (&optional dist-names)
-  ($mext_dist_user_install_remaining dist-names)
-  ($mext_dist_user_install_source dist-names))
+(defmfun $mext_dist_user_source_install (&optional distnames)
+  ($mext_dist_user_install_remaining distnames)
+  ($mext_dist_user_install_source distnames))
 
-(defmfun $mext_dist_build (&optional dist-names)
-  ($mext_dist_clean dist-names)
-  ($mext_dist_load dist-names)
-  ($mext_dist_compile dist-names))
+(defmfun $mext_dist_build (&optional distnames)
+  ($mext_dist_clean distnames)
+  ($mext_dist_load distnames)
+  ($mext_dist_compile distnames))
 
-(defmfun $mext_dist_user_all (&optional dist-names)
-  ($mext_dist_build dist-names)
-  ($mext_dist_user_install dist-names))
+(defmfun $mext_dist_user_all (&optional distnames)
+  ($mext_dist_build distnames)
+  ($mext_dist_user_install distnames))
 
 ;; load file in a subdir dir, or use *default-pathname-defaults*
 (defmfun $load_in_dsubdir (file &optional dir)
@@ -664,12 +664,10 @@ This was copied from maxima source init-cl.lisp.")
 (defmfun $mkdir (filespec &optional (mode "0770"))
   (mext::mkdir filespec mode))
 
-;; not optional! but otherwise, I don't know how to trap no argument
-;; removed arg check.
-(defmfun $mext_info ( dist-name )
-  (or (mext::mext-info dist-name)
+(defmfun $mext_info ( distname )
+  (or (mext::mext-info distname)
         (merror (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") 
-                ($sconcat dist-name))))
+                ($sconcat distname))))
 
 ;; list installed distributions
 (defmfun $mext_list ()

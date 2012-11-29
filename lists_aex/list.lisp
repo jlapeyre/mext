@@ -239,9 +239,10 @@
   an independent copy of expr.
   constant_list(expr,[n,m,..]) returns a nested list of dimensions n,m,...
   where each leaf is an independent copy of expr and the copies of each
-  list at each level are independent."))
+  list at each level are independent. If a third argument is given, then it
+  is used as the op, rather than 'list', at every level."))
                        
-(defmfun-ae $constant_list (c spec &optional (head mlist))
+(defmfun-ae $constant_list (c (spec :pos-int-or-listof) &optional (head mlist))
   (setf spec (max-list::canon-depth-spec spec))
   (setf head (reverse (max-list::canon-head-spec spec head)))
   (setf spec (reverse spec))
@@ -250,7 +251,7 @@
              (max-list::const-list0 c (pop spec) (pop head))
              c)))
     (dolist (n spec)
-      (format t "level length ~a~%" n)
+;      (format t "level length ~a~%" n)
       (setf lev (max-list::const-list1 lev n (pop head))))
     (if (eq o-type '$ar) ($faex lev) lev)))
 

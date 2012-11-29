@@ -20,9 +20,8 @@
     (:file "logic_ops" :load-only t) ; do not compile
     (:file "boolmin" :source-extension "lisp"
             :language :lisp)
-    (:file "logic")
-;    (:file "discrete_nocompile" :load-only t)
-    (:file "discrete_code")
+    (:file "logic" :load-only t) ; ecl fails to compile this
+    (:file "discrete_code" :load-only t)  ; ecl fails to compile this
     (:file "group" :source-extension "lisp"
            :language :lisp)))
 

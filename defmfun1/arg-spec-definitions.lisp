@@ -5,7 +5,7 @@
                      (:function "a function"
                                 (not (numberp e))) ; a bit fuzzy what this would mean
                      (:string  "a string" (stringp e))
-                     (:string-or-listof ("an string" "a list of strings")
+                     (:string-or-listof ("a string" "a list of strings")
                                          (or (stringp e)
                                              (and (maxima::$listp e)
                                                   (every #'stringp (cdr e)))))
@@ -32,6 +32,11 @@
                       (and (integerp e) (>= e 0)))
                      (:pos-int "a positive integer"
                          (and (integerp e) (> e 0)))
+                     (:pos-int-or-listof ("a positive integer" "a list of positive integers")
+                                         (or (and (integerp e) (> e 0))
+                                             (and (maxima::$listp e)
+                                                  (every #'(lambda (x) (and (integerp x) (> x 0)))
+                                                         (cdr e)))))
                      ((:int-range 2) "an integer between ~a and ~a"
                        int-range-check)
                      (:uint-64 ,(format nil "equivalent to an unsigned 64 bit integer~%    (ie an integer between 0 and 2^64)")

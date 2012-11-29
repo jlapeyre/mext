@@ -18,6 +18,7 @@
 
 (mk:defsystem load-implicit
   :source-extension "mac"
+  :load-only t    ; ecl fails to compile this. 5 other lisps don't report error
   :components
    ((:file "implicit")))
 

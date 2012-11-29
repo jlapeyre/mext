@@ -12,7 +12,8 @@
 # of this software, as well.
 
 maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-#maximas="emaxima"
+#maximas="smaxima gmaxima clmaxima emaxima ccmaxima"
+#maximas="smaxima"
 
 # Build just the mext_system
 build_mext () {
@@ -45,7 +46,7 @@ test_mext_packages () {
 parse_test_logs () {
     for maxima in $maximas
     do
-      echo Parsing tests for $maxima
+      echo Parsing test log for $maxima
       ./parse_testlog.pl test logfiles/$maxima.testlog
     done
 }
@@ -53,7 +54,7 @@ parse_test_logs () {
 parse_build_logs () {
     for maxima in $maximas
     do
-      echo Parsing tests for $maxima
+      echo Parsing build log for $maxima
       ./parse_testlog.pl build logfiles/$maxima.mextlog
     done
 }
@@ -67,7 +68,8 @@ print_max_doc () {
  done
 }
 
-#build_mext
-#build_mext_packages
+build_mext
+build_mext_packages
+parse_build_logs
 test_mext_packages
 parse_test_logs

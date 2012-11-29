@@ -39,8 +39,8 @@
   "Returns a list of all installed mext distributions."
     (mext::mext-list))
 
-(defmfun1 ($mext_info :doc) ((dist-name :or-string-symbol))
+(defmfun1 ($mext_info :doc) ((distname :or-string-symbol))
   "Print information about an installed mext distribution. The list of installed
  distributions is built by calling 'mext_list'."
-    (or (mext::mext-info dist-name)
-        (merror1 (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") ($sconcat dist-name))))
+    (or (mext::mext-info distname)
+        (merror1 (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") ($sconcat distname))))
