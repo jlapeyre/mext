@@ -6,7 +6,8 @@
 (max-doc::set-cur-sec 'max-doc::runtime-fandv)
 
 (defmfun1 ($chdir :doc) ( &optional (dir :string))
-  "Set the working directory."
+  "Set the working directory for maxima/lisp. With some lisps, such as cmu lisp the system
+ directory is changed as well. This should be made uniform across lisp implementations."
   (let ((result (mext::chdir :dir dir :push t)))
     (or result (merror1 (intl:gettext (format nil "chdir: ~a is not a directory" dir))))))
 
