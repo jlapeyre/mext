@@ -9,6 +9,3 @@ if  member(lispname, ["gcl", "ecl" ]) then
     mext_dist_build(),
     mext_dist_user_install(),
     mext_dist_clean());
-  
-
-

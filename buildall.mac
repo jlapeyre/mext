@@ -1,4 +1,5 @@
 load(mext);
+
 /*
  gcl works only with load_in_dsubdir and chdir(), the other lisps
  work also with load_in_subdir and updir()... why ?
@@ -13,9 +14,12 @@ for package in [ "defmfun1", "maxdoc", "mext_defmfun1", "aex",
             "lists_aex", "discrete_aex", "store" ] do
   buildall_mext(package);
 
+updir();
+chdir("prime_pi_maxima");
+load_in_dsubdir(["ibuild","mac"]);
+popdir();
+
 /* other third party packages adapted to mext */
-
-
 for package in [ "nelder_mead", "alt_eigen", "pw", "discrete",
           "coma", "circuits", "implicit" ,"bernstein", "grobner"] do
   buildall_mext(package);

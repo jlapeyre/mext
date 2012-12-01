@@ -8,9 +8,4 @@
    :version "0.0.1"
    :license "GPL"
    :description "serialization for maxima expressions"
-   :long-description "serialization for maxima expressions")
-
-
-
-
- 
+   :long-description "mass storage of maxima expressions in binary format")

@@ -7,4 +7,3 @@ if  member(lispname, ["gcl", "ecl" ]) then
     load_in_subdir(["store","system"]),
     mext_dist_clean(),
     mext_dist_build());
-

@@ -16,7 +16,7 @@
                         '( "chdir" ("dir")
                            ("Set the working directory to " arg "dir" ".")))
 
-(defmfun1 ($popdir :doc) ( &optional (n :non-neg-int))
+(defmfun1 ($popdir :doc) ( &optional (n 1 :non-neg-int))
   "Pop a value from the current directory stack and chdir to this value.
  If <n> is given, pop <n> values and chdir the last value popped."
   (mext::popdir n))

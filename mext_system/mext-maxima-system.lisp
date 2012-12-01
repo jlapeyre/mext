@@ -1,9 +1,11 @@
+;;; -*- Mode: LISP; Syntax: ANSI-Common-Lisp; Base: 10 -*-
+
 (in-package :mext-maxima)
 
 ;(defmacro mext-optimize ()
 ;  `(declaim (optimize (compilation-speed 0) (speed 3) (space 0) (safety 0) #-gcl (debug 0))))
 
-;; for testing
+;; for testing.
 (defmacro mext-optimize ()
   `(declaim (optimize (compilation-speed 0) (speed 3) (space 0) (safety 0) #-gcl (debug 3))))
 
@@ -337,6 +339,7 @@ This was copied from maxima source init-cl.lisp.")
 
 (defun print-dist-info (info)
   (print-dist-info-record info "Name" :name)
+  (print-dist-info-record info "Short Description" :description)
   (print-dist-info-record info "Description" :long-description)
   (print-dist-info-record info "Version" :version)
   (print-dist-info-record info "Author" :author)
