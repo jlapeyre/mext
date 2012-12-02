@@ -13,13 +13,15 @@
 
 ;; probably need to do this differently for different lisps.
 
+#|
+;;   :copy-array  conflicts with symbol in graphs
 (if (find-package :gjl.lisp-util ) t  (defpackage :gjl.lisp-util (:use common-lisp)
   (:export 
    :gaif 
    :cmp-length
    :comma-separated-english
-   :copy-array 
    :copy-array-type
+   :copy-array
    :dbind 
    :dump-hash
    :ensure-list
@@ -39,6 +41,7 @@
    :string-ends-with-pos 
    :wrap-text
 )))
+|#
 
 (in-package :gjl.lisp-util)
 

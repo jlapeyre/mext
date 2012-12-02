@@ -552,7 +552,7 @@ expression. lex is the identity if <e> is not an aex.
 
 (defun aex-cp-args (x)
   "return lisp array copy of aex expr"
-  (if (aex-p x) (copy-array (aex-arr x)) nil))
+  (if (aex-p x) (gjl::copy-array (aex-arr x)) nil))
 
 (defun aex-mk-head-args (h args)
   (make-aex :head h :arr args ))
@@ -560,7 +560,7 @@ expression. lex is the identity if <e> is not an aex.
 (defmfun-aeo ($aex_cp :doc) ( (e :non-atom)  &optional head)
   (if (and head (atom head)) (setf head (list head 'msimp)))
   (cond ( (aex-p e)
-          (make-aex :head (if head head (aex-head e)) :arr (copy-array (aex-arr e))
+          (make-aex :head (if head head (aex-head e)) :arr (gjl::copy-array (aex-arr e))
                     :adjustable (if adj-type-p adj-type (aex-adjustable e))))
         ( t
           (if head (setf e (cons head (cdr e))))
@@ -574,7 +574,7 @@ expression. lex is the identity if <e> is not an aex.
 
 (defun aex-cp (e &key (adjustable t adj-type-p) (head nil) (element-type 'any))
   (cond ( (aex-p e)
-         (make-aex :head (if head head (aex-head e)) :arr (copy-array (aex-arr e))
+         (make-aex :head (if head head (aex-head e)) :arr (gjl::copy-array (aex-arr e))
                    :adjustable (if adj-type-p adjustable (aex-adjustable e)) ))
         ( t
          (if head (setf e (cons head (cdr e))))

@@ -1,12 +1,14 @@
 (in-package "COMMON-LISP-USER")
 
+
 (if (find-package :gjl.lisp-util ) t  (defpackage :gjl.lisp-util (:use common-lisp)
+  (:nicknames :gjl)
   (:export 
    :gaif 
    :cmp-length
    :comma-separated-english
-   :copy-array 
    :copy-array-type
+;   :copy-array  conflicts with symbol in graphs
    :dbind 
    :dump-hash
    :ensure-list

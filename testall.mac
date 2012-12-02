@@ -1,7 +1,7 @@
 load(mext);
 
 /* pw test is rather slow */
-mext_test([mext_system,implicit,aex,lists_aex]);
+mext_test([mext_system,prime_pi,pw,implicit,aex,lists_aex]);
 
 /*
  mext_test([implicit,aex,lists_aex,pw]);
