@@ -1,13 +1,15 @@
 load(mext);
 
-/* pw test is rather slow */
+our_mext_list : mext_list();
 
-/*
-mext_test([mext_system,prime_pi,pw,implicit,aex,lists_aex]);
-*/
+our_test_list : [mext_system,pw,implicit,aex,lists_aex];
 
-mext_test([mext_system,pw,implicit,aex,lists_aex,store]);
+if member("store", our_mext_list) then our_test_list :
+        cons("store",our_test_list);
 
-/*
- mext_test([implicit,aex,lists_aex,pw]);
-*/
+if member("prime_pi", our_mext_list) then our_test_list :
+        cons("prime_pi",our_test_list);
+
+mext_test(our_test_list);
+
+kill(our_mext_list, our_test_list);

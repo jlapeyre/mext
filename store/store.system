@@ -3,7 +3,8 @@
 (in-package :mext-maxima)
 
 (create-distribution "store"
-  :loader "load-store")
+  :loader "load-store"
+  :install-only "store-rtests")
 
 (in-package :cl-user)
 
@@ -14,8 +15,13 @@
     (:file "load-cl-store" :load-only t)
     (:file "store-expression")))
 
-;; neither compile nor load when building
 (mk:defsystem load-store
   :source-extension "mac"
   :components
    ((:file "store")))
+
+(mk:defsystem store-rtests
+  :source-extension "mac"
+  :source-pathname "rtests"
+  :components
+    ((:file "rtest_store")))

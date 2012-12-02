@@ -1,0 +1,24 @@
+( kill(a,c), store_restore(item) := block( store("tst.cls",item),
+  restore("tst.cls")),0);
+0;
+
+store_restore(1);
+1;
+
+(a:1, store_restore(a));
+1;
+
+(load(graphs),
+     c : petersen_graph(), 0);
+0$
+
+/*
+  We should worry about where this file is written. This may
+  be somewhere where the user does not have write permission.
+*/  
+(store("graph.cls",c),
+      factor(graph_charpoly( restore("graph.cls"), x)));
+(x-3)*(x-1)^5*(x+2)^4$
+
+(kill(a,c),0);
+0;

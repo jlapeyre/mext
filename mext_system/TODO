@@ -1,0 +1,8 @@
+Functions and symbols can be clobbered with kill(all);
+require() and mext_provide() don't know about this. 
+
+Quick solution would be to have mext_provide define a symbol that will
+be clobbered by kill(all). require() can check this symbol. Another
+solution would be to use a different function in place of kill, say
+mkill, that checks an additional property and only kills symbols
+that do not have it.
