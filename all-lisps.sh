@@ -1,6 +1,8 @@
 #
 # Use bash for now
 
+# Script for testing mext and packages under *nix lisp implementations.
+
 # Build mext and all mext packages for several versions of maxima
 # compiled with different lisps. For unix-like OS's.
 # An alternative for a single lisp is to use the maxima
@@ -32,6 +34,15 @@ build_mext_packages () {
     do
         echo Building all packages for $maxima
         $maxima -b buildall.mac &> logfiles/$maxima.mextlog
+    done
+}
+
+# for testing changes to a single package
+build_one_mext_package () {
+    for maxima in $maximas
+    do
+        echo Building one package for $maxima
+        $maxima -b buildone.mac &> logfiles/$maxima.mextlog
     done
 }
 
@@ -68,8 +79,10 @@ print_max_doc () {
  done
 }
 
-build_mext
-build_mext_packages
+#build_mext
+#build_mext_packages
+
+build_one_mext_package
 parse_build_logs
 test_mext_packages
 parse_test_logs

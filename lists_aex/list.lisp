@@ -23,13 +23,13 @@
          `(defun ,name (imin imax incr )
             ,@decl
             (cond ( (< (/ (- imax imin) incr) 0)
-                   '( (mlist) ))
+                   '( (maxima::mlist) ))
                   (t
                    (cond ( (>= imax imin)
-                          (cons '(mlist simp) (loop for i ,@loop-decl  from imin to imax by incr collect i)))
+                          (cons '(maxima::mlist maxima::simp) (loop for i ,@loop-decl  from imin to imax by incr collect i)))
                          (t
                           (setf incr (- incr))
-                          (cons '(mlist simp) (loop for i ,@loop-decl from imin downto imax by incr collect i)))))))))
+                          (cons '(maxima::mlist maxima::simp) (loop for i ,@loop-decl from imin downto imax by incr collect i)))))))))
 
 (def-num-range-type num-range-int fixnum)
 (def-num-range-type num-range-float float)
@@ -108,7 +108,7 @@
 
 
 (defun const-list0 (c n head)
- (cons (list head 'simp) (make-list n :initial-element c)))
+ (cons (list head 'maxima::simp) (make-list n :initial-element c)))
 
 (defun const-list1 (c n head)
   (declare (fixnum n))
@@ -116,7 +116,7 @@
     (setf n (1- n))
     (dotimes (i n)
       (setf res (cons (copy-tree c)  res)))
-    (cons (list head 'simp) res)))
+    (cons (list head 'maxima::simp) res)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (in-package :maxima)
