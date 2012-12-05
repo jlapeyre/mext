@@ -3,12 +3,19 @@ mext maxima third party code installation system.
 This folder tree contains the mext system, as well as several packages
 for which it was written: defmfun1, aex, and code that depends on
 these. In addition, there are, several 'packages' from the maxima
-third party code repository (currently, we refer to these as
-'distribtutions' rather than 'packages'.)
+third party code repository (Currently, we refer to these as
+'distribtutions' rather than 'packages', but we may change to
+'package'.)
 
 The mext system packages the distributions in a more-or-less
 uniform way. They are built and installed using only maxima,
-rather than depending directly on any system tool.
+rather than depending directly on any system tool. (There are
+some shell/perl scripts to automate testing with several lisps
+under linux, but this is not part of the system.)
+
+Most or all of this has been found to work on at least one
+platform running maxima with:
+linux gcl,sbcl,ccl,clisp,cmucl,ecl; win32 gcl,ccl.
 
 Features:
 
