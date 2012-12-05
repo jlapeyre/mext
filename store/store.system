@@ -12,7 +12,7 @@
   :source-extension "lisp"
   :components
    ((:file "store-packages" :load-only t)
-    (:file "load-cl-store" :load-only t)
+;    (:file "load-cl-store" :load-only t)
     (:file "store-expression")))
 
 (mk:defsystem load-store

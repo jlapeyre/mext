@@ -1,0 +1,9 @@
+mext_require("maxdoc");
+
+mext_provide("quicklisp",
+  [
+  "quicklisp-packages",
+  "quicklisp",
+  "max-asdf",
+  "max-qlsetup"
+   ]);

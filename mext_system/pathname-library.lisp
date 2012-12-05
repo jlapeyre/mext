@@ -352,6 +352,16 @@
     (format t "Copying '~a' to '~a'~%" source-path target-path)
     (copy-file source-path target-path :overwrite t)))
 
+;; make a directory pathname from a list of strings 
+;; representing directory pathname components, and
+;; a parent directory pathname.
+;; eg: (mext::subdir-pathname '( "a" "b" ) $maxima_userdir)
+;;   ->  #P"/home/joeuser/a/b/"
+(defun subdir-pathname (subdirlist dir)
+  (let* ((dirlist (fpathname-directory dir))
+        (newdirlist (append dirlist subdirlist)))
+    (pathname-as-directory (fmake-pathname :directory newdirlist))))
+
 (defvar *stream-buffer-size* 8192)
 
 (defun copy-stream (from to &optional (checkp t))

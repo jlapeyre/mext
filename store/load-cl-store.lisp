@@ -1,10 +1,11 @@
 (in-package :maxima)
+
+;; obsolete
+
 ;; gcl can't use any of this yet.
 ;; ccl understands  (require :asdf), but not maxima built with ccl
-#-(or sbcl gcl) (load "/usr/share/common-lisp/source/cl-asdf/asdf.lisp")
 
-;; seems sbcl maxima already has this loaded
-#-gcl (require :asdf)
+(max-ql:load-asdf)
 
 ;; following line seems must be present with sbcl
 ;; unless the following line is present,

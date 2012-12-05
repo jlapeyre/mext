@@ -12,12 +12,14 @@ rather than depending directly on any system tool.
 
 Features:
 
-* Only one subdirectory of the user directory is added to
-the maxima search paths. This directory contains files that
-load the distributions. Actually the subdirectory is named
-for the maxima version and the lisp implementation and
-the lisp version. So, different maxima and lisps can be
-used in parallel.
+* Only one subdirectory of the user directory is added to the maxima
+search paths. For each distribution, there is one file in this
+directory that loads code. The code for each distribution, as well as
+rtests, etc. are located in further subfolders that are not added to
+the maxima search path by default.  Actually the subdirectory that is
+put in the search path is named for the maxima version and the lisp
+implementation and the lisp version. So, different maxima and lisps
+can be used in parallel.
 
 * A distribution can be loaded with require('distname);
 or require("distname");
@@ -39,18 +41,17 @@ That is, a mext defintion is written that optionally compiles and
 installs source from the maxima share directory to the user mext
 directory.
 
-* Functions for dealing with pathnames, files, and directories
-are included in mext. This includes cl-fad, a portable pathname
-library, hacked to support gcl somewhat. Some functions in gcl
-are missing, not ansi-compliant, or broken. (but, gcl also
-found an error that 5 other lisps missed!)  mext uses an
-interface to many of the ansi pathname functions and cl-fad functions,
-implemented as functions with the ansi name preceeded with an 'f'.
-For behavior not specified by the standard, I standarized on
-sbcl. Most of these functions for most lisps call the standard
-function. The result is not well tested, but
+* Functions for dealing with pathnames, files, and directories are
+included in mext. This includes cl-fad, a portable pathname library,
+hacked to support gcl somewhat. Some functions in gcl are missing, not
+ansi-compliant, or broken. (but, gcl also found an error that 5 other
+lisps missed!)  mext uses an interface to many of the ansi pathname
+functions and cl-fad functions, implemented as functions with the ansi
+name preceeded with an 'f'.  For behavior not specified by the
+standard, I standarized on sbcl. Most of these functions for most
+lisps call the standard function. The result is not well tested, but
 currently works for installing distributions with six lisp
-implementations under linux and gcl under win32.
+implementations under linux and gcl and clozure lisp under win32.
 
 * I tried as much as possible to keep the pathname code portable. That
 is, I avoided '.\/'. This makes the maintainer level code, ie calls
@@ -59,9 +60,9 @@ lists rather than strings with directory separators.
 
 Non-features:
 
- Much of the underlying code and more seems to be provided as well
- by asdf and related tools. But, this serves as a stop-gap as long as
- maxima on gcl/win32 is widely used.
+ Much of the underlying code and more seems to be provided as well by
+ asdf and related tools. But, the code in mext serves as a stop-gap as
+ long as maxima on gcl/win32 is widely used.
 
  Not much documentation. But here are some examples (with some
  lines edited out.) Note that the key :maintainer below is used

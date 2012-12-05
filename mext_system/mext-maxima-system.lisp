@@ -76,13 +76,17 @@ This was copied from maxima source init-cl.lisp.")
 (defvar *systems-required-source* nil) ; probably remove
 (defvar *user-install-explicit* nil)
 (defvar *post-user-install-hooks*  nil)
-;; distribution directory
+;; distribution directory while building
 (defvar *dist-dir* (fpathname-directory (fload-pathname)))
 
 (defvar *userdir-pathname* maxima::*maxima-userdir*)
 
 (defvar *userdir-pathname-as-list* (mext::fpathname-directory 
 				    (mext::pathname-as-directory  maxima::*maxima-userdir*)))
+
+(defvar *homedir-pathname* (pathname-as-directory (pathname (maxima::maxima-getenv "HOME"))))
+
+(defvar $homedir (namestring *homedir-pathname*))
 
 ;; These are nil when the first maxima prompt is printed.
 #+(or clisp cmu) (setf *default-pathname-defaults* (ext:default-directory))
@@ -227,7 +231,10 @@ This was copied from maxima source init-cl.lisp.")
 ;; clisp part is hacked in, it will raise error if a directory is given.
 ;; bug file-exists-p is broken for clisp
 ;; Search for name with various exts in paths.
-;; paths is a  list of directories each in list form
+;; name -- string
+;; exts -- list of possible extensions
+;; paths -- a  list of directories each in list form
+;;
 (defun file-search (name exts paths &aux file )
   (loop for ext in exts while (not file) do
         (loop for path in paths while (not file) do
@@ -242,6 +249,8 @@ This was copied from maxima source init-cl.lisp.")
 (defun mext-mxt-file-search (name)
  "Find the .mxt file in the installation directory of a mext distribution."
   (file-search name (list "mxt") (list (append *mext-user-dir-as-list* (list name)))))
+
+;;; Following functions are called from defsystem operate-on-component, etc.
 
 (defun find-trial-source-full-pathname (cfpn)
   (let* ((sdir  *dist-dir*)

@@ -44,7 +44,9 @@
              :change-root-pathname
              :directory-pathname-p
              :mext-optimize
+             :subdir-pathname
              :subdir-of-shared
              :subdir-of-contrib
+             :load-asdf
 )))
 ;    (:import-from :gjl.lisp-util :ensure-list)))

@@ -13,9 +13,9 @@
 # lisp implementations. Allegro worked with an earlier version
 # of this software, as well.
 
-maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
+#maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
 #maximas="smaxima gmaxima clmaxima emaxima ccmaxima"
-#maximas="smaxima"
+maximas="cmumaxima"
 
 # Build just the mext_system
 build_mext () {

@@ -26,30 +26,30 @@ this repository as a zip file" button.
 * Right-click on the downloaded zip file and choose
 Extract all files. When prompted for a destination,
 click 'Browse...'. You can extract it anywhere, but
-we make a specific choice here. Click your home directory,
-Click 'Make New Folder'. Name the folder 'mext'. You should
-see a path something like:
-     C:\Users\Bill\mext
-Click 'Extract.
+here, we assume you browse to your home folder,
+ C:\Users\username.
+Click 'OK'. Click 'Extract. The files should be extracted
+to a folder called C:\Users\username\mext-master, or
+something like that.
   
   Warning: if the timestamps of the extracted files are in the future
    with respect to your system, defsystem will compile in semi-infinite
-   loops, repeatedly ask questions, and ignore the answers.
+   loops, repeatedly ask questions, and ignore the answers. I have not
+   yet found found a way to defeat this.
 
-* Intstall the mext_system distribution (package) to your
-user maxima folder.  All other distributions packaged for
-mext depend on mext_system (mext). First, we show how to
-install them one-by-one. Below, we show how to install several,
-or all, of them.  Open wxmaxima. Click
-menu File-->Load Package. Browse to where you extracted the
-zip file and choose mext-->mext_system. At the bottom of the
-file dialog change the filter to read 'All' or 'lisp'. Click
-on the LISP file 'mext-ibuild'. Click 'open'.  If all goes
-well, mext should be installed.
+* Intstall the mext_system distribution (package) to your user maxima
+folder, as follows.  All other distributions packaged for mext depend
+on mext_system (mext). First, we show how to install them
+one-by-one. Below, we show how to install several, or all, of them.
+  Open wxmaxima. Click menu File-->Load Package. Browse to where you
+extracted the zip file and choose mext-->mext_system. At the bottom of
+the file dialog change the filter to read 'All' or 'lisp'. Click on
+the LISP file 'mext-ibuild'. Click 'open'.  If all goes well, mext
+should be installed.
 
 * Install other software. Just to be safe, restart maxima or
-wxmaxima. (This is probably not necessary).  Some
-distributions depend on others, so you have to load the
+wxmaxima. (menu item Maxima->Restart Maxima).  Some
+distributions depend on others, so you have to install the
 dependencies first. (See the note below.)  To install one
 distribution, click File-->Load Package and choose the
 folder named for the distribution you want to load. Click on
@@ -69,7 +69,7 @@ Any distribution not listed here depends only on mext_system.
   store -> maxdoc  (store also requires that the asdf library cl-store be installed)
 
 * To install all distribtutions, instead of installing them one by one as
-described above.  First install mext_system as described
+described above:  First install mext_system as described
 above. Then open a new wxmaxima session.  Type the following:
 
   load(mext);
@@ -78,6 +78,12 @@ above. Then open a new wxmaxima session.  Type the following:
   updir();
   chdir("mext");
   pwd();
+
+If you type 
+  list_directory();
+you should see the file "buildall3.mac" in the resulting list.
+If not, do an additional chdir("xxx") to change to the directory
+containing "buildall3.mac".
 
 Edit the file mext\buildall3.mac to include all or some of the
 distributions. All are included by default.

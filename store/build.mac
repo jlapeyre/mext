@@ -1,9 +1,14 @@
 load(mext);
 
-if  member(lispname, ["gcl", "ecl" ]) then
+/* actually 'store' does work for cmucl, but I did not get quicklisp to
+  work with maxima/cmucl.  But cl-store is loaded manually with  cmucl/maxima.
+ */
+if  member(lispname, ["gcl", "ecl", "cmucl" ]) then
   print("The maxima package store does not work under ", lispname,".")
   else (
     mext_require("maxdoc"),
+    require("quicklisp"),
+    quicklisp_load("cl-store"),
     load_in_subdir(["store","system"]),
     mext_dist_clean(),
     mext_dist_build());

@@ -11,4 +11,6 @@
       "gjl-lisp-util" "pathname-library" "mext-maxima-system"
       "mext-component-operations" "compile") do
     (load-one file mext-maxima-load::*binary-ext*))
+;  #-gcl (load-one "quicklisp" mext-maxima-load::*binary-ext*)
+;  #-gcl (load-one "maxima-asdf" "lisp")
   (load-one "mext_system" "mxt"))

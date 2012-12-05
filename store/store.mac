@@ -1,10 +1,9 @@
-mext_require("maxdoc");
+require("maxdoc");
+require("quicklisp");
+quicklisp_load("cl-store");
 
 mext_provide("store",
   [ "store-packages",
-    "load-cl-store",
     "store-expression"]);
-
-
 
 

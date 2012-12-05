@@ -1,0 +1,33 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing quicklisp
+
+(in-package :mext-maxima)
+
+(create-distribution "quicklisp"
+    :loader "load-quicklisp"
+    :install-only "quicklisp-maxima")
+;  :install-only "quicklisp-rtests")
+
+(mk:defsystem quicklisp
+  :source-extension "lisp"
+  :components
+   ((:file "quicklisp-packages" :load-only t)
+    (:file "quicklisp")
+    (:file "max-asdf")
+    (:file "max-qlsetup")))
+
+(mk:defsystem load-quicklisp
+  :source-extension "mac"
+  :components
+   ((:file "quicklisp")))
+
+(mk:defsystem quicklisp-maxima
+   :source-extension "lisp"
+   :components
+     ((:file "max-ql")))
+  
+;; (mk:defsystem quicklisp-rtests
+;;   :source-extension "mac"
+;;   :source-pathname "rtests"
+;;   :components
+;;     ((:file "rtest_afuncs")))

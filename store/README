@@ -1,8 +1,13 @@
 Store: mext distribution for maxima.  Store is a maxima interface to
 cl-store, the serializtion package for ansi common lisp by Sean
-Ross. Building and using this package requires that the asdf package
-cl-store be installed on your system.
+Ross. 
+
+Building and using this package will use quicklisp to download
+and intstall  cl-store.
 
 Store reads and writes nested maxima objects/expression in a binary format.
 Store can handle objects and expressions that maxima 'save' cannot:
 For instance, graph objects created by the graph package.
+
+-----------------
+This package works with maxima/clozure under windows.
