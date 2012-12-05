@@ -1,0 +1,5 @@
+This is an interface to quicklisp for maxima.
+To build and install, load the file 'ibuild.mac'
+in this directory. Be aware that this will download
+and install quicklisp from the internet. mext uses
+quicklisp for asdf 'systems'.

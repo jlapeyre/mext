@@ -91,9 +91,4 @@
 
 (add-doc-sec '( :tag runtime-fandv :name "Functions and Variables for Runtime Environment"))
 
-
-
-
-
-
-
+(add-doc-sec '( :tag quicklisp-fandv :name "Functions and Variables for Quicklisp"))

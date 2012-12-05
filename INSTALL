@@ -66,7 +66,11 @@ Any distribution not listed here depends only on mext_system.
   discrete_aex -> aex
   alt_eigen -> maxdoc
   nelder_mead -> maxdoc
-  store -> maxdoc  (store also requires that the asdf library cl-store be installed)
+  quicklisp -> maxdoc
+  store -> quicklisp  
+  
+NOTE: If you build or install 'quicklisp' or 'store', you must have an internet connection
+so that quicklisp can download asdf lisp packages.
 
 * To install all distribtutions, instead of installing them one by one as
 described above:  First install mext_system as described
@@ -76,7 +80,7 @@ above. Then open a new wxmaxima session.  Type the following:
   pwd();
   chdir(maxima_userdir);
   updir();
-  chdir("mext");
+  chdir("mext");   /* or chdir("mext-master"); */
   pwd();
 
 If you type 
@@ -90,3 +94,5 @@ distributions. All are included by default.
 Then click File-->Load Package and choose the file mext\buildall3.mac.
 This should build and install all packages. Maxima might seem to
 be hung sometimes, so you have to be patient.
+
+You can also try reading and loading testall.mac.

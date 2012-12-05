@@ -25,12 +25,17 @@
 
 (in-package :maxima)
 
-(defmfun1 $quicklisp_start ()
+(max-doc::set-cur-sec 'max-doc::quicklisp-fandv)
+
+(defmfun1 ($quicklisp_start :doc) ()
+  "Load (setup) quicklisp. It must already be installed."
   (max-ql::quicklisp-start))
 
 ;; quicklisp-quickstart:install will report failure with ccl under windows, but will be more or less
 ;; installed. Then we load asdf explicitly, then setup
-(defmfun1 $quicklisp_install ()
+(defmfun1 ($quicklisp_install :doc) ()
+  "Download and install quicklisp from the internet. This is usually done automatically as the
+ final step of building and installing the maxima interface to quicklisp."
   #-gcl
   (quicklisp-quickstart:install)
   #-gcl (max-ql::quicklisp-start)

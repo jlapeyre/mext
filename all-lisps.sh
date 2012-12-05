@@ -15,7 +15,7 @@
 
 #maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
 #maximas="smaxima gmaxima clmaxima emaxima ccmaxima"
-maximas="cmumaxima"
+maximas="smaxima"
 
 # Build just the mext_system
 build_mext () {
