@@ -79,6 +79,11 @@ the file mext-master\buildall.mac.  This should
 build and install all packages. Maxima might seem
 to be hung sometimes, so you have to be patient.
 
+NOTE: If an error occurs, try fixing the problem, then
+restart maxima and reload buildall.mac. For instance, if
+'bernstein' is not available, remove the string "bernstein"
+from buildall.mac, then restart maxima before continuing.
+
 ---------------------------------------------------
 * The prime counting function is packaged
 separately because the tables are relatively
