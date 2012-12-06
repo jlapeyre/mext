@@ -5,7 +5,7 @@ for which it was written: defmfun1, aex, and code that depends on
 these. In addition, there are, several 'packages' from the maxima
 third party code repository. There are a few packages made from code
 in the maxima share and contrib folders. (Currently, we refer to all
-of these as 'distribtutions' rather than 'packages', but we may change
+of these as 'distributions' rather than 'packages', but we may change
 to 'package'.)
 
 See the file 'INSTALL' for installation instructions.
@@ -39,7 +39,7 @@ by kill(all), has not been addressed yet.)
 * Installing binary only, source only, or a combination is
 supported.
 
-* Installation and running of rtests is standarized:
+* Installation and running of rtests is standardized:
  mext_test(dist1,dist2);
 
 * Building and installation is done mostly with defsystem. There are
@@ -48,7 +48,7 @@ defsystem or asdf exactly. This might make it easier to move to asdf
 in the future.
 
 * Building from the maxima share and contrib directories is supported.
-That is, a mext defintion is written that optionally compiles and
+That is, a mext definition is written that optionally compiles and
 installs source from the maxima share directory to the user mext
 directory.
 
@@ -58,14 +58,14 @@ hacked to support gcl somewhat. Some functions in gcl are missing, not
 ansi-compliant, or broken. (but, gcl also found an error that 5 other
 lisps missed!)  mext uses an interface to many of the ansi pathname
 functions and cl-fad functions, implemented as functions with the ansi
-name preceeded with an 'f'.  For behavior not specified by the
-standard, I standarized on sbcl. Most of these functions for most
+name preceded with an 'f'.  For behavior not specified by the
+standard, I standardized on sbcl. Most of these functions for most
 lisps call the standard function. The result is not well tested, but
 currently works for installing distributions with six lisp
 implementations under linux and gcl and clozure lisp under win32.
 
 * I tried as much as possible to keep the pathname code portable. That
-is, I avoided '.\/'. This makes the maintainer level code, ie calls
+is, I avoided '.\/'. This makes the maintainer level code, i.e. calls
 to provide and require a bit more verbose, as paths are specified as
 lists rather than strings with directory separators.
 
@@ -180,3 +180,11 @@ Examples:
 
 
   Author: Mario S. Mommer.
+
+----------------------------------------------------------------
+
+LocalWords:  mext maxima defmfun aex contrib perl linux gcl sbcl ccl
+LocalWords:  clisp cmucl ecl subdirectory rtests subfolders distname
+LocalWords:  defsystem asdf pathnames pathname ansi clozure chdir pwd
+LocalWords:  truename runtime nelder pw Lapeyre GPL Mommer piecewise
+LocalWords:  expr init

@@ -1,10 +1,17 @@
 mext maxima distribution (or package) installer.
 
+INSTALLATION INSTRUCTIONS:
+
+These are instructions for installing the mext system,
+as well as software packaged for mext.
+
 There are several ways to install this software.
 The following way uses wxmaxima and has been
-tested under gcl/win32, ccl/win32, as well as
-several lisps under linux.  The details here
-assume we are on win32.
+tested with some combinations of maxima v5.25,
+v5.28, gcl/win32, ccl/win32, as well as
+six lisps under linux. The details here
+assume we are on win32. I have not had time to
+port this to mac OS X.
 
 Currently only installation to the user maxima
 folder is supported. A separate subfolder is
@@ -18,13 +25,15 @@ third party software. This might also be called a
 package.  The code in the distribution might
 consist of one file, or of several files. Several,
 but not all of the packages from the maxima third
-party code site are pacakged here.
+party code site are packaged here.
 
-* Download the source from github (google for
+---------------------------------------------------
+1) Download the source from github (google for
  maxima mext github), using the "download this
  repository as a zip file" button.
 
-* Right-click on the downloaded zip file and choose
+---------------------------------------------------
+2) Right-click on the downloaded zip file and choose
 Extract all files. When prompted for a destination,
 click 'Browse...'. You can extract it anywhere, but
 here, we assume you browse to your home folder,
@@ -38,7 +47,8 @@ something like that.
    loops, repeatedly ask questions, and ignore the answers. I have not
    yet found found a way to defeat this.
 
-* Intstall the mext_system distribution (package)
+---------------------------------------------------
+3) Install the mext_system distribution (package)
 to your user maxima folder, as follows.  All other
 distributions packaged for mext depend on
 mext_system (mext). Open wxmaxima. Click menu
@@ -49,14 +59,17 @@ read 'lisp'. Click on the LISP file
 'mext-ibuild'. Click 'open'.  If all goes well,
 mext should be installed.
 
-* Install other software. Just to be safe, restart maxima or
-wxmaxima. (menu item Maxima->Restart Maxima). Here we show
-how to install several distributions at once. Below we show
-how to install them one at a time.
+---------------------------------------------------
+4) Install distributions packaged for mext. Just
+to be safe, restart maxima or wxmaxima. (menu item
+Maxima->Restart Maxima). Here we show how to
+install several distributions at once. Below we
+show how to install them one at a time.
 
-  NOTE: If you build or install 'quicklisp' or
-  'store', you must have an internet connection so
-  that quicklisp can download asdf lisp packages.
+  NOTE: If you build or install the mext packages
+  'quicklisp' or 'store', you must have an
+  internet connection so that quicklisp can
+  download asdf lisp packages.
 
 Edit the file mext-master\buildall.mac to include
 all or some of the distributions. All are included
@@ -66,8 +79,9 @@ the file mext-master\buildall.mac.  This should
 build and install all packages. Maxima might seem
 to be hung sometimes, so you have to be patient.
 
+---------------------------------------------------
 * The prime counting function is packaged
-separately becaues the tables are relatively
+separately because the tables are relatively
 large. Google github prime_pi, to find this
 package.
 
@@ -78,6 +92,7 @@ To see some documentation, restart maxima and type
  require('all);
  print_max_doc_sections();
 
+---------------------------------------------------
 * Installing one-by-one. Some distributions depend
 on others, so you have to install the dependencies
 first. (See the note below.)  To install one
@@ -100,3 +115,9 @@ Any distribution not listed here depends only on mext_system.
   store -> quicklisp  
 
 
+
+LocalWords:  maxima wxmaxima gcl ccl linux github
+LocalWords:  subfolder google username timestamps
+LocalWords:  defsystem ibuild quicklisp asdf aex
+LocalWords:  buildall testall maxdoc defmfun
+LocalWords:  eigen nelder
