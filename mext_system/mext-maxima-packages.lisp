@@ -44,6 +44,8 @@
              :change-root-pathname
              :directory-pathname-p
              :mext-optimize
+             :mext-require
+             :mext-list
              :subdir-pathname
              :subdir-of-shared
              :subdir-of-contrib

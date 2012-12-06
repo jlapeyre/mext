@@ -44,3 +44,9 @@
  distributions is built by calling 'mext_list'."
     (or (mext::mext-info distname)
         (merror1 (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") ($sconcat distname))))
+
+(defmfun1 ($require :doc) ((distname :or-string-symbol) &optional force)
+  "Load the mext pacakge <distname> and register that it has been loaded.
+ require('all) will load all installed mext packages. If <force> is true,
+ then <distname> is loaded even if it has been loaded previously."
+  (mext:mext-require distname force))

@@ -3,9 +3,12 @@ mext maxima third party code installation system.
 This folder tree contains the mext system, as well as several packages
 for which it was written: defmfun1, aex, and code that depends on
 these. In addition, there are, several 'packages' from the maxima
-third party code repository (Currently, we refer to these as
-'distribtutions' rather than 'packages', but we may change to
-'package'.)
+third party code repository. There are a few packages made from code
+in the maxima share and contrib folders. (Currently, we refer to all
+of these as 'distribtutions' rather than 'packages', but we may change
+to 'package'.)
+
+See the file 'INSTALL' for installation instructions.
 
 The mext system packages the distributions in a more-or-less
 uniform way. They are built and installed using only maxima,
@@ -26,17 +29,18 @@ rtests, etc. are located in further subfolders that are not added to
 the maxima search path by default.  Actually the subdirectory that is
 put in the search path is named for the maxima version and the lisp
 implementation and the lisp version. So, different maxima and lisps
-can be used in parallel.
+can be used in parallel. This system is set up with load('mext);
 
-* A distribution can be loaded with require('distname);
-or require("distname");
-The distribution is registered for the session and subsequent
-calls to require('distname) do nothing.
+* A distribution can be loaded with require('distname); or
+require("distname"); The distribution is registered for the session
+and subsequent calls to require('distname) do nothing. (clobbering
+by kill(all), has not been addressed yet.)
 
 * Installing binary only, source only, or a combination is
 supported.
 
-* Installation and running of rtests is standarized.
+* Installation and running of rtests is standarized:
+ mext_test(dist1,dist2);
 
 * Building and installation is done mostly with defsystem. There are
 some other parts. Much of the distribution definition follows

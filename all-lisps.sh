@@ -28,12 +28,12 @@ build_mext () {
 
 # build packages packaged with the mext system
 # Which packages are built is specified in the
-# file buildall.mac
+# file buildall1.mac
 build_mext_packages () {
     for maxima in $maximas
     do
         echo Building all packages for $maxima
-        $maxima -b buildall.mac &> logfiles/$maxima.mextlog
+        $maxima -b buildall1.mac &> logfiles/$maxima.mextlog
     done
 }
 

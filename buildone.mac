@@ -1,0 +1,11 @@
+load(mext);
+
+/* This is for testing a change to a single package. */
+
+buildall_mext (package) := (
+  chdir(package),
+  load_in_dsubdir(["ibuild","mac"]),
+  chdir());
+
+for package in [ "lists_aex" ] do
+  buildall_mext(package);

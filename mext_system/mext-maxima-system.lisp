@@ -444,6 +444,20 @@ This was copied from maxima source init-cl.lisp.")
  "Clear list of loaded mext distributions."
  (clrhash *installed-dist-table*))
 
+(defun mext-require (name &optional force)
+  (setf name (maxima::$sconcat name))
+  (if (string= "all" name)
+      (progn (loop for dist in (cdr (mext-list)) do
+                   (mext-require dist))
+             'maxima::$done)
+    (if (string= "mext_system" name) t
+      (let ((registered (gethash name *installed-dist-table*)))
+        (if (or (not registered) force)
+            (let ((file (mext-file-search name)))
+              (if file (progn (format t "require loading ~a~%" file) (maxima::$load file) 'maxima::$done)
+                (maxima::merror (intl:gettext "mext require: Unable to find '~a'.")  name)))
+          t)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (in-package :maxima)
@@ -621,14 +635,7 @@ This was copied from maxima source init-cl.lisp.")
 
 ;; identical. I want to switch to this name
 (defmfun $require (name &optional force)
-  (setf name ($sconcat name))
-  (if (string= "mext_system" name) t
-    (let ((registered (gethash name mext-maxima::*installed-dist-table*)))
-      (if (or (not registered) force)
-          (let ((file (mext::mext-file-search name)))
-            (if file (progn (format t "loading ~a~%" file) ($load file))
-              (merror "Unable to find '~a'." name)))
-        t))))
+  (mext:mext-require name force))
 
 ;; declare that a mext package has been loaded. mext_require will see
 ;; that it has been loaded

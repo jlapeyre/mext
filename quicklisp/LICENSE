@@ -1,0 +1,14 @@
+The mext maxima package quicklisp includes code from the quicklisp
+project by Zach Beane, which contains the following disclaimer.
+
+  ;;;; Quicklisp is beta software and comes with no warranty of any kind.
+  ;;;;
+  ;;;; For more information about the Quicklisp beta, see:
+  ;;;;
+  ;;;;    http://www.quicklisp.org/beta/
+  ;;;;
+  ;;;; If you have any questions or comments about Quicklisp, please
+  ;;;; contact:
+
+The portion of the code by John Lapeyre is licensed under the GPL licence,
+version 2 or greater.

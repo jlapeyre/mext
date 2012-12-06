@@ -1,27 +1,28 @@
 mext maxima distribution (or package) installer.
 
-There are several ways to install this software.  The
-following way uses wxmaxima and has been tested under
-gcl/win32, as well as several lisps under linux.  The
-details here assume we are on win32. (There is also a posix
-shell script all-lisps.sh that can build and install the
-distributions for several lisps.)
+There are several ways to install this software.
+The following way uses wxmaxima and has been
+tested under gcl/win32, ccl/win32, as well as
+several lisps under linux.  The details here
+assume we are on win32.
 
-Currently only installation to the user maxima folder is
-supported. A separate subfolder is created for each combination
-of maxima version and lisp implementation/version. So you
-can use different versions of maxima and implementations
+Currently only installation to the user maxima
+folder is supported. A separate subfolder is
+created for each combination of maxima version and
+lisp implementation/version. So you can use
+different versions of maxima and implementations
 and versions of lisp in parallel.
 
 We use the word 'distribution' to mean a piece of
-third party software. This might also be called a package.
-The code in the distribution might consist of
-one file, or of several files. Several, but not all
-of the packages from the maxima third party code site
-are pacakged here.
+third party software. This might also be called a
+package.  The code in the distribution might
+consist of one file, or of several files. Several,
+but not all of the packages from the maxima third
+party code site are pacakged here.
 
-* Download the source from github, using the "download
-this repository as a zip file" button.
+* Download the source from github (google for
+ maxima mext github), using the "download this
+ repository as a zip file" button.
 
 * Right-click on the downloaded zip file and choose
 Extract all files. When prompted for a destination,
@@ -37,24 +38,53 @@ something like that.
    loops, repeatedly ask questions, and ignore the answers. I have not
    yet found found a way to defeat this.
 
-* Intstall the mext_system distribution (package) to your user maxima
-folder, as follows.  All other distributions packaged for mext depend
-on mext_system (mext). First, we show how to install them
-one-by-one. Below, we show how to install several, or all, of them.
-  Open wxmaxima. Click menu File-->Load Package. Browse to where you
-extracted the zip file and choose mext-->mext_system. At the bottom of
-the file dialog change the filter to read 'All' or 'lisp'. Click on
-the LISP file 'mext-ibuild'. Click 'open'.  If all goes well, mext
-should be installed.
+* Intstall the mext_system distribution (package)
+to your user maxima folder, as follows.  All other
+distributions packaged for mext depend on
+mext_system (mext). Open wxmaxima. Click menu
+File-->Load Package. Browse to where you extracted
+the zip file and choose mext-master --> mext_system. At the
+bottom of the file dialog change the filter to
+read 'lisp'. Click on the LISP file
+'mext-ibuild'. Click 'open'.  If all goes well,
+mext should be installed.
 
 * Install other software. Just to be safe, restart maxima or
-wxmaxima. (menu item Maxima->Restart Maxima).  Some
-distributions depend on others, so you have to install the
-dependencies first. (See the note below.)  To install one
-distribution, click File-->Load Package and choose the
-folder named for the distribution you want to load. Click on
-the file 'ibuild.mac' in this folder to build and install
-the distribution.
+wxmaxima. (menu item Maxima->Restart Maxima). Here we show
+how to install several distributions at once. Below we show
+how to install them one at a time.
+
+  NOTE: If you build or install 'quicklisp' or
+  'store', you must have an internet connection so
+  that quicklisp can download asdf lisp packages.
+
+Edit the file mext-master\buildall.mac to include
+all or some of the distributions. All are included
+by default. (there are some dependencies; see
+below.)  Then click File-->Load Package and choose
+the file mext-master\buildall.mac.  This should
+build and install all packages. Maxima might seem
+to be hung sometimes, so you have to be patient.
+
+* The prime counting function is packaged
+separately becaues the tables are relatively
+large. Google github prime_pi, to find this
+package.
+
+You can also try reading and loading testall.mac.
+
+To see some documentation, restart maxima and type
+ load(mext);
+ require('all);
+ print_max_doc_sections();
+
+* Installing one-by-one. Some distributions depend
+on others, so you have to install the dependencies
+first. (See the note below.)  To install one
+distribution, click File-->Load Package and choose
+the folder named for the distribution you want to
+load. Click on the file 'ibuild.mac' in this
+folder to build and install the distribution.
 
 Dependencies:  A depends on B is written A -> B
 All distributions depend on mext_system.
@@ -68,31 +98,5 @@ Any distribution not listed here depends only on mext_system.
   nelder_mead -> maxdoc
   quicklisp -> maxdoc
   store -> quicklisp  
-  
-NOTE: If you build or install 'quicklisp' or 'store', you must have an internet connection
-so that quicklisp can download asdf lisp packages.
 
-* To install all distribtutions, instead of installing them one by one as
-described above:  First install mext_system as described
-above. Then open a new wxmaxima session.  Type the following:
 
-  load(mext);
-  pwd();
-  chdir(maxima_userdir);
-  updir();
-  chdir("mext");   /* or chdir("mext-master"); */
-  pwd();
-
-If you type 
-  list_directory();
-you should see the file "buildall3.mac" in the resulting list.
-If not, do an additional chdir("xxx") to change to the directory
-containing "buildall3.mac".
-
-Edit the file mext\buildall3.mac to include all or some of the
-distributions. All are included by default.
-Then click File-->Load Package and choose the file mext\buildall3.mac.
-This should build and install all packages. Maxima might seem to
-be hung sometimes, so you have to be patient.
-
-You can also try reading and loading testall.mac.

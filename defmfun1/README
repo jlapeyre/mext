@@ -1,18 +1,60 @@
+defmfun1
+
+defmfun1 macro for writing maxima functions: (no support now for
+writing directly in maxima language). The syntax tries to follow defun
+as much as possible with &optional, &aux, &rest, with some additions.
+
+ a) There is a new parameter type &opt rather than &key for the
+    keyword args, mentioned above. The options are passed like this:
+     func(x, a -> b)
+
+ b) Directives for argument checking and preprocessing of args.
+    eg (n :int) to specify that an argument must be an integer.
+    Error reporting
+     "Argument n is not an integer in ..."
+
+    Each function has a user-level mutable attribute, match_form, that allows the form
+    to be returned unevaluated if argument checking fails, rather than
+    an error to be raised.
+
+ c) Automatic entry in the max-doc database. Actually, we require a
+    directive :doc to create a documentation entry.
+
+    (defmfun1 ($f4 :doc) ( (x :string) (y :non-neg-int) &optional (z :string "dog") )
+     "f4 ignores the string and integer arguments and returns 'dog' by default."
+       z)
+
+   (%i2) ? f4
+
+    -- Function: f4: f4(<x>, <y> :optional <z>)
+    Section: Example functions
+
+    f4 ignores the string and integer arguments and returns 'dog' by default.
+    f4 requires either two or three arguments.
+     The first argument <x> must be a string.
+     The second argument <y> must be a non-negative integer.
+     The third argument <z> must be a string.
+       
+   (%i3) f4();
+
+    f4: f4 called with no arguments; either two or three arguments are expected.
+
+   (%i4) f4(1);
+
+    f4: Argument '1' is not a string in f4(1).
+
+   (%i5) f4("cat",1);
+
+   (%o5) "dog"
+
+   Some other examples of definitions:
+   (defmfun1 $f8 (x  &rest (m :list) ) ...) ; Each of the &rest arguments must be a maxima list.
+   (defmfun1 $f9 ( (x (:int-range 1 10) )) ...)  ; eg f9(5)
+   (defmfun1 $f10 ( x &opt ($y (:int-range 1 3))) ; eg f10(1, y->2)
+
 The defmfun1 distribution requires that mext
 be built and installed.
 
 Build like this:
 
-load("./build.mac");
-mext_dist_user_install();
-
-or this
-(%i1) load(mext);
-(%i2) load("./defmfun1.system");
-(%i3) mext_dist_clean();
-(%i4) mext_dist_load();
-(%i5) mext_dist_compile();
-(%i6) mext_dist_user_install();
-
-In a new maxima session, defmfun1 can be loaded with
-load(defmfun1);
+load("./ibuild.mac");

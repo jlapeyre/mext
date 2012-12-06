@@ -1,0 +1,17 @@
+/*
+  Return a random permutation of the arguments of a.
+  This is for testing or demonstration. We actually
+  use a lisp version. But this is almost as fast.
+*/
+
+rand_perm(a) := block([a1,n,j,tmp],
+  modedeclare([j,n],fixnum),
+  a1 : aex_cp(a),
+  n : length(a1),
+  for i from 0 thru n-1 do (
+    j : i + random(n-i),
+    tmp : aex_get(a1,i),
+    aex_set(a1,i,aex_get(a1,j)),
+    aex_set(a1,j,tmp)),
+  a1);
+

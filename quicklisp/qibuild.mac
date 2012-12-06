@@ -1,3 +1,5 @@
+/* not really using this now. it is all done in ibuild.mac */
+
 load(mext);
 
 if  member(lispname, ["gcl", "cmucl"]) then
