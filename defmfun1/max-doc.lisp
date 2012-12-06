@@ -97,16 +97,16 @@ ia a list of three elements: hame, protoco, contents."
                                       (format nil "<~a>" x)))
                                       (call-desc-args cd))))
   (format nil "    ~a(~{~a~^, ~})~%  ~a~%~%" (call-desc-name cd) args
-          (wrap-text :text (format-call-desc-text cd) :width 80 :indent 6) )))
+          (wrap-text :text (format-doc-text (call-desc-text cd)) :width 80 :indent 6) )))
 
 (defun format-call-desc-list (cd-list)
   (format nil "~{~a~}" (nreverse (mapcar #'format-call-desc cd-list))))
 
-(defun format-call-desc-text (cd)
+(defun format-doc-text (text-descr)
   "This could be used more generally for formatting. It also
   does not handle nested format codes. Using texi and a lisp parser
   would be better."
-  (let ((txt (call-desc-text cd))
+  (let ((txt (if (listp text-descr) text-descr (list text-descr)))
         (scode (symbol-name 'code))
         (sarg (symbol-name 'arg)))
     (do* ((txt1 txt (cdr txt1))
@@ -401,9 +401,8 @@ must be keyword,value pairs for the doc entry struct."
                      (format nil "Calling:~%~a"
                              (format-call-desc-list (entry-call-desc-list e))))
                  (if (> (length (entry-contents e)) 0)
-                     (format nil "Description:~%~a~%" (wrap-text :text (entry-contents e) :width 80 :indent 3))
-;; following does not work. nothing to support markup in entry-contents
-;;                     (format nil "Description:~%~a~%"   (wrap-text :text (format-call-desc-text (entry-contents e)) :width 80 :indent 3))
+                     (format nil "Description:~%~a~%" (wrap-text 
+                                                       :text (format-doc-text (entry-contents e)) :width 80 :indent 3))
                      (format nil ""))
                  (let ((sspec (format-arg-specs name)))
                    (when (> (length sspec) 0) (format nil "Arguments:~%~a" sspec)))

@@ -516,7 +516,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-doc-entry '("aelistp"
-               :contents "Returns true if <e> is a list, either ml or ar representation."))
+               :contents ( "Returns true if " arg "e" " is a list, either ml or ar representation.")))
 (defmfun $aelistp (e)
          (or (and (aex-p e)
                   (eq (car (aex-head e)) 'mlist))

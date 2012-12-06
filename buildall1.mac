@@ -27,8 +27,11 @@ load_in_dsubdir(["ibuild","mac"]);
 popdir();
 
 /* other third party packages adapted to mext */
+
+/*
 for package in [ "nelder_mead", "alt_eigen", "pw", "discrete",
           "coma", "circuits", "implicit" ,"bernstein", "grobner"] do
   buildall_mext(package);
+*/
 
 /* "finance" loads rather slowly */
