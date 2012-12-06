@@ -501,8 +501,9 @@
          
 
 (defmfun-ae ($select :doc) (( expr :non-atom-list) test &optional (n 0 supplied-n-p :pos-int) &opt ($compile t :bool))
-  "Returns a list of all elements of <expr> for which <test> is true. <expr>
-   may have any op."
+  :desc ( "Returns a list of all elements of " arg "expr" 
+         "for which " arg "test" " is true. " arg "expr"
+         " may have any op.")
   (declare (fixnum n))
   (option-compile-lambda test)
   (defmfun-final-to-ae
@@ -534,7 +535,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun1  ($nreverse :doc)((e :non-atom))
-  "Destructively reverse the arguments of expresson <e>. This is more efficient than using reverse."
+  :desc ("Destructively reverse the arguments of expression " argdot "e" 
+    "This is more efficient than using reverse.")
   (if-aex e
           (progn
             (setf (aex-arr e) (nreverse (aex-arr e)))
@@ -553,8 +555,8 @@
 
 ;; This does not recognize lambda functions unless compile is t
 (defmfun1 ($count :doc) ( (expr :non-atom-ae-list) item &opt ($compile t :bool))
-  "Counts the number of items in <expr> matching <item>. If <item>
- is a lambda function then compile must be true."
+  :desc ("Counts the number of items in " arg "expr" " matching " argdot "item" 
+  " If " arg "item" " is a lambda function then " arg "compile" " must be true.")
   (setf expr (if (aex-p expr) (aex-arr expr)
                (cdr expr)))
   (option-compile-lambda item)

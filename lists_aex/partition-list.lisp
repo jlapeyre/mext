@@ -3,7 +3,7 @@
 (mext:mext-optimize)
 (use-package :gjl.lisp-util)
 
-(max-doc::set-cur-sec 'max-doc::lists-fandv)
+(max-doc:set-cur-sec 'max-doc::lists-fandv)
 
 ;; (use-package :maxima)
 
@@ -55,11 +55,13 @@
 
 (maxima::defmfun1 (maxima::$partition_list :doc) ((e :non-atom) (nlist :integer-or-listof)
                                                   &optional (dlist :integer-or-listof))
-  "Omitting <d> is equivalent to giving <d> equal to <n>.
-   <e> can be any expression, not only a list. If <n> is a list, then partition_list partitions
-   at sucessively deeper levels with elements of <n>. If <n> and <d> are lists the first elements
-  of <n> and <d> apply at the highest level and so on. If <n> is a list and <d> is a number, then the
-  offset <d> is used with each of the <n>."
+  :desc ("Omitting " arg "d" " is equivalent to giving " arg "d" " equal to " argdot "n" " "
+   arg "e" " can be any expression, not only a list. If " arg "n" " is a list, then "
+   code "partition_list" " partitions at sucessively deeper levels with elements of "
+   argdot "n" " If " arg "n" " and " arg "d" " are lists, the first elements"
+   "of " arg "n" " and " arg "d" " apply at the highest level and so on. If "
+   arg "n" " is a list and " arg "d" " is a number, then the offset "
+   arg "d" " is used with each of the " argdot "n")
   (maxima::s-or-mlist-to-list nlist)
   (cond ( dlist
          (if (numberp dlist)

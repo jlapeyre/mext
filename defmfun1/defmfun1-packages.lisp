@@ -43,7 +43,8 @@
 
 (if (find-package :simple-doc ) t (defpackage :simple-doc (:use :common-lisp :gjl.lisp-util)))
 
-(if (find-package :doc-system ) t (defpackage :doc-system (:use :common-lisp :gjl.lisp-util)))
+(if (find-package :doc-system ) t (defpackage :doc-system (:use :common-lisp :gjl.lisp-util)
+         (:export :set-source-package :set-source-file-name)))
 
 (if (find-package :descr1 ) t (defpackage :descr1 (:use :common-lisp :gjl.lisp-util)))
 

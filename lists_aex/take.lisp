@@ -193,8 +193,9 @@
       (take-do-list e v)))
 
 (maxima::defmfun1 (maxima::$take :doc) ((e :non-atom)  &rest (v :seq-spec))
-  "The first argument to take can have mixed lex and aex expressions on different levels.
-   If more sequence specifications are given, they apply to sucessively deeper levels in <e>."
+  :desc ( arg "e" " can have mixed lex and aex expressions on different levels. "
+   "If more sequence specifications are given, they apply to sucessively deeper levels in "
+    argdot "e")
   (if (null v) (list (car e))
       (take-do e v)))
 

@@ -18,7 +18,7 @@
 ;; This is, however slower, I suppose because of allocating memory.
 
 (defmfun-ae ($ae_random_permutation :doc) ( (a :non-atom)  )
-  "Return expression a with random permutation of arguments."
+  :desc ("returns " var "a" " with subexpressions permuted randomly.")
   (let* ( (a1 (aex-cp a)) ; aex-cp is like aex_cp, but no arg checks , etc.
           (n   (aex-length a1)) )
     (declare (fixnum n))

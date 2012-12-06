@@ -1,9 +1,9 @@
 (in-package :maxima)
 
-(doc-system::set-source-file-name "mext_defmfun1_code.lisp")
-(doc-system::set-source-package "mext_defmfun1")
+(doc-system:set-source-file-name "mext_defmfun1_code.lisp")
+(doc-system:set-source-package "mext_defmfun1")
 
-(max-doc::set-cur-sec 'max-doc::runtime-fandv)
+(max-doc:set-cur-sec 'max-doc::runtime-fandv)
 
 (defmfun1 ($chdir :doc) ( &optional (dir :string))
   "Set the working directory for maxima/lisp. With some lisps, such as cmu lisp the system
@@ -22,8 +22,8 @@
   (mext::popdir n))
 
 (defmfun1 ($dirstack :doc) ()
-  "Return a list of the directories on the directory stack. This list is
- manipulated with 'chdir', 'updir', and 'popdir'."
+  :desc ("Return a list of the directories on the directory stack. This list is
+ manipulated with " mref "chdir" ", " mrefcomma "updir" " and " mrefdot "popdir")
   (cons '(mlist simp) mext::*pwd-directory-stack*))
 
 (defmfun1 ($pwd :doc) ()
@@ -31,8 +31,8 @@
   (mext::pwd))
 
 (defmfun1 ($mext_test :doc) ( &optional (dists :or-string-symbol-or-listof))
-  "Run the test suites for a mext distribution or list of distributions. With
- no argument, a subfolder named 'rtests' is searched for in the current directory."
+  :desc ("Run the test suites for a mext distribution or list of distributions. With
+ no argument, a subfolder named " code "rtests" " is searched for in the current directory.")
   (mext::mext-test dists))
 
 (defmfun1 ($mext_list :doc) ()

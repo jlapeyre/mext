@@ -1,6 +1,4 @@
-; (in-package :max-store)
 (in-package :maxima)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (use-package :gjl.lisp-util)
 (use-package :max-doc)
 (set-cur-sec 'max-doc::io-fandv)
@@ -9,7 +7,7 @@
 ;; TODO: cl-store has various settings that that can greatly affect efficiency. We should support these.
 
 (defmfun1 ($store :doc)  ( (file :string) &rest exprs )
-  "store stores maxima expressions in files in binary format. Many types of lisp expressions and subexpressions
+  "stores maxima expressions in files in binary format. Many types of lisp expressions and subexpressions
  are supported: numbers,strings,list,arrays,hashtables,structures,...."
   (let ((cl-store::*check-for-circs* t))
     (cl-store::store (if (length1p exprs) (car exprs) (cons '(mlist simp) exprs)) file)))
@@ -19,7 +17,7 @@
     (cl-store::store (if (length1p exprs) (car exprs) (cons '(mlist simp) exprs)) file)))
 
 (defmfun1 ($restore :doc) ((file :string) )
-  "<restore> reads maxima expressions from a file created by the function <store>."
+  :desc ("Reads maxima expressions from a file created by the function " mrefdot "store")
   (let ((cl-store::*check-for-circs* t))
     (cl-store::restore file)))
 

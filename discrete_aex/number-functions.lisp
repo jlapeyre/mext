@@ -24,8 +24,9 @@
     (parse-integer (format nil fs digits) :radix base)))
 
 (defmfun1 ($from_digits :doc)  ( (digits :or-ae-list-string :ensure-lex) &optional (base 10))
-  "<base> need not be number, but may be, for instance, a symbol. If <base> is
-   a number it must be an integer between 2 and 36. <digits> may be a string rather than a list."
+  :desc ( var "base" " need not be number, but may be, for instance, a symbol. If "
+  var "base" " is a number it must be an integer between 2 and 36. " var "digits"
+  " may be a string rather than a list.")
   (if (stringp digits)
       (if (and (numberp base) (echeck-arg :radix base))
           (return-from $from_digits (parse-integer digits :radix base))
@@ -107,8 +108,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun1 $prime_pi_soe1 ((n :non-neg-int))
-  "The algorithm is the sieve of Eratosthenes. This algorithm uses
-   internally an array of <n> bits."
+  :desc ("The prime counting function. The algorithm is the sieve of Eratosthenes.
+   Internally an array of " var "n" " bits is used.")
   (if (= 0 n) 0
       (let ((a (make-array (+ n 1) :element-type 'bit :initial-element 1 :adjustable nil ))
             (c 1))
@@ -127,8 +128,8 @@
 ;; all of this fixnum business saves 10 or 15 percent in speed.
 ;; dunno which are the important ones.
 (defmfun1 ($prime_pi_soe :doc)  ((n :non-neg-int))
-  "The algorithm is the sieve of Eratosthenes. This algorithm uses
-   internally an array of <n> bits."
+  :desc ("The prime counting function. The algorithm is the sieve of Eratosthenes.
+   Internally an array of " var "n" " bits is used.")
   (if (= 0 n) 0
       (let ((a (make-array (+ n 1) :element-type 'bit :initial-element 1 :adjustable nil ))
             (c 1)
@@ -175,7 +176,7 @@
 
 
 (defmfun1 ($catalan_number :doc) (n)
-  "Returns the nth catalan number."
+ :desc ("Returns the " var "n" "th catalan number.")
   (if (numberp n) (/ ($binomial (* 2 n) n) (+ n 1))
       (meval (mul (list '(mexpt simp) (add 1 n) -1) ($binomial (mul 2 n) n)))))
 
@@ -191,8 +192,10 @@
 
 
 (defmfun1 ($divisor_summatory :doc) ((x :non-neg-number) )
-  "Returns the divisor summatory function D(<x>). The divisor function d(n) counts
- the number of unique divisors of the natural number n. D(x) is the sum of d(n) over n <= x."
+  :desc ("Returns the divisor summatory function "
+         code ("D(" var "x" ")") ". The divisor function d(n) counts
+ the number of unique divisors of the natural number n. D(" var "x" ") is the sum of d(n) over n <= " 
+  vardot "x")
   (let ((sum 0) (u (floor (sqrt x))) (nx (floor x)))
                     (loop for i from 1 to u do
                           (setf sum (+ sum (floor (/ nx i)))))
@@ -206,7 +209,8 @@
                           :code "map(divisor_summatory,lrange(12))"))
 
 (defmfun1 (|$oeis_A092143| :doc) ((n :pos-int))
-  "Returns the cumulative product of all divisors of integers from 1 to <n>."
+  :desc ("Returns the cumulative product of all divisors of integers from 1 to "
+         argdot "n")
   (let ((prod 1))
     (loop for k from 1 to n do
           (setf prod (* prod (expt k (floor (/ n k))))))
@@ -250,11 +254,11 @@
 
 
 (defmfun1 ($perfect_p :doc) ((n :pos-int))
-  "Returns true if <n> is a perfect number. Otherwise, returns false."
+  :desc ("Returns true if " arg "n" " is a perfect number. Otherwise, returns false.")
   (if (= n (- ($divisor_function n 1) n)) t nil))
 
 (defmfun1 ($abundant_p :doc) ((n :pos-int))
-  "Returns true if <n> is an abundant number. Otherwise, returns false."
+  :desc ("Returns true if " arg "n" " is an abundant number. Otherwise, returns false.")
   (if (< n (- ($divisor_function n 1) n)) t nil))
 
 (examples::clear-examples "abundant_p")
@@ -263,12 +267,12 @@
                           :code "select(lrange(100),abundant_p)"))
 
 (defmfun1 ($aliquot_sum :doc) ((n :pos-int))
-  "Returns the aliquot sum of <n>. The aliquot sum
- of <n> is the sum of the proper divisors of <n>."
+  :desc ("Returns the aliquot sum of " argdot "n" " The aliquot sum
+ of " arg "n" " is the sum of the proper divisors of " argdot "n")n
   (- ($divisor_function n 1) n))
 
 (defmfun1 ($amicable_p :doc) ((n :pos-int) (m :pos-int))
-  "Returns true if <n> and <m> are amicable, and false otherwise."
+  :desc ("Returns true if " arg "n" " and " arg "m" " are amicable, and false otherwise.")
   (and (not (= m n)) (= ($aliquot_sum n) m) (= ($aliquot_sum m) n)))
 
 (examples::clear-examples "amicable_p")
@@ -281,8 +285,8 @@
 ;; TODO: allow keeping only the later part of the sequence. Look for periods greater than 1
 ;;(defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) &optional (n2 0 n2-supplied-p :non-neg-int ) )
 (defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) )
-  "Returns the first <n> elements (counting from zero) in the aliquot sequence of <k>.
-   The sequence is truncated at an element if it is zero or repeats the previous element."
+  :desc ("Returns the first " arg "n" " elements (counting from zero) in the aliquot sequence of "
+  argdot "k" " The sequence is truncated at an element if it is zero or repeats the previous element.")
   (let ( (seq (list k)) (cur k) (last 0) )
     (loop for i from 0 to n until (or (= 0 cur) (= cur last)) do
           (setf last cur)

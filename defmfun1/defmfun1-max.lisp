@@ -183,25 +183,28 @@
   "Define a macro like defmfun1 that already has the options <opts> defined.
    <name> is the name of the macro. <opts> is a list of &opt specifications for defmfun1.
    <code> is forms to be inserted before the body when expanding calls to macro <name>.
-   Notice we check for a doc string in body."
+   Notice we check for a doc string in body, and move the <code> to the other side"
   `(defmacro ,name (name1 args &body body)
      ,@(if code
-          `((if (stringp (first body))
-             (setf body (cons (car body) (append ',code (rest body))))
-             (setf body (append ',code body))))
-          nil)
-         (progn
-           (setf args (append args
-                              (if (not (member '&opt args)) (cons '&opt ',opts)
-                                  ',opts)))
-           (mk-defmfun1-form name1 args body))))
+           `((if (stringp (first body))
+                 (setf body (cons (car body) (append ',code (rest body))))
+               (if (eq :desc (first body))
+                   (setf body (cons (car body) (cons (second body) (append ',code (cddr body)))))
+                 (setf body (append ',code body)))))
+         nil)
+     (progn
+       (setf args (append args
+                          (if (not (member '&opt args)) (cons '&opt ',opts)
+                            ',opts)))
+       (mk-defmfun1-form name1 args body))))
 
 (max-doc::set-cur-sec 'max-doc::options)
 
 (defmfun1 ($foptions :doc) ( (name :or-string-symbol) )
- "Return a list of allowed options to defmfun1 function 'name'.
-  I would prefer to call this options, but that name is taken
-  by an unused, undocumented function."
+ :desc ("Return a list of allowed options to " code "defmfun1"
+  " function " argdot "name"
+  " I would prefer to call this " code "options" ", but that name is taken
+ by an unused, undocumented function.")
  (maxima-symbol-to-string name)
  (let ((oh (gethash name defmfun1::*option-table*)))
    (cons '(mlist simp)
@@ -213,7 +216,7 @@
 (max-doc::set-cur-sec 'max-doc::attributes)
 
 (defmfun1 ($attributes :doc) ((name :or-string-symbol) )
- "Return mlist of 'attributes' of function 'name'."
+  :desc ("Returns a list of the 'attributes' of function " argdot "name")
  (maxima-symbol-to-string name)
  (let ((oh (gethash name defmfun1::*attributes-table*)))
    (cons '(mlist simp)

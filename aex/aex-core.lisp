@@ -142,13 +142,15 @@ of 0 for n returns the head (or op) of e."))
       v)
   (setf (aref (aex-arr e) (1- n)) v)))
 
+;; This would be faster if it were not defmfun1
 (defmfun1 ($aex_unshift :doc) ( v (e :aex_adj) )
-  "aex_unshift destructively pushes an element <v> onto the end
- of <e>. The return value is <v>. For array representation of expressions we use
- push, pop for the beginning of and expression, and
- shift, unshift for the end of an expression, whether the
- representation is an array or a list. This is consistent with
- maxima, but the reverse of the meaning of the terms in perl."
+  :desc ("destructively pushes an element " arg "v" " onto the end
+ of " argdot "e" " The return value is " argdot "v" 
+ "For array representation of expressions we use "
+ code "push" "," code "pop" " for the beginning of and expression, and "
+ code "shift" "," code "unshift" " for the end of an expression, whether the "
+ "representation is an array or a list. This is consistent with "
+ " maxima, but the reverse of the meaning of the terms in perl.")
   (vector-push-extend  v (aex-arr e)))
 
 (examples::clear-examples "aex_unshift")
@@ -158,12 +160,13 @@ of 0 for n returns the head (or op) of e."))
                          :code "a : lrange(10,ot->ar), aex_unshift(\"dog\",a), a"))
 
 (defmfun1 ($aex_shift :doc) ( (e :aex_adj) )
-    "aex_shift destructively removes an element from the end
- of <e>. For array representation of expressions we use
- push, pop for the beginning of and expression, and
- shift, unshift for the end of an expression, whether the
- representation is an array or a list. This is the reverse
- of the meaning of the terms in perl."
+   :desc ("destructively removes an element from the end
+ of " argdot "e" 
+ "For array representation of expressions we use "
+ code "push" "," code "pop" " for the beginning of and expression, and "
+ code "shift" "," code "unshift" " for the end of an expression, whether the "
+ "representation is an array or a list. This is consistent with "
+ " maxima, but the reverse of the meaning of the terms in perl.")
   (vector-pop (aex-arr e)))
 
 (examples::clear-examples "aex_shift")
@@ -225,8 +228,8 @@ of 0 for n returns the head (or op) of e."))
   (if (aex-p e) (length (aex-arr e)) (length (cdr e))))
 
 (defmfun1 ($ilength :doc)  ((e :or-non-atom-subvar))
- "Returns the length of the expression <e>. This is like maxima 'length',
- but here,  <e> can be either an aex or a lex."
+ :desc ("Returns the length of the expression " argdot "e" " This is like maxima "
+ code "length" ", but here, " arg "e" " can be either an aex or a lex.")
   (if (aex-p e) (length (aex-arr e))
      (progn (setf e (if ($listp e) e
                            (specrepcheck e)))
@@ -546,7 +549,7 @@ expression. lex is the identity if <e> is not an aex.
 
 ;; same as redefinition of $op, which we have disabled
 (defmfun1 ($aeop :doc) ( (expr :non-atom) )
-  "aeop(<e>) op function for aex. returns op if <e> is not an aex."
+ :desc (  "op function for aex. returns op if " arg "e" " is not an aex.")
   (if-aex expr (getop (car (aex-head expr)))
             ($part expr 0)))
 
