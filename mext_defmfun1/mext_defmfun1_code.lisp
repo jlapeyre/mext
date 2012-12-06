@@ -11,14 +11,14 @@
   (let ((result (mext::chdir :dir dir :push t)))
     (or result (merror1 (intl:gettext (format nil "chdir: ~a is not a directory" dir))))))
 
-(max-doc::add-call-desc '( "chdir" ()
+(max-doc:add-call-desc '( "chdir" ()
                            ("Set the working directory to the value it had when mext was loaded."))
                         '( "chdir" ("dir")
                            ("Set the working directory to " arg "dir" ".")))
 
 (defmfun1 ($popdir :doc) ( &optional (n 1 :non-neg-int))
-  "Pop a value from the current directory stack and chdir to this value.
- If <n> is given, pop <n> values and chdir the last value popped."
+  :desc ( "Pop a value from the current directory stack and chdir to this value.
+ If " arg "n" " is given, pop " arg "n" " values and chdir the last value popped.")
   (mext::popdir n))
 
 (defmfun1 ($dirstack :doc) ()
@@ -40,13 +40,13 @@
     (mext::mext-list))
 
 (defmfun1 ($mext_info :doc) ((distname :or-string-symbol))
-  "Print information about an installed mext distribution. The list of installed
- distributions is built by calling 'mext_list'."
+  :desc ("Print information about installed mext distribution " arg "distname"
+    ". The list of installed  distributions is built by calling " code "mext_list" ".")
     (or (mext::mext-info distname)
         (merror1 (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") ($sconcat distname))))
 
 (defmfun1 ($require :doc) ((distname :or-string-symbol) &optional force)
-  "Load the mext pacakge <distname> and register that it has been loaded.
- require('all) will load all installed mext packages. If <force> is true,
- then <distname> is loaded even if it has been loaded previously."
+  :desc ( "Load the mext pacakge " arg "distname" " and register that it has been loaded."
+ " " code "require('all)" " will load all installed mext packages. If " arg "force" " is true,
+ then " arg "distname" " is loaded even if it has been loaded previously.")
   (mext:mext-require distname force))

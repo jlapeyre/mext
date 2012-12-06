@@ -262,7 +262,7 @@ ia a list of three elements: hame, protoco, contents."
          (name (entry-name entry)))
     (if (get-doc-entry :es name)
         (if *ignore-silently* (return-from add-doc-entry1 t)
-          (format t "add-entry: ** warning replacing entry '~a'~%" name)))
+          (format t "add-doc-entry: ** warning replacing entry '~a'~%" name)))
     (if (not (section-p section))
         (let ((nsec (get-doc-sec section)))
           (if nsec

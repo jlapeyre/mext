@@ -121,17 +121,21 @@
            (nreq (length req)) ; minimum number of non-option args.
            (nreqo (length reqo)) ; maximum nuumber of non-option args. (required plus optional)
            (all-args (append req (cdr optional) opt)) ; all args except &rest
-           (sname ($sconcat name))  (declare-form nil)  (doc-string nil)  (defun-type 'defmfun))
+           (sname ($sconcat name))  (declare-form nil)  (doc-string nil) (doc-content nil) (defun-type 'defmfun))
       (declare (fixnum nreq nreqo))
       (when (stringp (car body))
          (setf doc-string (list (car body))) (setf body (cdr body)))
+      (when (eq :desc (car body))
+        (setf doc-content (second body)) (setf body (cddr body)))
       (loop while (and (listp (car body)) (eq 'declare (caar body))) do
            (push (car body) declare-form) (setf body (cdr body)))
        (if (defmfun1::are-some-args-held name) (setf defun-type 'defmspec))
        `(progn
           ,(when (member :doc directives)
-                 `(max-doc::add-doc-entry1 :e '( :name ,sname :protocol ,(defmfun1::format-protocol sname req optional rest)
-                                               :contents ,(if doc-string (concatenate 'string "   " (first doc-string)) ""))))
+                 `(max-doc::add-doc-entry1 :e 
+                '( :name ,sname :protocol ,(defmfun1::format-protocol sname req optional rest)
+                         :contents ,(if doc-content doc-content
+                                      (if doc-string (concatenate 'string "   " (first doc-string)) "")))))
           (defmfun1::set-default-options ',name ',opt) ; only for user, not used in macro or function body
           (defmfun1::save-lambda-list-etc ',name ',arg-specs)
           (defmfun1::save-preprocess-specs ',name ',pp-specs)
