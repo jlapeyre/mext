@@ -1,9 +1,9 @@
 (in-package :examples)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
-(doc-system::set-source-file-name "aex-examples.lisp")
-(doc-system::set-source-package "aex-maxima")
+(doc-system:set-source-file-name "aex-examples.lisp")
+(doc-system:set-source-package "aex-maxima")
+(defmfun1:set-mext-package "defmfun1")
 
 ;;; Database of examples for functions. Add an example for a function with (add-example "funcname" ...)
 ;;;  format-examples returns a string "Examples: ...." with input output pairs of examples (all as one string)
@@ -14,13 +14,10 @@
 ;;; This differs from the maxima examples() facility
 ;;;  1. the examples are not extracted from a texinfo file
 ;;;  2. they can be added with lisp code from anywhere.
-;;;  3. a maxima interface for adding examples is easy to write (not done)
+;;;  3. a maxima interface for adding examples is easy to write.
 ;;;  4. explanatory text pretext and posttext is available.
 ;;;  5. format-examples prints text strings, but does not set the line number variables
 ;;;  6. current maxima example() implemetation does not protect or rebind symbols used in the examples.
-
-;;; TODO examples are currently run 'live'. We need to include examples that are not executed, rather
-;;;  the expected output is supplied.
 
 (defstruct (example)
   (pretext "" :type string)   ; print this before the input output pair
@@ -165,15 +162,15 @@
 
 ;;; See other examples in tyep_of in misc-util.lisp 
 
-(max-doc::set-cur-sec 'max-doc::misc-fandv)
+(max-doc:set-cur-sec 'max-doc::misc-fandv)
 
 (maxima::defmfun1 (maxima::$examples :doc) ( (item :or-string-symbol ) )
   (maxima::maxima-symbol-to-string item)
   (format t "~a" (format-examples item))
   'maxima::$done)
 
-(max-doc::clear-call-desc "examples")
-(max-doc::add-call-desc '( "examples" ("item") ("Print examples for the topic " arg "item"
+(max-doc:clear-call-desc "examples")
+(max-doc:add-call-desc '( "examples" ("item") ("Print examples for the topic " arg "item"
                               ". Note these examples are different from those extracted from the
             maxima manual with the command " code "example" ".")))
 
