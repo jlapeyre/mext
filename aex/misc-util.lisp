@@ -14,11 +14,12 @@
 
 (in-package :maxima)
 (mext:mext-optimize)
+(defmfun1:set-mext-package "aex")
 
 (use-package :gjl.lisp-util)
 ;;(use-package :maxima-dev-doc)
 
-(max-doc::set-cur-sec 'max-doc::misc-util)
+(max-doc:set-cur-sec 'max-doc::misc-util)
 
 ;; TODO this is documented as an internal var. This should be documented as a user
 ;; var. Do we have a facility for this ?
@@ -26,28 +27,16 @@
   "If this is true, then print translated code when automatically compiling lambda functions
   passed as arguments. This is done in the macro option-compile-lambda."  )
 
-#|
-(defmfun1 $comp_load ((fname :string))
-  "Compile and load a lisp file. Maxima does not load it by default.
-If the input filename does not end with \".lisp\", it will be appended."
-  (let* ((lext ".lisp")
-         (ss (remove-terminal-substring fname lext))
-         (compile-file-name (if ss fname (concatenate 'string fname lext)))
-         (output-file-name (concatenate 'string
-                                        (if ss ss fname) "." *compiled-lisp-file-extension*)))
-    ($compile_file compile-file-name)
-    ($load output-file-name)))
-|#
-
 ;; this one does not rely on the list  *compiled-lisp-file-extension* above
 
 (max-doc::set-cur-sec 'max-doc::func-def-fandv)
 
 
 (defmfun1 ($compile_file1 :doc) ( (input-file :string) &optional bin-file translation-output-file &aux result)
- "This is copied from maxima <compile_file>, with changes. Sometimes a loadable binary file is apparantly compiled, but
- an error flag is set and <compile_file> returns false for the output binary filename. Here we return the binary
-  filename in any case."
+  :desc ("This is copied from maxima " mref "compile_file" 
+    ", with changes. Sometimes a loadable binary file is apparantly compiled, but
+ an error flag is set and " mref "compile_file" " returns false for the output binary filename. Here we return the binary
+ filename in any case.")
   (setq input-file (maxima-string input-file))
   (and bin-file(setq  bin-file (maxima-string bin-file)))
   (and translation-output-file
@@ -72,9 +61,10 @@ If the input filename does not end with \".lisp\", it will be appended."
   (append result (list bin-file)))
 
 (defmfun1 ($comp_load :doc) ((fname :string) &optional (pathlist "" :string-or-listof :ensure-list ))
-  "Compile and load a lisp file. Maxima does not load it by default with <compile_file>.
- If the input filename does not end with \".lisp\", it will be appended. If <pathlist> is
- specified, then <fname> is only searched for in directories in <pathlist>."
+  :desc ("Compile and load a lisp file. Maxima does not load it by default with "
+ mrefdot "compile_file" "If the input filename does not end with \".lisp\", it will be appended. If "
+ arg "pathlist" " is  specified, then " arg "fname" " is only searched for in directories in "
+  argdot "pathlist")
   (format t "pathlist is ~a~%" ($sconcat pathlist))
   (let (($file_search_lisp (if (and (stringp pathlist) (equal pathlist "")) $file_search_lisp
                             (cons '(mlist simp) pathlist))))
@@ -104,8 +94,8 @@ If the input filename does not end with \".lisp\", it will be appended."
 
 (max-doc::set-cur-sec 'max-doc::io-fandv)
 (defmfun1 ($pager_string :doc) ( (s :string) )
- "Read the string <s> in the pager given by the maxima variable pager_command. 
- This works with gcl under linux."
+ :desc ("Read the string " arg "s" " in the pager given by the maxima variable pager_command.
+ This works with gcl under linux.")
   (with-open-file (*standard-output* "tmppager.dat" :direction :output
                                      :if-exists :supersede)
                   (format t "~a" s))
@@ -114,7 +104,7 @@ If the input filename does not end with \".lisp\", it will be appended."
 
 (max-doc::set-cur-sec 'max-doc::program-flow-fandv)
 (defmfun1 ($error_str :doc)  ()
-  "error_str() returns the last error message as a string."
+  "returns the last error message as a string."
   (let ((err (cdr $error)))
     (push nil err)
     (apply #'format err)))

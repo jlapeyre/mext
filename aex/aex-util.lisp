@@ -10,7 +10,8 @@
 
 (in-package :maxima)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+
+;; These are probably obsolete
 
 (max-doc::set-cur-sec 'max-doc::misc-fandv)
 

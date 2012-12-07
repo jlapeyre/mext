@@ -29,12 +29,14 @@
    :wrap-text
 )))
 
-(if (find-package :defmfun1 ) t (defpackage :defmfun1
-                                  (:use :common-lisp :gjl.lisp-util)
-                                  (:import-from :maxima :$sconcat :merror)))
-;;                                  (:shadowing-import-from :maxima :ddefparameter :ddefun )))
+(if (find-package :defmfun1 ) t 
+  (defpackage :defmfun1
+    (:use :common-lisp :gjl.lisp-util)
+    (:import-from :maxima :$sconcat :merror)
+    (:export :set-mext-package :get-mext-package-for-function)))
 
-(if (find-package :max-doc ) t (defpackage :max-doc (:use :common-lisp :gjl.lisp-util)
+(if (find-package :max-doc ) t 
+  (defpackage :max-doc (:use :common-lisp :gjl.lisp-util)
     (:export :add-doc-sec :add-doc-entry :add-doc-entry1 :add-call-desc :add-call-desc1
              :set-cur-sec :see-also :see-also-group :clear-call-desc)))
 
@@ -44,7 +46,8 @@
 (if (find-package :simple-doc ) t (defpackage :simple-doc (:use :common-lisp :gjl.lisp-util)))
 
 (if (find-package :doc-system ) t (defpackage :doc-system (:use :common-lisp :gjl.lisp-util)
-         (:export :set-source-package :set-source-file-name)))
+         (:export :set-source-package :set-source-file-name
+                  :get-source-file-name :get-source-package)))
 
 (if (find-package :descr1 ) t (defpackage :descr1 (:use :common-lisp :gjl.lisp-util)))
 

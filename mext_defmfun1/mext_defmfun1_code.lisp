@@ -2,8 +2,8 @@
 
 (doc-system:set-source-file-name "mext_defmfun1_code.lisp")
 (doc-system:set-source-package "mext_defmfun1")
-
 (max-doc:set-cur-sec 'max-doc::runtime-fandv)
+(defmfun1:set-mext-package "mext_defmfun1")
 
 (defmfun1 ($chdir :doc) ( &optional (dir :string))
   "Set the working directory for maxima/lisp. With some lisps, such as cmu lisp the system

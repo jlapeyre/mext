@@ -1,6 +1,7 @@
 (in-package :maxima)
 (mext:mext-optimize)
-(max-doc::set-cur-sec 'max-doc::numerics-fandv)
+(max-doc:set-cur-sec 'max-doc::numerics-fandv)
+(defmfun1:set-mext-package "aex")
 
 (defmacro mk-numeric-lisp-function ( (lisp-name &optional (n 1)) )
   (let* ((max-name-string (concatenate 'string "$N_" (symbol-name lisp-name)))

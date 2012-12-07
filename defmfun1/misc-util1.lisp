@@ -17,7 +17,8 @@
 (defvar *merror1-last-message* nil)
 (defvar *merror1-last-code* nil)
 
-;;  This should be documented well! This is a potentially important function
+;;  Following is used by 'take' and 'partition_list'.
+;;  This should be documented well! This is a potentially important function.
 ;;  Suppose we have a function called like (inner e a1 a2 ...)
 ;;  where e is an expression and a1 a2, etc tell how to process the args.
 ;;  We would like to have (inner e (a11 a12 ...) (a21 a22 ..)) apply inner
@@ -75,7 +76,7 @@
           (setf ,e (list ,e)))))
 
 ;; uh this one is probably leaky, but it should not
-;; be called with complicated expressions, i hope
+;; be called with complicated expressions, i hope.n
 (defmacro maxima-symbol-to-string (or-sym-str)
   "Convert symbol to string. String falls through."
   (let ((s (gensym)))

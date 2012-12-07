@@ -2,6 +2,7 @@
 (use-package :gjl.lisp-util)
 (use-package :max-doc)
 (set-cur-sec 'max-doc::io-fandv)
+(defmfun1:set-mext-package "store")
 
 ;; Write and read maxima expressions to a file. This is done via a serialization library, cl-store.
 ;; TODO: cl-store has various settings that that can greatly affect efficiency. We should support these.
@@ -13,6 +14,8 @@
     (cl-store::store (if (length1p exprs) (car exprs) (cons '(mlist simp) exprs)) file)))
 
 (defmfun1 ($store_fast :doc) ( (file :string) &rest exprs )
+  :desc ("stores maxima expressions in files in binary format. This is like "
+  mref "store" ", except that no checks for circular references are done.")
   (let ((cl-store::*check-for-circs* nil))
     (cl-store::store (if (length1p exprs) (car exprs) (cons '(mlist simp) exprs)) file)))
 
@@ -22,6 +25,8 @@
     (cl-store::restore file)))
 
 (defmfun1 ($restore_fast :doc) ((file :string) )
+  :desc ("Reads maxima expressions from a file created by the function " mrefdot "store"
+ ", or " mref "store_fast" ", except that no checks for circular references are done.")
   (let ((cl-store::*check-for-circs* nil))
     (cl-store::restore file)))
 

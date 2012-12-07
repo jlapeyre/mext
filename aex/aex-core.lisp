@@ -11,7 +11,8 @@
 (use-package :gjl.lisp-util)
 (use-package :max-doc)
 
-(max-doc::set-cur-sec 'max-doc::aex-fandv)
+(max-doc:set-cur-sec 'max-doc::aex-fandv)
+(defmfun1:set-mext-package "aex")
 
 ($put '$aex_package 0.1 '$version)
 

@@ -4,6 +4,7 @@
 (use-package :gjl.lisp-util)
 
 (max-doc:set-cur-sec 'max-doc::lists-fandv)
+(defmfun1:set-mext-package "lists_aex")
 
 ;; (use-package :maxima)
 

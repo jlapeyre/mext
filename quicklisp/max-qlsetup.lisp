@@ -1,5 +1,7 @@
 (in-package :max-ql)
 
+(defmfun1:set-mext-package "quicklisp")
+
 (defun quicklisp-start ()
   (let* ((setup (make-pathname :name "setup" :type "lisp"
                                :directory (pathname-directory *quicklisp-pathname*)))

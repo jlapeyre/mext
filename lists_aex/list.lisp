@@ -1,11 +1,11 @@
 (in-package :max-list)
 (mext:mext-optimize)
 
-;; this is worthless at the moment. For some reason, the functions are not imported,
-;; so I have to qualify calls to all max-doc functions
 (use-package :max-doc)
 
-(max-doc::set-cur-sec 'max-doc::lists-fandv)
+(max-doc:set-cur-sec 'max-doc::lists-fandv)
+
+(defmfun1:set-mext-package "lists_aex")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -26,10 +26,12 @@
                    '( (maxima::mlist) ))
                   (t
                    (cond ( (>= imax imin)
-                          (cons '(maxima::mlist maxima::simp) (loop for i ,@loop-decl  from imin to imax by incr collect i)))
+                          (cons '(maxima::mlist maxima::simp) 
+                                (loop for i ,@loop-decl  from imin to imax by incr collect i)))
                          (t
                           (setf incr (- incr))
-                          (cons '(maxima::mlist maxima::simp) (loop for i ,@loop-decl from imin downto imax by incr collect i)))))))))
+                          (cons '(maxima::mlist maxima::simp) 
+                                (loop for i ,@loop-decl from imin downto imax by incr collect i)))))))))
 
 (def-num-range-type num-range-int fixnum)
 (def-num-range-type num-range-float float)

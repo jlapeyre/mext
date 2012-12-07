@@ -1,10 +1,12 @@
 (in-package :maxima)
 (mext:mext-optimize)
-(max-doc::set-cur-sec 'max-doc::aex-fandv)
+(max-doc:set-cur-sec 'max-doc::aex-fandv)
+(defmfun1:set-mext-package "aex")
 
 (defmfun-ae ($iapply :doc)  ( (fun :function)  (arg :non-atom :ensure-lex))
-  "iapply is like maxima apply, but it supports aex lists. <arg> is converted
- to an ml if it is an aex expression. By default, output is ml regardless of the input representation."
+  :desc ( mref "iapply" " is like maxima " mref "apply" ", but it supports aex lists. "
+  arg "arg" " is converted to an ml if it is an aex expression. By default, output is ml 
+ regardless of the input representation.")
   (unless ($listp arg)
     (merror1 (intl:gettext "iapply: second argument must be a list; found: ~M") arg))
   (defmfun-final-to-ae 
@@ -40,8 +42,6 @@
                        '( :code "ireverse(lrange(4, [ot->ar]), [ot->ml] )"))
 
 ;;(defmfun1 ($icons :doc) (x (e :non-atom-list))
-;; In a function that mostly only does icons in a loop,
-;; using defmfun rather than defmfun1 is almost twice as fast.
 (defmfun $icons (x e)
   "This is like maxima 'cons', but less general, and much, much faster.
    It is suitable at a minimum, for pushing a number or list or string onto
@@ -49,18 +49,18 @@
    are not interested in investigating, use 'cons' instead."
   (cons (car e) (cons x (cdr e))))
 
-
 (max-doc::set-cur-sec 'max-doc::lists-fandv)
 (add-doc-entry1 :e  '(:name "icons"
                       :protocol "icons(x,e)"
                       :contents
-                      "icons(x,e) is like maxima 'cons', but less general, and much, much faster.
- <x> is a maxima object. <e> is a maxima list or list-like object, such as [a], or f(a).
- It is suitable at a minimum, for pushing a number or list or string onto
- a list of numbers, or strings or lists. If you find icons gives buggy behavior that you
- are not interested in investigating, use 'cons' instead."))
+  ( code ("icons(" argcomma "x" arg "e" ")")
+  " is like maxima " mref "cons" ", but less general, and much, much faster. "
+  arg "x" " is a maxima object. " arg "e" " is a maxima list or list-like object, such as "
+  code "[a]" ", or " code "f(a)" ". It is suitable at a minimum, for pushing a number or list or string onto
+ a list of numbers, or strings or lists. If you find " mref "icons" " gives buggy behavior that you
+ are not interested in investigating, use " mref "cons" " instead.")))
 
 (max-doc::implementation "icons" 
    "In a function that mostly only does icons in a loop,
-     icons defined with defmfun rather than defmfun1 runs almost twice as fast. So icons is
+   icons defined with defmfun rather than defmfun1 runs almost twice as fast. So icons is
    defined with defmfun rather than defmfun1. icons does no argument checking.")

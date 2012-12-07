@@ -10,10 +10,10 @@
 (mext:mext-optimize)
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
-(max-doc::set-cur-sec 'max-doc::misc-fandv)
+(max-doc:set-cur-sec 'max-doc::misc-fandv)
 
-(doc-system::set-source-file-name "defmfun1-max.lisp")
-(doc-system::set-source-package "maxima")
+(doc-system:set-source-file-name "defmfun1-max.lisp")
+(doc-system:set-source-package "maxima")
 
 ;;(format t ">>args ~s~%>>argl ~s~%>>specl ~s~%" args arg-list arg-specs)
 ;; (format t ">>args ~s~%>>argl ~s~%>>specl ~s~%" args arg-list arg-specs)
@@ -139,6 +139,7 @@
           (defmfun1::set-default-options ',name ',opt) ; only for user, not used in macro or function body
           (defmfun1::save-lambda-list-etc ',name ',arg-specs)
           (defmfun1::save-preprocess-specs ',name ',pp-specs)
+          (defmfun1::record-mext-package ',name defmfun1::*mext-package*)
           (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) ; Here is the function definition
             ,@doc-string
             ,@(if (eq defun-type 'defmspec) `((setf ,args (cdr ,args))))
@@ -154,7 +155,8 @@
                    ,(defmfun1-write-assignments name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h)
                    ,@(if rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
                    (if (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest))
-                   ,@(if (null rest) `((if ,restarg ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest))))
+                   ,@(if (null rest) `((if ,restarg ,(defmfun1::narg-error-or-message 
+                                                       name args restarg nargs nreq nreqo rest))))
                    ,@(defmfun1-write-rest-assignments name args rest reqo-spec)
                    ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec)
                    ,@body)))))))))

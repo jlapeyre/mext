@@ -3,7 +3,8 @@
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (use-package :gjl.lisp-util)
 
-(max-doc::set-cur-sec 'max-doc::combinatorics-fandv)
+(max-doc:set-cur-sec 'max-doc::combinatorics-fandv)
+(defmfun1:set-mext-package "discrete_aex")
 
 ;;; The use of (aex-get ...) and (setf (aex-get ...)) etc is a
 ;;; inefficient because the array is found in the aex struct each time. But it
@@ -61,8 +62,9 @@
                   ", which must be represented by a permuation the integers from 1 through n,"
                   " with n the length of the list.")))
 
-(defmfun-ae ($perm_cycles :doc) ( (ain :ae-list ))
-  "Returns a cyclic decomposition of the input permutation."
+(defmfun-ae ($perm_to_cycles :doc) ( (ain :ae-list ))
+  :desc ("Returns a cycle decomposition of the input permutation " argdot "ain"
+  " The input must be a permutation of " code "n" " integers from 1 through " code "n" ".")
   (let* (
          (a (aex-cp ain :adjustable nil :element-type 'fixnum))
          (arr (aex-arr a))
@@ -84,8 +86,8 @@
     (when one-cycle (push (defmfun-final-to-ae (cons '(mlist simp) one-cycle)) all-cycles))
     (defmfun-final-to-ae (cons '(mlist simp) all-cycles))))
 
-(examples::clear-examples "perm_cycles")
-(examples::add-example "perm_cycles" '( :code "perm_cycles([5,4,3,2,1,10,6,7,8,9])"))
+(examples::clear-examples "perm_to_cycles")
+(examples::add-example "perm_to_cycles" '( :code "perm_to_cycles([5,4,3,2,1,10,6,7,8,9])"))
 
 (defmfun1 ($permutation_p :doc) ( (ain :ae-list))
   (let* ((n (ilength ain))
@@ -145,4 +147,4 @@
 (max-doc::implementation "random_cycle" "This function uses Sattolo's algorithm.")
 
 (max-doc::see-also-group '( "random_cycle" "random_permutation_sym" "ae_random_permutation"
-                            "signature_permutation" "perm_cycles"))
+                            "signature_permutation" "perm_to_cycles"))

@@ -16,8 +16,8 @@
 (import 'maxima::ddefvar)
 (import 'maxima::ddefparameter)
 
-(doc-system::set-source-file-name "defmfun1.lisp")
-(doc-system::set-source-package "defmfun1")
+(doc-system:set-source-file-name "defmfun1.lisp")
+(doc-system:set-source-package "defmfun1")
 
 (ddefvar *arg-check-func-table* (make-hash-table)
  "Table of argument checking functions for defmfun1. These are
@@ -52,6 +52,25 @@
    Currently, information on when to evaluate the arguments is stored here. 
    I suppose ths could be specified in the lambda list, but it would probably be rather
    cluttered.")
+
+(defvar *mext-package* nil)
+
+(ddefvar *mext-package-table* (make-hash-table :test 'equal)
+  "This hash-table stores the name of the mext package in which a function
+   is defined.")
+
+(defun set-mext-package (name)
+  (setf *mext-package* name))
+
+(defun record-mext-package (name package)
+  (when package
+    (setf name (maxima::$sconcat name))
+    (setf (gethash name *mext-package-table*) package)))
+
+(defun get-mext-package-for-function (name)
+  (setf name (maxima::$sconcat name))
+  (gethash name *mext-package-table*))
+
 
 (maxima::ddefun set-hold-all (name)
   "Set the $hold_all attribute for a defmfun1 function. The macro will expand to
@@ -398,7 +417,7 @@
                           (or (keyword-p e) (and (listp e) (keyword-p (car e)) ))) nospecs)
              (maxima::merror1 'maxima::$defmfun1_unknown_directive "defmfun1: Error expanding function definition for ~s"
    (format nil "~s. Error in argument directive ~s.~% Probably an unknown type specification.~% In source file ~a, package ~a."
-                 name nospecs (doc-system::get-source-file-name) (doc-system::get-source-package))))
+                 name nospecs (doc-system:get-source-file-name) (doc-system:get-source-package))))
 ;;                                        name nospecs  maxima::$load_pathname))) ; does not work for more than one reason
             (push (if (length1p nospecs) nospecs (list (first nospecs) `(quote ,(second nospecs))) ) argt1) ; quote default values
             (if (length-eq nospecs 3) (setf (gethash (first nospecs) supplied-p-hash) (third nospecs)))

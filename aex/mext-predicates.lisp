@@ -1,13 +1,14 @@
 (in-package :maxima)
 (mext:mext-optimize)
 
-(max-doc::set-cur-sec 'max-doc::predicates-fandv)
+(max-doc:set-cur-sec 'max-doc::predicates-fandv)
+(defmfun1:set-mext-package "aex")
 
 (defmfun1 ($cmplength :doc) (e (n 0 :non-neg-int)) ; 0 to quiet compiler
-  "cmplength(<e>, <n>) -- return the smaller of <n> and length(<e>).
-  This is useful if e is very large and n is small, so that
-  computing the entire length of e is inefficient. Expression
-  e can be either a list or an array."
+  :desc ( "return the smaller of " arg "n" " and " code ("length(" arg "e" ")")
+  ". This is useful if " arg "e" " is very large and " arg " n is small, so that
+ computing the entire length of " arg "e" " is inefficient. Expression "
+  arg "e" " can be either a list or an array.")
   (declare (fixnum n))
   (if (aex-p e)
       (let ((len (length (aex-arr e))))
@@ -21,8 +22,9 @@
   things down a bit. So be cautious using it in a tight loop.")
 
 (defmfun1 ($length_eq :doc) ( (e :or-string-non-atom) (n 0 :non-neg-int)) ; 0 to quiet compiler
-  "Returns true if <e> is of length <n>, false otherwise. This implementation traverses no more
- elements of <e> than necessary to return the result."
+  :desc ("Returns true if " arg "e" " is of length " argcomma "n" 
+  " false otherwise. This implementation traverses no more
+ elements of " arg "e" " than necessary to return the result.")
   (declare (fixnum n))
   (cond ((listp e)
          (do ((e e (cdr e))
@@ -37,8 +39,8 @@
   things down a bit. So be cautious using it in a tight loop.")
   
 (defmfun1 ($length1p :doc) ( (e :or-string-non-atom))
-  "Returns true if <e> is of length 1, false otherwise. This implementation traverse no more
- elements of <e> than necessary to return the result."
+  :desc ("Returns true if " arg "e" " is of length 1, false otherwise. This implementation traverse no more
+ elements of " arg "e" " than necessary to return the result.")
   (cond ((listp e)
          (and (not (null (cdr e))) (null (cddr e))))
         ((aex-p e)
@@ -63,8 +65,8 @@
 (max-doc::see-also-group '( "length0p" "cmplength" "length_eq" "length1p"))
 
 (defmfun1 ($type_of :doc) (e &optional verbose)
- "Return something like the 'type' of a maxima expression. This
- is a bit ill defined currently. type_of uses the lisp function type-of."
+ :desc ("Return something like the 'type' of a maxima expression. This
+ is a bit ill defined currently. " mref "type_of" " uses the lisp function type-of.")
   (cond ( (aex-p e)
           (if verbose (list '(mlist simp) ($op e) 'aex)
             ($aeop e)))
