@@ -15,21 +15,21 @@
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (use-package :gjl.lisp-util :max-doc)
 
-(max-doc::set-cur-sec 'max-doc::doc-fandv)
+(max-doc:set-cur-sec 'max-doc::doc-fandv)
 
 (defmfun1 $add_doc_section ((s :string))
   (if (not (null (max-doc::get-doc-sec s)))
       (maxima::merror1 "add_doc: Section \"~a\" already exists~%" s))
-  (max-doc::add-doc-sec s))
+  (max-doc:add-doc-sec s))
 
 (defmfun1 $get_cur_doc_section ()
- (max-doc::get-cur-sec))
+ (max-doc:get-cur-sec))
 
 
-(defmfun1 ($print_max_doc_sections :doc) ()
-  "Print all sections of max_doc documentation. This does not include other documentation
+(defmfun1 ($print_maxdoc_sections :doc) ()
+  "Print all sections of maxdoc documentation. This does not include other documentation
  databases, such as the main maxima documentation."
-  (format t " ---  max_doc sections~%~%")
+  (format t " ---  maxdoc sections~%~%")
   (let* ( (sections (sort (get-hash-keys max-doc::*max-doc-section-hashtable*) #'string-lessp)))
     (loop for section--name in sections do
                 (format t " *  ~a~%" section--name))

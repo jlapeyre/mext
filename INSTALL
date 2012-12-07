@@ -95,7 +95,7 @@ You can also try reading and loading testall.mac.
 To see some documentation, restart maxima and type
  load(mext);
  require('all);
- print_max_doc_sections();
+ print_maxdoc_sections();
 
 ---------------------------------------------------
 * Installing one-by-one. Some distributions depend
