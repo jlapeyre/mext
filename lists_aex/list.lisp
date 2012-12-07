@@ -85,11 +85,11 @@
  " lrange is much more efficient than makelist for creating ranges, particularly for large lists
  (e.g. 10^5 or more items.)"))
 
-(max-doc::add-call-desc '( "lrange" ("stop") ("returns a list of numbers from 1 through " arg "stop"))
+(max-doc::add-call-desc '( "lrange" ("stop") ("returns a list of numbers from 1 through " argdot "stop"))
                '( "lrange" ("start" "stop")
-                  ("returns a list of expressions from " arg "start" " through " arg "stop" " while also doing soeting"))
+                  ("returns a list of expressions from " arg "start" " through " argdot "stop"))
                '( "lrange" ("start" "stop" "incr")
-                  ("returns a list of expressions from " arg "start" " through " arg "stop" " in steps of " arg "incr")))
+                  ("returns a list of expressions from " arg "start" " through " arg "stop" " in steps of " argdot "incr")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -504,7 +504,7 @@
 
 (defmfun-ae ($select :doc) (( expr :non-atom-list) test &optional (n 0 supplied-n-p :pos-int) &opt ($compile t :bool))
   :desc ( "Returns a list of all elements of " arg "expr" 
-         "for which " arg "test" " is true. " arg "expr"
+         " for which " arg "test" " is true. " arg "expr"
          " may have any op.")
   (declare (fixnum n))
   (option-compile-lambda test)

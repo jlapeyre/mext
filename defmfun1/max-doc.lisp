@@ -53,6 +53,14 @@
   (args '() :type list)
   (text  '() :type list))
 
+(defvar *format-codes-text*
+  (make-hash-table :test 'equal))
+
+(defvar *format-codes-texi*
+  (make-hash-table :test 'equal))
+
+(defvar *format-codes-default* *format-codes-text*)
+
 (defun add-call-desc1 (name args text)
   (let ((cd (make-call-desc :name name :args args :text text))
         (entry (get-doc-entry :es name)))
@@ -86,86 +94,79 @@ ia a list of three elements: hame, protoco, contents."
       (setf (entry-call-desc-list entry)
             (push cd (entry-call-desc-list entry))))))
 
+
+(defun set-format-codes-table (code-name)
+  (cond ((string= "text" code-name)
+         (setf *format-codes-default* *format-codes-text*))
+        ((string= "texi" code-name)
+         (setf *format-codes-default* *format-codes-texi*))
+        (t (maxima::merror1 (intl:gettext 
+           "max-doc:set-format-codes-table Unknown code name ~s.") code-name))))
+
+;(set-format-codes-table "texi")
+
+;; like fill-hash-from-list, but make string from keys
+(defun fill-format-codes (hash-table element-list)
+  (mapcar (lambda (pair) 
+            (setf (gethash (symbol-name (first pair)) hash-table) (second pair))) element-list)
+  hash-table)
+
+(fill-format-codes *format-codes-text*
+   '( (code "`~a'")  (codedot "`~a'.")  (codecomma "`~a',") 
+      (mref "`~a'")  (mrefdot "`~a'.")  (mrefcomma "`~a',") 
+      (arg "<~a>")   (argdot "<~a>.")   (argcomma "<~a>,")
+      (var "<~a>")   (vardot "<~a>.")   (varcomma "<~a>,")
+      (opt "<~a>")   (optdot "<~a>.")   (optcomma "<~a>,")
+      (dots " ... ")))
+
+(defun make-texi-codes (table codes)
+ "Make a table of symbols to codes for texi. E.g. var --> @var{~a}"
+  (loop for code in codes do
+        (let ((name (symbol-name code)))
+          (setf (gethash name table) (format nil "@~a{~~a}" (string-downcase name))))))
+
+(make-texi-codes *format-codes-texi*
+   '( code codecomma codedot var varcomma vardot
+      mref mrefcomma mrefdot arg argcomma argdot
+      var varcomma vardot opt optcomma optdot
+      dots))
+
+(defun format-doc-text (text-descr code-table)
+ "Return a string of formatted text from a text description list and table that
+  takes format codes to strings."
+  (let ((txt (if (listp text-descr) text-descr (list text-descr))))
+    (do* ((txt1 txt (cdr txt1))
+          (item (car txt) (car txt1))
+          (res))
+        ((null txt1) (format nil "~{~a~}" (nreverse res)))
+      (if (symbolp item) 
+          (let ((fmt (gethash (symbol-name item) code-table)))
+            (if fmt
+                (progn (pop txt1)
+                       (push (format nil fmt
+                                     (if (listp (car txt1)) (format-doc-text (car txt1) code-table)
+                                       (car txt1))) res))
+              (maxima::merror1 "max-doc: Unrecognized format code: ~a." item)))
+        (push item res)))))
+
 (defun format-call-desc (cd)
-  (let ((args (mapcar (lambda (x) (if (listp x)
-                                      (cond ((equal (car x) "list")
-                                             (format nil "[~{<~a>~^, ~}]" (cdr x)))
-                                            ((equal (car x) "lit")
-                                             (format nil "~{~a ~}" (cdr x)))
-                                            (t
-                                             (maxima::merror1 "max-doc: unknown call descritpton argument ~s" x)))
-                                      (format nil "<~a>" x)))
-                                      (call-desc-args cd))))
+  (let ((args (mapcar (lambda (x) 
+        (if (listp x)
+            (cond ((equal (car x) "list")
+                   (let* ((fmt (gethash (symbol-name 'arg) *format-codes-default*))
+                          (fmt1 (format nil "[~~{~a~~^, ~~}]" fmt)))
+                     (format nil fmt1 (cdr x))))
+                  ((equal (car x) "lit")
+                   (format nil "~{~a ~}" (cdr x)))
+                  (t
+                   (maxima::merror1 "max-doc: unknown call description argument ~s" x)))
+          (format-doc-text (list 'var x) *format-codes-default*)))
+                      (call-desc-args cd))))
   (format nil "    ~a(~{~a~^, ~})~%  ~a~%~%" (call-desc-name cd) args
-          (wrap-text :text (format-doc-text (call-desc-text cd)) :width 80 :indent 6) )))
+          (wrap-text :text (format-doc-text (call-desc-text cd) *format-codes-default*) :width 80 :indent 6) )))
 
 (defun format-call-desc-list (cd-list)
   (format nil "~{~a~}" (nreverse (mapcar #'format-call-desc cd-list))))
-
-;; Handles nested format codes
-(defun format-doc-text (text-descr)
-  (let ((txt (if (listp text-descr) text-descr (list text-descr)))
-        (scode (symbol-name 'code))
-        (sarg (symbol-name 'arg))
-        (sargcomma (symbol-name 'argcomma))
-        (sargdot (symbol-name 'argdot))
-        (smref (symbol-name 'mref))
-        (smrefcomma (symbol-name 'mrefcomma))
-        (smrefdot (symbol-name 'mrefdot))
-        (svar (symbol-name 'var))
-        (svarcomma (symbol-name 'varcomma))
-        (svardot (symbol-name 'vardot))
-        (sopt (symbol-name 'opt))
-        (soptcomma (symbol-name 'optcomma))
-        (soptdot (symbol-name 'optdot)))
-    (flet ((fm (item)
-               (if (listp (car item)) (format-doc-text (car item))
-                     (car item))))
-      (do* ((txt1 txt (cdr txt1))
-            (item (car txt) (car txt1))
-            (res))
-          ((null txt1) (format nil "~{~a~}" (nreverse res)))
-        (cond ((and (symbolp item) (equal (symbol-name item) sarg))
-               (pop txt1)
-               (push (format nil "<~a>" (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) svar))
-               (pop txt1)
-               (push (format nil "<~a>" (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) svarcomma))
-               (pop txt1)
-               (push (format nil "<~a>," (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) svardot))
-               (pop txt1)
-               (push (format nil "<~a>." (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) scode))
-               (pop txt1)
-               (push (format nil "`~a'" (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) smref))
-               (pop txt1)
-               (push (format nil "`~a'" (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) smrefcomma))
-               (pop txt1)
-               (push (format nil "`~a'," (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) smrefdot))
-               (pop txt1)
-               (push (format nil "`~a'." (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) sargcomma))
-               (pop txt1)
-               (push (format nil "<~a>," (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) sargdot))
-               (pop txt1)
-               (push (format nil "<~a>." (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) sopt))
-               (pop txt1)
-               (push (format nil "<~a>" (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) soptdot))
-               (pop txt1)
-               (push (format nil "<~a>." (fm txt1)) res))
-              ((and (symbolp item) (equal (symbol-name item) soptcomma))
-               (pop txt1)
-               (push (format nil "<~a>," (fm txt1)) res))
-              (t
-               (push item res)))))))
 
 ;; created a function for setting a slot
 (defmacro def-setter (setter-name slot)
@@ -174,7 +175,7 @@ ia a list of three elements: hame, protoco, contents."
      (let ((entry (get-doc-entry :es name)))
        (if entry
            (setf (,slot entry) val)
-           (maxima::merror1 "max-doc::~a: No entry for doc item ~a" ',setter-name name)))))
+           (maxima::merror1 "max-doc:~a: No entry for doc item ~a" ',setter-name name)))))
 
 
 (def-setter author entry-author)
@@ -390,13 +391,13 @@ must be keyword,value pairs for the doc entry struct."
 (defun format-one-spec-in-list (arg-count arg type)
   (format nil "    The ~:R argument ~a must be ~a.~%"
           arg-count
-          (maxima::maybe-invert-string-case (format nil "<~a>" arg))
+          (maxima::maybe-invert-string-case (format-doc-text (list 'arg arg) *format-codes-default*))
           (defmfun1::get-arg-spec-to-english type)))
 
 (defun format-single-spec (rest-args arg type)
   (format nil (if rest-args  ". The first argument ~a must be ~a.~%"
                   " ~a, which must be ~a.~%")
-          (maxima::maybe-invert-string-case (format nil "<~a>" arg))
+          (maxima::maybe-invert-string-case (format-doc-text (list 'arg arg) *format-codes-default*))
           (defmfun1::get-arg-spec-to-english type)))
 
 (defun format-arg-specs-rest (name arg)
@@ -444,13 +445,16 @@ must be keyword,value pairs for the doc entry struct."
                    (if pack (format nil "    mext package: ~a~%" pack) ""))
                  (format nil "~%")
                  (if (null (entry-default-value e))  ""
-                     (format nil "  default value `~a'~%" (entry-default-value e)))
+                   (format nil "~a.~%"
+                           (format-doc-text 
+                            (list "  default value " 'code (entry-default-value e)) *format-codes-default* )))
+;                   (format nil "  default value `~a'~%" (entry-default-value e)))
                  (if (> (length (entry-call-desc-list e)) 0)
                      (format nil "Calling:~%~a"
                              (format-call-desc-list (entry-call-desc-list e))))
                  (if (> (length (entry-contents e)) 0)
                      (format nil "Description:~%~a~%" (wrap-text 
-                               :text (format-doc-text (entry-contents e)) :width 80 :indent 3))
+                               :text (format-doc-text (entry-contents e) *format-codes-default* ) :width 80 :indent 3))
                      (format nil ""))
                  (let ((sspec (format-arg-specs name)))
                    (when (> (length sspec) 0) (format nil "Arguments:~%~a" sspec)))

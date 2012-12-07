@@ -293,7 +293,6 @@
 ;; Maxima function $table
 ;; Defined by `defmspec' to prevent expression evaluation
 
-
 (defmfun1::set-hold-all '$table)
 (max-doc::add-doc-entry '( :name "table" :type "Function"))
 (defmfun-ae ($table) ( expr (iterator1 :list) &rest (iterators :list) )
@@ -309,7 +308,7 @@
 
 (add-call-desc '( "table" ("expr" ("list" "n"))
                   ("Evaluates expression " arg "number" " times. If " arg "number" " is not an integer
-  or a floating point number, then $float is called. If we have a
+  or a floating point number, then " code "float" " is called. If we have a
   floating point number, it is truncated into an integer.
   This type of iterator is the fastest, since no variable is bound.")))
 
@@ -317,12 +316,15 @@
 (add-call-desc '( "table" ("expr" ("list" "variable" "initial" "end" "step") )
                  ("Returns a list of evaluated expressions where " arg "variable" " (a symbol) is set
       to a value. The first element of the returned list is " arg "expression" " evaluated
-      with " arg "variable" " set to " arg "initial" ". The i-th element of the returned list is " arg "expression" " 
-      evaluated with " arg "variable" " set to " arg "initial" " + (i-1)*" arg "step" ". The iteration stops
+      with " arg "variable" " set to " argdot "initial" 
+      " The " code "i" "-th element of the returned list is " arg "expression" " 
+      evaluated with " arg "variable" " set to " 
+      codedot (arg "initial" " + (i-1)*" arg "step") " The iteration stops
       once the value is greater (if " arg "step" " is positive) or smaller (if " arg "step" " is negative)
-      than " arg "end" ". Requirement: The difference of " arg "end" " - " arg "intial" " must return a $numberp
-      number. " arg "step" " must be a nonzero $numberp number. This allows for iterators of
-      rather general forms like [i, %i - 2, %i, 0.1b0] ...")))
+      than " argdot "end" " Requirement: The difference between " arg "end" " and " arg "intial" 
+      " must return a " code "$numberp" " number. " arg "step" 
+      " must be a nonzero " code "$numberp" " number. This allows for iterators of
+      rather general forms like " codedot ("[i, %i - 2, %i, 0.1b0] " dots "") )))
 
 (add-call-desc '( "table" ("expr" ("list" "variable" "initial" "end"))
                   ("This iterator uses a step of 1 and is equal to  [" arg "variable" ","

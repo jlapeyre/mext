@@ -5,9 +5,9 @@
 (defmfun1:set-mext-package "aex")
 
 (defmfun1 ($cmplength :doc) (e (n 0 :non-neg-int)) ; 0 to quiet compiler
-  :desc ( "return the smaller of " arg "n" " and " code ("length(" arg "e" ")")
-  ". This is useful if " arg "e" " is very large and " arg " n is small, so that
- computing the entire length of " arg "e" " is inefficient. Expression "
+  :desc ( "return the smaller of " arg "n" " and " codedot ("length(" arg "e" ")")
+  " This is useful if " arg "e" " is very large and " arg "n" " is small, so that
+   computing the entire length of " arg "e" " is inefficient. Expression "
   arg "e" " can be either a list or an array.")
   (declare (fixnum n))
   (if (aex-p e)

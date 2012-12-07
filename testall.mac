@@ -2,6 +2,9 @@ load(mext);
 
 our_mext_list : mext_list();
 
+/* our_test_list : [mext_system,aex,lists_aex]; */
+
+
 our_test_list : [mext_system,pw,implicit,aex,lists_aex];
 
 if member("store", our_mext_list) then our_test_list :
