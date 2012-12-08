@@ -38,7 +38,7 @@
 (if (find-package :max-doc ) t 
   (defpackage :max-doc (:use :common-lisp :gjl.lisp-util)
     (:export :add-doc-sec :add-doc-entry :add-doc-entry1 :add-call-desc :add-call-desc1
-             :set-cur-sec :see-also :see-also-group :clear-call-desc)))
+             :set-cur-sec :get-cur-sec :see-also :see-also-group :clear-call-desc)))
 
 (if (find-package :maxima-dev-doc ) t (defpackage :maxima-dev-doc (:use :common-lisp :gjl.lisp-util)))
 ;;       (:export :ddefmfun :ddefun :ddefvar :ddefparameter )))

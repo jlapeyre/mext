@@ -314,7 +314,7 @@
 
 
 (add-call-desc '( "table" ("expr" ("list" "variable" "initial" "end" "step") )
-                 ("Returns a list of evaluated expressions where " arg "variable" " (a symbol) is set
+    ("Returns a list of evaluated expressions where " arg "variable" " (a symbol) is set
       to a value. The first element of the returned list is " arg "expression" " evaluated
       with " arg "variable" " set to " argdot "initial" 
       " The " code "i" "-th element of the returned list is " arg "expression" " 
@@ -322,7 +322,7 @@
       codedot (arg "initial" " + (i-1)*" arg "step") " The iteration stops
       once the value is greater (if " arg "step" " is positive) or smaller (if " arg "step" " is negative)
       than " argdot "end" " Requirement: The difference between " arg "end" " and " arg "intial" 
-      " must return a " code "$numberp" " number. " arg "step" 
+      " must return a " code "numberp" " number. " arg "step" 
       " must be a nonzero " code "$numberp" " number. This allows for iterators of
       rather general forms like " codedot ("[i, %i - 2, %i, 0.1b0] " dots "") )))
 

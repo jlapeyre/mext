@@ -53,6 +53,19 @@
   (args '() :type list)
   (text  '() :type list))
 
+;; current (default) manual section
+(defvar *current-section* nil)
+
+;; current (default) mext distribution
+(defvar *current-distribution* nil)
+
+(defvar *ignore-silently* t)
+
+(defvar *text-width* 80)
+(defvar *indent1* 3)
+(defvar *indent2* 4)
+(defvar *indent3* 6)
+
 (defvar *format-codes-text*
   (make-hash-table :test 'equal))
 
@@ -61,12 +74,22 @@
 
 (defvar *format-codes-default* *format-codes-text*)
 
+(defvar *max-doc-top* (make-sections))
+
+(defvar max-doc::*max-doc-deffn-defvr-hashtable*
+  (make-hash-table :test 'equal))
+
+(defvar max-doc::*max-doc-section-hashtable*
+  (make-hash-table :test 'equal))
+
+(defvar max-doc::*max-doc-oeis-hashtable*
+  (make-hash-table :test 'equal))
+
 (defun add-call-desc1 (name args text)
   (let ((cd (make-call-desc :name name :args args :text text))
         (entry (get-doc-entry :es name)))
     (setf (entry-call-desc-list entry)
           (push cd (entry-call-desc-list entry)))))
-
 
 (defun clear-call-desc (&rest names)
   "Remove all call descriptions for string 'names' or list of names.
@@ -85,7 +108,7 @@ ia a list of three elements: hame, protoco, contents."
 
 (defun add-call-desc-one (arg)
   (unless (= 3 (length arg))
-    (maxima::merror1 "max-doc::add-call-desc: expected a list of three items in a call description, found ~s~%" (length arg)))
+    (maxima::merror1 "max-doc:add-call-desc: expected a list of three items in a call description, found ~s~%" (length arg)))
   (destructuring-bind (name args text) arg
     (let ((cd (make-call-desc :name name :args args :text text))
           (entry (get-doc-entry :es name)))
@@ -93,7 +116,6 @@ ia a list of three elements: hame, protoco, contents."
         (maxima::merror1 "max-doc::add-call-desc: no max-doc entry for ~s~%" name))
       (setf (entry-call-desc-list entry)
             (push cd (entry-call-desc-list entry))))))
-
 
 (defun set-format-codes-table (code-name)
   (cond ((string= "text" code-name)
@@ -117,7 +139,7 @@ ia a list of three elements: hame, protoco, contents."
       (arg "<~a>")   (argdot "<~a>.")   (argcomma "<~a>,")
       (var "<~a>")   (vardot "<~a>.")   (varcomma "<~a>,")
       (opt "<~a>")   (optdot "<~a>.")   (optcomma "<~a>,")
-      (dots " ... ")))
+      (math "~a") (dmath "~a") (dots " ... ")))
 
 (defun make-texi-codes (table codes)
  "Make a table of symbols to codes for texi. E.g. var --> @var{~a}"
@@ -129,7 +151,7 @@ ia a list of three elements: hame, protoco, contents."
    '( code codecomma codedot var varcomma vardot
       mref mrefcomma mrefdot arg argcomma argdot
       var varcomma vardot opt optcomma optdot
-      dots))
+      math dmath dots))
 
 (defun format-doc-text (text-descr code-table)
  "Return a string of formatted text from a text description list and table that
@@ -163,7 +185,7 @@ ia a list of three elements: hame, protoco, contents."
           (format-doc-text (list 'var x) *format-codes-default*)))
                       (call-desc-args cd))))
   (format nil "    ~a(~{~a~^, ~})~%  ~a~%~%" (call-desc-name cd) args
-          (wrap-text :text (format-doc-text (call-desc-text cd) *format-codes-default*) :width 80 :indent 6) )))
+          (wrap-text :text (format-doc-text (call-desc-text cd) *format-codes-default*) :width 80 :indent *indent3* ) )))
 
 (defun format-call-desc-list (cd-list)
   (format nil "~{~a~}" (nreverse (mapcar #'format-call-desc cd-list))))
@@ -200,55 +222,21 @@ ia a list of three elements: hame, protoco, contents."
   (if (= (length val-and-doc) 2)
       (let ((doc (second val-and-doc)))
         `(progn
-;;           (add-doc-entry1 '(:name ,(concatenate 'string "\"" (maxima::$sconcat var) "\"")
            (add-doc-entry '(:name ,(maxima::$sconcat var)
                              :type "Variable"
                              :contents ,doc))
            (maxima::defmvar ,var ,@val-and-doc)))))
 
-#|
-(defun author (name author)
-  (ensure-list author)
-  (let ((entry (get-doc-entry :es name)))
-    (setf (entry-see-also entry) see-list)))
-|#
-
 (defun implementation (name implemention-string)
   (let ((entry (get-doc-entry :es name)))
     (setf (entry-implementation entry) implemention-string)))
-
-(defvar *max-doc-top* (make-sections))
-
-(defvar max-doc::*max-doc-deffn-defvr-hashtable*
-  (make-hash-table :test 'equal))
-
-(defvar max-doc::*max-doc-section-hashtable*
-  (make-hash-table :test 'equal))
-
-(defvar max-doc::*max-doc-oeis-hashtable*
-  (make-hash-table :test 'equal))
 
 (defun init-doc-top-level ()
   (setf *max-doc-top* (make-sections))
   (set-cur-sec nil))
 
-;; current (default) manual section
-(defvar *current-section* nil)
-
-;; current (default) mext distribution
-(defvar *current-distribution* nil)
-
-(defvar *ignore-silently* t)
-
 (defun get-cur-sec ()
   *current-section*)
-
-;;(defun set-cur-sec (secs)
-;;  (cond ((stringp secs)
-;;          (setf *current-section* secs))
-;;        ((section-p secs)
-;;         (setf *current-section* (section-name secs)))
-;;        (t (maxima::merror1 (intl:gettext "max-doc: can't set current section to ~m. Neiter a string nor section.") secs))))
 
 (defun set-cur-sec (sec-tag)
   (cond ((section-p sec-tag)
@@ -391,13 +379,17 @@ must be keyword,value pairs for the doc entry struct."
 (defun format-one-spec-in-list (arg-count arg type)
   (format nil "    The ~:R argument ~a must be ~a.~%"
           arg-count
-          (maxima::maybe-invert-string-case (format-doc-text (list 'arg arg) *format-codes-default*))
+;          (maxima::maybe-invert-string-case 
+           (format-doc-text (list 'arg 
+                             (maxima::maybe-invert-string-case (symbol-name arg))) *format-codes-default*)
           (defmfun1::get-arg-spec-to-english type)))
 
 (defun format-single-spec (rest-args arg type)
   (format nil (if rest-args  ". The first argument ~a must be ~a.~%"
                   " ~a, which must be ~a.~%")
-          (maxima::maybe-invert-string-case (format-doc-text (list 'arg arg) *format-codes-default*))
+;          (maxima::maybe-invert-string-case 
+           (format-doc-text (list 'arg
+                                  (maxima::maybe-invert-string-case (symbol-name arg))) *format-codes-default*)
           (defmfun1::get-arg-spec-to-english type)))
 
 (defun format-arg-specs-rest (name arg)
@@ -454,7 +446,7 @@ must be keyword,value pairs for the doc entry struct."
                              (format-call-desc-list (entry-call-desc-list e))))
                  (if (> (length (entry-contents e)) 0)
                      (format nil "Description:~%~a~%" (wrap-text 
-                               :text (format-doc-text (entry-contents e) *format-codes-default* ) :width 80 :indent 3))
+                               :text (format-doc-text (entry-contents e) *format-codes-default* ) :width *text-width* :indent *indent1*))
                      (format nil ""))
                  (let ((sspec (format-arg-specs name)))
                    (when (> (length sspec) 0) (format nil "Arguments:~%~a" sspec)))
@@ -470,14 +462,13 @@ must be keyword,value pairs for the doc entry struct."
                  (examples::format-examples name)
                  (form-ent entry-oeis "~%OEIS number: ~a.~%" (comma-separated-english x))
                  (form-ent entry-see-also "~%See also: ~a.~%" (comma-separated-english x))
-                 (form-ent entry-implementation "~%Implementation:~%   ~a~%" (wrap-text :text x :width 80 :indent 4))
+                 (form-ent entry-implementation "~%Implementation:~%   ~a~%" 
+                           (wrap-text :text x :width *text-width* :indent *indent2*)) 
                  (form-ent entry-author
                      "~%  Author~p: ~a.~%" (length x)  (comma-separated-english x))
 ;;                 (form-ent entry-copyright ; there should be some control of how much is printed
 ;;                     "~%  Copyright (C) ~{~a ~}.~%" x)
                  (format nil "~%"))))
-
-
 
 (defun search-key (key item)
   "we only search on the 'name' of the entry."
