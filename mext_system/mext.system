@@ -47,7 +47,8 @@
     (:file "pathname-library")
     (:file "compile")
     (:file "mext-component-operations")
-    (:file "mext-maxima-system")))
+    (:file "mext-maxima-system")
+    (:file "dontkill")))
 
 (mk:defsystem mext-inst-loader
   :source-extension "lisp"

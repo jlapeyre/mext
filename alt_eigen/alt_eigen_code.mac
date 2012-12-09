@@ -13,6 +13,11 @@
 
 (load('basic), load('lrats),load('simplifying));
 
+dont_kill_share("basic");
+dont_kill_share("lrats");
+dont_kill( simp_assuming, float_free_p, mygramschmidt, maybe_solve,
+           alt_eigen, alt_eigen_h);
+
 simp_assuming(pred,f) := block([prederror : false, bool : is(pred)],
   if bool = true then f 
   else if bool = false then 'unknown

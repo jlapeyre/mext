@@ -7,7 +7,7 @@ require(discrete_aex);
 kill(all);
 */
 
-our_test_list : [mext_system,aex,lists_aex,discrete_aex];
+our_test_list : [mext_system,aex,lists_aex,discrete_aex,alt_eigen];
 
 our_extra_test_list : [];
 /* our_extra_test_list : [pw,implicit]; */

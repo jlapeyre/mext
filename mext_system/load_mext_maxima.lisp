@@ -17,7 +17,8 @@
 
 (let ((dir *load-mext-maxima-load-pathname*))
   (loop for file in (list  
-      #+openmcl "defsystem" "operate-on-system2" "mext-maxima-packages" "gjl-lisp-util" "pathname-library" "mext-maxima-system" "compile" "mext-component-operations")
+      #+openmcl "defsystem" "operate-on-system2" "mext-maxima-packages" "gjl-lisp-util" 
+       "pathname-library" "mext-maxima-system" "dontkill" "compile" "mext-component-operations")
         do
         (let ((file-path (make-pathname :directory dir :name file :type "lisp")))
                          (format t " load_mext Loading ~a~%" file-path)

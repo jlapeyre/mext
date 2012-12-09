@@ -59,6 +59,14 @@
           with " codedot "dont_kill")
   (cons '(mlist simp) allbutl))
 
+(defmfun1 ($dont_kill_share :doc) ((package :or-string-symbol))
+  :desc ("Prevent symbols in maxima share package " arg "package"
+         " from being killed by " codedot "kill")
+  (let ((name (maxima::$sconcat package)))
+    (mext:do-dont-kill-share name))
+  '$done)
+
+
 (defmfun1 ($mext_info :doc) ((distname :or-string-symbol))
   :desc ("Print information about installed mext distribution " arg "distname"
     ". The list of installed  distributions is built by calling " code "mext_list" ".")

@@ -32,9 +32,10 @@
   (defpackage :mext-maxima (:use common-lisp :gjl.lisp-util)
     (:nicknames :mext)
     (:export :add-to-dont-kill
+             :compact-pathname
              :list-directory
              :directory-exists-p
-             :compact-pathname
+             :do-dont-kill-share
              :pathname-as-directory
              :fmake-pathname
              :fload-pathname

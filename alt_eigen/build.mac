@@ -1,5 +1,5 @@
 load(mext);
-require("maxdoc");
+require("mext_defmfun1");
 load_in_subdir(["alt_eigen","system"]);
 mext_dist_clean();
 mext_dist_build();
