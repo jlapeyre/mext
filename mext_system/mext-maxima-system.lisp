@@ -458,6 +458,11 @@ This was copied from maxima source init-cl.lisp.")
                 (maxima::merror (intl:gettext "mext require: Unable to find '~a'.")  name)))
           t)))))
 
+
+(defun add-to-dont-kill (&rest items )
+  (loop for item in items do
+        (if (not (member item maxima::allbutl)) (push item maxima::allbutl))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (in-package :maxima)

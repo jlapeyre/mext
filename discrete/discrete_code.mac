@@ -1250,7 +1250,9 @@ _linsolve_mod(eqs, vars, mod) :=
  *
  ***************************/
 
-/* gjl 2012
+/* gjl 2012. return to compiling, because compiling entire
+   file fails for some lisps.
+*/   
 compile(
   permutation_product,
   inverse_permutation,
@@ -1275,4 +1277,4 @@ compile(
   _compute_deltas,
   _strip_generator
 )$
-*/
+

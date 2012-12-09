@@ -33,12 +33,14 @@
   (defpackage :defmfun1
     (:use :common-lisp :gjl.lisp-util)
     (:import-from :maxima :$sconcat :merror)
-    (:export :set-mext-package :get-mext-package-for-function)))
+    (:export :rule :set-mext-package :get-mext-package-for-function
+             :set-hold-all)))
 
 (if (find-package :max-doc ) t 
   (defpackage :max-doc (:use :common-lisp :gjl.lisp-util)
     (:export :add-doc-sec :add-doc-entry :add-doc-entry1 :add-call-desc :add-call-desc1
-             :set-cur-sec :get-cur-sec :see-also :see-also-group :clear-call-desc)))
+             :clear-call-desc :implementation
+             :set-cur-sec :get-cur-sec :see-also :see-also-group)))
 
 (if (find-package :maxima-dev-doc ) t (defpackage :maxima-dev-doc (:use :common-lisp :gjl.lisp-util)))
 ;;       (:export :ddefmfun :ddefun :ddefvar :ddefparameter )))
@@ -53,13 +55,15 @@
 
 (if (find-package :info-database ) t (defpackage :info-database (:use :common-lisp :gjl.lisp-util)))
 
-(if (find-package :examples ) t (defpackage :examples (:use :common-lisp)
-                                            (:import-from :maxima :$sconcat :merror
-                                                       :mfuncall   :$eval_string)))
+(if (find-package :examples ) t (defpackage :examples (:use :common-lisp :gjl.lisp-util)
+            (:import-from :maxima :$sconcat :merror
+             :mfuncall   :$eval_string)
+            (:export :add-expample :clear-example :clear-add-example 
+                     :format-examples :wrap-text)))
 
 ;; ??? why this ?
-(defpackage :examples (:use :common-lisp :gjl.lisp-util ) (:import-from :maxima :$sconcat :merror
-                                                       :mfuncall   :$eval_string))
+;(defpackage :examples (:use :common-lisp :gjl.lisp-util ) (:import-from :maxima :$sconcat :merror
+;                                                       :mfuncall   :$eval_string))
 
 
 

@@ -49,6 +49,7 @@
            t)))
     nil))
 
+;; not used
 ;; whats this ?
 (defmfun-ae-in $apply_a (fun arg)
   (aesimp-in-to-ml-1 arg)

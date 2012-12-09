@@ -459,7 +459,7 @@ must be keyword,value pairs for the doc entry struct."
                    (if (> (length atts) 1)
                        (format nil "Attributes: ~a has attributes: ~a~%" name (maxima::$sconcat atts))
                        ""))
-                 (examples::format-examples name)
+                 (examples:format-examples name)
                  (form-ent entry-oeis "~%OEIS number: ~a.~%" (comma-separated-english x))
                  (form-ent entry-see-also "~%See also: ~a.~%" (comma-separated-english x))
                  (form-ent entry-implementation "~%Implementation:~%   ~a~%" 

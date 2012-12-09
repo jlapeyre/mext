@@ -1,3 +1,6 @@
+kill(a,b,c,d,e,f,g,h,i,j,k);
+done;
+
 take([a,b,c,d,e],3);
 [a,b,c]$
 

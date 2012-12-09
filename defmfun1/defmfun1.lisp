@@ -463,6 +463,9 @@
   "Check if first elmt of mlist is Rule."
   (and (maxima::$listp e) (rule-expr-p (cadr e))))
 
+(defmacro rule (rule val)
+ "For passing rules from lisp code."
+  `(list '(maxima::|$Rule| maxima::simp) ',rule ,val))
 
 (maxima::ddefun collect-opt-args (rarg nmin)
   "At run time, filter parameters passed to a defmfun1 definition into option
@@ -497,8 +500,12 @@
 
 (defparameter *print-error-integers-as-words* t)
 
+;; I think 'zero' is better than 'no'.
+;; 'no' might imply that arguments are optional. Also, we must
+;; use 'zero' for 'zero or more'.
 (defun err-itostr (i)
-  (err-itostr0 i "~[no~:;~:*~r~]"))
+  (err-itostr0 i "~[zero~:;~:*~r~]"))
+;  (err-itostr0 i "~[no~:;~:*~r~]"))
 (defun err-itostr1 (i)
   (err-itostr0 i "~r"))
 (defun err-itostr0 (i zfmt)

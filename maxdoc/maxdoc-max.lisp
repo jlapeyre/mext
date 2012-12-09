@@ -35,8 +35,8 @@
                 (format t " *  ~a~%" section--name))
     (format t "~%")
     (loop for section--name in sections do
-          (max-doc::print-doc-section (gethash section--name max-doc::*max-doc-section-hashtable*)))))
-
+          (max-doc::print-doc-section (gethash section--name max-doc::*max-doc-section-hashtable*))))
+  '$done)
 
 ;; (max-doc::set-cur-sec 'max-doc::number-theory-fandv)
 
@@ -73,4 +73,3 @@
       (if (> (length opts) 1)
           (format t " ~a takes options with default values:~% ~a~%~%" name ($sconcat opts))))))
 |#
-

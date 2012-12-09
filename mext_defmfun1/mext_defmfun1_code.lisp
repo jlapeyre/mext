@@ -39,6 +39,26 @@
   "Returns a list of all installed mext distributions."
     (mext::mext-list))
 
+(defmfun1 ($mext_clear :doc) ()
+  "Clears the list of mext packages that have been loaded with require.
+   Subsequent calls to require will reload the packages."
+    (mext::mext-clear))
+
+(defmfun1:set-hold-all '$dont_kill)
+(defmfun1 ($dont_kill :doc) (&rest item)
+  :desc ("Add the " arg "items" "s to the list of symbols that are not killed
+          by " codedot "kill(all)" " This facility is part of the maxima core,
+          but is apparantly unused. Maybe putting a property in the symbol's
+          property list would be better.")
+  (apply #'mext::add-to-dont-kill item)
+  '$done)
+
+(defmfun1 ($get_dont_kill :doc) ()
+  :desc ("Returns the list of symbols that are not killed
+          by " codedot "kill(all)" " Items are added to this list
+          with " codedot "dont_kill")
+  (cons '(mlist simp) allbutl))
+
 (defmfun1 ($mext_info :doc) ((distname :or-string-symbol))
   :desc ("Print information about installed mext distribution " arg "distname"
     ". The list of installed  distributions is built by calling " code "mext_list" ".")

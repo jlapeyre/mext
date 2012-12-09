@@ -293,8 +293,8 @@
 ;; Maxima function $table
 ;; Defined by `defmspec' to prevent expression evaluation
 
-(defmfun1::set-hold-all '$table)
-(max-doc::add-doc-entry '( :name "table" :type "Function"))
+(defmfun1:set-hold-all '$table)
+(max-doc:add-doc-entry '( :name "table" :type "Function"))
 (defmfun-ae ($table) ( expr (iterator1 :list) &rest (iterators :list) )
   (push iterator1 iterators)
   (let ((res

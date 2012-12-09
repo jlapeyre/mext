@@ -274,7 +274,8 @@
 (max-doc::see-also-group '( "unset_match_form" "set_match_form" "set_nowarn" "unset_nowarn" "attributes"))
 
 ;; copied from translation of maxima code
-;; Use of Rule is just to be compatible with mixima
+;; Use of Rule is just to be compatible with mixima.
+;; But, we could change this.
 ;;infix("->")$
 ;;"->"(a,b) ::= buildq([a:a,b:b],Rule('a,b));
 (meval '(($infix simp) "->"))
@@ -282,10 +283,12 @@
  (($BUILDQ) ((MLIST) ((MSETQ) $A $A) ((MSETQ) $B $B))
   ((|$Rule|) ((MQUOTE) $A) $B))))
 
+;; prevent operator "->" from being clobbered by kill(all)
+(push "->" *mopl*)
+
 (ddefun rule-opt (opt-name val)
  "Make an option specification as a Rule. For use when calling from lisp code.
   ***!! Note. We need to learn how to set the precedence."
-;; (format t "Setting rule ~s~%" `((|$Rule| simp) ,opt-name ,val))
  `((|$Rule| simp) ,opt-name ,val))
 
 (defprop |$Rule| msize-infix grind)

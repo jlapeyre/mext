@@ -4,8 +4,8 @@
 (in-package :mext-maxima)
 
 (create-distribution "discrete_aex"
-  :loader "load-discrete_aex")
-;  :install-only "discrete_aex-rtests")
+  :loader "load-discrete_aex"
+  :install-only "discrete_aex-rtests")
 
 (mk:defsystem discrete_aex
   :source-extension "lisp"
@@ -19,8 +19,8 @@
   :components
    ((:file "discrete_aex")))
   
-;; (mk:defsystem discrete_aex-rtests
-;;   :source-extension "mac"
-;;   :source-pathname "rtests"
-;;   :components
-;;     ( (:file "")))
+(mk:defsystem discrete_aex-rtests
+              :source-extension "mac"
+              :source-pathname "rtests"
+              :components
+              ((:file "rtest_discrete_aex")))
