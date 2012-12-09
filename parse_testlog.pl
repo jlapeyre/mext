@@ -64,7 +64,7 @@ sub parse_test_log_file {
     my @tests = ( 
         [ qr/^Running tests in/ , sub { $_[1]->{running} = $_[0] } ],
         [ qr/No unexpected errors/ , sub { print prepend(shift);}],
-        [ qr/The following /, sub {print seprepend($_[1]->{running}); print seprepend(shift);}],
+        [ qr/The following /, sub {print "\n"; print seprepend($_[1]->{running}); print seprepend(shift);}],
         [ qr/failed out of/, sub {print eprepend(shift)}],
         [ qr/an error/, sub {print eprepend(shift)}],
         [ qr/Unable to find/, sub {print eprepend(shift)}],

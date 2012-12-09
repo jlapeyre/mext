@@ -278,10 +278,14 @@
 ;; But, we could change this.
 ;;infix("->")$
 ;;"->"(a,b) ::= buildq([a:a,b:b],Rule('a,b));
+;; Note, this macro is deleted by kill(all), but it does not seem to affect
+;; anything
 (meval '(($infix simp) "->"))
 (meval '((MDEFMACRO SIMP) (($->) $A $B)
  (($BUILDQ) ((MLIST) ((MSETQ) $A $A) ((MSETQ) $B $B))
   ((|$Rule|) ((MQUOTE) $A) $B))))
+
+
 
 ;; prevent operator "->" from being clobbered by kill(all)
 (push "->" *mopl*)

@@ -602,6 +602,8 @@ refers to the head."
 (push "<<" *mopl*)
 (push ">>" *mopl*)
 
+(mext:add-to-dont-kill "<<" ">>")
+
 ;; not sure if this is used
 (defmfun $print_aex (x strm depth)
   "This only marks the outermost expression with a tilde."

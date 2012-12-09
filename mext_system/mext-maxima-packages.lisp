@@ -31,7 +31,8 @@
 (if (find-package :mext-maxima ) t  
   (defpackage :mext-maxima (:use common-lisp :gjl.lisp-util)
     (:nicknames :mext)
-    (:export :list-directory
+    (:export :add-to-dont-kill
+             :list-directory
              :directory-exists-p
              :compact-pathname
              :pathname-as-directory
