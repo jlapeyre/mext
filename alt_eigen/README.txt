@@ -11,6 +11,7 @@ The code is split into two files, one of which is compiled.
 To install only source, change ':load-only nil' to ':load-only t' everywhere
 in alt_eigen.system before building. But, I saw no change in
 the number of tests passed with compiled vs.  source code.
+rtest runs about 30% faster when code is compiled.
 
 To run the code in a subsequent maxima session:
 

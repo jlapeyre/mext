@@ -9,6 +9,3 @@
    :license "GPL3"
    :description "Find the eigenvectors and eigenvalues of square unblocked matrix"
    :long-description "Find the eigenvectors and eigenvalues of square unblocked matrix")
-
-
- 
