@@ -7,9 +7,9 @@ If mext is installed, build and install this package with
 (%i1) load("./ibuild.mac");
 (%i2) mext_test();
 
-By default only compiled code is installed. To install only
-source, change ':load-only nil' to ':load-only t' in
-alt_eigen.system before building. But, I saw no change in
+The code is split into two files, one of which is compiled.
+To install only source, change ':load-only nil' to ':load-only t' everywhere
+in alt_eigen.system before building. But, I saw no change in
 the number of tests passed with compiled vs.  source code.
 
 To run the code in a subsequent maxima session:

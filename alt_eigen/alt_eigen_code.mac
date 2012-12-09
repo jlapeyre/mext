@@ -25,8 +25,6 @@ simp_assuming(pred,f) := block([prederror : false, bool : is(pred)],
 
 simplifying('assuming,'simp_assuming)$
 
-float_free_p(e) := if mapatom(e) then not (floatnump(e) or bfloatp(e)) else every(lambda([s], float_free_p(s)), args(e));
-
 /* Gram-Schmidt assuming that p vanishes. 
 
 (1) Due to the conjugate([rat(0)]) --> error, the dot function maps conjugate.
@@ -40,104 +38,4 @@ mygramschmidt(v,p) := block([u : [], proj, dot, uk, doallmxops : true, scalarmat
       uk : fullratsubst(p, ratexpand(uk)),        
       if some(lambda([s], is(s # 0)), uk) then push(uk, u)),  
    u)$
-
-maybe_solve(p,z,deg) := block([n, lt, inflag : true, sol,  programmode : true, globalsolve : false, 
-   solveexplicit : true, breakup : false, solvenullwarn : false, solvefactors : true],   
-   p : ratexpand(p), 
-   n : hipow(p,z), 
-   sol : if n <= deg then solve(p,z) else [],
-   if sol = [] then (    
-      lt : ratcoeff(p,z,n),
-      [z^n = (lt * z^n - p)/lt])
-   else sol)$
-
-/* Let m be a r x r matrix and let p be a polynomial in the variable z. This  function returns a basis for the  
-solution to m v = mu * v, where mu is  a zero of the polynomial p. The basis is encoded as the columns of
-a matrix.
-
-Instead of handing alt_eigen_h the characteristic polynomial, it's possible to build up the characteristic polynomial 
-in the while n > 0 loop. Once the loop finishes, the requirement that lk vanishes determines the characteristic 
-polynomial (by solving linear equations).
-
-ratmx : true misbehaves with a non default value for matrix_element_mult.
-
-Some problems run very slowly with ratfac : true (example 
-matrix([0,0,0,1,0,1,1,1,0,1],[1,1,0,0,1,0,1,0,1,0],[1,1,1,1,0,0,0,1,0,1],[0,1,1,0,0,1,1,1,1,0],[0,0,1,0,1,0,1,0,1,0],[0,1,0,0,0,0,0,1,0,0],[1,1,0,0,0,0,0,0,1,1],[1,0,1,1,1,0,1,0,0,0],[0,1,1,0,0,1,0,1,0,1],[1,0,0,1,1,0,0,1,0,0]))
-
-bug: (can cause trouble for matrices with floating point entries)
-
- (%i4) rat(1.2) * rat(1/2) - 11/5, keepfloat : true;
- (%o4)/R/ -8.0/5
- (%i5) expand(%,0,0);
-
-For algebraic numbers, sometimes subres is better than spmod. */
-
-alt_eigen_h(m,r,p,z) := block([vn, n, l, lk, ls, e : funmake('matrix,[]), q, listarith:true, scalarmatrixp:false, 
-    doallmxops : true, ratfac : false, ratmx : true],
-  vn : rat(ident(r)),
-  p : rat(p), 
-  n : hipow(p,z),  
-  p : p / ratcoeff(p,z,n),
-  n : n-1,
-  l : vn * z^n,
-  lk : vn,
-  while n > -1 do (
-     lk : m . lk + ratcoeff(p, z, n) * vn,  
-     n : n -1,
-     if n > -1 then l : l + z^n * lk), 
-
-  lk : nullspace(lk),
-  for ls in lk do (
-     ls : l . ls,       
-     q : xreduce('gcd, flatten(args(ls))),
-     if q # 0 then e : addcol(e, ls / q) else e : addcol(e, ls)),
-  e);
-
-/* Find the eigenvectors and eigenvalues of square unblocked matrix; specifically:
-
-    alt_eigen(m, 'var = z, 'maxdegree = n, 'orthogonal = bool)
-
-maxdegree -- try to solve factors of the characteristic poly with degree n or less,
-orthogonal -- when true, eigenvectors with geometric multiplicity two or more are sent thru gramm schmidt.
-
-Computing the characteristic polynomial is much faster with ratmx : true. */
-
-alt_eigen(m, [extra]) := block([r, c, n, z : gensym(), p, pp, lk, ord, hp, es : [], cnd, u, ortho, ls, inflag : true,
- doallmxops : true, ratfac : false],  
-  if not matrixp(m) then error("The first argument must be a matrix"),  
-  if blockmatrixp(m) then error("The first argument must be an unblocked matrix"),
-  if not float_free_p(m) then error("The function alt_eigen does not work for  matrices with floating point entries"),
-
-  [r,c] : matrix_size(m),
-  if r # c or r = 0 then error("The first argument must be a nonempty square matrix"),
-  n : r,   
-  hp : assoc('maxdegree, extra, 1), /* hp = highest power polynomial that will be solved */
-  if not integerp(hp) then error("The value of 'maxdegree' must be an integer"),
-  u : assoc('var, extra, z),
-  ortho : assoc('orthogonal, extra, false),
-  if not freeof(u,m) then error("The first argument must not depend on ", u),
-
-  if every(lambda([s], s=0),m) then return([u = 0, makelist(col(identfor(m),k),k,1,c)]),
-
-  /* p :  z^2 + (2*%i - 2)*z - 2*%i, gcd(p, diff(p,z)) # z+%i-1 with default gcd. */
-  block([ratmx : true, gcd : 'red, algebraic : true], 
-     p : charpoly(m, z),  
-     p : gfactor(p),
-     pp : gfactor(p / gcd(p, diff(p,z))),
-     cnd : gfactor(resultant(pp,diff(pp,z),z))),
  
-  p : if not mapatom(p) and op(p) = "*" then args(p) else [p],
-  p : sublist(p, lambda([s], not freeof(z,s))),  
-  for pk in p do ( 
-    [pk,ord] : if not mapatom(pk) and op(pk) ="^" then args(pk) else [pk,1],
-    lk : alt_eigen_h(m,r,pk,z), 
-    lk : fullratsubst(first(maybe_solve(pk,z,1)), lk), 
-    lk : map(lambda([i], col(lk,i)), makelist(k,k,1,ord)),
-    lk : sublist(lk, lambda([s], some(lambda([w], w # 0), s))),   
-    pk : maybe_solve(pk, z, hp), 
-    for pkl in pk do (
-       ls : subst(pkl, lk),
-       if ortho then ls : mygramschmidt(ls, pkl),
-       es : append([pkl, ls], es))),
-  assuming(notequal(cnd,0), subst(z=u,es)));
-

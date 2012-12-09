@@ -13,9 +13,9 @@
 (mk:defsystem alt_eigen
   :source-extension "mac"
   :language :mext-maxima
-  :load-only t
   :components
-   ((:file "alt_eigen_code")))
+   ((:file "alt_eigen_code" :load-only t)
+    (:file "alt_eigen_compile" :load-only nil )))
 
 (mk:defsystem load-alt_eigen
   :source-extension "mac"

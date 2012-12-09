@@ -1,4 +1,5 @@
 mext_require("mext_defmfun1");
 
 mext_provide( "alt_eigen",
-  [ "alt_eigen_code"]);
+  [ "alt_eigen_code",
+    "alt_eigen_compile"]);
