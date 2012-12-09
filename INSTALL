@@ -113,7 +113,7 @@ Any distribution not listed here depends only on mext_system.
   maxdoc -> defmfun1
   aex -> maxdoc
   lists_aex -> aex
-  discrete_aex -> aex
+  discrete_aex -> lists_aex
   alt_eigen -> maxdoc
   nelder_mead -> maxdoc
   quicklisp -> maxdoc

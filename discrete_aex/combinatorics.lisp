@@ -143,7 +143,7 @@
   (setf ain (cdr (rlex ain 2))) ; convert top two levesl to lex
   (let* ((n (max (loop for pair in ain maximize (second pair))
                  (loop for pair in ain maximize (third pair))))
-         (perm (aex-to ($lrange n))))
+         (perm ($lrange n (defmfun1:rule $ot '$ar))))
     (loop for pair in ain do
           (let* ((one (second pair))
                  (two (third pair))
