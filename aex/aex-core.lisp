@@ -752,3 +752,14 @@ refers to the head."
       (if-aex e (aex-mk-head-args '(mlist simp) (aex-cp-args e))
               (progn (atomchk (setq e (format1 e)) '$args nil)
                      (cons '(mlist) (margs e))))))
+
+;; in progress. add list of lists which can be of mixed representation.
+;; Avoid using the simplifer with aex expressions.
+;; (defun iadd (argsin)
+;;   (let* ((args
+;;          (loop for arg in argsin collect
+;;                (if (aex-p arg) (aex-arr arg) (cdr arg))))
+;;         (n (loop for arg in args 
+;;                   (if (aex-p arg) (aex-arr arg) (cdr arg))))
+;;     (cons '(mlist simp)
+;;           (loop 

@@ -41,7 +41,7 @@
                        int-range-check)
                      (:uint-64 ,(format nil "equivalent to an unsigned 64 bit integer~%    (ie an integer between 0 and 2^64)")
                       (and (integerp e) (>= e 0) (< e 18446744073709551616)))
-                     (:not-zero "an expression that is not zero."
+                     (:not-zero "an expression that is not zero"
                       (not (maxima::zerop1 e)))
                      (:roman-integer "an integer between 2 and 3999 (Required for roman form.)"
                                      (and (integerp e) (> e 0) (< e 4000)))
@@ -64,7 +64,7 @@
                                 (not (maxima::$mapatom e)))
                      (:non-atom-list "non-atomic and represented by a lisp list"
                                 (and (not (maxima::$mapatom e)) (listp e)))
-                     (:non-atom-ae-list "non-atomic and either aex or represented by a lisp list."
+                     (:non-atom-ae-list "non-atomic and either aex or represented by a lisp list"
                                 (and (not (maxima::$mapatom e)) (or (maxima::aex-p e) (listp e))))
                      (:or-pos-int-string ("a string" "a positive integer")
                                              (or (stringp e) (and (integerp e) (> e 0))))
