@@ -546,7 +546,7 @@
 
 (defmfun1  ($nreverse :doc)((e :non-atom))
   :desc ("Destructively reverse the arguments of expression " :argdot "e" 
-    "This is more efficient than using reverse.")
+    " This is more efficient than using reverse.")
   (if-aex e
           (progn
             (setf (aex-arr e) (nreverse (aex-arr e)))
@@ -554,9 +554,8 @@
           (progn
             (cons (car e) (nreverse (cdr e))))))
 
-(max-doc::see-also "nreverse" "reverse")
-(examples::clear-examples "nreverse")
-(examples::add-example "nreverse"
+(max-doc:see-also "nreverse" "reverse")
+(examples:clear-add-example "nreverse"
                        '( :pretext "Be careful not to use <a> after applying nreverse. Assign the result to another variable."
                           :vars "[a,b]"         
                           :code ("a : lrange(10), b : nreverse(a)" "a : lrange(10,ot->ar), b : nreverse(a)")))

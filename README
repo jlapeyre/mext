@@ -16,6 +16,14 @@ to 'package'.)
 
 See the file 'INSTALL' for installation instructions.
 
+Much of the third party software uses the maxdoc documentation system,
+with documentation embedded in the source code.  This allows printing
+online documentation via ? and ??.  A latex translator is also
+available. A texi translator is partially done.  See the output in the
+files thirdparty.{tex,pdf,html}. The latex file is created by loading
+mext packages and then giving the command print_sections_latex(); to
+print the documentation for all loaded packages.
+
 The mext system packages the distributions in a more-or-less
 uniform way. They are built and installed using only maxima,
 rather than depending directly on any system tool. (There are

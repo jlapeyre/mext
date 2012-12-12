@@ -35,7 +35,7 @@
 
 (clear-call-desc "store" "restore" "store_fast" "restore_fast")
 (add-call-desc '( "store" ("file" "expr1" "expr2" "...") ("stores the expressions to the file " :arg "file" ".")))
-(add-call-desc '( "restore" ("file") ("Reads and returns expressios from the file " :arg "file" ".")))
+(add-call-desc '( "restore" ("file") ("Reads and returns expressions from the file " :arg "file" ".")))
 (add-call-desc '( "store_fast" ("file" "expr1" "expr2" "...") ("stores the expressions to the file " :arg "file" 
               ". No checking for circular references is done.")))
 (add-call-desc '( "restore_fast" ("file") ("Reads and returns expressios from the file " :arg "file"
