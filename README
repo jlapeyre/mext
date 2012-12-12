@@ -1,5 +1,11 @@
 mext maxima third party code installation system.
 
+ Copyright (C) 2012 John Lapeyre
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 3 of the License, or
+ (at your option) any later version.
+
 This folder tree contains the mext system, as well as several packages
 for which it was written: defmfun1, aex, and code that depends on
 these. In addition, there are, several 'packages' from the maxima

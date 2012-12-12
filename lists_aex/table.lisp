@@ -307,28 +307,28 @@
 (max-doc::copyright "table" '( 2009 "Ziga Lenarcic"))
 
 (add-call-desc '( "table" ("expr" ("list" "n"))
-                  ("Evaluates expression " arg "number" " times. If " arg "number" " is not an integer
-  or a floating point number, then " code "float" " is called. If we have a
+                  ("Evaluates expression " :arg "number" " times. If " :arg "number" " is not an integer
+  or a floating point number, then " :emref "float" " is called. If we have a
   floating point number, it is truncated into an integer.
   This type of iterator is the fastest, since no variable is bound.")))
 
 
 (add-call-desc '( "table" ("expr" ("list" "variable" "initial" "end" "step") )
-    ("Returns a list of evaluated expressions where " arg "variable" " (a symbol) is set
-      to a value. The first element of the returned list is " arg "expression" " evaluated
-      with " arg "variable" " set to " argdot "initial" 
-      " The " code "i" "-th element of the returned list is " arg "expression" " 
-      evaluated with " arg "variable" " set to " 
-      codedot (arg "initial" " + (i-1)*" arg "step") " The iteration stops
-      once the value is greater (if " arg "step" " is positive) or smaller (if " arg "step" " is negative)
-      than " argdot "end" " Requirement: The difference between " arg "end" " and " arg "intial" 
-      " must return a " code "numberp" " number. " arg "step" 
-      " must be a nonzero " code "$numberp" " number. This allows for iterators of
-      rather general forms like " codedot ("[i, %i - 2, %i, 0.1b0] " dots "") )))
+    ("Returns a list of evaluated expressions where " :arg "variable" " (a symbol) is set
+      to a value. The first element of the returned list is " :arg "expression" " evaluated
+      with " :arg "variable" " set to " :argdot "initial" 
+      " The " :math "i" "-th element of the returned list is " :arg "expression" " 
+      evaluated with " :arg "variable" " set to " 
+      :arg "initial" :math " + (i-1) " :arg "step" ". The iteration stops
+      once the value is greater (if " :arg "step" " is positive) or smaller (if " :arg "step" " is negative)
+      than " :argdot "end" " Requirement: The difference between " :arg "end" " and " :arg "intial" 
+      " must return a " :emref "numberp" " number. " :arg "step" 
+      " must be a nonzero " :emref "numberp" " number. This allows for iterators of
+      rather general forms like " :code "[i, %i - 2, %i, 0.1b0] " :dots "." )))
 
 (add-call-desc '( "table" ("expr" ("list" "variable" "initial" "end"))
-                  ("This iterator uses a step of 1 and is equal to  [" arg "variable" ","
-                   arg "initial" "," arg "end" ", 1].")))
+                  ("This iterator uses a step of 1 and is equal to  [" :arg "variable" ","
+                   :arg "initial" "," :arg "end" ", 1].")))
 
 (examples::clear-examples "table") ;; in case we reload table.lisp
 

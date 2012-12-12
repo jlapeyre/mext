@@ -4,8 +4,8 @@
 (defmfun1:set-mext-package "aex")
 
 (defmfun-ae ($iapply :doc)  ( (fun :function)  (arg :non-atom :ensure-lex))
-  :desc ( mref "iapply" " is like maxima " mref "apply" ", but it supports aex lists. "
-  arg "arg" " is converted to an ml if it is an aex expression. By default, output is ml 
+  :desc ( :mref "iapply" " is like maxima " :emref "apply" ", but it supports aex lists. "
+  :arg "arg" " is converted to an ml if it is an aex expression. By default, output is ml 
  regardless of the input representation.")
   (unless ($listp arg)
     (merror1 (intl:gettext "iapply: second argument must be a list; found: ~M") arg))
@@ -43,22 +43,23 @@
 
 ;;(defmfun1 ($icons :doc) (x (e :non-atom-list))
 (defmfun $icons (x e)
-  "This is like maxima 'cons', but less general, and much, much faster.
-   It is suitable at a minimum, for pushing a number or list or string onto
-   a list of numbers, or strings or lists. If you find buggy behavior that you
-   are not interested in investigating, use 'cons' instead."
+;  :desc ( "This is like maxima " :mref "cons" ", but less general, and much, much faster.
+;   It is suitable at a minimum, for pushing a number or list or string onto
+;   a list of numbers, or strings or lists. If you find buggy behavior that you
+;   are not interested in investigating, use " :mref "cons" " instead.")
   (cons (car e) (cons x (cdr e))))
 
 (max-doc::set-cur-sec 'max-doc::lists-fandv)
 (add-doc-entry1 :e  '(:name "icons"
                       :protocol "icons(x,e)"
+                      :protocol-list ( "icons" ("X" "E") nil nil)
                       :contents
-  ( code ("icons(" argcomma "x" arg "e" ")")
-  " is like maxima " mref "cons" ", but less general, and much, much faster. "
-  arg "x" " is a maxima object. " arg "e" " is a maxima list or list-like object, such as "
-  code "[a]" ", or " code "f(a)" ". It is suitable at a minimum, for pushing a number or list or string onto
- a list of numbers, or strings or lists. If you find " mref "icons" " gives buggy behavior that you
- are not interested in investigating, use " mref "cons" " instead.")))
+  ( :mref "icons" 
+  " is like maxima " :emref "cons" ", but less general, and much, much faster. "
+  :arg "x" " is a maxima object. " :arg "e" " is a maxima list or list-like object, such as "
+  :code "[a]" ", or " :code "f(a)" ". It is suitable at a minimum, for pushing a number or list or string onto
+ a list of numbers, or strings or lists. If you find " :mref "icons" " gives buggy behavior that you
+ are not interested in investigating, use " :emref "cons" " instead.")))
 
 (max-doc::implementation "icons" 
    "In a function that mostly only does icons in a loop,

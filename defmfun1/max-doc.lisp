@@ -35,6 +35,7 @@
   (default-value nil)
   (def-type nil)
   (protocol nil)
+  (protocol-list nil)
   (section nil)
   (distribution nil)
   (implementation nil)
@@ -62,6 +63,9 @@
 (defvar *ignore-silently* t)
 
 (defvar *text-width* 80)
+;; kludge. we wrap latex text just to improve human readability. but this may
+;; split argument \verb, which causes latex error. so make lines large.
+(defvar *latex-text-width* 300)
 (defvar *indent1* 3)
 (defvar *indent2* 4)
 (defvar *indent3* 6)
@@ -70,6 +74,9 @@
   (make-hash-table :test 'equal))
 
 (defvar *format-codes-texi*
+  (make-hash-table :test 'equal))
+
+(defvar *format-codes-latex*
   (make-hash-table :test 'equal))
 
 (defvar *format-codes-default* *format-codes-text*)
@@ -101,9 +108,9 @@
 (defun add-call-desc (&rest args)
   (unless (every #'listp args)
     (maxima::merror1 (intl:gettext "max-doc::add-call-desc: Arguments are not all lists. In file (no not really in this file) ~a")
-                                   maxima::$load_pathname))
+     maxima::$load_pathname))
   "Enter a list of descriptions of how to call the function. Each description
-ia a list of three elements: hame, protoco, contents."
+ia a list of three elements: hame, protocol, contents."
   (mapc #'add-call-desc-one args))
 
 (defun add-call-desc-one (arg)
@@ -122,10 +129,33 @@ ia a list of three elements: hame, protoco, contents."
          (setf *format-codes-default* *format-codes-text*))
         ((string= "texi" code-name)
          (setf *format-codes-default* *format-codes-texi*))
+        ((string= "latex" code-name)
+         (setf *format-codes-default* *format-codes-latex*))
         (t (maxima::merror1 (intl:gettext 
            "max-doc:set-format-codes-table Unknown code name ~s.") code-name))))
 
-;(set-format-codes-table "texi")
+;; from common lisp cookbook
+(defun replace-all (string part replacement &key (test #'char=))
+"Returns a new string in which all the occurences of the part 
+is replaced with replacement."
+    (with-output-to-string (out)
+      (loop with part-length = (length part)
+            for old-pos = 0 then (+ pos part-length)
+            for pos = (search part string
+                              :start2 old-pos
+                              :test test)
+            do (write-string string out
+                             :start old-pos
+                             :end (or pos (length string)))
+            when pos do (write-string replacement out)
+            while pos)))
+
+(defun latex-esc (str)
+  (replace-all 
+   (replace-all 
+    (replace-all str "_" "\\_")
+    "^" "\\^")
+   "$" "\\$"))
 
 ;; like fill-hash-from-list, but make string from keys
 (defun fill-format-codes (hash-table element-list)
@@ -136,10 +166,26 @@ ia a list of three elements: hame, protoco, contents."
 (fill-format-codes *format-codes-text*
    '( (code "`~a'")  (codedot "`~a'.")  (codecomma "`~a',") 
       (mref "`~a'")  (mrefdot "`~a'.")  (mrefcomma "`~a',") 
+      (emref "`~a'")  (emrefdot "`~a'.")  (emrefcomma "`~a',") 
       (arg "<~a>")   (argdot "<~a>.")   (argcomma "<~a>,")
       (var "<~a>")   (vardot "<~a>.")   (varcomma "<~a>,")
       (opt "<~a>")   (optdot "<~a>.")   (optcomma "<~a>,")
-      (math "~a") (dmath "~a") (dots " ... ")))
+      (dquote "\"~a\"") (dquotedot "\"~a\".") (dquotecomma "\"~a\",")
+      (math "~a")
+      (dmath "~a") (dots " ... ")))
+
+;; mref, mrefdot, mrefcomma below are not used. caught in earlier branch
+;; emref etc. should eventually do external links
+(fill-format-codes *format-codes-latex*
+   '( (code "{\\tt ~a}")  (codedot "{\\tt ~a}.")  (codecomma "{\\tt ~a},") 
+      (mref "{\\tt ~a}")  (mrefdot "{\\tt ~a}.")  (mrefcomma "{\\tt ~a},")
+      (emref "{\\tt ~a}")  (emrefdot "{\\tt ~a}.")  (emrefcomma "{\\tt ~a},")
+      (arg "{\\it ~a}")   (argdot "{\\it ~a}.")   (argcomma "{\\it ~a},")
+      (var "{\\it ~a}")   (vardot "{\\it ~a}.")   (varcomma "{\\it ~a},")
+      (opt "{\\it ~a}")   (optdot "{\\it ~a}.")   (optcomma "{\\it ~a},")
+      (dquote "``~a''") (dquotedot "``~a''.") (dquotecomma "``~a'',")
+      (math "$~a$")
+      (dmath "~%$$~a$$~%") (dots "\\ldots")))
 
 (defun make-texi-codes (table codes)
  "Make a table of symbols to codes for texi. E.g. var --> @var{~a}"
@@ -153,7 +199,7 @@ ia a list of three elements: hame, protoco, contents."
       var varcomma vardot opt optcomma optdot
       math dmath dots))
 
-(defun format-doc-text (text-descr code-table)
+(defun format-doc-text (text-descr &optional (code-table *format-codes-default*))
  "Return a string of formatted text from a text description list and table that
   takes format codes to strings."
   (let ((txt (if (listp text-descr) text-descr (list text-descr))))
@@ -170,6 +216,53 @@ ia a list of three elements: hame, protoco, contents."
                                        (car txt1))) res))
               (maxima::merror1 "max-doc: Unrecognized format code: ~a." item)))
         (push item res)))))
+
+;; we should try to refactor the text and latex code at some point.
+;; lots of things to fix:
+;;  *require documentation descriptions to always use
+;;   colons with symbols, eg :arg, so that we can dispense with symbol-name and strings.
+(defun format-doc-text-latex (text-descr &optional (code-table *format-codes-latex*))
+ "Return a string of formatted text from a text description list and table that
+  takes format codes to strings."
+  (let ((txt (if (listp text-descr) text-descr (list text-descr))))
+;    (format t " TOP ~s~%" txt)
+    (do* ((txt1 txt (cdr txt1))
+          (item (car txt) (car txt1))
+          (res))
+        ((null txt1) (format nil "~{~a~}" (nreverse res)))
+      (if (symbolp item)
+          (let* ((sitem (symbol-name item))
+                 (fmt (gethash sitem code-table))
+                 (s (cadr txt1))
+                 (es (latex-esc s)))
+            (pop txt1)
+            (cond ((member sitem '("CODE" "CODEDOT" "CODECOMMA")  :test #'equal)
+                   (let* ((delim (loop for char in '(#\# #\$ #\~ #\@ #\& #\- #\% \#^ \#?) do
+                                       (if (not (find char s)) (return char))))
+                          (str (format nil "\\verb~a~a~a" delim s delim)))
+                     (push 
+                      (cond ((string= sitem "CODE") str)
+                            ((string= sitem "CODEDOT") (format nil "~a." str))
+                            ((string= sitem "CODECOMMA") (format nil "~a," str)))
+                      res)))
+                  ((member sitem '("MREF" "MREFDOT" "MREFCOMMA")  :test #'equal)
+                  ; (format t "~s ~s~%" sitem s)
+                   (let ((str (format nil "\\hyperlink{~a}{{\\tt ~a}}" s es)))
+                     (push 
+                      (cond ((string= sitem "MREF") str)
+                            ((string= sitem "MREFDOT") (format nil "~a." str))
+                            ((string= sitem "MREFCOMMA") (format nil "~a," str)))
+                      res)))
+                  (t
+;                   (format t "~s ~s ~s~%" sitem s es)
+                   (if fmt (push
+                            (if (stringp fmt)
+                                (format nil fmt
+                                 (if (listp s) (format-doc-text-latex s code-table)
+                                   (if (eq :math item) s es))))
+                            res)
+                     (maxima::merror1 "max-doc: Unrecognized format code: ~a." item)))))
+        (push (latex-esc item) res)))))
 
 (defun format-call-desc (cd)
   (let ((args (mapcar (lambda (x) 
@@ -189,6 +282,47 @@ ia a list of three elements: hame, protoco, contents."
 
 (defun format-call-desc-list (cd-list)
   (format nil "~{~a~}" (nreverse (mapcar #'format-call-desc cd-list))))
+
+(defun format-arg-list (args)
+  (let ((code (gethash (symbol-name 'arg)  *format-codes-default*)))
+    (format nil "~{~a~^, ~}"
+            (loop for arg in args collect
+                  (progn 
+                    (if (listp arg) (setf arg (car arg)))
+                    (setf arg (latex-esc (maxima::maybe-invert-string-case (format nil "~a" arg))))
+                    (format nil code arg))))))
+
+(defun format-protocol-latex (protocol)
+  "This formats the protocol (lambda list) of a defmfun1 form as a string for printing
+   documentation."
+  (destructuring-bind (sname req optional rest) protocol
+    (let ((sarg (format-arg-list req)))
+      (when (not (null optional))
+        (setf sarg (concatenate 'string sarg " :optional "
+                              (format-arg-list (rest optional)))))
+      (when (not (null rest))
+        (setf sarg (concatenate 'string sarg " :rest "
+                                (format-arg-list (rest rest)))))
+      (format nil "{\\bf ~a}(~a)" (latex-esc sname) sarg))))
+
+(defun format-call-desc-latex (cd)
+  (let ((args (mapcar (lambda (x) 
+        (if (listp x)
+            (cond ((equal (car x) "list")
+                   (let* ((fmt (gethash (symbol-name 'arg) *format-codes-latex*))
+                          (fmt1 (format nil "[~~{~a~~^, ~~}]" fmt)))
+                     (format nil fmt1 (cdr x))))
+                  ((equal (car x) "lit")
+                   (format nil "~{~a ~}" (cdr x)))
+                  (t
+                   (maxima::merror1 "max-doc: unknown call description argument ~s" x)))
+          (format-doc-text-latex (list 'var x))))
+                      (call-desc-args cd))))  ;; map latex-esc over args in next line
+  (format nil "\\item[] {\\bf ~a}(~{~a~^, ~})~%  ~a~%~%" (latex-esc (call-desc-name cd)) args
+          (wrap-text :text (format-doc-text-latex (call-desc-text cd)) :width *latex-text-width* :indent 0 ) )))
+
+(defun format-call-desc-list-latex (cd-list)
+  (format nil "~{~a~}" (nreverse (mapcar #'format-call-desc-latex cd-list))))
 
 ;; created a function for setting a slot
 (defmacro def-setter (setter-name slot)
@@ -326,7 +460,14 @@ must be keyword,value pairs for the doc entry struct."
   (add-doc-entry1  :e e ))
 
 (defun get-doc-entry (&key es (section *current-section*))
-  (gethash es (section-hash section)))
+  "return the doc entry for 'es'."
+  (if (eq section :all)
+      (let ((sections (get-hash-keys max-doc::*max-doc-section-hashtable*)))
+        (loop for section1 in sections do
+              (let ((item (gethash es (section-hash 
+                                       (gethash section1 *max-doc-section-hashtable*)))))
+                (if item (return item)))))
+  (gethash es (section-hash section))))
 
 ;; not used
 (defun print-doc-item (e)
@@ -350,6 +491,20 @@ must be keyword,value pairs for the doc entry struct."
       (loop for item in items do
             (print-doc-entry (gethash item h))))))
 
+(defun print-doc-section-latex (s &optional (stream t) )
+  (format stream "\\section{~a}~%" (section-name s))
+  (unless (null (section-contents s)) (format stream "~% ~a~%" (section-contents s)))
+  (let* ((h (section-hash s))
+           (items (sort (get-hash-keys h) #'string-lessp)))
+    (when items
+      (format stream "\\begin{itemize}~%")
+      (loop for item in items do
+            (let ((name (entry-name (gethash item h))))
+              (format stream "\\item \\hyperlink{~a}{{\\tt ~a}}~%" name (latex-esc name))))
+      (format stream "\\end{itemize}~%")
+      (loop for item in items do
+            (print-doc-entry-latex (gethash item h) stream)))))
+
 (defun format-doc-section (s)
   (with-output-to-string (maxima::*standard-outptut*)
     (print-doc-section s)))
@@ -357,6 +512,9 @@ must be keyword,value pairs for the doc entry struct."
 
 (defun print-doc-entry (e)
   (format t "~a" (format-doc-entry e)))
+
+(defun print-doc-entry-latex (e &optional (stream t))
+  (format stream "~a" (format-doc-entry-latex e)))
 
 (defun format-arg-specs (name)
   "make string like: foo requires between 3 and 6 arguments"
@@ -369,7 +527,8 @@ must be keyword,value pairs for the doc entry struct."
                (rest-args (getf arg-list :rest ))
                (nmin (length req))
                (nmax (+ nmin (length optional))))
-          (concatenate 'string (format nil "   ~a requires " name)
+          (concatenate 'string (format nil "   ~a requires "
+                                       (format-doc-text (list :code name)))
                        (defmfun1::format-nargs-expected nmin nmax (not (null rest-args))  nil)
                        (if (and (= nmin 1) (= nmax 1))  "" (format nil ".~%"))
                        (format-arg-specs1 rest-args name (append req optional) )
@@ -463,13 +622,85 @@ must be keyword,value pairs for the doc entry struct."
                  (form-ent entry-oeis "~%OEIS number: ~a.~%" (comma-separated-english x))
                  (form-ent entry-see-also "~%See also: ~a.~%" (comma-separated-english x))
                  (form-ent entry-implementation "~%Implementation:~%   ~a~%" 
-                           (wrap-text :text x :width *text-width* :indent *indent2*)) 
+                           (wrap-text :text x :width *latex-text-width* :indent 0)) 
                  (form-ent entry-author
                      "~%  Author~p: ~a.~%" (length x)  (comma-separated-english x))
 ;;                 (form-ent entry-copyright ; there should be some control of how much is printed
 ;;                     "~%  Copyright (C) ~{~a ~}.~%" x)
                  (format nil "~%"))))
 
+;(defun func-sec-latex (sec)
+;  (format nil "\\subsubsection{~a}" sec))
+;(defun func-sec-latex (sec)
+;  (format nil "\\noindent{\\bf ~a}" sec))
+
+(defun format-doc-entry-latex (e)
+  "called by system documentation routines."
+  (let* ((name (entry-name e))
+         (fname (latex-esc name))
+         (*format-codes-default* *format-codes-latex*))
+    (flet ((skip () (format nil "~%\\vspace{5 pt}~%"))
+           (sect (sec) (format nil "\\noindent{\\bf ~a}" sec)))
+      (concatenate 'string
+                   (format nil "\\subsection{~a: ~a\\label{sec:~a}}~%\\hypertarget{~a}{}~%" 
+                           (entry-type e) fname name name)
+                   (if (null (entry-protocol-list e))
+                       (format nil "~%")
+                     (format nil "~a~%~%" (format-protocol-latex (entry-protocol-list e))))
+;                 (if (null (entry-section e)) "" ; should be included depending on how this is called
+;                   (format nil "Section: ~a~%~%" (entry-section e)))
+                   (let ((pack (defmfun1:get-mext-package-for-function name)))
+                     (if pack (format nil "~%\\noindent mext package: ~a~%~%" (latex-esc pack)) ""))
+                   (format nil "~%")
+                   (skip)
+                   (if (null (entry-default-value e))  ""
+                     (format nil "~a.~%~%"
+                             (format-doc-text-latex 
+                              (list "  default value " 'code (entry-default-value e)) *format-codes-latex* )))
+                   (if (> (length (entry-call-desc-list e)) 0)
+;;  conveters dont like this  (format nil "~a~%\\begin{itemize}\\itemsep5pt \\parskip0pt \\parsep0pt ~%~a\\end{itemize}~%"
+                       (format nil "~a~%\\begin{itemize}~%~a\\end{itemize}~%"
+                               (sect "Calling")
+                               (format-call-desc-list-latex (entry-call-desc-list e))))
+                   (if (> (length (entry-contents e)) 0)
+                       (format nil "~a~%~a~%~a~%" (sect "Description") (wrap-text 
+                               :text (format-doc-text-latex (entry-contents e) *format-codes-latex* )
+                               :width *latex-text-width* :indent 0) (skip))
+                     (format nil ""))
+                   (let ((sspec (format-arg-specs name)))
+                     (if (> (length sspec) 0) 
+                       (format nil "~a~%~a~%~a~%" (sect "Arguments") (latex-esc (format nil "~a" sspec)) (skip))
+                       ""))
+                   (let ((opts (maxima::$foptions name)))
+                     (if (> (length opts) 1)
+                         (format nil "~a~%{\\tt ~a} takes options with default values: ~a.~a~%" 
+                                 (sect "Options") fname 
+                                 (latex-esc (format nil "~{{\\tt ~a}~^, ~}" (cdr opts)))
+                                 (skip))
+                       ""))
+                   (let ((atts (maxima::$attributes name)))
+                     (if (> (length atts) 1)
+                         (format nil "~a~%~a has attributes: ~a~%~a~%" 
+                                 (sect "Attributes") fname (latex-esc (maxima::$sconcat atts))
+                                 (skip))
+                       ""))
+                   (examples:format-examples-latex name)
+                   (form-ent entry-oeis "~%OEIS number: ~a.~%~%" (comma-separated-english x))
+                   (form-ent entry-see-also "~%~a~% ~a.~%~a~%"
+                             (sect "See also")
+                             (comma-separated-english 
+                                         (loop for e in x collect
+                                               (format nil "\\hyperlink{~a}{{\\tt ~a}}" e (latex-esc e)))) (skip))
+                   (form-ent entry-implementation "~%~a~%~a~%~a~%"
+                           (sect "Implementation")
+                           (wrap-text :text (format-doc-text-latex x) :width *latex-text-width* :indent 0)
+                           (skip))
+                 (form-ent entry-author
+                           "~%~a~%~a.~%~a~%" 
+                           (sect (format nil "Author~p" (length x)))  (comma-separated-english x)
+                           (skip))
+                 (format nil "~%")))))
+  
 (defun search-key (key item)
   "we only search on the 'name' of the entry."
   (declare (ignore key))

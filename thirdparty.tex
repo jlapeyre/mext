@@ -1,0 +1,4343 @@
+
+\documentclass[]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyvrb}
+\usepackage{fullpage}
+\usepackage{hyperref}
+\begin{document}
+\title{Third-party maxima software}
+\author{John Lapeyre}
+\maketitle
+\tableofcontents
+\section{Array Representation For Expressions}
+
+  Maxima expressions are normally implemented internally as lisp lists,
+ but they may also be represented by lisp arrays. Each representation has
+ advantages.
+\section{Attributes}
+
+ A function may possess a list of attributes. The attributes control how the arguments
+ to the function are evaluated and how errors are handled.
+\begin{itemize}
+\item \hyperlink{attributes}{{\tt attributes}}
+\item \hyperlink{set_match_form}{{\tt set\_match\_form}}
+\item \hyperlink{set_nowarn}{{\tt set\_nowarn}}
+\item \hyperlink{unset_match_form}{{\tt unset\_match\_form}}
+\item \hyperlink{unset_nowarn}{{\tt unset\_nowarn}}
+\end{itemize}
+\subsection{Function: attributes\label{sec:attributes}}
+\hypertarget{attributes}{}
+{\bf attributes}({\it name})
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns a list of the `attributes' of function {\it name}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt attributes} requires one argument {\it name}, which must be a string or a symbol.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{unset_match_form}{{\tt unset\_match\_form}}, \hyperlink{set_match_form}{{\tt set\_match\_form}}, \hyperlink{set_nowarn}{{\tt set\_nowarn}}, and \hyperlink{unset_nowarn}{{\tt unset\_nowarn}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: set\_match\_form\label{sec:set_match_form}}
+\hypertarget{set_match_form}{}
+{\bf set\_match\_form}({\it names})
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Set the `match\_form' attribute for function(s) {\it names}. If the argument checks for a function call fail, and the attribute `match\_form' is set, then rather than signaling an error, the unevaluated form is returned. Furthemore, if the attribute `nowarn' is not set, then a warning message is 
+printed. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt set\_match\_form} requires one argument {\it names}, which must be  a string, a symbol, or a list of strings or symbols.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{unset_match_form}{{\tt unset\_match\_form}}, \hyperlink{set_nowarn}{{\tt set\_nowarn}}, \hyperlink{unset_nowarn}{{\tt unset\_nowarn}}, and \hyperlink{attributes}{{\tt attributes}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: set\_nowarn\label{sec:set_nowarn}}
+\hypertarget{set_nowarn}{}
+{\bf set\_nowarn}({\it names})
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Set the `nowarn' attribute for function(s) {\it names}. If the argument checks for a function call fail, and the attribute `match\_form' is set, and the attribute `nowarn' is set, then rather than signaling an error, the unevaluated form is returned and no warning message is printed. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt set\_nowarn} requires one argument {\it names}, which must be  a string, a symbol, or a list of strings or symbols.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{unset_match_form}{{\tt unset\_match\_form}}, \hyperlink{set_match_form}{{\tt set\_match\_form}}, \hyperlink{unset_nowarn}{{\tt unset\_nowarn}}, and \hyperlink{attributes}{{\tt attributes}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: unset\_match\_form\label{sec:unset_match_form}}
+\hypertarget{unset_match_form}{}
+{\bf unset\_match\_form}({\it names})
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Unset the `match\_form' attribute for function(s) {\it names}. If the argument checks for a function call fail, and the attribute `match\_form' is set, then rather than signaling an error, the unevaluated form is returned. Furthemore, if the attribute `nowarn' is not set, then a warning message is 
+printed. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt unset\_match\_form} requires one argument {\it names}, which must be  a string, a symbol, or a list of strings or symbols.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{set_match_form}{{\tt set\_match\_form}}, \hyperlink{set_nowarn}{{\tt set\_nowarn}}, \hyperlink{unset_nowarn}{{\tt unset\_nowarn}}, and \hyperlink{attributes}{{\tt attributes}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: unset\_nowarn\label{sec:unset_nowarn}}
+\hypertarget{unset_nowarn}{}
+{\bf unset\_nowarn}({\it names})
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Unset the `nowarn' attribute for function(s) {\it names}. If the argument checks for a function call fail, and the attribute `match\_form' is set, and the attribute `nowarn' is set, then rather than signaling an error, the unevaluated form is returned and no warning message is printed. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt unset\_nowarn} requires one argument {\it names}, which must be  a string, a symbol, or a list of strings or symbols.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{unset_match_form}{{\tt unset\_match\_form}}, \hyperlink{set_match_form}{{\tt set\_match\_form}}, \hyperlink{set_nowarn}{{\tt set\_nowarn}}, and \hyperlink{attributes}{{\tt attributes}}.
+
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Array Represention for Expressions}
+
+ These functions operate on the the array expression data structure.
+\begin{itemize}
+\item \hyperlink{aeop}{{\tt aeop}}
+\item \hyperlink{aex}{{\tt aex}}
+\item \hyperlink{aex_cp}{{\tt aex\_cp}}
+\item \hyperlink{aex_get}{{\tt aex\_get}}
+\item \hyperlink{aex_new}{{\tt aex\_new}}
+\item \hyperlink{aex_set}{{\tt aex\_set}}
+\item \hyperlink{aex_shift}{{\tt aex\_shift}}
+\item \hyperlink{aex_unshift}{{\tt aex\_unshift}}
+\item \hyperlink{aexg}{{\tt aexg}}
+\item \hyperlink{aexs}{{\tt aexs}}
+\item \hyperlink{copy_aex_type}{{\tt copy\_aex\_type}}
+\item \hyperlink{iapply}{{\tt iapply}}
+\item \hyperlink{ilength}{{\tt ilength}}
+\item \hyperlink{ipart}{{\tt ipart}}
+\item \hyperlink{ipart_set}{{\tt ipart\_set}}
+\item \hyperlink{ireverse}{{\tt ireverse}}
+\item \hyperlink{lex}{{\tt lex}}
+\end{itemize}
+\subsection{Function: aeop\label{sec:aeop}}
+\hypertarget{aeop}{}
+{\bf aeop}({\it expr})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+op function for aex. returns op if {\it e} is not an aex. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt aeop} requires one argument {\it expr}, which must be non-atomic.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: aex\label{sec:aex}}
+\hypertarget{aex}{}
+{\bf aex}( :optional {\it x})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf aex}({\it e})
+  Converts expression {\it e} to an array representation. The input expression {\it e} is returned unchanged if it is already an array expression or is a symbol or number or specially represented maxima expression. This function converts only at the first level. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt aex} requires either zero or one arguments.
+.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt aex} takes options with default values: {\tt adj->true}.
+\vspace{5 pt}
+
+
+\subsection{Function: aex\_cp\label{sec:aex_cp}}
+\hypertarget{aex_cp}{}
+{\bf aex\_cp}({\it e} :optional {\it head})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf aex\_cp}({\it e})
+  Returns an aex form copy of {\it e}. {\it e} may be in either lex or aex form. Conversion to aex representation occurs only on the first level. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt aex\_cp} requires either one or two arguments.
+    The first argument {\it e} must be non-atomic.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt aex\_cp} takes options with default values: {\tt adj->true}.
+\vspace{5 pt}
+
+
+\subsection{Function: aex\_get\label{sec:aex_get}}
+\hypertarget{aex_get}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the {\it n}th part of aexpr {\it e}. A value of $0$ for {\it n} is not allowed. This is more efficient than \hyperlink{aexg}{{\tt aexg}}, which allows {\it n} equal to zero. 
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) a : aex([5,6,7]), aex_get(a,2);
+(%o1) 7
+\end{Verbatim}
+
+
+\subsection{Function: aex\_new\label{sec:aex_new}}
+\hypertarget{aex_new}{}
+{\bf aex\_new}({\it n} :optional {\it head})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Arguments}
+   {\tt aex\_new} requires either one or two arguments.
+    The first argument {\it n} must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: aex\_set\label{sec:aex_set}}
+\hypertarget{aex_set}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Destructively sets the {\it n}th part of aexpr {\it e} to value {\it v}. A value of $0$ for {\it n} is not allowed. This is more efficient than \hyperlink{aexs}{{\tt aexs}}. No argument checking is done. 
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Destructively assign to a part of an expression. 
+
+\begin{Verbatim}[frame=single]
+(%i1) a : aex([1,2,3]), aex_set(a,1,x), a;
+(%o1) <[1,x,3]>
+\end{Verbatim}
+
+
+\noindent{\bf See also}
+ \hyperlink{aexs}{{\tt aexs}} and \hyperlink{ipart}{{\tt ipart}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: aex\_shift\label{sec:aex_shift}}
+\hypertarget{aex_shift}{}
+{\bf aex\_shift}({\it e})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+destructively removes an element from the end of {\it e}. For array representation of expressions we use the words `push' and `pop' for the beginning of and expression, and `shift' and `unshift' for the end of an expression, whether the representation is an array or a list. This is consistent with 
+maxima, but the reverse of the meaning of the terms in perl. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt aex\_shift} requires one argument {\it e}, which must be an adjustable array expression.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) a : lrange(10,ot->ar);
+(%o1) <[1,2,3,4,5,6,7,8,9,10]>
+(%i1) b : aex_shift(a);
+(%o1) 10
+(%i2) a;
+(%o2) <[1,2,3,4,5,6,7,8,9]>
+\end{Verbatim}
+
+
+\subsection{Function: aex\_unshift\label{sec:aex_unshift}}
+\hypertarget{aex_unshift}{}
+{\bf aex\_unshift}({\it v}, {\it e})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Destructively pushes an element {\it v} onto the end of {\it e}. The return value is {\it v}. For array representation of expressions we use the words `push' and `pop' for the beginning of and expression, and `shift' and `unshift' for the end of an expression, whether the representation is an array 
+or a list. This is consistent with maxima, but the reverse of the meaning of the terms in perl. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt aex\_unshift} requires two arguments.
+    The second argument {\it e} must be an adjustable array expression.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) a : lrange(10,ot->ar), aex_unshift("dog",a), a;
+(%o1) <[1,2,3,4,5,6,7,8,9,10,"dog"]>
+\end{Verbatim}
+
+
+\subsection{Function: aexg\label{sec:aexg}}
+\hypertarget{aexg}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+aexg(e,n) returns the nth part of aexpr e. If n is 0, the head of e is returned. No argument checking is performed. 
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{aex_get}{{\tt aex\_get}}, \hyperlink{ipart}{{\tt ipart}}, \hyperlink{inpart}{{\tt inpart}}, and \hyperlink{part}{{\tt part}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: aexs\label{sec:aexs}}
+\hypertarget{aexs}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+destructively sets the {\it n}th part of aexpr {\it e} to value {\it v}. A value of $0$ for {\it n} returns the head (or op) of {\it e}. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: copy\_aex\_type\label{sec:copy_aex_type}}
+\hypertarget{copy_aex_type}{}
+{\bf copy\_aex\_type}({\it ein})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Create a new aex with same head,length,adjustability,etc. but contents of expression are not copied. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt copy\_aex\_type} requires one argument {\it ein}, which must be an array-representation expression.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: iapply\label{sec:iapply}}
+\hypertarget{iapply}{}
+{\bf iapply}({\it fun}, {\it arg})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+\hyperlink{iapply}{{\tt iapply}} is like maxima {\tt apply}, but it supports aex lists. {\it arg} is converted to an ml if it is an aex expression. By default, output is ml regardless of the input representation. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt iapply} requires two arguments.
+    The first argument {\it fun} must be a function.
+    The second argument {\it arg} must be non-atomic.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt iapply} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) iapply(%%ff,lrange(4));
+(%o1) %%ff(1,2,3,4)
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single]
+(%i1) iapply(%%ff,lrange(4,[ot->ar]));
+(%o1) %%ff(1,2,3,4)
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single]
+(%i1) iapply(%%ff,lrange(4,[ot->ar]), [ot->ar] );
+(%o1) %%ff<1,2,3,4>
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single]
+(%i1) iapply(%%ff,lrange(4), [ot->ar] );
+(%o1) %%ff<1,2,3,4>
+\end{Verbatim}
+
+
+\subsection{Function: ilength\label{sec:ilength}}
+\hypertarget{ilength}{}
+{\bf ilength}({\it e})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the length of the expression {\it e}. This is like maxima \verb#length#, but here, {\it e} can be either an aex or a lex. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt ilength} requires one argument {\it e}, which must be a subscripted variable or non-atomic.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: ipart\label{sec:ipart}}
+\hypertarget{ipart}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf ipart}({\it ind1}, {\it ind2}, {\it ...})
+  Returns the part of expression {\it e} specified by indices. {\it e} is a mixed representation expression. When used as an lvalue, ipart can be used to assign to a part of an expression. 
+
+\end{itemize}
+\noindent{\bf Examples}
+
+   Destructively assign to a part of an exression. 
+
+\begin{Verbatim}[frame=single]
+(%i1) (a : [1,2,3], ipart(a,1) : 7, a);
+(%o1) [7,2,3]
+\end{Verbatim}
+
+
+\subsection{Function: ipart\_set\label{sec:ipart_set}}
+\hypertarget{ipart_set}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf ipart\_set}({\it e}, {\it val}, {\it ind1}, {\it ind2}, {\it ...})
+  Set part of {\it e} specified by the final arguments to {\it val}. {\it e} is a mixed representation expression. 
+
+\end{itemize}
+
+\subsection{Function: ireverse\label{sec:ireverse}}
+\hypertarget{ireverse}{}
+{\bf ireverse}({\it e})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+ireverse is like maxima reverse, but is works on both aex and list objects. ireverse is tries to be identical to maxima reverse for a non-aex argument. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt ireverse} requires one argument {\it e}, which must be non-atomic.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt ireverse} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) ireverse(lrange(4));
+(%o1) [4,3,2,1]
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single]
+(%i1) ireverse(lrange(4), [ot->ar] );
+(%o1) <[4,3,2,1]>
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single]
+(%i1) ireverse(lrange(4, [ot->ar]) );
+(%o1) <[4,3,2,1]>
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single]
+(%i1) ireverse(lrange(4, [ot->ar]), [ot->ml] );
+(%o1) [4,3,2,1]
+\end{Verbatim}
+
+
+\subsection{Function: lex\label{sec:lex}}
+\hypertarget{lex}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf lex}({\it e})
+  converts the aex expression {\it e} to lex. If {\it e} is not an aex expression, {\it e} is returned. Conversion is only done on the first level. 
+
+\end{itemize}
+
+\section{Functions and Variables for Combinatorics}
+\begin{itemize}
+\item \hyperlink{ae_random_permutation}{{\tt ae\_random\_permutation}}
+\item \hyperlink{cycles_to_perm}{{\tt cycles\_to\_perm}}
+\item \hyperlink{inverse_permutation}{{\tt inverse\_permutation}}
+\item \hyperlink{perm_to_cycles}{{\tt perm\_to\_cycles}}
+\item \hyperlink{perm_to_transpositions}{{\tt perm\_to\_transpositions}}
+\item \hyperlink{permutation_p}{{\tt permutation\_p}}
+\item \hyperlink{permutation_p1}{{\tt permutation\_p1}}
+\item \hyperlink{random_cycle}{{\tt random\_cycle}}
+\item \hyperlink{random_permutation_sym}{{\tt random\_permutation\_sym}}
+\item \hyperlink{signature_permutation}{{\tt signature\_permutation}}
+\item \hyperlink{transpositions_to_perm}{{\tt transpositions\_to\_perm}}
+\end{itemize}
+\subsection{Function: ae\_random\_permutation\label{sec:ae_random_permutation}}
+\hypertarget{ae_random_permutation}{}
+{\bf ae\_random\_permutation}({\it a})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+returns {\it a} with subexpressions permuted randomly. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt ae\_random\_permutation} requires one argument {\it a}, which must be non-atomic.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt ae\_random\_permutation} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{random_cycle}{{\tt random\_cycle}}, \hyperlink{random_permutation_sym}{{\tt random\_permutation\_sym}}, \hyperlink{signature_permutation}{{\tt signature\_permutation}}, \hyperlink{perm_to_cycles}{{\tt perm\_to\_cycles}}, and \hyperlink{cycles_to_perm}{{\tt cycles\_to\_perm}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: cycles\_to\_perm\label{sec:cycles_to_perm}}
+\hypertarget{cycles_to_perm}{}
+{\bf cycles\_to\_perm}({\it cycles})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns a permutation from its cycle decomposition {\it cycles}, which is a list of lists. Here `permutation' means a permutation of a list of the integers from $1$ to some number $n$. The default output representation is aex. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt cycles\_to\_perm} requires one argument {\it cycles}, which must be a list (lex or aex).
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt cycles\_to\_perm} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{random_cycle}{{\tt random\_cycle}}, \hyperlink{random_permutation_sym}{{\tt random\_permutation\_sym}}, \hyperlink{ae_random_permutation}{{\tt ae\_random\_permutation}}, \hyperlink{signature_permutation}{{\tt signature\_permutation}}, and \hyperlink{perm_to_cycles}{{\tt perm\_to\_cycles}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: inverse\_permutation\label{sec:inverse_permutation}}
+\hypertarget{inverse_permutation}{}
+{\bf inverse\_permutation}({\it perm})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the inverse permutation of {\it perm}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt inverse\_permutation} requires one argument {\it perm}, which must be a list (lex or aex).
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt inverse\_permutation} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) inverse_permutation([5,1,4,2,6,8,7,3,10,9]);
+(%o1) <[2,4,8,3,1,5,7,6,10,9]>
+(%i1) inverse_permutation(inverse_permutation([5,1,4,2,6,8,7,3,10,9]),ot->ml);
+(%o1) [5,1,4,2,6,8,7,3,10,9]
+\end{Verbatim}
+
+
+\subsection{Function: perm\_to\_cycles\label{sec:perm_to_cycles}}
+\hypertarget{perm_to_cycles}{}
+{\bf perm\_to\_cycles}({\it ain})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns a cycle decomposition of the input permutation {\it ain}. The input must be a permutation of $n$ integers from 1 through $n$. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt perm\_to\_cycles} requires one argument {\it ain}, which must be a list (lex or aex).
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt perm\_to\_cycles} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) perm_to_cycles([5,4,3,2,1,10,6,7,8,9]);
+(%o1) [[7,8,9,10,6],[3],[4,2],[5,1]]
+\end{Verbatim}
+
+
+\noindent{\bf See also}
+  \hyperlink{random_cycle}{{\tt random\_cycle}}, \hyperlink{random_permutation_sym}{{\tt random\_permutation\_sym}}, \hyperlink{ae_random_permutation}{{\tt ae\_random\_permutation}}, \hyperlink{signature_permutation}{{\tt signature\_permutation}}, and \hyperlink{cycles_to_perm}{{\tt cycles\_to\_perm}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: perm\_to\_transpositions\label{sec:perm_to_transpositions}}
+\hypertarget{perm_to_transpositions}{}
+{\bf perm\_to\_transpositions}({\it ain})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns a list representing the permutation {\it ain} as a product of transpositions. The output representation type is applied at both levels. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt perm\_to\_transpositions} requires one argument {\it ain}, which must be a list (lex or aex).
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt perm\_to\_transpositions} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+
+\subsection{Function: permutation\_p\label{sec:permutation_p}}
+\hypertarget{permutation_p}{}
+{\bf permutation\_p}({\it ain})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf permutation\_p}({\it list})
+  Returns true if the list {\it list} of length $n$ is a permutation of the integers from $1$ through $n$. Otherwise returns false. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt permutation\_p} requires one argument.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+Separate routines for aex and lex input are used. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: permutation\_p1\label{sec:permutation_p1}}
+\hypertarget{permutation_p1}{}
+{\bf permutation\_p1}({\it ain})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+This is the same as \hyperlink{permutation_p}{{\tt permutation\_p}}, but, if the input is a list, it assumes all elements in the input list are fixnum integers, while \hyperlink{permutation_p}{{\tt permutation\_p}} does not. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt permutation\_p1} requires one argument.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+Some variables are declared fixnum, but this does not seem to improve performance with respect to \hyperlink{permutationp}{{\tt permutationp}}. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: random\_cycle\label{sec:random_cycle}}
+\hypertarget{random_cycle}{}
+{\bf random\_cycle}({\it n})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf random\_cycle}({\it n})
+  Returns a random cycle of length {\it n}. The return value is a list of the integers from $1$ through {\it n}, representing an element of the symmetric group $S_n$ that is a cycle. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt random\_cycle} requires one argument {\it n}, which must be a positive integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt random\_cycle} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{random_permutation_sym}{{\tt random\_permutation\_sym}}, \hyperlink{ae_random_permutation}{{\tt ae\_random\_permutation}}, \hyperlink{signature_permutation}{{\tt signature\_permutation}}, \hyperlink{perm_to_cycles}{{\tt perm\_to\_cycles}}, and \hyperlink{cycles_to_perm}{{\tt cycles\_to\_perm}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+This function uses Sattolo's algorithm. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: random\_permutation\_sym\label{sec:random_permutation_sym}}
+\hypertarget{random_permutation_sym}{}
+{\bf random\_permutation\_sym}({\it n})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf random\_permutation\_sym}({\it n})
+  Returns a random permutation of the integers from $1$ through {\it n}. This represents a random element of the symmetric group $S_n$. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt random\_permutation\_sym} requires one argument {\it n}, which must be a positive integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt random\_permutation\_sym} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{random_cycle}{{\tt random\_cycle}}, \hyperlink{ae_random_permutation}{{\tt ae\_random\_permutation}}, \hyperlink{signature_permutation}{{\tt signature\_permutation}}, \hyperlink{perm_to_cycles}{{\tt perm\_to\_cycles}}, and \hyperlink{cycles_to_perm}{{\tt cycles\_to\_perm}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: signature\_permutation\label{sec:signature_permutation}}
+\hypertarget{signature_permutation}{}
+{\bf signature\_permutation}({\it ain})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf signature\_permutation}({\it list})
+  returns the sign, or signature, of the symmetric permutation {\it list}, which must be represented by a permuation the integers from $1$ through $n$, where $n$ is the length of the list. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt signature\_permutation} requires one argument {\it ain}, which must be a list (lex or aex).
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{random_cycle}{{\tt random\_cycle}}, \hyperlink{random_permutation_sym}{{\tt random\_permutation\_sym}}, \hyperlink{ae_random_permutation}{{\tt ae\_random\_permutation}}, \hyperlink{perm_to_cycles}{{\tt perm\_to\_cycles}}, and \hyperlink{cycles_to_perm}{{\tt cycles\_to\_perm}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: transpositions\_to\_perm\label{sec:transpositions_to_perm}}
+\hypertarget{transpositions_to_perm}{}
+{\bf transpositions\_to\_perm}({\it ain})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the permutation specified by the list of transpositions {\it ain}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt transpositions\_to\_perm} requires one argument {\it ain}, which must be a list (lex or aex).
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt transpositions\_to\_perm} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+Input is converted to lex on both levels. Default output is aex. 
+
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Documentation}
+\begin{itemize}
+\item \hyperlink{doc_system_list}{{\tt doc\_system\_list}}
+\item \hyperlink{print_entry_latex}{{\tt print\_entry\_latex}}
+\item \hyperlink{print_maxdoc_entry}{{\tt print\_maxdoc\_entry}}
+\item \hyperlink{print_maxdoc_sections}{{\tt print\_maxdoc\_sections}}
+\item \hyperlink{print_sections_latex}{{\tt print\_sections\_latex}}
+\item \hyperlink{read_docs_with_pager}{{\tt read\_docs\_with\_pager}}
+\item \hyperlink{set_all_doc_systems}{{\tt set\_all\_doc\_systems}}
+\item \hyperlink{simple_doc_add}{{\tt simple\_doc\_add}}
+\item \hyperlink{simple_doc_delete}{{\tt simple\_doc\_delete}}
+\item \hyperlink{simple_doc_get}{{\tt simple\_doc\_get}}
+\item \hyperlink{simple_doc_init}{{\tt simple\_doc\_init}}
+\item \hyperlink{simple_doc_print}{{\tt simple\_doc\_print}}
+\end{itemize}
+\subsection{Variable: doc\_system\_list\label{sec:doc_system_list}}
+\hypertarget{doc_system_list}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+A list of the documenatation system that will be searched by ? and ??. This can be set to all avaliable systems with the function set\_all\_doc\_systems. Also, if this variable is false, then all documentation is enabled. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: print\_entry\_latex\label{sec:print_entry_latex}}
+\hypertarget{print_entry_latex}{}
+{\bf print\_entry\_latex}({\it item})
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Arguments}
+   {\tt print\_entry\_latex} requires one argument {\it item}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: print\_maxdoc\_entry\label{sec:print_maxdoc_entry}}
+\hypertarget{print_maxdoc_entry}{}
+{\bf print\_maxdoc\_entry}({\it item})
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Arguments}
+   {\tt print\_maxdoc\_entry} requires one argument {\it item}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: print\_maxdoc\_sections\label{sec:print_maxdoc_sections}}
+\hypertarget{print_maxdoc_sections}{}
+{\bf print\_maxdoc\_sections}()
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Print all sections of maxdoc documentation. This does not include other documentation databases, such as the main maxima documentation. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt print\_maxdoc\_sections} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: print\_sections\_latex\label{sec:print_sections_latex}}
+\hypertarget{print_sections_latex}{}
+{\bf print\_sections\_latex}()
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Print all sections of maxdoc documentation in latex format. This does not include other documentation databases, such as the main maxima documentation. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt print\_sections\_latex} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\subsection{Option variable: read\_docs\_with\_pager\label{sec:read_docs_with_pager}}
+\hypertarget{read_docs_with_pager}{}
+
+
+
+\vspace{5 pt}
+  default value \verb#true#.
+
+\noindent{\bf Description}
+If read\_docs\_with\_pager is true then documentation printedby describe() or ? or ?? is read with a pager. This will mostlikely only work with a command line interface under linux/unixwith certain lisp implementations. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: set\_all\_doc\_systems\label{sec:set_all_doc_systems}}
+\hypertarget{set_all_doc_systems}{}
+{\bf set\_all\_doc\_systems}()
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Enable all documentation databases for describe, ? and ??. This sets doc\_system\_list to a list of all doc systems. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt set\_all\_doc\_systems} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: simple\_doc\_add\label{sec:simple_doc_add}}
+\hypertarget{simple_doc_add}{}
+{\bf simple\_doc\_add}({\it name}, {\it content})
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Adds documentation string {\it content} for item {\it name}. These documentation strings are accessible via '?' and '??'. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt simple\_doc\_add} requires two arguments.
+    The first argument {\it name} must be a string.
+    The second argument {\it content} must be a string.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{simple_doc_init}{{\tt simple\_doc\_init}}, \hyperlink{simple_doc_delete}{{\tt simple\_doc\_delete}}, \hyperlink{simple_doc_get}{{\tt simple\_doc\_get}}, and \hyperlink{simple_doc_print}{{\tt simple\_doc\_print}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: simple\_doc\_delete\label{sec:simple_doc_delete}}
+\hypertarget{simple_doc_delete}{}
+{\bf simple\_doc\_delete}({\it name})
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Deletes the simple\_doc documentation string for item {\it name}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt simple\_doc\_delete} requires one argument {\it name}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{simple_doc_init}{{\tt simple\_doc\_init}}, \hyperlink{simple_doc_add}{{\tt simple\_doc\_add}}, \hyperlink{simple_doc_get}{{\tt simple\_doc\_get}}, and \hyperlink{simple_doc_print}{{\tt simple\_doc\_print}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: simple\_doc\_get\label{sec:simple_doc_get}}
+\hypertarget{simple_doc_get}{}
+{\bf simple\_doc\_get}({\it name})
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the simple\_doc documentation string for item {\it name}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt simple\_doc\_get} requires one argument {\it name}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{simple_doc_init}{{\tt simple\_doc\_init}}, \hyperlink{simple_doc_add}{{\tt simple\_doc\_add}}, \hyperlink{simple_doc_delete}{{\tt simple\_doc\_delete}}, and \hyperlink{simple_doc_print}{{\tt simple\_doc\_print}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: simple\_doc\_init\label{sec:simple_doc_init}}
+\hypertarget{simple_doc_init}{}
+{\bf simple\_doc\_init}()
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Initialize the simple\_doc documentation database. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt simple\_doc\_init} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{simple_doc_add}{{\tt simple\_doc\_add}}, \hyperlink{simple_doc_delete}{{\tt simple\_doc\_delete}}, \hyperlink{simple_doc_get}{{\tt simple\_doc\_get}}, and \hyperlink{simple_doc_print}{{\tt simple\_doc\_print}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: simple\_doc\_print\label{sec:simple_doc_print}}
+\hypertarget{simple_doc_print}{}
+{\bf simple\_doc\_print}({\it name})
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Prints the simple\_doc documentation string for item {\it name}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt simple\_doc\_print} requires one argument {\it name}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{simple_doc_init}{{\tt simple\_doc\_init}}, \hyperlink{simple_doc_add}{{\tt simple\_doc\_add}}, \hyperlink{simple_doc_delete}{{\tt simple\_doc\_delete}}, and \hyperlink{simple_doc_get}{{\tt simple\_doc\_get}}.
+
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Equations}
+\begin{itemize}
+\item \hyperlink{nelder_mead}{{\tt nelder\_mead}}
+\end{itemize}
+\subsection{Function: nelder\_mead\label{sec:nelder_mead}}
+\hypertarget{nelder_mead}{}
+{\bf nelder\_mead}({\it expr}, {\it vars}, {\it init})
+
+
+\noindent mext package: store
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+The Nelder-Mead optimization algorithm. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt nelder\_mead} requires three arguments.
+    The second argument {\it vars} must be a list of symbols.
+    The third argument {\it init} must be a list of numbers.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Find the minimum of a function at a non-analytic point. 
+
+\begin{Verbatim}[frame=single]
+(%i1) nelder_mead(if x<0 then -x else x^2, [x], [4]);
+(%o1) [x = 9.536387892694629e-11]
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single]
+(%i1) f(x) := if x<0 then -x else x^2$
+(%i2) nelder_mead(f, [x], [4]);
+(%o2) [x = 9.536387892694628e-11]
+(%i3) nelder_mead(f(x), [x], [4]);
+(%o3) [x = 9.536387892694628e-11]
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single]
+(%i1) nelder_mead(x^4+y^4-2*x*y-4*x-3*y, [x,y], [2,2]);
+(%o1) [x = 1.157212489168102,y = 1.099342680267472]
+\end{Verbatim}
+
+
+\noindent{\bf Author}
+Mario S. Mommer.
+
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Function Definition}
+\begin{itemize}
+\item \hyperlink{comp_load}{{\tt comp\_load}}
+\item \hyperlink{compile_file1}{{\tt compile\_file1}}
+\end{itemize}
+\subsection{Function: comp\_load\label{sec:comp_load}}
+\hypertarget{comp_load}{}
+{\bf comp\_load}({\it fname} :optional {\it pathlist})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Compile and load a lisp file. Maxima does not load it by default with {\tt compile\_file}. If the input filename does not end with ``.lisp'', it will be appended. If {\it pathlist} is specified, then {\it fname} is only searched for in directories in {\it pathlist}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt comp\_load} requires either one or two arguments.
+    The first argument {\it fname} must be a string.
+    The second argument {\it pathlist} must be a string or a list of strings.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: compile\_file1\label{sec:compile_file1}}
+\hypertarget{compile_file1}{}
+{\bf compile\_file1}({\it input-file} :optional {\it bin-file}, {\it translation-output-file})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+This is copied from maxima {\tt compile\_file}, with changes. Sometimes a loadable binary file is apparently compiled, but an error flag is set and {\tt compile\_file} returns false for the output binary filename. Here we return the binary filename in any case. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt compile\_file1} requires between one and three arguments.
+    The first argument {\it input-file} must be a string.
+
+
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Input and Output}
+\begin{itemize}
+\item \hyperlink{pager_command}{{\tt pager\_command}}
+\item \hyperlink{pager_string}{{\tt pager\_string}}
+\item \hyperlink{restore}{{\tt restore}}
+\item \hyperlink{restore_fast}{{\tt restore\_fast}}
+\item \hyperlink{store}{{\tt store}}
+\item \hyperlink{store_fast}{{\tt store\_fast}}
+\end{itemize}
+\subsection{Option variable: pager\_command\label{sec:pager_command}}
+\hypertarget{pager_command}{}
+
+
+
+\vspace{5 pt}
+  default value \verb#/usr/bin/less#.
+
+\noindent{\bf Description}
+The pathname to the pager program used for reading paged output, eg for documentation. 
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+ \hyperlink{read_docs_with_pager}{{\tt read\_docs\_with\_pager}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: pager\_string\label{sec:pager_string}}
+\hypertarget{pager_string}{}
+{\bf pager\_string}({\it s})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Read the string {\it s} in the pager given by the maxima variable \verb#pager_command#.This works at least with gcl under linux. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt pager\_string} requires one argument {\it s}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: restore\label{sec:restore}}
+\hypertarget{restore}{}
+{\bf restore}({\it file})
+
+
+\noindent mext package: store
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf restore}({\it file})
+  Reads and returns expressios from the file {\it file}. 
+
+\end{itemize}
+\noindent{\bf Description}
+Reads maxima expressions from file {\it file} created by the function \hyperlink{store}{{\tt store}}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt restore} requires one argument {\it file}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{store}{{\tt store}}, \hyperlink{store_fast}{{\tt store\_fast}}, and \hyperlink{restore_fast}{{\tt restore\_fast}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: restore\_fast\label{sec:restore_fast}}
+\hypertarget{restore_fast}{}
+{\bf restore\_fast}({\it file})
+
+
+\noindent mext package: store
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf restore\_fast}({\it file})
+  Reads and returns expressios from the file {\it file}. No checking for circular references is done. 
+
+\end{itemize}
+\noindent{\bf Description}
+Reads maxima expressions from file {\it file} created by the function \hyperlink{store}{{\tt store}}, or \hyperlink{store_fast}{{\tt store\_fast}}. No checks for circular references are done. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt restore\_fast} requires one argument {\it file}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{store}{{\tt store}}, \hyperlink{restore}{{\tt restore}}, and \hyperlink{store_fast}{{\tt store\_fast}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: store\label{sec:store}}
+\hypertarget{store}{}
+{\bf store}({\it file} :rest {\it exprs})
+
+
+\noindent mext package: store
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf store}({\it file}, {\it expr1}, {\it expr2}, {\it ...})
+  stores the expressions to the file {\it file}. 
+
+\end{itemize}
+\noindent{\bf Description}
+Stores maxima expressions {\it exprs} in {\it file} in binary format. Many types of lisp expressions and subexpressions are supported: numbers,strings,list,arrays,hashtables,structures,.... 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt store} requires one or more arguments. The first argument {\it file} must be a string.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Save a graph to a file. This cannot be done with the command <save>. 
+
+\begin{Verbatim}[frame=single]
+(%i1) load(graphs)$
+(%i2) c : petersen_graph();
+(%o2) GRAPH(10 vertices, 15 edges)
+(%i3) factor(graph_charpoly(c,x));
+(%o3) (x-3)*(x-1)^5*(x+2)^4
+(%i4) store("graph.cls",c)$
+(%i5) factor(graph_charpoly( restore("graph.cls"), x));
+(%o5) (x-3)*(x-1)^5*(x+2)^4
+\end{Verbatim}
+
+
+\noindent{\bf See also}
+  \hyperlink{restore}{{\tt restore}}, \hyperlink{store_fast}{{\tt store\_fast}}, and \hyperlink{restore_fast}{{\tt restore\_fast}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+store uses the cl-store library. See the cl-store documentation for more information. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: store\_fast\label{sec:store_fast}}
+\hypertarget{store_fast}{}
+{\bf store\_fast}({\it file} :rest {\it exprs})
+
+
+\noindent mext package: store
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf store\_fast}({\it file}, {\it expr1}, {\it expr2}, {\it ...})
+  stores the expressions to the file {\it file}. No checking for circular references is done. 
+
+\end{itemize}
+\noindent{\bf Description}
+Stores maxima expressions {\it exprs} in {\it file} in binary format. This is like \hyperlink{store}{{\tt store}}, except that no checks for circular references are done. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt store\_fast} requires one or more arguments. The first argument {\it file} must be a string.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{store}{{\tt store}}, \hyperlink{restore}{{\tt restore}}, and \hyperlink{restore_fast}{{\tt restore\_fast}}.
+
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Lists}
+
+ These functions manipulate lists. They build lists, take them apart, select elements, etc.
+\begin{itemize}
+\item \hyperlink{aelistp}{{\tt aelistp}}
+\item \hyperlink{constant_list}{{\tt constant\_list}}
+\item \hyperlink{count}{{\tt count}}
+\item \hyperlink{drop_while}{{\tt drop\_while}}
+\item \hyperlink{every1}{{\tt every1}}
+\item \hyperlink{fold}{{\tt fold}}
+\item \hyperlink{fold_list}{{\tt fold\_list}}
+\item \hyperlink{icons}{{\tt icons}}
+\item \hyperlink{imap}{{\tt imap}}
+\item \hyperlink{length_while}{{\tt length\_while}}
+\item \hyperlink{lrange}{{\tt lrange}}
+\item \hyperlink{nest}{{\tt nest}}
+\item \hyperlink{nest_list}{{\tt nest\_list}}
+\item \hyperlink{nest_while}{{\tt nest\_while}}
+\item \hyperlink{nreverse}{{\tt nreverse}}
+\item \hyperlink{partition_list}{{\tt partition\_list}}
+\item \hyperlink{select}{{\tt select}}
+\item \hyperlink{sequence specifier}{{\tt sequence specifier}}
+\item \hyperlink{table}{{\tt table}}
+\item \hyperlink{take}{{\tt take}}
+\item \hyperlink{take_while}{{\tt take\_while}}
+\item \hyperlink{tuples}{{\tt tuples}}
+\end{itemize}
+\subsection{Function: aelistp\label{sec:aelistp}}
+\hypertarget{aelistp}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns true if {\it e} is a list, either ml or ar representation. 
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) aelistp([1,2,3]);
+(%o1) true
+(%i1) aelistp( aex([1,2,3]));
+(%o1) true
+(%i2) aelistp(3);
+(%o2) false
+(%i3) aelistp(x);
+(%o3) false
+(%i4) x:lrange(10),aelistp(x);
+(%o4) true
+(%i5) aelistp(%%f(y));
+(%o5) false
+(%i6) aelistp( aex( %%f(y) ));
+(%o6) false
+\end{Verbatim}
+
+
+\subsection{Function: constant\_list\label{sec:constant_list}}
+\hypertarget{constant_list}{}
+{\bf constant\_list}({\it expr}, {\it list})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns a list of $n$ elements, each of which is an independent copy of expr. \verb#constant_list(expr,[n,m,..])# returns a nested list of dimensions {\it n},{\it m},\ldots where each leaf is an independent copy of expr and the copies of each list at each level are independent. If a third argument 
+is given, then it is used as the op, rather than `list', at every level. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt constant\_list} requires either two or three arguments.
+    The second argument {\it spec} must be a positive integer or a list of positive integers.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt constant\_list} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{makelist}{{\tt makelist}}, \hyperlink{lrange}{{\tt lrange}}, and \hyperlink{table}{{\tt table}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: count\label{sec:count}}
+\hypertarget{count}{}
+{\bf count}({\it expr}, {\it item})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Counts the number of items in {\it expr} matching {\it item}. If {\it item} is a lambda function then {\it compile} must be true. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt count} requires two arguments.
+    The first argument {\it expr} must be non-atomic and either aex or represented by a lisp list.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt count} takes options with default values: {\tt compile->true}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) count([1,2,"dog"], 'numberp);
+(%o1) 2
+(%i1) count([1,2,"dog"], "dog");
+(%o1) 1
+(%i2) count(lrange(10^4), lambda([x], is(mod(x,3) = 0)));
+(%o2) 3333
+(%i3) count( %%ff(1,2,"dog"), "dog");
+(%o3) 1
+(%i4) count(lrange(100,ot->ar), 'evenp);
+(%o4) 50
+\end{Verbatim}
+
+
+\subsection{Function: drop\_while\label{sec:drop_while}}
+\hypertarget{drop_while}{}
+{\bf drop\_while}({\it expr}, {\it test})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf drop\_while}({\it expr}, {\it test})
+  Tests the elements of {\it expr} in order, dropping them until {\it test} fails. The remaining elements are returned in an expression with the same op as that {\it expr}. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt drop\_while} requires two arguments.
+    The first argument {\it expr} must be non-atomic and represented by a lisp list.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt drop\_while} takes options with default values: {\tt adj->true}, {\tt ot->ml}, {\tt compile->true}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Drop elements as long as they are negative. 
+
+\begin{Verbatim}[frame=single]
+(%i1) drop_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)));
+(%o1) [3,6,7,-4]
+\end{Verbatim}
+
+
+\subsection{Function: every1\label{sec:every1}}
+\hypertarget{every1}{}
+{\bf every1}({\it expr}, {\it test})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf every1}({\it expr}, {\it test})
+  Returns true if {\it test} is true for each element in {\it expr}. Otherwise, false is returned. This is like \verb#every# but allow a test that takes only one argument. For some inputs, every1 is much faster than every. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt every1} requires two arguments.
+    The first argument {\it expr} must be non-atomic and represented by a lisp list.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt every1} takes options with default values: {\tt compile->true}.
+\vspace{5 pt}
+
+
+\subsection{Function: fold\label{sec:fold}}
+\hypertarget{fold}{}
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+\verb#fold(f,x,[a,b,c])# returns \verb# f(f(f(x,a),b),c).# 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt fold} requires three arguments.
+    The third argument {\it v} must be non-atomic.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt fold} takes options with default values: {\tt adj->true}, {\tt ot->ml}, {\tt compile->true}.
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+ \hyperlink{fold_list}{{\tt fold\_list}} and \hyperlink{nest}{{\tt nest}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: fold\_list\label{sec:fold_list}}
+\hypertarget{fold_list}{}
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+fold\_list(f,x,[a,b,c]) returns [f(x,a),f(f(x,a),b),f(f(f(x,a),b),c)]. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt fold\_list} requires three arguments.
+    The third argument {\it v} must be non-atomic.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt fold\_list} takes options with default values: {\tt adj->true}, {\tt ot->ml}, {\tt compile->true}.
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+ \hyperlink{fold}{{\tt fold}} and \hyperlink{nest}{{\tt nest}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: icons\label{sec:icons}}
+\hypertarget{icons}{}
+{\bf icons}({\it x}, {\it e})
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+\hyperlink{icons}{{\tt icons}} is like maxima {\tt cons}, but less general, and much, much faster. {\it x} is a maxima object. {\it e} is a maxima list or list-like object, such as \verb#[a]#, or \verb#f(a)#. It is suitable at a minimum, for pushing a number or list or string onto a list of 
+numbers, or strings or lists. If you find \hyperlink{icons}{{\tt icons}} gives buggy behavior that you are not interested in investigating, use {\tt cons} instead. 
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+In a function that mostly only does icons in a loop, icons defined with defmfun rather than defmfun1 runs almost twice as fast. So icons is defined with defmfun rather than defmfun1. icons does no argument checking. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: imap\label{sec:imap}}
+\hypertarget{imap}{}
+{\bf imap}({\it f}, {\it expr})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Maps functions of a single argument. I guess that {\tt map} handles more types of input without error. But \hyperlink{imap}{{\tt imap}} can be much faster for some inputs. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt imap} requires two arguments.
+    The second argument {\it expr} must be non-atomic.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt imap} takes options with default values: {\tt compile->true}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Map sqrt efficiently over a list of floats 
+
+\begin{Verbatim}[frame=single]
+(%i1) (a : lrange(1.0,4),
+        imap(lambda([x],modedeclare(x,float),sqrt(x)),a));
+(%o1) [1.0,1.414213562373095,1.732050807568877,2.0]
+\end{Verbatim}
+
+   With aex expression, no conversions to lex are done. 
+
+\begin{Verbatim}[frame=single]
+(%i1) (a : lrange(1.0,4,ot->ar),
+          imap(lambda([x],modedeclare(x,float),sqrt(x)),a));
+(%o1) <[1.0,1.414213562373095,1.732050807568877,2.0]>
+\end{Verbatim}
+
+
+\subsection{Function: length\_while\label{sec:length_while}}
+\hypertarget{length_while}{}
+{\bf length\_while}({\it expr}, {\it test})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Computes the length of {\it expr} while {\it test} is true. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt length\_while} requires two arguments.
+    The first argument {\it expr} must be non-atomic and represented by a lisp list.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt length\_while} takes options with default values: {\tt compile->true}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) length_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)));
+(%o1) 3
+\end{Verbatim}
+
+
+\subsection{Function: lrange\label{sec:lrange}}
+\hypertarget{lrange}{}
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf lrange}({\it stop})
+  returns a list of numbers from 1 through {\it stop}. 
+
+\item[] {\bf lrange}({\it start}, {\it stop})
+  returns a list of expressions from {\it start} through {\it stop}. 
+
+\item[] {\bf lrange}({\it start}, {\it stop}, {\it incr})
+  returns a list of expressions from {\it start} through {\it stop} in steps of {\it incr}. 
+
+\end{itemize}
+\noindent{\bf Description}
+lrange is much more efficient than makelist for creating ranges, particularly for large lists (e.g. $10^5$ or more items.) Functions for creating a list of numbers, in order of decreasing speed, are: \hyperlink{lrange}{{\tt lrange}}, \hyperlink{table}{{\tt table}}, {\tt create\_list},{\tt 
+makelist}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt lrange} requires between one and three arguments.
+    The third argument {\it incr} must be an expression that is not zero.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt lrange} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) lrange(6);
+(%o1) [1,2,3,4,5,6]
+(%i1) lrange(2,6);
+(%o1) [2,3,4,5,6]
+(%i2) lrange(2,6,2);
+(%o2) [2,4,6]
+(%i3) lrange(6,1,-1);
+(%o3) [6,5,4,3,2,1]
+(%i4) lrange(6,1,-2);
+(%o4) [6,4,2]
+(%i5) lrange(6,ot->ar);
+(%o5) <[1,2,3,4,5,6]>
+\end{Verbatim}
+
+   The type of the first element and increment determine the type of the 
+   elements. 
+
+\begin{Verbatim}[frame=single]
+(%i1) lrange(1.0,6);
+(%o1) [1.0,2.0,3.0,4.0,5.0,6.0]
+(%i1) lrange(1.0b0,6);
+(%o1) [1.0b0,2.0b0,3.0b0,4.0b0,5.0b0,6.0b0]
+(%i2) lrange(1/2,6);
+(%o2) [1/2,3/2,5/2,7/2,9/2,11/2]
+(%i3) lrange(6.0,1,-1);
+(%o3) [6.0,5.0,4.0,3.0,2.0,1.0]
+\end{Verbatim}
+
+   Symbols can be used for limits or increments. 
+
+\begin{Verbatim}[frame=single]
+(%i1) lrange(x,x+4);
+(%o1) [x,x+1,x+2,x+3,x+4]
+(%i1) lrange(x,x+4*a,a);
+(%o1) [x,x+a,x+2*a,x+3*a,x+4*a]
+\end{Verbatim}
+
+
+\noindent{\bf See also}
+  \hyperlink{makelist}{{\tt makelist}}, \hyperlink{table}{{\tt table}}, and \hyperlink{constant_list}{{\tt constant\_list}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: nest\label{sec:nest}}
+\hypertarget{nest}{}
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+nest(f,x,n) returns f(...f(f(f(x)))...) where there are n nested calls of f. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt nest} requires three arguments.
+    The first argument {\it f} must be a function.
+    The third argument {\it n} must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt nest} takes options with default values: {\tt adj->true}, {\tt ot->ml}, {\tt compile->true}.
+\vspace{5 pt}
+
+
+\subsection{Function: nest\_list\label{sec:nest_list}}
+\hypertarget{nest_list}{}
+{\bf nest\_list}({\it f}, {\it x}, {\it n})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Arguments}
+   {\tt nest\_list} requires three arguments.
+    The third argument {\it n} must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt nest\_list} takes options with default values: {\tt adj->true}, {\tt ot->ml}, {\tt compile->true}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Find the first 10 primes after 100. 
+
+\begin{Verbatim}[frame=single]
+(%i1) nest_list(next_prime,100,10);
+(%o1) [101,103,107,109,113,127,131,137,139,149]
+\end{Verbatim}
+
+
+\noindent{\bf See also}
+  \hyperlink{nest}{{\tt nest}}, \hyperlink{fold}{{\tt fold}}, and \hyperlink{fold_list}{{\tt fold\_list}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: nest\_while\label{sec:nest_while}}
+\hypertarget{nest_while}{}
+{\bf nest\_while}({\it f}, {\it x}, {\it test} :optional {\it min}, {\it max})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf nest\_while}({\it f}, {\it x}, {\it test})
+  applies {\it f} to {\it x} until {\it test} fails to return true when called on the nested result. 
+
+\item[] {\bf nest\_while}({\it f}, {\it x}, {\it test}, {\it min})
+  applies {\it f} at least {\it min} times. 
+
+\item[] {\bf nest\_while}({\it f}, {\it x}, {\it test}, {\it min}, {\it max})
+  applies {\it f} not more than {\it max} times. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt nest\_while} requires between three and five arguments.
+    The fourth argument {\it min} must be a non-negative integer.
+    The fifth argument {\it max} must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt nest\_while} takes options with default values: {\tt adj->true}, {\tt ot->ml}, {\tt compile->true}.
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+This should be modified to allow applying test to more than just the most recent result. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: nreverse\label{sec:nreverse}}
+\hypertarget{nreverse}{}
+{\bf nreverse}({\it e})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Destructively reverse the arguments of expression {\it e}.This is more efficient than using reverse. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt nreverse} requires one argument {\it e}, which must be non-atomic.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Be careful not to use <a> after applying nreverse. Assign the result to 
+   another variable. 
+
+\begin{Verbatim}[frame=single]
+(%i1) a : lrange(10), b : nreverse(a);
+(%o1) [10,9,8,7,6,5,4,3,2,1]
+(%i1) a : lrange(10,ot->ar), b : nreverse(a);
+(%o1) <[10,9,8,7,6,5,4,3,2,1]>
+\end{Verbatim}
+
+
+\noindent{\bf See also}
+ \hyperlink{reverse}{{\tt reverse}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: partition\_list\label{sec:partition_list}}
+\hypertarget{partition_list}{}
+{\bf partition\_list}({\it e}, {\it nlist} :optional {\it dlist})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf partition\_list}({\it e}, {\it n})
+  partitions {\it e} into sublists of length {\it n} 
+
+\item[] {\bf partition\_list}({\it e}, {\it n}, {\it d})
+  partitions {\it e} into sublists of length {\it n} with offsets {\it d}. 
+
+\end{itemize}
+\noindent{\bf Description}
+Omitting {\it d} is equivalent to giving {\it d} equal to {\it n}. {\it e} can be any expression, not only a list. If {\it n} is a list, then \hyperlink{partition_list}{{\tt partition\_list}} partitions at sucessively deeper levels with elements of {\it n}. If {\it n} and {\it d} are lists, the 
+first elementsof {\it n} and {\it d} apply at the highest level and so on. If {\it n} is a list and {\it d} is a number, then the offset {\it d} is used with each of the {\it n}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt partition\_list} requires either two or three arguments.
+    The first argument {\it e} must be non-atomic.
+    The second argument {\it nlist} must be an integer or a list of integers.
+    The third argument {\it dlist} must be an integer or a list of integers.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Partition the numbers from 1 through 10 into pairs. 
+
+\begin{Verbatim}[frame=single]
+(%i1) partition_list([1,2,3,4,5,6,7,8,9,10],2);
+(%o1) [[1,2],[3,4],[5,6],[7,8],[9,10]]
+\end{Verbatim}
+
+
+\subsection{Function: select\label{sec:select}}
+\hypertarget{select}{}
+{\bf select}({\it expr}, {\it test} :optional {\it n})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns a list of all elements of {\it expr} for which {\it test} is true. {\it expr} may have any op. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt select} requires either two or three arguments.
+    The first argument {\it expr} must be non-atomic and represented by a lisp list.
+    The third argument {\it n} must be a positive integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt select} takes options with default values: {\tt adj->true}, {\tt ot->ml}, {\tt compile->true}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Select elements less than 3 
+
+\begin{Verbatim}[frame=single]
+(%i1) select([1,2,3,4,5,6,7], lambda([x], is(x<3)));
+(%o1) [1,2]
+\end{Verbatim}
+
+
+\subsection{Argument type: sequence specifier\label{sec:sequence specifier}}
+\hypertarget{sequence specifier}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+A sequence specification specifies a subsequence of the elements in an expression. A single positive number $n$ means the first $n$ elements. $-n$ means the last $n$ elements. A list of three numbers \verb#[i1,i2,i3]# means the \verb#i1#th through the \verb#i2#th stepping by \verb#i3#. If \verb#i1# 
+or \verb#i2# are negative, they count from the end. If \verb#i3# is negative, stepping is down and \verb#i1# must be greater than or equal to \verb#i2#. If \verb#i3# is omitted, it is taken to be $1$. A sequence specifiier can also be one of 'all 'none or 'reverse, which mean all elements, no 
+elements or all elements in reverse order respectively. 
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+ \hyperlink{take}{{\tt take}} and \hyperlink{string_take}{{\tt string\_take}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: table\label{sec:table}}
+\hypertarget{table}{}
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf table}({\it expr}, [{\it n}])
+  Evaluates expression {\it number} times. If {\it number} is not an integer or a floating point number, then {\tt float} is called. If we have a floating point number, it is truncated into an integer. This type of iterator is the fastest, since no variable is bound. 
+
+\item[] {\bf table}({\it expr}, [{\it variable}, {\it initial}, {\it end}, {\it step}])
+  Returns a list of evaluated expressions where {\it variable} (a symbol) is set to a value. The first element of the returned list is {\it expression} evaluated with {\it variable} set to {\it initial}. The $i$-th element of the returned list is {\it expression} evaluated with {\it variable} set to 
+{\it initial}$ + (i-1) ${\it step}. The iteration stops once the value is greater (if {\it step} is positive) or smaller (if {\it step} is negative) than {\it end}. Requirement: The difference between {\it end} and {\it intial} must return a {\tt numberp} number. {\it step} must be a nonzero {\tt 
+numberp} number. This allows for iterators of rather general forms like \verb#[i, %i - 2, %i, 0.1b0] #\ldots 
+
+\item[] {\bf table}({\it expr}, [{\it variable}, {\it initial}, {\it end}])
+  This iterator uses a step of 1 and is equal to [{\it variable},{\it initial},{\it end}, 1]. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt table} requires two or more arguments.
+    The second argument {\it iterator1} must be a list.
+   Each of the remaining arguments must be a list.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt table} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+\noindent{\bf Attributes}
+table has attributes: [hold\_all]
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Make a list of function values 
+
+\begin{Verbatim}[frame=single]
+(%i1) table(sin(x),[x,0,2*%pi,%pi/4]);
+(%o1) [0,1/sqrt(2),1,1/sqrt(2),0,-1/sqrt(2),-1,-1/sqrt(2),0]
+\end{Verbatim}
+
+   Make a nested list. 
+
+\begin{Verbatim}[frame=single]
+(%i1) table( x^y, [x,1,2], [y,1,2]);
+(%o1) [[1,1],[2,4]]
+\end{Verbatim}
+
+
+\noindent{\bf See also}
+  \hyperlink{makelist}{{\tt makelist}}, \hyperlink{lrange}{{\tt lrange}}, and \hyperlink{constant_list}{{\tt constant\_list}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Author}
+Ziga Lenarcic.
+
+\vspace{5 pt}
+
+
+\subsection{Function: take\label{sec:take}}
+\hypertarget{take}{}
+{\bf take}({\it e} :rest {\it v})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf take}({\it e}, {\it n})
+  returns a list of the first {\it n} elements of list or expression {\it e}. 
+
+\item[] {\bf take}({\it e}, [{\it n1}, {\it n2}])
+  returns a list of the {\it n1}th through {\it n2}th elements of list or expression {\it e}. 
+
+\item[] {\bf take}({\it e}, [{\it n1}, {\it n2}, {\it step}])
+  returns a list of the {\it n1}th through {\it n2}th elements stepping by {\it step} of list or expression {\it e}. 
+
+\item[] {\bf take}({\it e}, -n )
+  returns the last {\it n} elements. 
+
+\item[] {\bf take}({\it e}, {\it spec1}, {\it spec2}, {\it ...})
+  applies the sequence specifications at sucessively deeper levels in {\it e}. 
+
+\end{itemize}
+\noindent{\bf Description}
+{\it e} can have mixed lex and aex expressions on different levels. If more sequence specifications are given, they apply to sucessively deeper levels in {\it e}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt take} requires one or more arguments. The first argument {\it e} must be non-atomic.
+   Each of the remaining arguments must be a sequence specification.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Take the first 3 elements of a list. 
+
+\begin{Verbatim}[frame=single]
+(%i1) take([a,b,c,d,e],3);
+(%o1) [a,b,c]
+\end{Verbatim}
+
+   Take the last 3 elements of a list. 
+
+\begin{Verbatim}[frame=single]
+(%i1) take([a,b,c,d,e],-3);
+(%o1) [c,d,e]
+\end{Verbatim}
+
+   Take the second through third elements of a list. 
+
+\begin{Verbatim}[frame=single]
+(%i1) take([a,b,c,d,e],[2,3]);
+(%o1) [b,c]
+\end{Verbatim}
+
+   Take the second through tenth elements of a list counting by two. 
+
+\begin{Verbatim}[frame=single]
+(%i1) take([1,2,3,4,5,6,7,8,9,10],[2,10,2]);
+(%o1) [2,4,6,8,10]
+\end{Verbatim}
+
+   Take the last through first elements of a list counting backwards by one. 
+
+\begin{Verbatim}[frame=single]
+(%i1) take([a,b,c,d],[-1,1,-1]);
+(%o1) [d,c,b,a]
+\end{Verbatim}
+
+   Shorthand for the previous example is 'reverse. 
+
+\begin{Verbatim}[frame=single]
+(%i1) take([a,b,c,d],'reverse);
+(%o1) [d,c,b,a]
+\end{Verbatim}
+
+   Take the second through third elements at the first level and the last 2 
+   elements at the second level. 
+
+\begin{Verbatim}[frame=single]
+(%i1) take([[a,b,c], [d,e,f], [g,h,i]], [2,3],-2);
+(%o1) [[e,f],[h,i]]
+\end{Verbatim}
+
+
+\subsection{Function: take\_while\label{sec:take_while}}
+\hypertarget{take_while}{}
+{\bf take\_while}({\it expr}, {\it test})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf take\_while}({\it expr}, {\it test})
+  collects the elements in {\it expr} until {\it test} fails on one of them. The op of the returned expression is the same as the op of {\it expr}. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt take\_while} requires two arguments.
+    The first argument {\it expr} must be non-atomic and represented by a lisp list.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt take\_while} takes options with default values: {\tt adj->true}, {\tt ot->ml}, {\tt compile->true}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Take elements as long as they are negative. 
+
+\begin{Verbatim}[frame=single]
+(%i1) take_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)));
+(%o1) [-3,-10,-1]
+\end{Verbatim}
+
+
+\subsection{Function: tuples\label{sec:tuples}}
+\hypertarget{tuples}{}
+{\bf tuples}({\it list-or-lists} :optional {\it n})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf tuples}({\it list}, {\it n})
+  Return a list of all lists of length {\it n} whose elements are chosen from {\it list}. 
+
+\item[] {\bf tuples}([{\it list1}, {\it list2}, {\it ...}])
+  Return a list of all lists whose $i$\_th element is chosen from {\it listi}. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt tuples} requires either one or two arguments.
+    The first argument {\it list-or-lists} must be non-atomic and represented by a lisp list.
+    The second argument {\it n} must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt tuples} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Make all three letter words in the alphabet `a,b'. 
+
+\begin{Verbatim}[frame=single]
+(%i1) tuples([a,b],3);
+(%o1) [[a,a,a],[a,a,b],[a,b,a],[a,b,b],[b,a,a],[b,a,b],[b,b,a],[b,b,b]]
+\end{Verbatim}
+
+   Take all pairs chosen from two lists. 
+
+\begin{Verbatim}[frame=single]
+(%i1) tuples([ [0,1] , [x,y,z] ]);
+(%o1) [[0,x],[0,y],[0,z],[1,x],[1,y],[1,z]]
+\end{Verbatim}
+
+   tuples works for expressions other than lists. 
+
+\begin{Verbatim}[frame=single]
+(%i1) tuples(f(0,1),3);
+(%o1) [f(0,0,0),f(0,0,1),f(0,1,0),f(0,1,1),f(1,0,0),f(1,0,1),f(1,1,0),f(1,1,1)]
+\end{Verbatim}
+
+
+\section{Functions and Variables for Number Theory}
+\begin{itemize}
+\item \hyperlink{abundant_p}{{\tt abundant\_p}}
+\item \hyperlink{aliquot_sequence}{{\tt aliquot\_sequence}}
+\item \hyperlink{aliquot_sum}{{\tt aliquot\_sum}}
+\item \hyperlink{amicable_p}{{\tt amicable\_p}}
+\item \hyperlink{catalan_number}{{\tt catalan\_number}}
+\item \hyperlink{divisor_function}{{\tt divisor\_function}}
+\item \hyperlink{divisor_summatory}{{\tt divisor\_summatory}}
+\item \hyperlink{from_digits}{{\tt from\_digits}}
+\item \hyperlink{integer_digits}{{\tt integer\_digits}}
+\item \hyperlink{integer_string}{{\tt integer\_string}}
+\item \hyperlink{oeis_A092143}{{\tt oeis\_A092143}}
+\item \hyperlink{perfect_p}{{\tt perfect\_p}}
+\item \hyperlink{prime_pi}{{\tt prime\_pi}}
+\item \hyperlink{prime_pi_soe}{{\tt prime\_pi\_soe}}
+\item \hyperlink{prime_twins}{{\tt prime\_twins}}
+\item \hyperlink{primes1}{{\tt primes1}}
+\end{itemize}
+\subsection{Function: abundant\_p\label{sec:abundant_p}}
+\hypertarget{abundant_p}{}
+{\bf abundant\_p}({\it n})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns true if {\it n} is an abundant number. Otherwise, returns false. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt abundant\_p} requires one argument {\it n}, which must be a positive integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   The abundant numbers between 1 and 100 
+
+\begin{Verbatim}[frame=single]
+(%i1) select(lrange(100),abundant_p);
+(%o1) [12,18,20,24,30,36,40,42,48,54,56,60,66,70,72,78,80,84,88,90,96,100]
+\end{Verbatim}
+
+
+\noindent{\bf See also}
+  \hyperlink{divisor_function}{{\tt divisor\_function}}, \hyperlink{aliquot_sum}{{\tt aliquot\_sum}}, \hyperlink{aliquot_sequence}{{\tt aliquot\_sequence}}, \hyperlink{divisor_summatory}{{\tt divisor\_summatory}}, and \hyperlink{perfect_p}{{\tt perfect\_p}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: aliquot\_sequence\label{sec:aliquot_sequence}}
+\hypertarget{aliquot_sequence}{}
+{\bf aliquot\_sequence}({\it k}, {\it n})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the first {\it n} elements (counting from zero) in the aliquot sequence of {\it k}. The sequence is truncated at an element if it is zero or repeats the previous element. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt aliquot\_sequence} requires two arguments.
+    The first argument {\it k} must be a positive integer.
+    The second argument {\it n} must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Perfect numbers give a repeating sequence of period 1. 
+
+\begin{Verbatim}[frame=single]
+(%i1) imap(lambda([x],aliquot_sequence(x,100)),[6,28,496,8128]);
+(%o1) [[6],[28],[496],[8128]]
+\end{Verbatim}
+
+   Aspiring numbers are those which are not perfect, but terminate with a 
+   repeating perfect number. 
+
+\begin{Verbatim}[frame=single]
+(%i1) imap(lambda([x],aliquot_sequence(x,100)),[25, 95, 119, 143, 417, 445, 565, 608, 650, 652, 675, 685]);
+(%o1) [[25,6],[95,25,6],[119,25,6],[143,25,6],[417,143,25,6],[445,95,25,6],[565,119,25,6],[608,652,496],[650,652,496],[652,496],[675,565,119,25,6],[685,143,25,6]]
+\end{Verbatim}
+
+
+\noindent{\bf See also}
+  \hyperlink{divisor_function}{{\tt divisor\_function}}, \hyperlink{aliquot_sum}{{\tt aliquot\_sum}}, \hyperlink{divisor_summatory}{{\tt divisor\_summatory}}, \hyperlink{perfect_p}{{\tt perfect\_p}}, and \hyperlink{abundant_p}{{\tt abundant\_p}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: aliquot\_sum\label{sec:aliquot_sum}}
+\hypertarget{aliquot_sum}{}
+{\bf aliquot\_sum}({\it n})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the aliquot sum of {\it n}. The aliquot sum of {\it n} is the sum of the proper divisors of {\it n}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt aliquot\_sum} requires one argument {\it n}, which must be a positive integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Attributes}
+aliquot\_sum has attributes: [match\_form]
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{divisor_function}{{\tt divisor\_function}}, \hyperlink{aliquot_sequence}{{\tt aliquot\_sequence}}, \hyperlink{divisor_summatory}{{\tt divisor\_summatory}}, \hyperlink{perfect_p}{{\tt perfect\_p}}, and \hyperlink{abundant_p}{{\tt abundant\_p}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: amicable\_p\label{sec:amicable_p}}
+\hypertarget{amicable_p}{}
+{\bf amicable\_p}({\it n}, {\it m})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns true if {\it n} and {\it m} are amicable, and false otherwise. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt amicable\_p} requires two arguments.
+    The first argument {\it n} must be a positive integer.
+    The second argument {\it m} must be a positive integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   The first few amicable pairs. 
+
+\begin{Verbatim}[frame=single]
+(%i1) map(lambda([x],amicable_p(first(x),second(x))), [[220, 284], 
+        [1184, 1210], [2620, 2924], [5020, 5564], [6232, 6368]]);
+(%o1) [true,true,true,true,true]
+\end{Verbatim}
+
+
+\subsection{Function: catalan\_number\label{sec:catalan_number}}
+\hypertarget{catalan_number}{}
+{\bf catalan\_number}({\it n})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the {\it n}th catalan number. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt catalan\_number} requires one argument.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   The catalan number for n from 1 through 12. 
+
+\begin{Verbatim}[frame=single]
+(%i1) map(catalan_number,lrange(12));
+(%o1) [1,2,5,14,42,132,429,1430,4862,16796,58786,208012]
+\end{Verbatim}
+
+   The n'th catalan number. 
+
+\begin{Verbatim}[frame=single]
+(%i1) catalan_number(n);
+(%o1) binomial(2*n,n)/(n+1)
+\end{Verbatim}
+
+
+OEIS number: A000108.
+
+
+\subsection{Function: divisor\_function\label{sec:divisor_function}}
+\hypertarget{divisor_function}{}
+{\bf divisor\_function}({\it n} :optional {\it x})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+The divisor function $\sigma_x(n)$. If {\it x} is omitted it takes the default value $0$. Currently, complex values for x are not supported. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt divisor\_function} requires either one or two arguments.
+    The first argument {\it n} must be a non-negative integer.
+    The second argument {\it x} must be a number.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Attributes}
+divisor\_function has attributes: [match\_form]
+
+\vspace{5 pt}
+
+
+OEIS number: A000005 for x=0 and A000203 for x=1.
+
+
+\noindent{\bf See also}
+  \hyperlink{aliquot_sum}{{\tt aliquot\_sum}}, \hyperlink{aliquot_sequence}{{\tt aliquot\_sequence}}, \hyperlink{divisor_summatory}{{\tt divisor\_summatory}}, \hyperlink{perfect_p}{{\tt perfect\_p}}, and \hyperlink{abundant_p}{{\tt abundant\_p}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: divisor\_summatory\label{sec:divisor_summatory}}
+\hypertarget{divisor_summatory}{}
+{\bf divisor\_summatory}({\it x})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the divisor summatory function $D(x)$ for {\it x}. The divisor function $d(n)$ counts the number of unique divisors of the natural number $n$. $D(x)$ is the sum of $d(n)$ over $n \le x$ 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt divisor\_summatory} requires one argument {\it x}, which must be a non-negative number.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Attributes}
+divisor\_summatory has attributes: [match\_form]
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   D(n) for n from 1 through 12 
+
+\begin{Verbatim}[frame=single]
+(%i1) map(divisor_summatory,lrange(12));
+(%o1) [1,3,5,8,10,14,16,20,23,27,29,35]
+\end{Verbatim}
+
+
+OEIS number: A006218.
+
+
+\noindent{\bf See also}
+  \hyperlink{divisor_function}{{\tt divisor\_function}}, \hyperlink{aliquot_sum}{{\tt aliquot\_sum}}, \hyperlink{aliquot_sequence}{{\tt aliquot\_sequence}}, \hyperlink{perfect_p}{{\tt perfect\_p}}, and \hyperlink{abundant_p}{{\tt abundant\_p}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: from\_digits\label{sec:from_digits}}
+\hypertarget{from_digits}{}
+{\bf from\_digits}({\it digits} :optional {\it base})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf from\_digits}({\it digits})
+  returns the integer represented by the decimal digits in the list {\it digits}. 
+
+\item[] {\bf from\_digits}({\it digits}, {\it base})
+  returns the integer represented by the base {\it base} digits in the list {\it digits}. 
+
+\end{itemize}
+\noindent{\bf Description}
+{\it base} need not be number, but may be, for instance, a symbol. If {\it base} is a number it must be an integer between 2 and 36. {\it digits} may be a string rather than a list. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt from\_digits} requires either one or two arguments.
+    The first argument {\it digits} must be a list (lex or aex) or a string.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+ \hyperlink{integer_digits}{{\tt integer\_digits}} and \hyperlink{integer_string}{{\tt integer\_string}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: integer\_digits\label{sec:integer_digits}}
+\hypertarget{integer_digits}{}
+{\bf integer\_digits}({\it n} :optional {\it base}, {\it len})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf integer\_digits}({\it n})
+  returns a list of the base 10 digits of {\it n}. 
+
+\item[] {\bf integer\_digits}({\it n}, {\it base})
+  returns a list of the base {\it base} digits of {\it n}. 
+
+\item[] {\bf integer\_digits}({\it n}, {\it base}, {\it len})
+  returns a list of the base {\it base} digits of {\it n} padded with 0's so that the total length of the list is {\it len}. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt integer\_digits} requires between one and three arguments.
+    The first argument {\it n} must be an integer.
+    The second argument {\it base} must be a valid radix (an integer between 2 and 36).
+    The third argument {\it len} must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt integer\_digits} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+ \hyperlink{from_digits}{{\tt from\_digits}} and \hyperlink{integer_string}{{\tt integer\_string}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+gcl is much faster than the others. \verb#integer_digits(2^(10^6))#: typical times for lisps: ccl-1.7-r15184M = 65s, sbcl-1.0.52.0.debian = 1.5s, allegro-8.2 = 23s, Mma-3.0 = 5s, gcl-2.6.7 = 0.11s, Mma-8 = 0.04s. The base is limited to 36 only because we call write-to-string. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: integer\_string\label{sec:integer_string}}
+\hypertarget{integer_string}{}
+{\bf integer\_string}({\it n} :optional {\it base}, {\it pad})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf integer\_string}({\it n})
+  returns a string containing the decimal digits of the integer {\it n}. 
+
+\item[] {\bf integer\_string}({\it n}, {\it base})
+  returns a string containing the base {\it base} digits of the integer {\it n}. 
+
+\item[] {\bf integer\_string}({\it n}, {\it base}, {\it pad})
+  pads the string on the left with 0's so that the length of the string is {\it pad}. 
+
+\item[] {\bf integer\_string}({\it n}, "roman" )
+  returns a string containing the roman-numeral form of the integer {\it n}. 
+
+\item[] {\bf integer\_string}({\it n}, "cardinal" )
+  returns a string containing the english word form of the integer (cardinal number) {\it n}. 
+
+\item[] {\bf integer\_string}({\it n}, "ordinal" )
+  returns a string containing the english word form of the ordinal (counting) number {\it n}. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt integer\_string} requires between one and three arguments.
+    The first argument {\it n} must be an integer.
+    The second argument {\it base} must be a valid radix (an integer between 2 and 36) or a string.
+    The third argument {\it pad} must be a positive integer.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+ \hyperlink{integer_digits}{{\tt integer\_digits}} and \hyperlink{from_digits}{{\tt from\_digits}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: oeis\_A092143\label{sec:oeis_A092143}}
+\hypertarget{oeis_A092143}{}
+{\bf oeis\_A092143}({\it n})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the cumulative product of all divisors of integers from 1 to {\it n}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt oeis\_A092143} requires one argument {\it n}, which must be a positive integer.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: perfect\_p\label{sec:perfect_p}}
+\hypertarget{perfect_p}{}
+{\bf perfect\_p}({\it n})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns true if {\it n} is a perfect number. Otherwise, returns false. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt perfect\_p} requires one argument {\it n}, which must be a positive integer.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{divisor_function}{{\tt divisor\_function}}, \hyperlink{aliquot_sum}{{\tt aliquot\_sum}}, \hyperlink{aliquot_sequence}{{\tt aliquot\_sequence}}, \hyperlink{divisor_summatory}{{\tt divisor\_summatory}}, and \hyperlink{abundant_p}{{\tt abundant\_p}}.
+
+\vspace{5 pt}
+
+
+\subsection{Function: prime\_pi\label{sec:prime_pi}}
+\hypertarget{prime_pi}{}
+{\bf prime\_pi}({\it n})
+
+
+\noindent mext package: quicklisp
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf prime\_pi}({\it n})
+  returns the number of primes less than or equal to {\it n}. 
+
+\end{itemize}
+\noindent{\bf Description}
+Computes the prime counting function. The option {\it threads} specifies the maximum number of cpu threads to use. The routine may use fewer threads, depending on the value of {\it n}. The percent of the calculation that is finished is printed during the calculation if the option {\it status} is 
+true. The status will only work under certain terminals. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt prime\_pi} requires one argument {\it n}, which must be equivalent to an unsigned 64 bit integer
+    (ie an integer between 0 and 2\^64).
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt prime\_pi} takes options with default values: {\tt status->false}, {\tt threads->1}.
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{prime_pi_soe}{{\tt prime\_pi\_soe}}, \hyperlink{next_prime}{{\tt next\_prime}}, and \hyperlink{prev_prime}{{\tt prev\_prime}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+The algorithm combines a segmented sieve with tables. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: prime\_pi\_soe\label{sec:prime_pi_soe}}
+\hypertarget{prime_pi_soe}{}
+{\bf prime\_pi\_soe}({\it n})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+The prime counting function. The algorithm is the sieve of Eratosthenes. Internally an array of {\it n} bits is used. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt prime\_pi\_soe} requires one argument {\it n}, which must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{prime_pi}{{\tt prime\_pi}}, \hyperlink{next_prime}{{\tt next\_prime}}, and \hyperlink{prev_prime}{{\tt prev\_prime}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+This is not the most efficient way to compute primes. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: prime\_twins\label{sec:prime_twins}}
+\hypertarget{prime_twins}{}
+{\bf prime\_twins}({\it min} :optional {\it max})
+
+
+\noindent mext package: quicklisp
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf prime\_twins}({\it n})
+  returns the number of prime twins less than or equal to {\it n}. 
+
+\item[] {\bf prime\_twins}({\it nmin}, {\it nmax})
+  returns the number of prime twins between {\it nmin} and {\it max}. 
+
+\end{itemize}
+\noindent{\bf Description}
+The option {\it ktuplet} counts the {\it ktuplet}-constellation rather than the twins. {\it ktuplet} must be an integer between 1 and 7. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt prime\_twins} requires either one or two arguments.
+    The first argument {\it min} must be equivalent to an unsigned 64 bit integer
+    (ie an integer between 0 and 2\^64).
+    The second argument {\it max} must be equivalent to an unsigned 64 bit integer
+    (ie an integer between 0 and 2\^64).
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt prime\_twins} takes options with default values: {\tt ktuplet->2}, {\tt status->false}, {\tt threads->1}.
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{prime_pi}{{\tt prime\_pi}}, \hyperlink{next_prime}{{\tt next\_prime}}, \hyperlink{prev_prime}{{\tt prev\_prime}}, and \hyperlink{primep}{{\tt primep}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+No tables are used in this algorithm. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: primes1\label{sec:primes1}}
+\hypertarget{primes1}{}
+{\bf primes1}({\it n1} :optional {\it n2})
+
+
+\noindent mext package: discrete\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf primes1}({\it max})
+  returns a list of the primes less than or equal to {\it max}. 
+
+\item[] {\bf primes1}({\it min}, {\it max})
+  returns a list of the primes between {\it min} and {\it max}. 
+
+\end{itemize}
+\noindent{\bf Description}
+The algorithm is the sieve of Eratosthenes. This is not an efficient algorithm. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt primes1} requires either one or two arguments.
+    The first argument {\it n1} must be a non-negative integer.
+    The second argument {\it n2} must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Options}
+{\tt primes1} takes options with default values: {\tt adj->true}, {\tt ot->ml}.
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Numerics}
+
+ These are mathematical functions--- cos,sin,etc. ---that accept only
+ numerical arguments. Tests of loops in untranslated code show that these are much
+ more efficient than using the standard maxima versions. But, for most applications, the
+ standard maxima versions are probably ok.
+\begin{itemize}
+\item \hyperlink{n_abs}{{\tt n\_abs}}
+\item \hyperlink{n_acos}{{\tt n\_acos}}
+\item \hyperlink{n_acosh}{{\tt n\_acosh}}
+\item \hyperlink{n_asin}{{\tt n\_asin}}
+\item \hyperlink{n_asinh}{{\tt n\_asinh}}
+\item \hyperlink{n_atan}{{\tt n\_atan}}
+\item \hyperlink{n_atanh}{{\tt n\_atanh}}
+\item \hyperlink{n_cos}{{\tt n\_cos}}
+\item \hyperlink{n_cosh}{{\tt n\_cosh}}
+\item \hyperlink{n_exp}{{\tt n\_exp}}
+\item \hyperlink{n_expt}{{\tt n\_expt}}
+\item \hyperlink{n_log}{{\tt n\_log}}
+\item \hyperlink{n_sin}{{\tt n\_sin}}
+\item \hyperlink{n_sinh}{{\tt n\_sinh}}
+\item \hyperlink{n_sqrt}{{\tt n\_sqrt}}
+\item \hyperlink{n_tan}{{\tt n\_tan}}
+\item \hyperlink{n_tanh}{{\tt n\_tanh}}
+\end{itemize}
+\subsection{Function: n\_abs\label{sec:n_abs}}
+\hypertarget{n_abs}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_abs calls the lisp numeric function ?abs. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_abs may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_acos\label{sec:n_acos}}
+\hypertarget{n_acos}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_acos calls the lisp numeric function ?acos. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_acos may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_acosh\label{sec:n_acosh}}
+\hypertarget{n_acosh}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_acosh calls the lisp numeric function ?acosh. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_acosh may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_asin\label{sec:n_asin}}
+\hypertarget{n_asin}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_asin calls the lisp numeric function ?asin. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_asin may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_asinh\label{sec:n_asinh}}
+\hypertarget{n_asinh}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_asinh calls the lisp numeric function ?asinh. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_asinh may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_atan\label{sec:n_atan}}
+\hypertarget{n_atan}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_atan calls the lisp numeric function ?atan. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_atan may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_atanh\label{sec:n_atanh}}
+\hypertarget{n_atanh}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_atanh calls the lisp numeric function ?atanh. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_atanh may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_cos\label{sec:n_cos}}
+\hypertarget{n_cos}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_cos calls the lisp numeric function ?cos. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_cos may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_cosh\label{sec:n_cosh}}
+\hypertarget{n_cosh}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_cosh calls the lisp numeric function ?cosh. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_cosh may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_exp\label{sec:n_exp}}
+\hypertarget{n_exp}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_exp calls the lisp numeric function ?exp. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_exp may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_expt\label{sec:n_expt}}
+\hypertarget{n_expt}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_expt calls the lisp numeric function ?expt. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_expt may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_log\label{sec:n_log}}
+\hypertarget{n_log}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_log calls the lisp numeric function ?log. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_log may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_sin\label{sec:n_sin}}
+\hypertarget{n_sin}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_sin calls the lisp numeric function ?sin. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_sin may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_sinh\label{sec:n_sinh}}
+\hypertarget{n_sinh}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_sinh calls the lisp numeric function ?sinh. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_sinh may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_sqrt\label{sec:n_sqrt}}
+\hypertarget{n_sqrt}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_sqrt calls the lisp numeric function ?sqrt. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_sqrt may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_tan\label{sec:n_tan}}
+\hypertarget{n_tan}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_tan calls the lisp numeric function ?tan. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_tan may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: n\_tanh\label{sec:n_tanh}}
+\hypertarget{n_tanh}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+n\_tanh calls the lisp numeric function ?tanh. This function accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). n\_tanh may be considerably faster in some code, particularly untranslated code. 
+
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Predicates}
+\begin{itemize}
+\item \hyperlink{cmplength}{{\tt cmplength}}
+\item \hyperlink{length0p}{{\tt length0p}}
+\item \hyperlink{length1p}{{\tt length1p}}
+\item \hyperlink{length_eq}{{\tt length\_eq}}
+\item \hyperlink{type_of}{{\tt type\_of}}
+\end{itemize}
+\subsection{Function: cmplength\label{sec:cmplength}}
+\hypertarget{cmplength}{}
+{\bf cmplength}({\it e}, {\it n})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+return the smaller of {\it n} and \verb#length(e)#. This is useful if {\it e} is very large and {\it n} is small, so that computing the entire length of {\it e} is inefficient. Expression {\it e} can be either a list or an array. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt cmplength} requires two arguments.
+    The second argument {\it n} must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{length0p}{{\tt length0p}}, \hyperlink{length_eq}{{\tt length\_eq}}, and \hyperlink{length1p}{{\tt length1p}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+cmplength is implemented with defmfun1, which slows things down a bit. So be cautious using it in a tight loop. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: length0p\label{sec:length0p}}
+\hypertarget{length0p}{}
+{\bf length0p}({\it e})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns true if <e> is of length 0, false otherwise. This implementation traverse no more elements of <e> than necessary to return the result. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt length0p} requires one argument {\it e}, which must be a string or non-atomic.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{cmplength}{{\tt cmplength}}, \hyperlink{length_eq}{{\tt length\_eq}}, and \hyperlink{length1p}{{\tt length1p}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+length0p is implemented with defmfun1, which slows things down a bit. So be cautious using it in a tight loop. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: length1p\label{sec:length1p}}
+\hypertarget{length1p}{}
+{\bf length1p}({\it e})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns true if {\it e} is of length 1, false otherwise. This implementation traverse no more elements of {\it e} than necessary to return the result. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt length1p} requires one argument {\it e}, which must be a string or non-atomic.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{length0p}{{\tt length0p}}, \hyperlink{cmplength}{{\tt cmplength}}, and \hyperlink{length_eq}{{\tt length\_eq}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+length1p is implemented with defmfun1, which slows things down a bit. So be cautious using it in a tight loop. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: length\_eq\label{sec:length_eq}}
+\hypertarget{length_eq}{}
+{\bf length\_eq}({\it e}, {\it n})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns true if {\it e} is of length {\it n}, false otherwise. This implementation traverses no more elements of {\it e} than necessary to return the result. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt length\_eq} requires two arguments.
+    The first argument {\it e} must be a string or non-atomic.
+    The second argument {\it n} must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+  \hyperlink{length0p}{{\tt length0p}}, \hyperlink{cmplength}{{\tt cmplength}}, and \hyperlink{length1p}{{\tt length1p}}.
+
+\vspace{5 pt}
+
+
+\noindent{\bf Implementation}
+length\_eq is implemented with defmfun1, which slows things down a bit. So be cautious using it in a tight loop. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: type\_of\label{sec:type_of}}
+\hypertarget{type_of}{}
+{\bf type\_of}({\it e} :optional {\it verbose})
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Return something like the `type' of a maxima expression. This is a bit ill defined currently. \hyperlink{type_of}{{\tt type\_of}} uses the lisp function type-of. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt type\_of} requires either one or two arguments.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) type_of(1);
+(%o1) ?bit
+(%i1) type_of(1.0);
+(%o1) ?double\-float
+(%i2) type_of(1.0b0);
+(%o2) ?bfloat
+(%i3) type_of(1/3);
+(%o3) /
+(%i4) type_of("dog");
+(%o4) ?string
+(%i5) type_of([1,2,3]);
+(%o5) [
+(%i6) type_of(aex([1,2,3]));
+(%o6) [
+(%i7) type_of(%e);
+(%o7) ?symbol
+(%i8) type_of(%i);
+(%o8) ?symbol
+(%i9) type_of(%i+1);
+(%o9) +
+\end{Verbatim}
+
+   type\_of returns the type of the lisp struct corresponding to a maxima 
+   object. 
+
+\begin{Verbatim}[frame=single]
+(%i1) load(graphs)$
+(%i2) type_of(new_graph());
+(%o2)   graph
+\end{Verbatim}
+
+
+\section{Functions and Variables for Program Flow}
+\begin{itemize}
+\item \hyperlink{error_str}{{\tt error\_str}}
+\end{itemize}
+\subsection{Function: error\_str\label{sec:error_str}}
+\hypertarget{error_str}{}
+{\bf error\_str}()
+
+
+\noindent mext package: aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the last error message as a string. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt error\_str} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\noindent{\bf See also}
+ \hyperlink{error}{{\tt error}} and \hyperlink{errormsg}{{\tt errormsg}}.
+
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Quicklisp}
+\begin{itemize}
+\item \hyperlink{quicklisp_apropos}{{\tt quicklisp\_apropos}}
+\item \hyperlink{quicklisp_install}{{\tt quicklisp\_install}}
+\item \hyperlink{quicklisp_load}{{\tt quicklisp\_load}}
+\item \hyperlink{quicklisp_start}{{\tt quicklisp\_start}}
+\end{itemize}
+\subsection{Function: quicklisp\_apropos\label{sec:quicklisp_apropos}}
+\hypertarget{quicklisp_apropos}{}
+{\bf quicklisp\_apropos}({\it term})
+
+
+\noindent mext package: quicklisp
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Search quicklisp for lisp 'systems' (packages) matching {\it term}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt quicklisp\_apropos} requires one argument {\it term}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: quicklisp\_install\label{sec:quicklisp_install}}
+\hypertarget{quicklisp_install}{}
+{\bf quicklisp\_install}()
+
+
+\noindent mext package: quicklisp
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Download and install quicklisp from the internet. This is usually done automatically as the final step of building and installing the maxima interface to quicklisp. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt quicklisp\_install} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: quicklisp\_load\label{sec:quicklisp_load}}
+\hypertarget{quicklisp_load}{}
+{\bf quicklisp\_load}({\it package\_name})
+
+
+\noindent mext package: quicklisp
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Load the asdf lisp package {\it package\_name}, or, if not installed, install from the internet and then load. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt quicklisp\_load} requires one argument {\it package\_name}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: quicklisp\_start\label{sec:quicklisp_start}}
+\hypertarget{quicklisp_start}{}
+{\bf quicklisp\_start}()
+
+
+\noindent mext package: quicklisp
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Load (setup) quicklisp. It must already be installed. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt quicklisp\_start} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Runtime Environment}
+\begin{itemize}
+\item \hyperlink{chdir}{{\tt chdir}}
+\item \hyperlink{dirstack}{{\tt dirstack}}
+\item \hyperlink{dont_kill}{{\tt dont\_kill}}
+\item \hyperlink{dont_kill_share}{{\tt dont\_kill\_share}}
+\item \hyperlink{get_dont_kill}{{\tt get\_dont\_kill}}
+\item \hyperlink{mext_clear}{{\tt mext\_clear}}
+\item \hyperlink{mext_info}{{\tt mext\_info}}
+\item \hyperlink{mext_list}{{\tt mext\_list}}
+\item \hyperlink{mext_test}{{\tt mext\_test}}
+\item \hyperlink{popdir}{{\tt popdir}}
+\item \hyperlink{probe_file}{{\tt probe\_file}}
+\item \hyperlink{pwd}{{\tt pwd}}
+\item \hyperlink{require}{{\tt require}}
+\item \hyperlink{truename}{{\tt truename}}
+\end{itemize}
+\subsection{Function: chdir\label{sec:chdir}}
+\hypertarget{chdir}{}
+{\bf chdir}( :optional {\it dir})
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf chdir}()
+  Set the working directory to the value it had when mext was loaded. 
+
+\item[] {\bf chdir}({\it dir})
+  Set the working directory to {\it dir}. 
+
+\end{itemize}
+\noindent{\bf Description}
+Set the working directory for maxima/lisp. With some lisps, such as cmu lisp the system directory is changed as well. This should be made uniform across lisp implementations. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt chdir} requires either zero or one arguments.
+ {\it dir}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: dirstack\label{sec:dirstack}}
+\hypertarget{dirstack}{}
+{\bf dirstack}()
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Return a list of the directories on the directory stack. This list is manipulated with \hyperlink{chdir}{{\tt chdir}}, \hyperlink{updir}{{\tt updir}}, and \hyperlink{popdir}{{\tt popdir}}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt dirstack} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: dont\_kill\label{sec:dont_kill}}
+\hypertarget{dont_kill}{}
+{\bf dont\_kill}( :rest {\it item})
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Add the {\it items}s to the list of symbols that are not killed by \verb#kill(all)#. This facility is part of the maxima core, but is apparantly unused. Maybe putting a property in the symbol's property list would be better. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt dont\_kill} requires zero or more arguments.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Attributes}
+dont\_kill has attributes: [hold\_all]
+
+\vspace{5 pt}
+
+
+\subsection{Function: dont\_kill\_share\label{sec:dont_kill_share}}
+\hypertarget{dont_kill_share}{}
+{\bf dont\_kill\_share}({\it package})
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Prevent symbols in maxima share package {\it package} from being killed by {\tt kill}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt dont\_kill\_share} requires one argument {\it package}, which must be a string or a symbol.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: get\_dont\_kill\label{sec:get_dont_kill}}
+\hypertarget{get_dont_kill}{}
+{\bf get\_dont\_kill}()
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the list of symbols that are not killed by \verb#kill(all)#. Items are added to this list with \hyperlink{dont_kill}{{\tt dont\_kill}}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt get\_dont\_kill} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: mext\_clear\label{sec:mext_clear}}
+\hypertarget{mext_clear}{}
+{\bf mext\_clear}()
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Clears the list of mext packages that have been loaded with require. Subsequent calls to require will reload the packages. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt mext\_clear} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: mext\_info\label{sec:mext_info}}
+\hypertarget{mext_info}{}
+{\bf mext\_info}({\it distname})
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Print information about installed mext distribution {\it distname}. The list of installed distributions is built by calling \hyperlink{mext_list}{{\tt mext\_list}}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt mext\_info} requires one argument {\it distname}, which must be a string or a symbol.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: mext\_list\label{sec:mext_list}}
+\hypertarget{mext_list}{}
+{\bf mext\_list}()
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns a list of all installed mext distributions. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt mext\_list} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: mext\_test\label{sec:mext_test}}
+\hypertarget{mext_test}{}
+{\bf mext\_test}( :optional {\it dists})
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Run the test suites for a mext distribution or list of distributions. With no argument, a subfolder named \verb#rtests# is searched for in the current directory. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt mext\_test} requires either zero or one arguments.
+ {\it dists}, which must be  a string, a symbol, or a list of strings or symbols.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: popdir\label{sec:popdir}}
+\hypertarget{popdir}{}
+{\bf popdir}( :optional {\it n})
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Pop a value from the current directory stack and chdir to this value. If {\it n} is given, pop {\it n} values and chdir the last value popped. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt popdir} requires either zero or one arguments.
+ {\it n}, which must be a non-negative integer.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: probe\_file\label{sec:probe_file}}
+\hypertarget{probe_file}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf probe\_file}({\it filespec})
+  returns a string representing a canonical pathname to the file specified by {\it filespec}. False is returned if the file can't be found. 
+
+\end{itemize}
+\noindent{\bf Description}
+Probe\_File tries to find a canonical pathname for a filespecified by the string {\it filespec}. 
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) probe_file("a/b.txt");
+(%o1) "/home/username/c/a/b.txt"
+\end{Verbatim}
+
+
+\subsection{Function: pwd\label{sec:pwd}}
+\hypertarget{pwd}{}
+{\bf pwd}()
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Return the current working directory. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt pwd} requires zero arguments.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: require\label{sec:require}}
+\hypertarget{require}{}
+{\bf require}({\it distname} :optional {\it force})
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Load the mext pacakge {\it distname} and register that it has been loaded. \verb#require('all)# will load all installed mext packages. If {\it force} is true, then {\it distname} is loaded even if it has been loaded previously. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt require} requires either one or two arguments.
+    The first argument {\it distname} must be a string or a symbol.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: truename\label{sec:truename}}
+\hypertarget{truename}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf truename}({\it filespec})
+  returns a string representing a canonical pathname to the file specified by {\it filespec} 
+
+\end{itemize}
+\noindent{\bf Description}
+Truename tries to find a canonical pathanme for a file specified by the string {\it filespec}. 
+
+\vspace{5 pt}
+
+
+\section{Functions and Variables for Strings}
+\begin{itemize}
+\item \hyperlink{string_drop}{{\tt string\_drop}}
+\item \hyperlink{string_reverse}{{\tt string\_reverse}}
+\item \hyperlink{string_take}{{\tt string\_take}}
+\item \hyperlink{with_output_to_string}{{\tt with\_output\_to\_string}}
+\end{itemize}
+\subsection{Function: string\_drop\label{sec:string_drop}}
+\hypertarget{string_drop}{}
+{\bf string\_drop}({\it s}, {\it spec})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+string\_drop is only partially implemented. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt string\_drop} requires two arguments.
+    The first argument {\it s} must be a string.
+    The second argument {\it spec} must be a sequence specification.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1)  string_drop("abracadabra",1);
+(%o1) bracadabra
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single]
+(%i1)  string_drop("abracadabra",-1);
+(%o1) abracadabr
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single]
+(%i1)  string_drop("abracadabra",[2,10]);
+(%o1) aa
+\end{Verbatim}
+
+
+\subsection{Function: string\_reverse\label{sec:string_reverse}}
+\hypertarget{string_reverse}{}
+{\bf string\_reverse}({\it s})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf string\_reverse}({\it s})
+  returns a copy of string {\it s} with the characters in reverse order. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt string\_reverse} requires one argument {\it s}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: string\_take\label{sec:string_take}}
+\hypertarget{string_take}{}
+{\bf string\_take}({\it s}, {\it spec})
+
+
+\noindent mext package: lists\_aex
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf string\_take}({\it s}, {\it n})
+  returns a string of the first {\it n} characters of the string {\it s}. 
+
+\item[] {\bf string\_take}({\it s}, -n )
+  returns a string of the last{\it n} characters of {\it s}. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt string\_take} requires two arguments.
+    The first argument {\it s} must be a string.
+    The second argument {\it spec} must be a sequence specification.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) string_take("dog-goat-pig-zebra",[5,12]);
+(%o1) goat-pig
+\end{Verbatim}
+
+
+\subsection{Function: with\_output\_to\_string\label{sec:with_output_to_string}}
+\hypertarget{with_output_to_string}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Evaluates {\it expr\_1},{\it expr\_2},{\it expr\_3},\ldots 
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+\begin{Verbatim}[frame=single]
+(%i1) sreverse(with_output_to_string(for i:5 thru 10 do print("i! for i=",i,i!)));
+(%o1) 
+ 0088263 01 =i rof !i
+ 088263 9 =i rof !i
+ 02304 8 =i rof !i
+ 0405 7 =i rof !i
+ 027 6 =i rof !i
+ 021 5 =i rof !i
+\end{Verbatim}
+
+
+\noindent{\bf See also}
+ \hyperlink{with_stdout}{{\tt with\_stdout}}.
+
+\vspace{5 pt}
+
+
+\section{Miscellaneous Functions}
+\begin{itemize}
+\item \hyperlink{examples}{{\tt examples}}
+\item \hyperlink{examples_add}{{\tt examples\_add}}
+\end{itemize}
+\subsection{Function: examples\label{sec:examples}}
+\hypertarget{examples}{}
+{\bf examples}({\it item})
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf examples}({\it item})
+  Print examples for the topic {\it item}. Note these examples are different from those extracted from the maxima manual with the command \verb#example#. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt examples} requires one argument {\it item}, which must be a string or a symbol.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: examples\_add\label{sec:examples_add}}
+\hypertarget{examples_add}{}
+{\bf examples\_add}({\it item}, {\it text}, {\it protected-var-list}, {\it code})
+
+
+\noindent mext package: defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Calling}
+\begin{itemize}
+\item[] {\bf examples\_add}({\it item}, {\it text}, {\it protected-var-list}, {\it code})
+  Add an example for item {\it item}. {\it text} will be printed before the example is displayed. {\it protected-var-list} is string giving a list of variables such as "[x,y]" that appear in the example code. The example code will be wrapped in a block that makes {\it protected-var-list} local. {\it 
+code} may be a string or list of strings that is/are the example code. 
+
+\end{itemize}
+\noindent{\bf Arguments}
+   {\tt examples\_add} requires four arguments.
+    The first argument {\it item} must be a string or a symbol.
+    The second argument {\it text} must be a string.
+    The third argument {\it protected-var-list} must be a string.
+    The fourth argument {\it code} must be a string or a list of strings.
+
+
+\vspace{5 pt}
+
+\noindent{\bf Examples}
+
+   Add an example for the function 'last'. 
+
+\begin{Verbatim}[frame=single]
+(%i1) examples_add("last", "Return the last item in a  list.", "[a,b,c,d]", "last([a,b,c,d])") ;
+(%o1) done
+\end{Verbatim}
+
+
+\section{Miscellaneous utilities}
+\section{Options}
+
+ Options to a function in the aex-maxima distribution are passed as follows:
+
+    funcname(x,y, [optname -> optval, optname2 -> optval2])
+    or
+    funcname(x,y, optname -> optval, optname2 -> optval2)
+
+ The standard options described in this section are some options that are supported by
+ many functions in the aex-maxima distribution.
+\begin{itemize}
+\item \hyperlink{adj}{{\tt adj}}
+\item \hyperlink{compile}{{\tt compile}}
+\item \hyperlink{foptions}{{\tt foptions}}
+\item \hyperlink{ot}{{\tt ot}}
+\end{itemize}
+\subsection{Option: adj\label{sec:adj}}
+\hypertarget{adj}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+This option takes values of \verb#true# or \verb# false. If #\verb#true#, then the output aex expression is adjustable, that is, the underlying array can be extended in size. If \verb#false#, then the output aex expression is not adjustable. The non-adjustable array may have some advantanges in 
+efficiency, but I have not observed them, and this may be lisp-implementation dependent. 
+
+\vspace{5 pt}
+
+
+\subsection{Option: compile\label{sec:compile}}
+\hypertarget{compile}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+If this option is true, then lambda functions passed as arguments to a function will be automatically translated or compiled. If it is false they will used as interpreted maxima code. Compiling lambda functions usually greatly deceases the execution time of the function if the lambda function is 
+called many times. 
+
+\vspace{5 pt}
+
+
+\subsection{Function: foptions\label{sec:foptions}}
+\hypertarget{foptions}{}
+{\bf foptions}({\it name})
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Return a list of allowed options to \verb#defmfun1# function {\it name}. I would prefer to call this \verb#options#, but that name is taken by an unused, undocumented function. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt foptions} requires one argument {\it name}, which must be a string or a symbol.
+
+
+\vspace{5 pt}
+
+
+\subsection{Option: ot\label{sec:ot}}
+\hypertarget{ot}{}
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+With a value \verb#ar# this option causes the function to return an array-representation expression. With a value \verb#ml# a standard lisp list representation is returned. The array-representation is not a maxima array, but rather a more-or-less arbitrary maxima expression that is stored 
+internally as an array. For certain operations, such as random access to elements of the expression, an array representation is faster than the standard list representation. One disadvantange of the array representations is that creating an array is relatively slow. For instance, execution time may 
+be large if a function returns an expression with many small subexpressions that are in the array-representation. The majority of the maxima system does not understand array-representation, so conversion back to list-representation at may be necessary. 
+
+\vspace{5 pt}
+
+
+
+\end{document}

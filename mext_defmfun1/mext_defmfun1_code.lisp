@@ -14,11 +14,11 @@
 (max-doc:add-call-desc '( "chdir" ()
                            ("Set the working directory to the value it had when mext was loaded."))
                         '( "chdir" ("dir")
-                           ("Set the working directory to " arg "dir" ".")))
+                           ("Set the working directory to " :arg "dir" ".")))
 
 (defmfun1 ($popdir :doc) ( &optional (n 1 :non-neg-int))
   :desc ( "Pop a value from the current directory stack and chdir to this value.
- If " arg "n" " is given, pop " arg "n" " values and chdir the last value popped.")
+ If " :arg "n" " is given, pop " :arg "n" " values and chdir the last value popped.")
   (mext::popdir n))
 
 (defmfun1 ($dirstack :doc) ()
@@ -32,7 +32,7 @@
 
 (defmfun1 ($mext_test :doc) ( &optional (dists :or-string-symbol-or-listof))
   :desc ("Run the test suites for a mext distribution or list of distributions. With
- no argument, a subfolder named " code "rtests" " is searched for in the current directory.")
+ no argument, a subfolder named " :code "rtests" " is searched for in the current directory.")
   (mext::mext-test dists))
 
 (defmfun1 ($mext_list :doc) ()
@@ -46,8 +46,8 @@
 
 (defmfun1:set-hold-all '$dont_kill)
 (defmfun1 ($dont_kill :doc) (&rest item)
-  :desc ("Add the " arg "items" "s to the list of symbols that are not killed
-          by " codedot "kill(all)" " This facility is part of the maxima core,
+  :desc ("Add the " :arg "items" "s to the list of symbols that are not killed
+          by " :codedot "kill(all)" " This facility is part of the maxima core,
           but is apparantly unused. Maybe putting a property in the symbol's
           property list would be better.")
   (apply #'mext::add-to-dont-kill item)
@@ -55,26 +55,26 @@
 
 (defmfun1 ($get_dont_kill :doc) ()
   :desc ("Returns the list of symbols that are not killed
-          by " codedot "kill(all)" " Items are added to this list
-          with " codedot "dont_kill")
+          by " :codedot "kill(all)" " Items are added to this list
+          with " :mrefdot "dont_kill")
   (cons '(mlist simp) allbutl))
 
 (defmfun1 ($dont_kill_share :doc) ((package :or-string-symbol))
-  :desc ("Prevent symbols in maxima share package " arg "package"
-         " from being killed by " codedot "kill")
+  :desc ("Prevent symbols in maxima share package " :arg "package"
+         " from being killed by " :emrefdot "kill")
   (let ((name (maxima::$sconcat package)))
     (mext:do-dont-kill-share name))
   '$done)
 
 
 (defmfun1 ($mext_info :doc) ((distname :or-string-symbol))
-  :desc ("Print information about installed mext distribution " arg "distname"
-    ". The list of installed  distributions is built by calling " code "mext_list" ".")
+  :desc ("Print information about installed mext distribution " :arg "distname"
+    ". The list of installed  distributions is built by calling " :mref "mext_list" ".")
     (or (mext::mext-info distname)
         (merror1 (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") ($sconcat distname))))
 
 (defmfun1 ($require :doc) ((distname :or-string-symbol) &optional force)
-  :desc ( "Load the mext pacakge " arg "distname" " and register that it has been loaded."
- " " code "require('all)" " will load all installed mext packages. If " arg "force" " is true,
- then " arg "distname" " is loaded even if it has been loaded previously.")
+  :desc ( "Load the mext pacakge " :arg "distname" " and register that it has been loaded."
+ " " :code "require('all)" " will load all installed mext packages. If " :arg "force" " is true,
+ then " :arg "distname" " is loaded even if it has been loaded previously.")
   (mext:mext-require distname force))

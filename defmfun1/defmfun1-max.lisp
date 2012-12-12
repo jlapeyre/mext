@@ -82,7 +82,7 @@
                                              (push
                                               (defmfun1::check-and-error-option tst name opt-name  args)
                                               res))) res1))
-                             (t (merror1 (intl:gettext "~a ~a does not accept the option '~a'.~%")
+                             (t (merror1 (intl:gettext "~a ~a does not accept the option `~a'.~%")
                                          (defmfun1::err-prefix ',name) ($sconcat ',name) ($sconcat var) ))))))))
 
 (defun defmfun1-write-rest-assignments (name args rest reqo-spec)
@@ -134,6 +134,7 @@
           ,(when (member :doc directives)
                  `(max-doc::add-doc-entry1 :e 
                 '( :name ,sname :protocol ,(defmfun1::format-protocol sname req optional rest)
+                         :protocol-list ,(list sname req optional rest)
                          :contents ,(if doc-content doc-content
                                       (if doc-string (concatenate 'string "   " (first doc-string)) "")))))
           (defmfun1::set-default-options ',name ',opt) ; only for user, not used in macro or function body
@@ -218,7 +219,7 @@
 (max-doc::set-cur-sec 'max-doc::attributes)
 
 (defmfun1 ($attributes :doc) ((name :or-string-symbol) )
-  :desc ("Returns a list of the 'attributes' of function " argdot "name")
+  :desc ("Returns a list of the `attributes' of function " :argdot "name")
  (maxima-symbol-to-string name)
  (let ((oh (gethash name defmfun1::*attributes-table*)))
    (cons '(mlist simp)
@@ -234,26 +235,30 @@
  (setf attribute (string-upcase attribute))
  (if (symbolp max-attribute) (setf max-attribute (symbol-name max-attribute)))
  (setf max-attribute (string-upcase max-attribute))
- (let ( (set-doc-str (format nil "Set the '~a' attribute for function(s) <names>. ~a" (string-downcase max-attribute) doc-string))
-        (unset-doc-str (format nil "Unset the '~a' attribute for function(s) <names>. ~a" (string-downcase max-attribute) doc-string)))
+ (let ((set-doc-str 
+         (list (format nil "Set the `~a' attribute for function(s) " (string-downcase max-attribute))
+               :arg "names" ". " doc-string))
+       (unset-doc-str 
+        (list (format nil "Unset the `~a' attribute for function(s) " (string-downcase max-attribute))
+              :arg "names" ". " doc-string)))
    `(progn 
       (defmfun1 (,(intern (concatenate 'string "$SET_" max-attribute)) :doc) ((names :or-string-symbol-or-listof :ensure-list))
-        ,set-doc-str
+        :desc ,set-doc-str
         (loop for name in names do
               (maxima-symbol-to-string name)
               (,(find-symbol (concatenate 'string "SET-" attribute) 'defmfun1) name)))
       (defmfun1 (,(intern (concatenate 'string "$UNSET_" max-attribute)) :doc) ((names :or-string-symbol-or-listof :ensure-list))
-        ,unset-doc-str
+        :desc ,unset-doc-str
         (loop for name in names do
               (maxima-symbol-to-string name)
               (,(find-symbol (concatenate 'string "UNSET-" attribute) 'defmfun1) name))))))
       
 (mk-maxima-attribute match_form match-form "If the argument checks for a function call fail,
- and the attribute 'match_form' is set, then rather than signaling an error, the unevaluated form
- is returned. Furthemore, if the attribute 'nowarn' is not set, then a warning message is printed.")
+ and the attribute `match_form' is set, then rather than signaling an error, the unevaluated form
+ is returned. Furthemore, if the attribute `nowarn' is not set, then a warning message is printed.")
 
 (mk-maxima-attribute nowarn nowarn "If the argument checks for a function call fail,
- and the attribute 'match_form' is set, and the attribute 'nowarn' is set, then rather than signaling an error, the unevaluated form
+ and the attribute `match_form' is set, and the attribute `nowarn' is set, then rather than signaling an error, the unevaluated form
  is returned and no warning message is printed.")
 
 ;; we can get rid  of these

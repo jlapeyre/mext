@@ -51,7 +51,7 @@
                              (or (stringp e) (and (integerp e) (> e 1) (< e 37))))
                      (:or-string-symbol  ("a string" "a symbol")
                       (or (symbolp e) (stringp e)))
-                     (:or-string-symbol-or-listof ("an string" "a symbol" "a list of strings or symbols")
+                     (:or-string-symbol-or-listof ("a string" "a symbol" "a list of strings or symbols")
                                          (or (stringp e) (symbolp e)
                                              (and (maxima::$listp e)
                                                   (every #'(lambda (x) (or (stringp x) (symbolp x))) (cdr e)))))

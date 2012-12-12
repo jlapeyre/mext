@@ -125,14 +125,17 @@
 
 (max-doc::add-doc-entry '( :name "sequence specifier" :type "Argument type"
                           :contents
-" A sequence specification specifies a subsequence of the elements in an expression.
- A single positive number n means the first n elements. -n means the
- last n elements. A list of three numbers [i1,i2,i3] means the i1 th through the
- i2 th stepping by i3. If i1 or i2 are negative, they count from the end. If i3 is
- negative, stepping is down and i1 must be greater than or equal to i2. If i3 is omitted,
- it is taken to be 1.  A sequence specifiier can also be one of 'all 'none or
+ ( "A sequence specification specifies a subsequence of the elements in an expression.
+ A single positive number " :math "n" " means the first " :math "n" " elements. " :math "-n"
+ " means the last " :math "n" " elements. A list of three numbers " :code
+  "[i1,i2,i3]" " means the " :code "i1" "th through the "
+ :code "i2" "th stepping by " :codedot "i3" " If " :code "i1" " or " :code
+ "i2" " are negative, they count from the end. If " :code "i3" " is
+ negative, stepping is down and " :code "i1" " must be greater than or equal to " :codedot
+ "i2" " If " :code "i3" " is omitted, it is taken to be " :math "1" 
+ ". A sequence specifiier can also be one of 'all 'none or
  'reverse, which mean all elements, no  elements or all elements in
- reverse order respectively." ))
+ reverse order respectively." )))
 
 (max-doc::see-also "sequence specifier" '("take" "string_take"))
 
@@ -193,24 +196,24 @@
       (take-do-list e v)))
 
 (maxima::defmfun1 (maxima::$take :doc) ((e :non-atom)  &rest (v :seq-spec))
-  :desc ( arg "e" " can have mixed lex and aex expressions on different levels. "
+  :desc ( :arg "e" " can have mixed lex and aex expressions on different levels. "
    "If more sequence specifications are given, they apply to sucessively deeper levels in "
-    argdot "e")
+    :argdot "e")
   (if (null v) (list (car e))
       (take-do e v)))
 
 (max-doc::add-call-desc     ; more calls are missing
- '("take" ("e" "n") ("returns a list of the first " arg "n"
-                     " elements of list or expression " arg "e" "."))
- '("take" ("e" ("list" "n1" "n2")) ("returns a list of the " arg "n1" "th through " arg "n2" "th "
-                      " elements of list or expression " arg "e" "."))
+ '("take" ("e" "n") ("returns a list of the first " :arg "n"
+                     " elements of list or expression " :arg "e" "."))
+ '("take" ("e" ("list" "n1" "n2")) ("returns a list of the " :arg "n1" "th through " :arg "n2" "th "
+                      " elements of list or expression " :arg "e" "."))
 
- '("take" ("e" ("list" "n1" "n2" "step")) ("returns a list of the " arg "n1" "th through " arg "n2" "th "
-                                     " elements stepping by " arg "step" " of list or expression " arg "e" "."))
+ '("take" ("e" ("list" "n1" "n2" "step")) ("returns a list of the " :arg "n1" "th through " :arg "n2" "th "
+                                     " elements stepping by " :arg "step" " of list or expression " :arg "e" "."))
 
- '("take" ("e" ("lit" "-<n>" )) ("returns the last " arg "n" " elements."))
+ '("take" ("e" ("lit" "-n" )) ("returns the last " :arg "n" " elements."))
 
- '("take" ("e" "spec1" "spec2" "...") ("applies the sequence specifications at sucessively deeper levels in " arg "e" ".")))
+ '("take" ("e" "spec1" "spec2" "...") ("applies the sequence specifications at sucessively deeper levels in " :arg "e" ".")))
 
 (examples::clear-examples "take") ;;
 

@@ -81,7 +81,6 @@
   (let ((nhash (get-or-make-subhash name *attributes-table*)))
     (setf (gethash '$hold_all nhash) t)))
 
-
 (defmacro mk-attribute (attribute max-attribute)
  "Make accessor and query functions for an attribute. set- , unset- , is- ."
  (if (symbolp attribute) (setf attribute (symbol-name attribute)))
@@ -102,19 +101,6 @@
 
 (mk-attribute nowarn $nowarn)
 (mk-attribute match-form $match_form)
-
-;(defun set-match-form (name)
-;  (setf name ($sconcat name))
-;  (let ((nhash (get-or-make-subhash name *attributes-table*)))
-;    (setf (gethash '$match_form nhash) t)))
-;(defun unset-match-form (name)
-; (setf name ($sconcat name))
-; (let ((nhash (get-or-make-subhash name *attributes-table*)))
-;   (setf (gethash '$match_form nhash) nil)))
-;(defun is-match-form (name)
-;  (setf name ($sconcat name))
-;  (let ((nhash (get-or-make-subhash name *attributes-table*)))
-;    (gethash '$match_form nhash)))
 
 (defun are-some-args-held (name)
   (setf name ($sconcat name))
@@ -139,7 +125,6 @@
   "While expanding a defmfun1 definition, save preprocessing info for documentation."
   (setf (gethash (maxima::maybe-invert-string-case (symbol-name (car info))) *pp-doc-string-table*) info))
 
-;; This does not work if compiled code is loaded. The information is lost.
 (defun get-lambda-list-etc (name)
   (gethash name *arg-doc-string-table*))
 
@@ -148,10 +133,11 @@
 
 (defun format-arg-list (args)
   (format nil "~{~a~^, ~}"
-         (loop for arg in args collect
-              (progn 
-                (if (listp arg) (setf arg (car arg)))
-                (maxima::maybe-invert-string-case (format nil "<~a>" arg))))))
+          (loop for arg in args collect
+                (progn 
+                  (if (listp arg) (setf arg (car arg)))
+                  (maxima::maybe-invert-string-case (format nil "<~a>" arg))))))
+;     (max-doc::format-doc-text (list 'arg arg) max-doc::*format-codes-latex*))))))
 
 (defun error-or-message (name mssg)
   "name is function name. mssg is error message. print message,

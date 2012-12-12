@@ -60,13 +60,13 @@
     sgn))
              
 (add-call-desc '( "signature_permutation" ("list")
- ("returns the sign, or signature, of the symmetric permutation " argcomma "list"
-  " which must be represented by a permuation the integers from " math "1" 
-  " through " math "n" ", where " math "n" " is  the length of the list.")))
+ ("returns the sign, or signature, of the symmetric permutation " :argcomma "list"
+  " which must be represented by a permuation the integers from " :math "1" 
+  " through " :math "n" ", where " :math "n" " is  the length of the list.")))
 
 (defmfun-ae ($perm_to_cycles :doc) ( (ain :ae-list ))
-  :desc ("Returns a cycle decomposition of the input permutation " argdot "ain"
-  " The input must be a permutation of " code "n" " integers from 1 through " code "n" ".")
+  :desc ("Returns a cycle decomposition of the input permutation " :argdot "ain"
+  " The input must be a permutation of " :math "n" " integers from 1 through " :math "n" ".")
   (let* ((a (aex-cp ain :adjustable nil :element-type 'fixnum))
          (arr (aex-arr a))
          (n (aex-length a))
@@ -96,9 +96,9 @@
 ;; This could be made more efficient.
 (defmfun-ae ($cycles_to_perm :doc) ((cycles :ae-list))
   :desc ("Returns a permutation from its cycle decomposition "
-         arg "cycles" ", which is a list of lists. Here 'permutation' means
-        a permutation of a list of the integers from " math "1" " to some number "
-        math "n" ". The default output representation  is aex.")
+         :arg "cycles" ", which is a list of lists. Here `permutation' means
+        a permutation of a list of the integers from " :math "1" " to some number "
+        :math "n" ". The default output representation is aex.")
   (let* ((ncycles (cdr ($lex (raex cycles '(2))))) ;convert only on level 2. ensure top is lex
          (n (loop for cyc in ncycles summing (aex-length cyc)))
          (perm ($aex_new n)))
@@ -116,7 +116,7 @@
 
 ;; could be more efficient
 (defmfun-ae ($perm_to_transpositions :doc) ( (ain :ae-list ))
-  :desc ("Returns a list representing the permutation " arg "ain"
+  :desc ("Returns a list representing the permutation " :arg "ain"
          " as a product of transpositions. The output representation type
          is applied at both levels.")
   (let ((cycles ($perm_to_cycles ain (defmfun1:rule $ot '$ml))))
@@ -138,8 +138,8 @@
 
 ;; Need to implement routine for aex input      
 (defmfun-ae ($transpositions_to_perm :doc) ((ain :ae-list ))
- :desc ("returns the permutation specified by the list of
-         transpositions " argdot "ain")
+ :desc ("Returns the permutation specified by the list of
+         transpositions " :argdot "ain")
   (setf ain (cdr (rlex ain 2))) ; convert top two levesl to lex
   (let* ((n (max (loop for pair in ain maximize (second pair))
                  (loop for pair in ain maximize (third pair))))
@@ -158,7 +158,7 @@
 ;; testing using aex-get vs. directly using aref.
 ;; I see no speed difference with perm of length 5*10^6
 (defmfun-ae ($inverse_permutation :doc) ((perm :ae-list))
-  :desc ("returns the inverse permutation of " argdot "perm")
+  :desc ("Returns the inverse permutation of " :argdot "perm")
   (let* ((n (ilength perm))
          (iperm ($aex_new n))
          (aperm (aex-to perm))
@@ -200,14 +200,17 @@
     '$false))
     
   
-(add-call-desc '("permutation_p" ("list") ("Returns true if the list " arg "list" " of length "
- math "n" " is a permutation of the integers from " math "1" " through " math "n" ". Otherwise returns false.")))
+(add-call-desc '("permutation_p" ("list") 
+ ("Returns true if the list " :arg "list" " of length "
+ :math "n" " is a permutation of the integers from " :math "1" " through " 
+ :math "n" ". Otherwise returns false.")))
 
 (max-doc:implementation "permutation_p" 
  "Separate routines for aex and lex input are used.")
 
 (defmfun1 ($permutation_p1 :doc) (ain)
- :desc ("This is the same as " mrefcomma "permutation_p" " but, if the input is a list,
+ :desc 
+  ("This is the same as " mrefcomma "permutation_p" " but, if the input is a list,
    it assumes all elements in the input list are fixnum integers, while " mref "permutation_p" 
    " does not.")
   (if ($ae_listp ain)
@@ -235,8 +238,8 @@
     '$false))
   
 (max-doc:implementation "permutation_p1" 
- "Some variables are declared fixnum, but this does not seem to
-  improve performance with respect to permutationp.")
+ '("Some variables are declared fixnum, but this does not seem to
+  improve performance with respect to " :mrefdot "permutationp"))
 
 (defmacro rand-perm-sym-body ( cycle-p )
   "cycle-p true generates the body for a random cycle;
@@ -265,16 +268,16 @@
   (rand-perm-sym-body nil))
 
 (add-call-desc '("random_permutation_sym" ("n") 
-  ("Returns a random permutation of the integers from " math "1" " through " argdot "n"
-   " This represents a random element of the symmetric group " math "S_n" ".")))
+  ("Returns a random permutation of the integers from " :math "1" " through " :argdot "n"
+   " This represents a random element of the symmetric group " :math "S_n" ".")))
 
 (defmfun-ae ($random_cycle :doc) ((n :pos-int))
   (rand-perm-sym-body t))
 
 (add-call-desc '("random_cycle" ("n") 
- ("Returns a random cycle of length " argdot "n" " The return value is a list
-   of the integers from " math "1" " through " argcomma "n" " representing an
-   element of the symmetric group " math "S_n" " that is a cycle.")))
+ ("Returns a random cycle of length " :argdot "n" " The return value is a list
+   of the integers from " :math "1" " through " :argcomma "n" " representing an
+   element of the symmetric group " :math "S_n" " that is a cycle.")))
 
 (max-doc:implementation "random_cycle" "This function uses Sattolo's algorithm.")
 

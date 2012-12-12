@@ -89,9 +89,9 @@ refers to the head."
 (add-doc-entry1 :e '( :name "aex_get"
                       :protocol "aex_get(e,n)"
                       :contents
-  ("Returns the " arg "n" "th part of aexpr " argdot "e" " A value
-    of " math "0" " for " arg "n" " is not allowed. This is more efficient than "
-    mrefcomma "aexg" " which allows " arg "n" "equal to zero.")))
+  ("Returns the " :arg "n" "th part of aexpr " :argdot "e" " A value
+    of " :math "0" " for " :arg "n" " is not allowed. This is more efficient than "
+    :mrefcomma "aexg" " which allows " :arg "n" " equal to zero.")))
 
 (defmfun $aex_get (e n)
   (aref (aex-arr e) n))
@@ -105,9 +105,9 @@ refers to the head."
 (add-doc-entry1 :e  '( :name "aex_set"
                       :protocol "aex_set(e,n,v)"
                       :contents
- ("Destructively sets the " arg "n" "th part of aexpr " arg "e" " to value "
-   argdot "v" " A value of " math "0" " for " arg "n" " is not allowed. 
- This is more efficient than " mrefdot "aexs" " No argument checking is done.")))
+ ("Destructively sets the " :arg "n" "th part of aexpr " :arg "e" " to value "
+   :argdot "v" " A value of " :math "0" " for " :arg "n" " is not allowed. 
+ This is more efficient than " :mrefdot "aexs" " No argument checking is done.")))
 
 (defmfun $aex_set (e n v)
   (setf (aref (aex-arr e) n) v))
@@ -140,8 +140,8 @@ refers to the head."
 (add-doc-entry1 :e '( :name "aexs"
                       :protocol "aexs(e,n,v)"
                       :contents
- ("destructively sets the " arg "n" "th part of aexpr " arg "e" " to value " argdot "v"
- " A value of " math "0" " for " arg "n" " returns the head (or op) of " argdot "e")))
+ ("destructively sets the " :arg "n" "th part of aexpr " :arg "e" " to value " :argdot "v"
+ " A value of " :math "0" " for " :arg "n" " returns the head (or op) of " :argdot "e")))
 
 ;; used in rtest
 (defmfun $aexs (e n v)
@@ -153,11 +153,11 @@ refers to the head."
 
 ;; This would be faster if it were not defmfun1
 (defmfun1 ($aex_unshift :doc) ( v (e :aex_adj) )
-  :desc ("destructively pushes an element " arg "v" " onto the end
- of " argdot "e" " The return value is " argdot "v" 
- "For array representation of expressions we use "
- code "push" "," code "pop" " for the beginning of and expression, and "
- code "shift" "," code "unshift" " for the end of an expression, whether the "
+  :desc ("Destructively pushes an element " :arg "v" " onto the end
+ of " :argdot "e" " The return value is " :argdot "v" 
+ " For array representation of expressions we use the words "
+  " `push' and `pop' for the beginning of and expression, and "
+ "`shift' and `unshift' for the end of an expression, whether the "
  "representation is an array or a list. This is consistent with "
  " maxima, but the reverse of the meaning of the terms in perl.")
   (vector-push-extend  v (aex-arr e)))
@@ -170,10 +170,10 @@ refers to the head."
 
 (defmfun1 ($aex_shift :doc) ( (e :aex_adj) )
    :desc ("destructively removes an element from the end
- of " argdot "e" 
- "For array representation of expressions we use "
- code "push" "," code "pop" " for the beginning of and expression, and "
- code "shift" "," code "unshift" " for the end of an expression, whether the "
+ of " :argdot "e"  
+  " For array representation of expressions we use the words "
+  " `push' and `pop' for the beginning of and expression, and "
+ "`shift' and `unshift' for the end of an expression, whether the "
  "representation is an array or a list. This is consistent with "
  " maxima, but the reverse of the meaning of the terms in perl.")
   (vector-pop (aex-arr e)))
@@ -223,8 +223,8 @@ refers to the head."
 
   (add-doc-entry "ipart" )
 (add-call-desc '("ipart" ("ind1" "ind2" "..." )
-                ("Returns the part of expression " arg "e" " specified by indices. "
-  arg "e" " is a mixed representation expression. When used as an lvalue, ipart
+                ("Returns the part of expression " :arg "e" " specified by indices. "
+  :arg "e" " is a mixed representation expression. When used as an lvalue, ipart
  can be used to assign to a part of an expression.")))
 
 (examples::clear-examples "ipart")
@@ -239,8 +239,8 @@ refers to the head."
 
 ;; is used
 (defmfun1 ($ilength :doc)  ((e :or-non-atom-subvar))
- :desc ("Returns the length of the expression " argdot "e" " This is like maxima "
- code "length" ", but here, " arg "e" " can be either an aex or a lex.")
+ :desc ("Returns the length of the expression " :argdot "e" " This is like maxima "
+ code "length" ", but here, " :arg "e" " can be either an aex or a lex.")
   (if (aex-p e) (length (aex-arr e))
      (progn (setf e (if ($listp e) e
                            (specrepcheck e)))
@@ -287,8 +287,8 @@ refers to the head."
   (i-part-set e val inds))
 (add-doc-entry "ipart_set")
 (add-call-desc '("ipart_set" ("e" "val" "ind1" "ind2" "...")
-     ("Set part of " arg "e" " specified by the final arguments to " arg "val" ". "
- arg "e" " is a mixed representation expression.")))
+     ("Set part of " :arg "e" " specified by the final arguments to " :arg "val" ". "
+ :arg "e" " is a mixed representation expression.")))
 
 
 ; should add error checking, etc. In fact this should
@@ -381,8 +381,8 @@ refers to the head."
                    (make-array (length (cdr x)))))))
           (t x)))
 (add-call-desc '("aex" ("e")
-   ("converts expression " arg "e" " to an array representation."
-    " The input expression " arg "e" " is returned unchanged if it is already an "
+   ("Converts expression " :arg "e" " to an array representation."
+    " The input expression " :arg "e" " is returned unchanged if it is already an "
     "array expression or is a symbol or number or specially represented maxima expression.
     This function converts only at the first level.")))
 
@@ -580,8 +580,8 @@ refers to the head."
   (cond ((aex-p  x)
          (cons (aex-head x) (coerce (aex-arr x) 'list)))
         (t x)))
-(add-call-desc '("lex" ("e") ("converts the aex expression " arg "e" " to lex.
- If " arg "e" " is not an aex expression, " arg "e" " is returned.
+(add-call-desc '("lex" ("e") ("converts the aex expression " :arg "e" " to lex.
+ If " :arg "e" " is not an aex expression, " :arg "e" " is returned.
  Conversion is only done on the first level.")))
 
 ;; is used
@@ -613,7 +613,7 @@ refers to the head."
 ;; is used
 ;; same as redefinition of $op, which we have disabled
 (defmfun1 ($aeop :doc) ( (expr :non-atom) )
- :desc (  "op function for aex. returns op if " arg "e" " is not an aex.")
+ :desc (  "op function for aex. returns op if " :arg "e" " is not an aex.")
   (if-aex expr (getop (car (aex-head expr)))
             ($part expr 0)))
 
@@ -637,7 +637,7 @@ refers to the head."
           ($aex e (rule-opt '$adj adj-type)))))
 
 (add-call-desc '("aex_cp" ("e")
-    ("returns an aex form copy of " arg "e" ". " arg "e" " may be in either lex or aex form."
+    ("Returns an aex form copy of " :arg "e" ". " :arg "e" " may be in either lex or aex form."
       " Conversion to aex representation occurs only on the first level." )))
 
 ;; create aex expression by copying or converting. if head, adjustability , are specified

@@ -43,8 +43,8 @@ will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
       :protocol "with_output_to_string(<expr_1>, <expr_2>, ...)"
       :see-also ("with_stdout")
       :contents
-"Evaluates <expr_1>, <expr_2>, <expr_3>, ... and writes any output
- thus generated to a string, which is returned."))
+ ("Evaluates " :argcomma "expr_1" :argcomma "expr_2" :argcomma "expr_3" :dots " and writes any output
+  thus generated to a string, which is returned.")))
 
 (examples::clear-examples "with_output_to_string")
 (examples::add-example "with_output_to_string" 
@@ -85,10 +85,10 @@ will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
                (t  ; i3 is positive
                 (string-sub-pos s i1 i2 i3)))))
 
-(max-doc::add-call-desc '("string_take" ("s" "n") ("returns a string of the first " arg "n"
-                          " characters of the string " arg "s" "."))
-                        '("string_take" ("s" ("lit" "-<n>" )) ("returns a string of the last" arg "n"
-                                " characters of " arg "s" ".")))
+(max-doc::add-call-desc '("string_take" ("s" "n") ("returns a string of the first " :arg "n"
+                          " characters of the string " :arg "s" "."))
+                        '("string_take" ("s" ("lit" "-n" )) ("returns a string of the last" :arg "n"
+                                " characters of " :arg "s" ".")))
 
 (examples::clear-examples "string_take")
 (examples::add-example "string_take" '( :code "string_take(\"dog-goat-pig-zebra\",[5,12])"))
@@ -97,7 +97,7 @@ will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
 (maxima::defmfun1 ( maxima::$string_reverse :doc) ((s :string))
   (reverse s))
 
-(max-doc::add-call-desc '("string_reverse" ("s") ("returns a copy of string " arg "s"
+(max-doc::add-call-desc '("string_reverse" ("s") ("returns a copy of string " :arg "s"
                           " with the characters in reverse order.")))
 
 (maxima::defmfun1 ( maxima::$string_drop :doc) ((s :string) (spec :seq-spec))

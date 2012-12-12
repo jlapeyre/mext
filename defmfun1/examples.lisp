@@ -135,6 +135,30 @@
                                 (loop for e in (reverse el) collect (format nil (format-example e)))))
         "")))
 
+(defun format-example-latex (e)
+  (unless (example-p e)
+    (merror (intl:gettext "max-doc::format-example: Not an example ~a") e))
+  (format nil "~a" (concatenate 'string 
+        (if (example-pretext e)
+            (form-ent example-pretext "~%~a~%"  ; "~%\\end{Verbatim}~%~a~%\\begin{Verbatim}[frame=single]~%"
+           (max-doc:latex-esc (wrap-text :text x :width 80 :indent 3 )))
+          "")
+        "~%\\begin{Verbatim}[frame=single]~%"
+       (if (example-code-res e)
+           (format-input-output-list-dead (example-code-res e))
+         (format-input-output-list (example-code e) (example-vars e)))
+       "\\end{Verbatim}~%"       
+       (form-ent example-posttext "~a~%" x))))
+
+(maxima::ddefun format-examples-latex (name)
+  "Format as a string the list of examples for topic 'name'."
+  (let* ((el (gethash name *examples-hash*)))
+    (if el (concatenate 'string 
+                        (format nil (concatenate 'string
+  "\\noindent{\\bf Examples}~%~{~A~}~%")
+         (loop for e in (reverse el) collect (format nil (format-example-latex e))))
+        ""))))
+
 (defun add-example (name &rest examples)
   (let ((el (gethash name *examples-hash*)))
     (loop for example in examples do

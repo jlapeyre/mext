@@ -56,13 +56,13 @@
 
 (maxima::defmfun1 (maxima::$partition_list :doc) ((e :non-atom) (nlist :integer-or-listof)
                                                   &optional (dlist :integer-or-listof))
-  :desc ("Omitting " arg "d" " is equivalent to giving " arg "d" " equal to " argdot "n" " "
-   arg "e" " can be any expression, not only a list. If " arg "n" " is a list, then "
-   code "partition_list" " partitions at sucessively deeper levels with elements of "
-   argdot "n" " If " arg "n" " and " arg "d" " are lists, the first elements"
-   "of " arg "n" " and " arg "d" " apply at the highest level and so on. If "
-   arg "n" " is a list and " arg "d" " is a number, then the offset "
-   arg "d" " is used with each of the " argdot "n")
+  :desc ("Omitting " :arg "d" " is equivalent to giving " :arg "d" " equal to " :argdot "n" " "
+   :arg "e" " can be any expression, not only a list. If " :arg "n" " is a list, then "
+   :mref "partition_list" " partitions at sucessively deeper levels with elements of "
+   :argdot "n" " If " :arg "n" " and " :arg "d" " are lists, the first elements"
+   "of " :arg "n" " and " :arg "d" " apply at the highest level and so on. If "
+   :arg "n" " is a list and " :arg "d" " is a number, then the offset "
+   :arg "d" " is used with each of the " :argdot "n")
   (maxima::s-or-mlist-to-list nlist)
   (cond ( dlist
          (if (numberp dlist)
@@ -73,9 +73,9 @@
          (partition-list-a e nlist))))
 
 (max-doc::add-call-desc
- '("partition_list" ("e" "n") ("partitions " arg "e" " into sublists of length " arg "n"))
- '("partition_list" ("e" "n" "d") ("partitions " arg "e" " into sublists of length " arg "n"
-                                   " with offsets " arg "d" ".")))
+ '("partition_list" ("e" "n") ("partitions " :arg "e" " into sublists of length " :arg "n"))
+ '("partition_list" ("e" "n" "d") ("partitions " :arg "e" " into sublists of length " :arg "n"
+                                   " with offsets " :arg "d" ".")))
 
 (examples::add-example "partition_list" '( :pretext "Partition the numbers from 1 through 10 into pairs."
                                 :code ( "partition_list([1,2,3,4,5,6,7,8,9,10],2)")))

@@ -33,10 +33,12 @@
 
 
 (defmfun1 ($compile_file1 :doc) ( (input-file :string) &optional bin-file translation-output-file &aux result)
-  :desc ("This is copied from maxima " mref "compile_file" 
-    ", with changes. Sometimes a loadable binary file is apparantly compiled, but
- an error flag is set and " mref "compile_file" " returns false for the output binary filename. Here we return the binary
- filename in any case.")
+  :desc 
+  ("This is copied from maxima " :emref "compile_file" 
+   ", with changes. Sometimes a loadable binary file is apparently compiled, but
+   an error flag is set and " :emref "compile_file" 
+   " returns false for the output binary filename. Here we return the binary
+   filename in any case.")
   (setq input-file (maxima-string input-file))
   (and bin-file(setq  bin-file (maxima-string bin-file)))
   (and translation-output-file
@@ -61,10 +63,12 @@
   (append result (list bin-file)))
 
 (defmfun1 ($comp_load :doc) ((fname :string) &optional (pathlist "" :string-or-listof :ensure-list ))
-  :desc ("Compile and load a lisp file. Maxima does not load it by default with "
- mrefdot "compile_file" "If the input filename does not end with \".lisp\", it will be appended. If "
- arg "pathlist" " is  specified, then " arg "fname" " is only searched for in directories in "
-  argdot "pathlist")
+  :desc 
+ ("Compile and load a lisp file. Maxima does not load it by default with "
+  :emrefdot "compile_file" " If the input filename does not end with " :dquotecomma 
+   ".lisp" " it will be appended. If "
+ :arg "pathlist" " is  specified, then " :arg "fname" " is only searched for in directories in "
+ :argdot "pathlist")
   (format t "pathlist is ~a~%" ($sconcat pathlist))
   (let (($file_search_lisp (if (and (stringp pathlist) (equal pathlist "")) $file_search_lisp
                             (cons '(mlist simp) pathlist))))
@@ -94,8 +98,9 @@
 
 (max-doc::set-cur-sec 'max-doc::io-fandv)
 (defmfun1 ($pager_string :doc) ( (s :string) )
- :desc ("Read the string " arg "s" " in the pager given by the maxima variable pager_command.
- This works with gcl under linux.")
+ :desc 
+ ("Read the string " :arg "s" " in the pager given by the maxima variable " :codedot "pager_command"
+  "This works at least with gcl under linux.")
   (with-open-file (*standard-output* "tmppager.dat" :direction :output
                                      :if-exists :supersede)
                   (format t "~a" s))
@@ -104,7 +109,7 @@
 
 (max-doc::set-cur-sec 'max-doc::program-flow-fandv)
 (defmfun1 ($error_str :doc)  ()
-  "returns the last error message as a string."
+  "Returns the last error message as a string."
   (let ((err (cdr $error)))
     (push nil err)
     (apply #'format err)))

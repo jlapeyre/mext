@@ -38,9 +38,11 @@
 
 (if (find-package :max-doc ) t 
   (defpackage :max-doc (:use :common-lisp :gjl.lisp-util)
-    (:export :add-doc-sec :add-doc-entry :add-doc-entry1 :add-call-desc :add-call-desc1
-             :clear-call-desc :implementation
-             :set-cur-sec :get-cur-sec :see-also :see-also-group)))
+    (:export :add-doc-sec :add-doc-entry :add-doc-entry1 
+     :add-call-desc :add-call-desc1
+     :clear-call-desc :implementation :latex-esc :print-doc-section :print-doc-entry
+     :print-doc-entry-latex :print-doc-section-latex
+     :set-cur-sec :get-doc-entry :get-cur-sec :see-also :see-also-group)))
 
 (if (find-package :maxima-dev-doc ) t (defpackage :maxima-dev-doc (:use :common-lisp :gjl.lisp-util)))
 ;;       (:export :ddefmfun :ddefun :ddefvar :ddefparameter )))
@@ -59,7 +61,7 @@
             (:import-from :maxima :$sconcat :merror
              :mfuncall   :$eval_string)
             (:export :add-expample :clear-example :clear-add-example 
-                     :format-examples :wrap-text)))
+                     :format-examples :format-examples-latex :wrap-text)))
 
 ;; ??? why this ?
 ;(defpackage :examples (:use :common-lisp :gjl.lisp-util ) (:import-from :maxima :$sconcat :merror

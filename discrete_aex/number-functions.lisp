@@ -43,9 +43,9 @@
 
 (max-doc::see-also "from_digits" '("integer_digits" "integer_string"))
 (add-call-desc '( "from_digits" ("digits")
-                 ("returns the integer represented by the decimal digits in the list " arg "digits" "."))
+                 ("returns the integer represented by the decimal digits in the list " :arg "digits" "."))
                '( "from_digits" ("digits" "base")
-                 ("returns the integer represented by the base " arg "base" " digits in the list " arg "digits" ".")))
+                 ("returns the integer represented by the base " :arg "base" " digits in the list " :arg "digits" ".")))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -61,19 +61,19 @@
                   digits)))))
 
 (add-call-desc '( "integer_digits" ("n")
-                 ("returns a list of the base 10 digits of " arg "n" "."))
+                 ("returns a list of the base 10 digits of " :arg "n" "."))
                '("integer_digits" ("n" "base")
-                 ("returns a list of the base " arg "base" " digits of " arg "n" "."))
+                 ("returns a list of the base " :arg "base" " digits of " :arg "n" "."))
                '("integer_digits" ("n" "base" "len")
-                 ("returns a list of the base " arg "base" " digits of " arg "n"
-                  " padded with 0's so that the total length of the list is " arg "len" ".")))
+                 ("returns a list of the base " :arg "base" " digits of " :arg "n"
+                  " padded with 0's so that the total length of the list is " :arg "len" ".")))
 (max-doc::see-also "integer_digits" '("from_digits" "integer_string"))
 
 (max-doc::implementation "integer_digits"
- "gcl is much faster than the others. integer_digits(2^(10^6)): typical times for lisps:
+ '( "gcl is much faster than the others. " :code "integer_digits(2^(10^6))" ": typical times for lisps:
  ccl-1.7-r15184M = 65s, sbcl-1.0.52.0.debian = 1.5s,  allegro-8.2 = 23s, Mma-3.0 = 5s,
  gcl-2.6.7 = 0.11s, Mma-8 = 0.04s.
- The base is limited to 36 only because we call write-to-string.")
+ The base is limited to 36 only because we call write-to-string."))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -92,17 +92,17 @@
     (format nil fmt n)))
 
 (add-call-desc  '( "integer_string" ("n")
-                 ("returns a string containing the decimal digits of the integer " arg "n" "."))
+                 ("returns a string containing the decimal digits of the integer " :arg "n" "."))
                '( "integer_string" ("n" "base")
-                 ("returns a string containing the base " arg "base" " digits of the integer " arg "n" "."))
+                 ("returns a string containing the base " :arg "base" " digits of the integer " :arg "n" "."))
                '( "integer_string" ("n" "base" "pad")
-                 ("pads the string on the left with 0's so that the length of the string is " arg "pad"  "."))
+                 ("pads the string on the left with 0's so that the length of the string is " :arg "pad"  "."))
                '( "integer_string" ("n" ("lit" "\"roman\""))
-                 ("returns a string containing the roman-numeral form of the integer " arg "n" "."))
+                 ("returns a string containing the roman-numeral form of the integer " :arg "n" "."))
                '( "integer_string" ("n" ("lit" "\"cardinal\""))
-                 ("returns a string containing the english word form of the integer (cardinal number) " arg "n" "."))
+                 ("returns a string containing the english word form of the integer (cardinal number) " :arg "n" "."))
                '( "integer_string" ("n" ("lit" "\"ordinal\""))
-                 ("returns a string containing the english word form of the ordinal (counting) number " arg "n" ".")))
+                 ("returns a string containing the english word form of the ordinal (counting) number " :arg "n" ".")))
 
 (max-doc::see-also "integer_string" '("integer_digits" "from_digits"))
 
@@ -171,9 +171,9 @@
                        to maximum by candidate
                        do (setf (bit sieve composite) 1)))))))
 
-(add-call-desc '( "primes1" ("max") ("returns a list of the primes less than or equal to " arg "max" "."))
-               '( "primes1" ("min" "max") ("returns a list of the primes between " arg "min" " and "
-                                           arg "max" ".")))
+(add-call-desc '( "primes1" ("max") ("returns a list of the primes less than or equal to " :arg "max" "."))
+               '( "primes1" ("min" "max") ("returns a list of the primes between " :arg "min" " and "
+                                           :arg "max" ".")))
 
 
 (defmfun1 ($catalan_number :doc) (n)
@@ -194,9 +194,9 @@
 
 (defmfun1 ($divisor_summatory :doc) ((x :non-neg-number) )
   :desc ("Returns the divisor summatory function "
-         code ("D(" var "x" ")") ". The divisor function d(n) counts
- the number of unique divisors of the natural number n. D(" var "x" ") is the sum of d(n) over n <= " 
-  vardot "x")
+         :math "D(x)" " for " :argdot "x"  " The divisor function " :math "d(n)" " counts
+ the number of unique divisors of the natural number " :math "n" ". "
+  :math "D(x)" " is the sum of " :math "d(n)" " over " :math "n \\le x")
   (let ((sum 0) (u (floor (sqrt x))) (nx (floor x)))
                     (loop for i from 1 to u do
                           (setf sum (+ sum (floor (/ nx i)))))
@@ -211,7 +211,7 @@
 
 (defmfun1 (|$oeis_A092143| :doc) ((n :pos-int))
   :desc ("Returns the cumulative product of all divisors of integers from 1 to "
-         argdot "n")
+         :argdot "n")
   (let ((prod 1))
     (loop for k from 1 to n do
           (setf prod (* prod (expt k (floor (/ n k))))))
@@ -238,8 +238,8 @@
     prod))
 
 (defmfun1 ($divisor_function :doc) ((n :non-neg-int) &optional (x :number 0 ))
-  "The divisor function sigma_x(n). If x is omitted it takes the default value 0.
-   Currently, complex values for x are not supported."
+  :desc ("The divisor function " :math "\\sigma_x(n)" ". If " :arg "x" " is omitted it takes the default value "
+  :math "0" ". Currently, complex values for x are not supported.")
   (cond ( (= 0 x) (divisor-function-0 n) )
         ( (= 1 x) (divisor-function-1 n) )
         ( t
@@ -255,11 +255,11 @@
 
 
 (defmfun1 ($perfect_p :doc) ((n :pos-int))
-  :desc ("Returns true if " arg "n" " is a perfect number. Otherwise, returns false.")
+  :desc ("Returns true if " :arg "n" " is a perfect number. Otherwise, returns false.")
   (if (= n (- ($divisor_function n 1) n)) t nil))
 
 (defmfun1 ($abundant_p :doc) ((n :pos-int))
-  :desc ("Returns true if " arg "n" " is an abundant number. Otherwise, returns false.")
+  :desc ("Returns true if " :arg "n" " is an abundant number. Otherwise, returns false.")
   (if (< n (- ($divisor_function n 1) n)) t nil))
 
 (examples::clear-examples "abundant_p")
@@ -268,12 +268,12 @@
                           :code "select(lrange(100),abundant_p)"))
 
 (defmfun1 ($aliquot_sum :doc) ((n :pos-int))
-  :desc ("Returns the aliquot sum of " argdot "n" " The aliquot sum
- of " arg "n" " is the sum of the proper divisors of " argdot "n")n
+  :desc ("Returns the aliquot sum of " :argdot "n" " The aliquot sum
+ of " :arg "n" " is the sum of the proper divisors of " :argdot "n")
   (- ($divisor_function n 1) n))
 
 (defmfun1 ($amicable_p :doc) ((n :pos-int) (m :pos-int))
-  :desc ("Returns true if " arg "n" " and " arg "m" " are amicable, and false otherwise.")
+  :desc ("Returns true if " :arg "n" " and " :arg "m" " are amicable, and false otherwise.")
   (and (not (= m n)) (= ($aliquot_sum n) m) (= ($aliquot_sum m) n)))
 
 (examples::clear-examples "amicable_p")
@@ -286,8 +286,8 @@
 ;; TODO: allow keeping only the later part of the sequence. Look for periods greater than 1
 ;;(defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) &optional (n2 0 n2-supplied-p :non-neg-int ) )
 (defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) )
-  :desc ("Returns the first " arg "n" " elements (counting from zero) in the aliquot sequence of "
-  argdot "k" " The sequence is truncated at an element if it is zero or repeats the previous element.")
+  :desc ("Returns the first " :arg "n" " elements (counting from zero) in the aliquot sequence of "
+  :argdot "k" " The sequence is truncated at an element if it is zero or repeats the previous element.")
   (let ( (seq (list k)) (cur k) (last 0) )
     (loop for i from 0 to n until (or (= 0 cur) (= cur last)) do
           (setf last cur)

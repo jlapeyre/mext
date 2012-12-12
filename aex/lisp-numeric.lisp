@@ -24,7 +24,7 @@
               `(,lisp-name ,@(cadr arg-code))))
        (putprop ',max-name  '$float 'function-mode)
        (max-doc::add-doc-entry (list  :name ,max-print-name
-                                      :contents ,`(format nil "~a calls the lisp numeric function ~a. This function
+   :contents ,`(format nil "~a calls the lisp numeric function ~a. This function
   accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). ~a
   may be considerably faster in some code, particularly untranslated code." ,max-print-name ,($sconcat lisp-name) ,max-print-name))))))
 

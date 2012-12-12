@@ -82,14 +82,16 @@
 (max-doc::add-doc-entry '( :name "lrange" :type "Function"
                        :see-also ("makelist" "table" "constant_list")
                        :contents
- " lrange is much more efficient than makelist for creating ranges, particularly for large lists
- (e.g. 10^5 or more items.)"))
+ (" lrange is much more efficient than makelist for creating ranges, particularly for large lists
+   (e.g. " :math "10^5" " or more items.) Functions for creating a list of numbers, in order "
+   " of decreasing speed, are: " :mrefcomma "lrange" " " :mrefcomma "table" " " :emrefcomma
+   "create_list" :emref "makelist" "." )))
 
-(max-doc::add-call-desc '( "lrange" ("stop") ("returns a list of numbers from 1 through " argdot "stop"))
+(max-doc::add-call-desc '( "lrange" ("stop") ("returns a list of numbers from 1 through " :argdot "stop"))
                '( "lrange" ("start" "stop")
-                  ("returns a list of expressions from " arg "start" " through " argdot "stop"))
+                  ("returns a list of expressions from " :arg "start" " through " :argdot "stop"))
                '( "lrange" ("start" "stop" "incr")
-                  ("returns a list of expressions from " arg "start" " through " arg "stop" " in steps of " argdot "incr")))
+         ("returns a list of expressions from " :arg "start" " through " :arg "stop" " in steps of " :argdot "incr")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -214,14 +216,14 @@
              (max-list::tuples-lists o-type-p o-type (reverse list-or-lists)))))
 
 (max-doc::add-call-desc '( "tuples" ("list" "n")
-                  ("Return a list of all lists of length " arg "n" " whose elements are chosen from " arg "list" "."))
-               '( "tuples" (("list" "list1" "list2" "..."))
-                 ("Return a list of all lists whose i_th element is chosen from " arg "listi" ".")))
+      ("Return a list of all lists of length " :arg "n" " whose elements are chosen from " :arg "list" "."))
+      '( "tuples" (("list" "list1" "list2" "..."))
+       ("Return a list of all lists whose " :math "i" "_th element is chosen from " :arg "listi" ".")))
 
 (examples::clear-examples "tuples")
 
 (examples::add-example "tuples"
-                       '( :pretext "Make all three letter words in the alphabet 'a,b'."
+                       '( :pretext "Make all three letter words in the alphabet `a,b'."
                          :vars "[a,b]"           
                          :code "tuples([a,b],3)")
                        '( :pretext "Take all pairs chosen from two lists."
@@ -235,14 +237,16 @@
 
 (add-doc-entry1 :e '( :name "constant_list" :type "Function"
                        :protocol "constant_list(expr,list)"
+                       :protocol-list ("constant_list" ("EXPR" "LIST") nil nil)
                        :see-also ("makelist" "lrange" "table")
                        :contents
- " constant_list(expr,n) returns a list of n elements, each of which is
-  an independent copy of expr.
-  constant_list(expr,[n,m,..]) returns a nested list of dimensions n,m,...
-  where each leaf is an independent copy of expr and the copies of each
-  list at each level are independent. If a third argument is given, then it
-  is used as the op, rather than 'list', at every level."))
+ ("Returns a list of " :math "n" " elements, each of which is
+  an independent copy of expr. "
+  :code "constant_list(expr,[n,m,..])" " returns a nested list of dimensions "
+  :argcomma "n" :argcomma "m" :dots ""
+  " where each leaf is an independent copy of expr and the copies of each
+   list at each level are independent. If a third argument is given, then it
+   is used as the op, rather than `list', at every level.")))
                        
 (defmfun-ae $constant_list (c (spec :pos-int-or-listof) &optional (head mlist))
   (setf spec (max-list::canon-depth-spec spec))
@@ -311,10 +315,10 @@
              (setf res (mfuncall f res))))
     (defmfun-final-to-ae res)))
 
-(add-call-desc '( "nest_while" ("f" "x" "test") ("applies " arg "f" " to " arg "x" " until " arg "test"
+(add-call-desc '( "nest_while" ("f" "x" "test") ("applies " :arg "f" " to " :arg "x" " until " :arg "test"
                    " fails to return true when called on the nested result."))
-               '( "nest_while" ("f" "x" "test" "min") ("applies " arg "f" " at least " arg "min" " times."))
-               '( "nest_while" ("f" "x" "test" "min" "max") ("applies " arg "f" " not more than " arg "max" " times.")))
+               '( "nest_while" ("f" "x" "test" "min") ("applies " :arg "f" " at least " :arg "min" " times."))
+               '( "nest_while" ("f" "x" "test" "min" "max") ("applies " :arg "f" " not more than " :arg "max" " times.")))
 (max-doc::implementation "nest_while" "This should be modified to allow applying test to more than just the most recent
     result.")
 
@@ -334,8 +338,8 @@
   (defmfun-final-to-ae
       (if (functionp test) (max-list::take-while funcall) (max-list::take-while mfuncall))))
 
-(add-call-desc '("take_while" ("expr" "test") ("collects the elements in " arg "expr" " until " arg "test"
-   " fails on one of them. The op of the returned expression is the same as the op of " arg "expr" ".")))
+(add-call-desc '("take_while" ("expr" "test") ("collects the elements in " :arg "expr" " until " :arg "test"
+   " fails on one of them. The op of the returned expression is the same as the op of " :arg "expr" ".")))
 (examples::clear-examples "take_while")
 (examples::add-example "take_while" '( :pretext "Take elements as long as they are negative."
                                       :code "take_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)))"))
@@ -353,14 +357,13 @@
   (defmfun-final-to-ae
       (if (functionp test) (max-list::drop-while funcall) (max-list::drop-while mfuncall))))
 
-(add-call-desc '("drop_while" ("expr" "test") ("Tests the elements of " arg "expr" " in order, dropping them until "
-                                               arg "test" " fails."
-   " The remaining elements are returned in an expression with the same op as that " arg "expr" ".")))
+(add-call-desc '("drop_while" ("expr" "test") ("Tests the elements of " :arg "expr" " in order, dropping them until "
+                                               :arg "test" " fails."
+   " The remaining elements are returned in an expression with the same op as that " :arg "expr" ".")))
 
-(examples::clear-examples "drop_while")
-(examples::add-example "drop_while" '( :pretext "Drop elements as long as they are negative."
+(examples:clear-add-example "drop_while" '( :pretext "Drop elements as long as they are negative."
                                       :code "drop_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)))"))
-                                        
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro max-list::length-while (call-type)
@@ -373,8 +376,12 @@
       (incf count))))
 
 (defmfun1 ($length_while :doc) (( expr :non-atom-list) test &opt ($compile t :bool)  )
+  :desc ("Computes the length of " :arg "expr" " while " :arg "test" " is true.")
   (option-compile-lambda test)
   (if (functionp test) (max-list::length-while funcall) (max-list::length-while mfuncall)))
+
+(examples:clear-add-example "length_while" 
+     '(:code "length_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)))"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -388,9 +395,10 @@
   (option-compile-lambda test)
   (if (functionp test) (max-list::every1 funcall) (max-list::every1 mfuncall)))
 
-(add-call-desc '("every1" ("expr" "test") ("Returns true if " arg "test" " is true for each element in " arg "expr" "."
-                                          " Otherwise, false is returned. This is like " code "every" " but allow a test that "
-                                          "takes only one argument. For some inputs, every1 is much faster than every.")))
+(add-call-desc '("every1" ("expr" "test") 
+    ("Returns true if " :arg "test" " is true for each element in " :arg "expr" "."
+     " Otherwise, false is returned. This is like " :code "every" " but allow a test that "
+     "takes only one argument. For some inputs, every1 is much faster than every.")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -414,8 +422,8 @@
      a))
 
 (defmfun1 ($imap :doc) (f (expr :non-atom) &opt ($compile t :bool))
-  "'imap' only maps functions of a single argument. I guess that 'map' handles more
-   types of input without error. But 'imap' can be much faster for some inputs."
+  :desc ("Maps functions of a single argument. I guess that " :emref "map" " handles more
+   types of input without error. But " :mref "imap" " can be much faster for some inputs.")
   (option-compile-lambda f)
   (if (aex-p expr)
         (if (functionp f) (max-list::imap-aex-call funcall) (max-list::imap-aex-call mfuncall))
@@ -446,7 +454,7 @@
                        :protocol "fold(f,x,v)"
                        :see-also ("fold_list" "nest")
                        :contents
-" fold(f,x,[a,b,c]) returns  f(f(f(x,a),b),c)."))
+ ( :code "fold(f,x,[a,b,c])" " returns " :code " f(f(f(x,a),b),c).")))
 
 (defmacro max-list::fold-call (call-type)
  `(let ((res (,call-type f x (car v))))
@@ -503,8 +511,8 @@
          
 
 (defmfun-ae ($select :doc) (( expr :non-atom-list) test &optional (n 0 supplied-n-p :pos-int) &opt ($compile t :bool))
-  :desc ( "Returns a list of all elements of " arg "expr" 
-         " for which " arg "test" " is true. " arg "expr"
+  :desc ( "Returns a list of all elements of " :arg "expr" 
+         " for which " :arg "test" " is true. " :arg "expr"
          " may have any op.")
   (declare (fixnum n))
   (option-compile-lambda test)
@@ -519,7 +527,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-doc-entry '("aelistp"
-               :contents ( "Returns true if " arg "e" " is a list, either ml or ar representation.")))
+               :contents ( "Returns true if " :arg "e" " is a list, either ml or ar representation.")))
 (defmfun $aelistp (e)
          (or (and (aex-p e)
                   (eq (car (aex-head e)) 'mlist))
@@ -537,7 +545,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun1  ($nreverse :doc)((e :non-atom))
-  :desc ("Destructively reverse the arguments of expression " argdot "e" 
+  :desc ("Destructively reverse the arguments of expression " :argdot "e" 
     "This is more efficient than using reverse.")
   (if-aex e
           (progn
@@ -557,8 +565,8 @@
 
 ;; This does not recognize lambda functions unless compile is t
 (defmfun1 ($count :doc) ( (expr :non-atom-ae-list) item &opt ($compile t :bool))
-  :desc ("Counts the number of items in " arg "expr" " matching " argdot "item" 
-  " If " arg "item" " is a lambda function then " arg "compile" " must be true.")
+  :desc ("Counts the number of items in " :arg "expr" " matching " :argdot "item" 
+  " If " :arg "item" " is a lambda function then " :arg "compile" " must be true.")
   (setf expr (if (aex-p expr) (aex-arr expr)
                (cdr expr)))
   (option-compile-lambda item)

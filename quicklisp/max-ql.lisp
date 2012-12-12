@@ -3,12 +3,12 @@
 (defmfun1:set-mext-package "quicklisp")
 
 (defmfun1 ($quicklisp_load :doc) ((package_name :string))
-  :desc ("Load the asdf lisp package " arg "package_name"
-                   " or install from the internet and load.")
+  :desc ("Load the asdf lisp package " :arg "package_name"
+         ", or, if not installed, install from the internet and then load.")
   (quicklisp-client:quickload package_name)
   '$done)
 
 (defmfun1 ($quicklisp_apropos :doc) ( (term :string) )
-  :desc ("Search quicklisp for lisp 'systems' (packages) matching " arg "term" ".")
+  :desc ("Search quicklisp for lisp 'systems' (packages) matching " :arg "term" ".")
   (format t "~s~%" (quicklisp-client:system-apropos term))
   '$done)

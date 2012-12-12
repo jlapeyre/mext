@@ -35,8 +35,45 @@
                 (format t " *  ~a~%" section--name))
     (format t "~%")
     (loop for section--name in sections do
-          (max-doc::print-doc-section (gethash section--name max-doc::*max-doc-section-hashtable*))))
+          (max-doc:print-doc-section (gethash section--name max-doc::*max-doc-section-hashtable*))))
   '$done)
+
+(defmfun1 ($print_sections_latex :doc) ()
+  "Print all sections of maxdoc documentation in latex format. This does not include other documentation
+ databases, such as the main maxima documentation."
+  (with-open-file (stream "./maxsecs.tex" :direction :output :if-exists :supersede)
+(format stream "
+\\documentclass[]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage{fancyvrb}
+\\usepackage{fullpage}
+\\usepackage{hyperref}
+\\begin{document}
+\\title{Third-party maxima software}
+\\author{John Lapeyre}
+\\maketitle
+\\tableofcontents~%")
+  (let* ( (sections (sort (get-hash-keys max-doc::*max-doc-section-hashtable*) #'string-lessp)))
+;    (format stream "\\begin{itemize}~%")  ; do this with latex toc
+;    (loop for section--name in sections do
+;                (format stream "\\item ~a~%" section--name))
+;    (format stream "\\end{itemize}~%")
+    (loop for section--name in sections do
+          (max-doc:print-doc-section-latex (gethash section--name max-doc::*max-doc-section-hashtable*)
+                                           stream )))
+(format stream "
+\\end{document}~%"))
+  '$done)
+
+(defmfun1 ($print_maxdoc_entry :doc) ((item :string))
+  (let ((entry (max-doc:get-doc-entry :es item :section :all)))
+    (if entry (max-doc:print-doc-entry entry)
+      (format t "Can't find maxdoc entry '~a'.~%" item))))
+
+(defmfun1 ($print_entry_latex :doc) ((item :string))
+  (let ((entry (max-doc:get-doc-entry :es item :section :all)))
+    (if entry (max-doc:print-doc-entry-latex entry)
+      (format t "Can't find maxdoc entry '~a'.~%" item))))
 
 ;; (max-doc::set-cur-sec 'max-doc::number-theory-fandv)
 
