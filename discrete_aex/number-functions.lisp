@@ -258,6 +258,10 @@
   :desc ("Returns true if " :arg "n" " is a perfect number. Otherwise, returns false.")
   (if (= n (- ($divisor_function n 1) n)) t nil))
 
+(max-doc::implementation "perfect_p"
+  '("This function computes divisors. It would be far more efficient to use a table of
+   known perfect numbers, as there are very few of them."))
+
 (defmfun1 ($abundant_p :doc) ((n :pos-int))
   :desc ("Returns true if " :arg "n" " is an abundant number. Otherwise, returns false.")
   (if (< n (- ($divisor_function n 1) n)) t nil))

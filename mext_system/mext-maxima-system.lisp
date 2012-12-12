@@ -358,6 +358,18 @@ This was copied from maxima source init-cl.lisp.")
 (defun pwd ()
   (namestring *default-pathname-defaults*))
 
+;; we should call this in chdir
+(defun dir-rel-or-abs (dir)
+  (let* ((dir (fpathname-directory (pathname-as-directory dir))))
+    (pathname-as-directory 
+     (fmake-pathname :directory (if (eq (car dir) :absolute) dir
+                                  (append
+                                   (fpathname-directory *default-pathname-defaults*)
+                                   (cdr dir)))))))
+
+(defun mext-dir-exists-p (dir)
+  (directory-exists-p (dir-rel-or-abs dir)))
+
 (defun chdir ( &key dir (push t) )
   (let ((curdir *default-pathname-defaults*))
     (cond ((null dir)
@@ -368,14 +380,15 @@ This was copied from maxima source init-cl.lisp.")
            (when push (push curdir *pwd-directory-stack*))
 	   (namestring *default-pathname-defaults*))
           (t 
-           (let* ((dir (fpathname-directory (pathname-as-directory dir)))
-                  (fdir 
-                   (pathname-as-directory 
-                    (fmake-pathname :directory (if (eq (car dir) :absolute) dir
-                          (append
-                           (fpathname-directory *default-pathname-defaults*)
-                           (cdr dir)))))))
-             (if (directory-exists-p fdir) 
+           ;; (let* ((dir (fpathname-directory (pathname-as-directory dir)))
+           ;;        (fdir 
+           ;;         (pathname-as-directory 
+           ;;          (fmake-pathname :directory (if (eq (car dir) :absolute) dir
+           ;;                (append
+           ;;                 (fpathname-directory *default-pathname-defaults*)
+           ;;                 (cdr dir)))))))
+           (let ((fdir (dir-rel-or-abs dir)))
+             (if (directory-exists-p fdir)
                  (progn (setf *default-pathname-defaults*
 			      (truename fdir)) ; we want exception ?
 ;                              (mext:compact-pathname fdir))

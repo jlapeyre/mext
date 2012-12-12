@@ -10,12 +10,19 @@
 
 (in-package :cl-user)
 
-(mk:defsystem alt_eigen
+#-ecl (mk:defsystem alt_eigen
   :source-extension "mac"
   :language :mext-maxima
   :components
    ((:file "alt_eigen_code" :load-only t)
-    (:file "alt_eigen_compile" :load-only nil )))
+    (:file "alt_eigen_compile" :load-only nil)))
+
+#+ecl (mk:defsystem alt_eigen
+  :source-extension "mac"
+  :language :mext-maxima
+  :components
+   ((:file "alt_eigen_code" :load-only t)
+    (:file "alt_eigen_compile" :load-only t)))
 
 (mk:defsystem load-alt_eigen
   :source-extension "mac"

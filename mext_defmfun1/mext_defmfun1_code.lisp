@@ -26,6 +26,11 @@
  manipulated with " mref "chdir" ", " mrefcomma "updir" " and " mrefdot "popdir")
   (cons '(mlist simp) mext::*pwd-directory-stack*))
 
+(defmfun1 ($dir_exists :doc) ((dir :string))
+  :desc ("Returns the pathname as a string  if " :arg "dir" " exists, and " :code "false" " otherwise.")
+  (let ((res  (mext::mext-dir-exists-p dir)))
+    (if res (namestring res) nil)))
+
 (defmfun1 ($pwd :doc) ()
   "Return the current working directory."
   (mext::pwd))

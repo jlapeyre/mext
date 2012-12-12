@@ -13,6 +13,15 @@ in alt_eigen.system before building. But, I saw no change in
 the number of tests passed with compiled vs.  source code.
 rtest runs about 30% faster when code is compiled.
 
+Compiling alt_eigen was disabled for ecl, because, on the
+following platform, compiling failed.
+
+ Maxima version: "5.28.0"
+ Maxima build date: "2012-11-13 05:50:23"
+ Host type: "x86_64-unknown-linux-gnu"
+ Lisp implementation type: "ECL"
+ Lisp implementation version: "11.1.1"
+
 To run the code in a subsequent maxima session:
 
 (%i1) load(mext);
