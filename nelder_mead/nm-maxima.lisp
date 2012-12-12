@@ -3,6 +3,7 @@
 (mext:mext-optimize)
 
 (max-doc::set-cur-sec 'max-doc::equations-fandv)
+(defmfun1:set-mext-package "nelder_mead")
 
 (defmfun1 ($nelder_mead :doc) (expr (vars :symbol-listof) (init :number-listof) )
   "The Nelder-Mead optimization algorithm."
