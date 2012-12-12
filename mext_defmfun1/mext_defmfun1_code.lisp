@@ -18,7 +18,7 @@
 
 (defmfun1 ($popdir :doc) ( &optional (n 1 :non-neg-int))
   :desc ( "Pop a value from the current directory stack and chdir to this value.
- If " :arg "n" " is given, pop " :arg "n" " values and chdir the last value popped.")
+ If " :arg "n" " is given, pop " :arg "n" " values and chdir to the last value popped.")
   (mext::popdir n))
 
 (defmfun1 ($dirstack :doc) ()
