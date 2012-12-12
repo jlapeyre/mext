@@ -10,7 +10,6 @@
 ;;; could be changed. For now, we only use add-doc-sec in this file. Elsewhere, we
 ;;; use set-cur-sec to choose one of these
 
-
 ;;; We could put these definitions in the files that define the
 ;;; functions. Eg., put the Lists section definition in the file
 ;;; lists.lisp. But list functions are defined in other files
@@ -26,40 +25,52 @@
 
 ;;(add-doc-sec '( :tag maxima::$misc :name  "Miscellaneous Functions"))
 
-(add-doc-sec '( :tag misc-fandv :name  "Miscellaneous Functions"))
+(add-doc-sec '( :tag misc-fandv 
+                :name  "Miscellaneous Functions"
+                :shortname "fvmisc"))
 
-(add-doc-sec '( :tag lists-fandv :name "Functions and Variables for Lists"
+(add-doc-sec '( :tag lists-fandv 
+                :name "Functions and Variables for Lists"
+                :shortname "fvlists"
   :contents
   "These functions manipulate lists. They build lists, take them apart, select elements, etc."))
 
-(add-doc-sec '( :tag aex-core :name "Array Representation For Expressions"
+(add-doc-sec '( :tag aex-core 
+                :name "Array Representation For Expressions"
+                :shortname "aex"
    :contents
-  " Maxima expressions are normally implemented internally as lisp lists,
- but they may also be represented by lisp arrays. Each representation has
- advantages."))
+  "Maxima expressions are normally implemented internally as lisp lists,
+   but they may also be represented by lisp arrays. Each representation has
+   advantages."))
 
-(add-doc-sec '( :tag aex-fandv :name "Functions and Variables for Array Represention for Expressions"
+(add-doc-sec '( :tag aex-fandv 
+                :name "Functions and Variables for Array Represention for Expressions"
+                :shortname "fvaex"
    :contents
  "These functions operate on the the array expression data structure."))
 
 ;; combinatorics.lisp
-(add-doc-sec '( :tag combinatorics-fandv :name "Functions and Variables for Combinatorics"))
+(add-doc-sec '( :tag combinatorics-fandv :name "Functions and Variables for Combinatorics"
+                :shortname "fvcombinatorics"))
 
 ;; descr1.lisp
-(add-doc-sec '( :tag doc-fandv :name "Functions and Variables for Documentation"))
+(add-doc-sec '( :tag doc-fandv :name "Functions and Variables for Documentation"
+                :shortname "fvdocumentation"))
 
 ;; lisp-numeric.lisp
 (add-doc-sec '( :tag numerics-fandv :name "Functions and Variables for Numerics"
+                :shortname "fvnumerics"
      :contents "These are mathematical functions--- cos,sin,etc. ---that accept only
  numerical arguments. Tests of loops in untranslated code show that these are much
  more efficient than using the standard maxima versions. But, for most applications, the
  standard maxima versions are probably ok."))
 
 ;; max-doc-entries.lisp
-(add-doc-sec '( :tag io-fandv :name "Functions and Variables for Input and Output"))
+(add-doc-sec '( :tag io-fandv :name "Functions and Variables for Input and Output"
+                :shortname "fvio"))
 
 ;; max-doc-entries.lisp
-(add-doc-sec '( :tag options :name "Options"
+(add-doc-sec '( :tag options :name "Options" :shortname "options"
     :contents "Options to a function in the aex-maxima distribution are passed as follows:
 
     funcname(x,y, [optname -> optval, optname2 -> optval2])
@@ -69,26 +80,35 @@
  The standard options described in this section are some options that are supported by
  many functions in the aex-maxima distribution."))
 
-(add-doc-sec '( :tag attributes :name "Attributes"
+(add-doc-sec '( :tag attributes :name "Attributes" :shortname "attributes"
     :contents "A function may possess a list of attributes. The attributes control how the arguments
  to the function are evaluated and how errors are handled."))
 
 ;; strings.lisp
-(add-doc-sec '( :tag strings-fandv :name "Functions and Variables for Strings"))
+(add-doc-sec '( :tag strings-fandv :name "Functions and Variables for Strings"
+                :shortname "fvstrings"))
 
 ;; misc-util.lisp.  Don't know if we are using this
-(max-doc::add-doc-sec '( :tag misc-util :name "Miscellaneous utilities"))
+(max-doc::add-doc-sec '( :tag misc-util :name "Miscellaneous utilities"
+                         :shortname "miscutils"))
 
-(max-doc::add-doc-sec '( :tag func-def-fandv :name "Functions and Variables for Function Definition"))
+(max-doc::add-doc-sec '( :tag func-def-fandv :name "Functions and Variables for Function Definition"
+                         :shortname "fvfunctiondefinition"))
 
-(max-doc::add-doc-sec '( :tag program-flow-fandv :name "Functions and Variables for Program Flow"))
+(max-doc::add-doc-sec '( :tag program-flow-fandv :name "Functions and Variables for Program Flow"
+                         :shortname "fvflow"))
 
-(max-doc::add-doc-sec '( :tag predicates-fandv :name "Functions and Variables for Predicates"))
+(max-doc::add-doc-sec '( :tag predicates-fandv :name "Functions and Variables for Predicates"
+                         :shortname "fvpredicates"))
 
-(add-doc-sec '( :tag number-theory-fandv :name "Functions and Variables for Number Theory"))
+(add-doc-sec '( :tag number-theory-fandv :name "Functions and Variables for Number Theory"
+                :shortname "fvnumbertheory"))
 
-(add-doc-sec '( :tag equations-fandv :name "Functions and Variables for Equations"))
+(add-doc-sec '( :tag equations-fandv :name "Functions and Variables for Equations"
+                :shortname "fvequations"))
 
-(add-doc-sec '( :tag runtime-fandv :name "Functions and Variables for Runtime Environment"))
+(add-doc-sec '( :tag runtime-fandv :name "Functions and Variables for Runtime Environment"
+                :shortname "fvruntime"))
 
-(add-doc-sec '( :tag quicklisp-fandv :name "Functions and Variables for Quicklisp"))
+(add-doc-sec '( :tag quicklisp-fandv :name "Functions and Variables for Quicklisp"
+                :shortname "fvquicklisp"))

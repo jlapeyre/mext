@@ -5,14 +5,8 @@
 ;;; the Free Software Foundation; either version 2 of the License, or
 ;;; (at your option) any later version.
 
-;;(if (find-package :max-doc ) t (defpackage :max-doc (:use :common-lisp :lisp-util )
-;;   (:export :add-doc-sec :get-doc-sec :add-doc-entry :get-doc-entry :init-doc-toplevel)))
-
-;;(defpackage :max-doc (:use :common-lisp :lisp-util )
-;;   (:export :add-doc-sec :get-doc-sec :add-doc-entry :get-doc-entry :init-doc-toplevel))
 (in-package :max-doc)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (use-package :gjl.lisp-util)
 
@@ -23,6 +17,7 @@
 
 (defstruct (section)
   (name nil)
+  (shortname nil)
   (tag nil)
   (contents nil)
   (list (make-array 0 :adjustable t :fill-pointer 0))

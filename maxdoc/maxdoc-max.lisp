@@ -25,7 +25,6 @@
 (defmfun1 $get_cur_doc_section ()
  (max-doc:get-cur-sec))
 
-
 (defmfun1 ($print_maxdoc_sections :doc) ()
   "Print all sections of maxdoc documentation. This does not include other documentation
  databases, such as the main maxima documentation."
@@ -38,10 +37,11 @@
           (max-doc:print-doc-section (gethash section--name max-doc::*max-doc-section-hashtable*))))
   '$done)
 
-(defmfun1 ($print_sections_latex :doc) ()
-  "Print all sections of maxdoc documentation in latex format. This does not include other documentation
- databases, such as the main maxima documentation."
-  (with-open-file (stream "./maxsecs.tex" :direction :output :if-exists :supersede)
+(defmfun1 ($print_sections_latex :doc) ( &optional (filename :string "./maxsecs.tex") )
+ :desc ("Print all sections of maxdoc documentation currently loaded in latex format
+   to the file " :argdot "filename" " This does not include other documentation
+   databases, such as the main maxima documentation.")
+  (with-open-file (stream filename :direction :output :if-exists :supersede)
 (format stream "
 \\documentclass[]{article}
 \\usepackage[utf8]{inputenc}
@@ -54,16 +54,18 @@
 \\maketitle
 \\tableofcontents~%")
   (let* ( (sections (sort (get-hash-keys max-doc::*max-doc-section-hashtable*) #'string-lessp)))
-;    (format stream "\\begin{itemize}~%")  ; do this with latex toc
-;    (loop for section--name in sections do
-;                (format stream "\\item ~a~%" section--name))
-;    (format stream "\\end{itemize}~%")
     (loop for section--name in sections do
           (max-doc:print-doc-section-latex (gethash section--name max-doc::*max-doc-section-hashtable*)
                                            stream )))
 (format stream "
 \\end{document}~%"))
   '$done)
+
+;    (format stream "\\begin{itemize}~%")  ; do this with latex toc
+;    (loop for section--name in sections do
+;                (format stream "\\item ~a~%" section--name))
+;    (format stream "\\end{itemize}~%")
+
 
 (defmfun1 ($print_maxdoc_entry :doc) ((item :string))
   (let ((entry (max-doc:get-doc-entry :es item :section :all)))

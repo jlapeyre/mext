@@ -11,9 +11,9 @@
 \tableofcontents
 \section{Array Representation For Expressions}
 
-  Maxima expressions are normally implemented internally as lisp lists,
- but they may also be represented by lisp arrays. Each representation has
- advantages.
+ Maxima expressions are normally implemented internally as lisp lists,
+   but they may also be represented by lisp arrays. Each representation has
+   advantages.
 \section{Attributes}
 
  A function may possess a list of attributes. The attributes control how the arguments
@@ -513,8 +513,9 @@ Returns the length of the expression {\it e}. This is like maxima \verb#length#,
 \vspace{5 pt}
 \noindent{\bf Calling}
 \begin{itemize}
-\item[] {\bf ipart}({\it ind1}, {\it ind2}, {\it ...})
-  Returns the part of expression {\it e} specified by indices. {\it e} is a mixed representation expression. When used as an lvalue, ipart can be used to assign to a part of an expression. 
+\item[] {\bf ipart}({\it e}, {\it ind1}, {\it ind2}, {\it ...})
+  Returns the part of expression {\it e} specified by indices. {\it e} may be a mixed (lex and aex) representation expression. When used as an lvalue, ipart can be used to assign to a part of an expression. If an index is negative, then it counts from the end of the list. If {\it e} is an ordinary 
+maxima list (lex), then using a negative index is potentially slower than using a positive index because the entire list must first be traversed in order to determine it's length. If {\it e} is in aex representation, then this inefficiency is not present. 
 
 \end{itemize}
 \noindent{\bf Examples}
@@ -525,6 +526,12 @@ Returns the length of the expression {\it e}. This is like maxima \verb#length#,
 (%i1) (a : [1,2,3], ipart(a,1) : 7, a);
 (%o1) [7,2,3]
 \end{Verbatim}
+
+
+\noindent{\bf Implementation}
+Some tests were performed with large lists of numbers. If we set \verb#a:lrange(10^7)#, then the times required for \verb#ipart(a,10^7)#, \verb#ipart(a,-1)#, \verb#inpart(a,10^7)#, and \verb#part(a,10^7)# were $30$, $60$, $90$, and $90$ ms. 
+
+\vspace{5 pt}
 
 
 \subsection{Function: ipart\_set\label{sec:ipart_set}}
@@ -1054,7 +1061,7 @@ Print all sections of maxdoc documentation. This does not include other document
 
 \subsection{Function: print\_sections\_latex\label{sec:print_sections_latex}}
 \hypertarget{print_sections_latex}{}
-{\bf print\_sections\_latex}()
+{\bf print\_sections\_latex}( :optional {\it filename})
 
 
 \noindent mext package: defmfun1
@@ -1063,12 +1070,13 @@ Print all sections of maxdoc documentation. This does not include other document
 
 \vspace{5 pt}
 \noindent{\bf Description}
-Print all sections of maxdoc documentation in latex format. This does not include other documentation databases, such as the main maxima documentation. 
+Print all sections of maxdoc documentation currently loaded in latex format to the file {\it filename}. This does not include other documentation databases, such as the main maxima documentation. 
 
 \vspace{5 pt}
 
 \noindent{\bf Arguments}
-   {\tt print\_sections\_latex} requires zero arguments.
+   {\tt print\_sections\_latex} requires either zero or one arguments.
+ {\it filename}, which must be a string.
 
 
 \vspace{5 pt}
@@ -1261,7 +1269,7 @@ Prints the simple\_doc documentation string for item {\it name}.
 {\bf nelder\_mead}({\it expr}, {\it vars}, {\it init})
 
 
-\noindent mext package: store
+\noindent mext package: nelder\_mead
 
 
 
@@ -1424,7 +1432,7 @@ Read the string {\it s} in the pager given by the maxima variable \verb#pager_co
 \noindent{\bf Calling}
 \begin{itemize}
 \item[] {\bf restore}({\it file})
-  Reads and returns expressios from the file {\it file}. 
+  Reads and returns expressions from the file {\it file}. 
 
 \end{itemize}
 \noindent{\bf Description}
@@ -2131,7 +2139,7 @@ This should be modified to allow applying test to more than just the most recent
 
 \vspace{5 pt}
 \noindent{\bf Description}
-Destructively reverse the arguments of expression {\it e}.This is more efficient than using reverse. 
+Destructively reverse the arguments of expression {\it e}. This is more efficient than using reverse. 
 
 \vspace{5 pt}
 
@@ -2992,12 +3000,18 @@ Returns true if {\it n} is a perfect number. Otherwise, returns false.
 \vspace{5 pt}
 
 
+\noindent{\bf Implementation}
+This function computes divisors. It would be far more efficient to use a table of known perfect numbers, as there are very few of them. 
+
+\vspace{5 pt}
+
+
 \subsection{Function: prime\_pi\label{sec:prime_pi}}
 \hypertarget{prime_pi}{}
 {\bf prime\_pi}({\it n})
 
 
-\noindent mext package: quicklisp
+\noindent mext package: prime\_pi
 
 
 
@@ -3010,13 +3024,15 @@ Returns true if {\it n} is a perfect number. Otherwise, returns false.
 \end{itemize}
 \noindent{\bf Description}
 Computes the prime counting function. The option {\it threads} specifies the maximum number of cpu threads to use. The routine may use fewer threads, depending on the value of {\it n}. The percent of the calculation that is finished is printed during the calculation if the option {\it status} is 
-true. The status will only work under certain terminals. 
+true. The status will only work under some terminals. 
 
 \vspace{5 pt}
 
 \noindent{\bf Arguments}
    {\tt prime\_pi} requires one argument {\it n}, which must be equivalent to an unsigned 64 bit integer
-    (ie an integer between 0 and 2\^64).
+ (ie an integer between 0 and 2 to the power 64)
+(We need to modify the doc system so we can use notation for powers in arg check strings.
+.
 
 
 \vspace{5 pt}
@@ -3033,7 +3049,13 @@ true. The status will only work under certain terminals.
 
 
 \noindent{\bf Implementation}
-The algorithm combines a segmented sieve with tables. 
+This algorithm is fast for a general purpose mathematics program. It combines a segmented sieve implemented as a C library with tables. 
+
+\vspace{5 pt}
+
+
+\noindent{\bf Authors}
+ Kim Walisch (C library), Tomas Oliveira e Silva (tables), and John Lapeyre (lisp).
 
 \vspace{5 pt}
 
@@ -3077,7 +3099,7 @@ This is not the most efficient way to compute primes.
 {\bf prime\_twins}({\it min} :optional {\it max})
 
 
-\noindent mext package: quicklisp
+\noindent mext package: prime\_pi
 
 
 
@@ -3099,9 +3121,13 @@ The option {\it ktuplet} counts the {\it ktuplet}-constellation rather than the 
 \noindent{\bf Arguments}
    {\tt prime\_twins} requires either one or two arguments.
     The first argument {\it min} must be equivalent to an unsigned 64 bit integer
-    (ie an integer between 0 and 2\^64).
+ (ie an integer between 0 and 2 to the power 64)
+(We need to modify the doc system so we can use notation for powers in arg check strings.
+.
     The second argument {\it max} must be equivalent to an unsigned 64 bit integer
-    (ie an integer between 0 and 2\^64).
+ (ie an integer between 0 and 2 to the power 64)
+(We need to modify the doc system so we can use notation for powers in arg check strings.
+.
 
 
 \vspace{5 pt}
@@ -3722,6 +3748,7 @@ Load (setup) quicklisp. It must already be installed.
 \section{Functions and Variables for Runtime Environment}
 \begin{itemize}
 \item \hyperlink{chdir}{{\tt chdir}}
+\item \hyperlink{dir_exists}{{\tt dir\_exists}}
 \item \hyperlink{dirstack}{{\tt dirstack}}
 \item \hyperlink{dont_kill}{{\tt dont\_kill}}
 \item \hyperlink{dont_kill_share}{{\tt dont\_kill\_share}}
@@ -3763,6 +3790,28 @@ Set the working directory for maxima/lisp. With some lisps, such as cmu lisp the
 \noindent{\bf Arguments}
    {\tt chdir} requires either zero or one arguments.
  {\it dir}, which must be a string.
+
+
+\vspace{5 pt}
+
+
+\subsection{Function: dir\_exists\label{sec:dir_exists}}
+\hypertarget{dir_exists}{}
+{\bf dir\_exists}({\it dir})
+
+
+\noindent mext package: mext\_defmfun1
+
+
+
+\vspace{5 pt}
+\noindent{\bf Description}
+Returns the pathname as a string if {\it dir} exists, and \verb#false# otherwise. 
+
+\vspace{5 pt}
+
+\noindent{\bf Arguments}
+   {\tt dir\_exists} requires one argument {\it dir}, which must be a string.
 
 
 \vspace{5 pt}
@@ -3961,7 +4010,7 @@ Run the test suites for a mext distribution or list of distributions. With no ar
 
 \vspace{5 pt}
 \noindent{\bf Description}
-Pop a value from the current directory stack and chdir to this value. If {\it n} is given, pop {\it n} values and chdir the last value popped. 
+Pop a value from the current directory stack and chdir to this value. If {\it n} is given, pop {\it n} values and chdir to the last value popped. 
 
 \vspace{5 pt}
 
@@ -4078,11 +4127,6 @@ Truename tries to find a canonical pathanme for a file specified by the string {
 
 
 \vspace{5 pt}
-\noindent{\bf Description}
-string\_drop is only partially implemented. 
-
-\vspace{5 pt}
-
 \noindent{\bf Arguments}
    {\tt string\_drop} requires two arguments.
     The first argument {\it s} must be a string.
@@ -4148,7 +4192,7 @@ string\_drop is only partially implemented.
   returns a string of the first {\it n} characters of the string {\it s}. 
 
 \item[] {\bf string\_take}({\it s}, -n )
-  returns a string of the last{\it n} characters of {\it s}. 
+  returns a string of the last {\it n} characters of {\it s}. 
 
 \end{itemize}
 \noindent{\bf Arguments}
