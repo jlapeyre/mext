@@ -39,7 +39,9 @@
                                                          (cdr e)))))
                      ((:int-range 2) "an integer between ~a and ~a"
                        int-range-check)
-                     (:uint-64 ,(format nil "equivalent to an unsigned 64 bit integer~%    (ie an integer between 0 and 2^64)")
+                     (:uint-64 ,(format nil (concatenate 'string "equivalent to an unsigned 64 bit integer~%"
+                           " (ie an integer between 0 and 2 to the power 64)~%"
+                          "(We need to modify the doc system so we can use notation for powers in arg check strings.~%"))
                       (and (integerp e) (>= e 0) (< e 18446744073709551616)))
                      (:not-zero "an expression that is not zero"
                       (not (maxima::zerop1 e)))

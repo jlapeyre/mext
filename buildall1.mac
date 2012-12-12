@@ -22,7 +22,7 @@ build_several([ "quicklisp", "store" ]);
 
 /* Uncomment this if you have prime_pi package in a subdir of the parent dir */
 updir();
-if dir_exists("prime_pi_maxima") then
+if stringp(dir_exists("prime_pi_maxima")) then
  (chdir("prime_pi_maxima"),
    load_in_dsubdir(["ibuild","mac"]),
    popdir());
