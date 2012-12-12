@@ -41,7 +41,7 @@
     (:export :add-doc-sec :add-doc-entry :add-doc-entry1 
      :add-call-desc :add-call-desc1
      :clear-call-desc :implementation :latex-esc :print-doc-section :print-doc-entry
-     :print-doc-entry-latex :print-doc-section-latex
+     :print-doc-entry-latex :print-doc-section-latex :author :copyright
      :set-cur-sec :get-doc-entry :get-cur-sec :see-also :see-also-group)))
 
 (if (find-package :maxima-dev-doc ) t (defpackage :maxima-dev-doc (:use :common-lisp :gjl.lisp-util)))

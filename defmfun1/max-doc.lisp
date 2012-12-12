@@ -624,7 +624,7 @@ must be keyword,value pairs for the doc entry struct."
                  (form-ent entry-implementation "~%Implementation:~%   ~a~%" 
                            (wrap-text :text (format-doc-text x) :width *text-width* :indent *indent2*))
                  (form-ent entry-author
-                     "~%  Author~p: ~a.~%" (length x)  (comma-separated-english x))
+                     "~%  Author~p: ~a.~%" (length x) (comma-separated-english x) x)
 ;;                 (form-ent entry-copyright ; there should be some control of how much is printed
 ;;                     "~%  Copyright (C) ~{~a ~}.~%" x)
                  (format nil "~%"))))

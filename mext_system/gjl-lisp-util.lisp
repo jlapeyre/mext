@@ -173,7 +173,8 @@ but the contents are not copied."
                  :adjustable adjustable )))
 
 
-;; from Gene Michael Stover
+;; from Gene Michael Stover, but he had ~(~a~) in the default case,
+;; which lowercases the text.
 (defmacro mk-comm-sep-eng ( name (one (two-a two-b) (three-start three-last)))
   `(defun ,name (lst)
      (let ((n (cmp-length lst 3)))
@@ -181,7 +182,7 @@ but the contents are not copied."
              ((= 1 n) (format nil "~a~a" ,one (car lst)))
              ((= 2 n) (format nil "~a~a ~a ~a" ,two-a (car lst) ,two-b (cadr lst)))
              (t
-              (format nil (concatenate 'string ,three-start "~{ ~(~A~)~#[~;, " ,three-last
+              (format nil (concatenate 'string ,three-start "~{ ~a~#[~;, " ,three-last
                                        "~:;,~]~}")   lst))))))
 
 

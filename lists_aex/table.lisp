@@ -302,9 +302,9 @@
     (if (eq o-type '$ml) res ; convert to depth of table
         ($raex res (length iterators)))))
 
-(max-doc::see-also "table" '("makelist" "lrange" "constant_list"))
-(max-doc::author "table" "Ziga Lenarcic")
-(max-doc::copyright "table" '( 2009 "Ziga Lenarcic"))
+(max-doc:see-also "table" '("makelist" "lrange" "constant_list"))
+(max-doc:author "table" "Ziga Lenarcic")
+(max-doc:copyright "table" '( 2009 "Ziga Lenarcic"))
 
 (add-call-desc '( "table" ("expr" ("list" "n"))
                   ("Evaluates expression " :arg "number" " times. If " :arg "number" " is not an integer
@@ -330,9 +330,7 @@
                   ("This iterator uses a step of 1 and is equal to  [" :arg "variable" ","
                    :arg "initial" "," :arg "end" ", 1].")))
 
-(examples::clear-examples "table") ;; in case we reload table.lisp
-
-(examples::add-example "table"
+(examples:clear-add-example "table"
                        '( :pretext "Make a list of function values"
                          :code ( "table(sin(x),[x,0,2*%pi,%pi/4])" ))
                        '( :pretext "Make a nested list."
