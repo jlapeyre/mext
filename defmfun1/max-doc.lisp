@@ -622,7 +622,7 @@ must be keyword,value pairs for the doc entry struct."
                  (form-ent entry-oeis "~%OEIS number: ~a.~%" (comma-separated-english x))
                  (form-ent entry-see-also "~%See also: ~a.~%" (comma-separated-english x))
                  (form-ent entry-implementation "~%Implementation:~%   ~a~%" 
-                           (wrap-text :text x :width *latex-text-width* :indent 0)) 
+                           (wrap-text :text (format-doc-text x) :width *text-width* :indent *indent2*))
                  (form-ent entry-author
                      "~%  Author~p: ~a.~%" (length x)  (comma-separated-english x))
 ;;                 (form-ent entry-copyright ; there should be some control of how much is printed

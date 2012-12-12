@@ -203,10 +203,11 @@ refers to the head."
 
 ;; is used
 (ddefun i-part (e inds)
-        "ipart returns the part of <e> specified by the list <inds>.
-<e> is a mixed representation expression."
+    "ipart returns the part of <e> specified by the list <inds>.
+    <e> is a mixed representation expression."
         (let ((i (first inds)))
-;;          (declare (fixnum i))
+;;          (declare (fixnum i)) why remove this ?
+;; f+ is a maxima function or macro that uses the fixnum, I believe
           (when (< i 0) (setf i (f+ (ilength e) i 1)))
           (let ( (opart
                   (cond ((aex-p e) (aexg-int e i))
@@ -215,23 +216,38 @@ refers to the head."
                 (if (null (cdr inds)) (if (= 0 i) (getop (car opart)) opart)
                     (i-part opart (cdr inds))))))
 
+;(defmspec $ipart2 (x)
+;  (setf x (cdr x))
+;  (dbind (e &rest inds) x
+;         (i-part (meval e) (mapcar #'meval  inds))))
+
 ;; is used
-(defmspec $ipart (x)
-  (setf x (cdr x))
-  (dbind (e &rest inds) x
-         (i-part (meval e) (mapcar #'meval  inds))))
+;; this is faster, why were we doing the above ?
+(defmfun $ipart (e &rest inds)
+  (i-part e inds))
 
-  (add-doc-entry "ipart" )
-(add-call-desc '("ipart" ("ind1" "ind2" "..." )
-                ("Returns the part of expression " :arg "e" " specified by indices. "
-  :arg "e" " is a mixed representation expression. When used as an lvalue, ipart
- can be used to assign to a part of an expression.")))
+ (add-doc-entry "ipart" )
+(add-call-desc '("ipart" ("e" "ind1" "ind2" "..." )
+ ("Returns the part of expression " :arg "e" " specified by indices. "
+  :arg "e" " may be a mixed (lex and aex) representation expression. When used as an lvalue, ipart
+  can be used to assign to a part of an expression. If an index is negative, then
+  it counts from the end of the list. If " :arg "e" " is an ordinary maxima list (lex),
+  then using a negative index is potentially slower than using a positive index because
+  the entire list must first be traversed in order to determine it's length. If "
+  :arg "e" " is in aex representation, then this inefficiency is not present.")))
 
-(examples::clear-examples "ipart")
-(examples::add-example "ipart"
+(max-doc:implementation "ipart" '( 
+ "Some tests were performed with large lists of numbers. If
+  we set " :codecomma "a:lrange(10^7)" " then the times required for "
+ :codecomma "ipart(a,10^7)" " " :codecomma "ipart(a,-1)" " "
+ :codecomma "inpart(a,10^7)" " and " :code "part(a,10^7)" 
+ " were " :math "30" ", " :math "60" ", " :math "90" ", and "
+ :math "90" " ms."))
+
+(examples:clear-add-example "ipart"
                        '( :pretext "Destructively assign to a part of an exression."
-                         :vars "[a]"
-                         :code "(a : [1,2,3], ipart(a,1) : 7, a)"))
+                          :vars "[a]"
+                          :code "(a : [1,2,3], ipart(a,1) : 7, a)"))
 
 ;; is used
 (defun ilength (e)
@@ -246,21 +262,6 @@ refers to the head."
                            (specrepcheck e)))
              (length (margs e)))))
 
-#|
-          (progn
-            (setq e (cond (($listp e) e)
-                          ((or $inflag (not ($ratp e))) (specrepcheck e))
-                          (t ($ratdisrep e))))
-            (cond 
-                  ((or (numberp e) (eq (caar e) 'bigfloat))
-                   (if (and (not $inflag) (mnegp e))
-                       1
-                       (merror1 (intl:gettext "length: argument cannot be a number; found ~:M") e)))
-                  ((or $inflag (not (member (caar e) '(mtimes mexpt) :test #'eq))) (length (margs e)))
-                  ((eq (caar e) 'mexpt)
-                   (if (and (alike1 (caddr e) '((rat simp) 1 2)) $sqrtdispflag) 1 2))
-                  (t (length (cdr (nformat e))))))))
-|#
 ;; this is broken sometimes. dont use it i think
 ;; esp when compiled. hmm maybe it was only order of appearance
 ;; is used
@@ -289,7 +290,6 @@ refers to the head."
 (add-call-desc '("ipart_set" ("e" "val" "ind1" "ind2" "...")
      ("Set part of " :arg "e" " specified by the final arguments to " :arg "val" ". "
  :arg "e" " is a mixed representation expression.")))
-
 
 ; should add error checking, etc. In fact this should
 ; be written as a more general macro
@@ -424,12 +424,11 @@ refers to the head."
         (setf (elt to i) x))
     nil))
 
-;; not used anywhere.
+;; is used
 (defmfun1 ($aex_new :doc) ((n :non-neg-int) &optional (head mlist))
   (aex-make-n-head n :head `(,head simp)))
 
-;; is used. But routines in this file use it. They should use a
-;; non-defmfun1 version for efficiency. eg aex-copy-new-n below
+;; is used. 
 (defmfun1 ($copy_aex_type :doc) ((ein :aex))
   "Create a new aex with same head,length,adjustability,etc.
    but contents of expression are not copied."

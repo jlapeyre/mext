@@ -213,6 +213,15 @@ true$
 aex_p( ipart( aex( [1,[2,3]]), 2));
 false$
 
+ipart([1,2,3,4,5],-1);
+5;
+
+ipart([1,2,3,4,[5,6]],-1,1);
+5;
+
+ipart([1,2,3,4,[5,6]],-1,-1);
+6;
+
 /*  faex converts at all levels */
 aex_p( ipart( faex( [1,[2,3]]), 2));
 true$
