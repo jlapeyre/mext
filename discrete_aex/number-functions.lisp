@@ -260,7 +260,7 @@
 
 (max-doc::implementation "perfect_p"
   '("This function computes divisors. It would be far more efficient to use a table of
-   known perfect numbers, as there are very few of them."))
+   known perfect numbers, as very few of them are accessible by current computer hardware."))
 
 (defmfun1 ($abundant_p :doc) ((n :pos-int))
   :desc ("Returns true if " :arg "n" " is an abundant number. Otherwise, returns false.")

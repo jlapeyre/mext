@@ -511,9 +511,11 @@
          
 
 (defmfun-ae ($select :doc) (( expr :non-atom-list) test &optional (n 0 supplied-n-p :pos-int) &opt ($compile t :bool))
-  :desc ( "Returns a list of all elements of " :arg "expr" 
-         " for which " :arg "test" " is true. " :arg "expr"
-         " may have any op.")
+  :desc (
+  "Returns a list of all elements of " :arg "expr" 
+  " for which " :arg "test" " is true. " :arg "expr"
+  " may have any op. If " :arg "n" " is supplied, then at most " :arg "n"
+  " elements are examined.")
   (declare (fixnum n))
   (option-compile-lambda test)
   (defmfun-final-to-ae

@@ -1484,7 +1484,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <A NAME="select"></A>
 <B>select</B>(<I>expr</I>, <I>test</I> :optional <I>n</I>)</P><P>mext package: lists_aex</P><P>
 <B>Description</B>
-Returns a list of all elements of <I>expr</I> for which <I>test</I> is true. <I>expr</I> may have any op. </P><P><B>Arguments</B>
+Returns a list of all elements of <I>expr</I> for which <I>test</I> is true. <I>expr</I> may have any op. If <I>n</I> is supplied, then at most <I>n</I> elements are examined. </P><P><B>Arguments</B>
 <TT>select</TT> requires either two or three arguments.
 The first argument <I>expr</I> must be non-atomic and represented by a lisp list.
 The third argument <I>n</I> must be a positive integer.</P><P><B>Options</B>
@@ -2031,7 +2031,7 @@ Returns the cumulative product of all divisors of integers from 1 to <I>n</I>. <
 Returns true if <I>n</I> is a perfect number. Otherwise, returns false. </P><P><B>Arguments</B>
 <TT>perfect_p</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P><B>See also</B>
 <A HREF="#divisor_function"><TT>divisor_function</TT></A>, <A HREF="#aliquot_sum"><TT>aliquot_sum</TT></A>, <A HREF="#aliquot_sequence"><TT>aliquot_sequence</TT></A>, <A HREF="#divisor_summatory"><TT>divisor_summatory</TT></A>, and <A HREF="#abundant_p"><TT>abundant_p</TT></A>.</P><P><B>Implementation</B>
-This function computes divisors. It would be far more efficient to use a table of known perfect numbers, as there are very few of them. </P><!--TOC subsection Function: prime_pi-->
+This function computes divisors. It would be far more efficient to use a table of known perfect numbers, as very few of them are accessible by current computer hardware. </P><!--TOC subsection Function: prime_pi-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc99">10.13</A>  Function: prime_pi<A NAME="sec:prime_pi"></A></H3><!--SEC END --><P>
 <A NAME="prime_pi"></A>
 <B>prime_pi</B>(<I>n</I>)</P><P>mext package: prime_pi</P><P>
