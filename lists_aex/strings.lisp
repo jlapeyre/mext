@@ -87,7 +87,7 @@ will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
 
 (max-doc::add-call-desc '("string_take" ("s" "n") ("returns a string of the first " :arg "n"
                           " characters of the string " :arg "s" "."))
-                        '("string_take" ("s" ("lit" "-n" )) ("returns a string of the last" :arg "n"
+                        '("string_take" ("s" ("lit" "-n" )) ("returns a string of the last " :arg "n"
                                 " characters of " :arg "s" ".")))
 
 (examples::clear-examples "string_take")
@@ -100,8 +100,8 @@ will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
 (max-doc::add-call-desc '("string_reverse" ("s") ("returns a copy of string " :arg "s"
                           " with the characters in reverse order.")))
 
+;  "string_drop is only partially implemented, but the following examples work."
 (maxima::defmfun1 ( maxima::$string_drop :doc) ((s :string) (spec :seq-spec))
-  "string_drop is only partially implemented."
   (dbind (i1 i2 i3 n) (maxima-take::process-seq-spec-0 s spec)
          (declare (ignore n))
          (cond ((= 1 i3)
