@@ -20,7 +20,7 @@
 ;;;  6. current maxima example() implemetation does not protect or rebind symbols used in the examples.
 
 (defstruct (example)
-  (pretext "" :type string)   ; print this before the input output pair
+  (pretext "") ; can be string or list of maxdoc formatted text. print this before the input output pair
   (posttext "" :type string)  ; print this after the input output pair. Maybe we won't use this.
   (vars "[]" :type string)    ; list of vars that will go in "block( vars, code )" to keep example symbols separate from session.
   (code '())  ; string or list strings of code lines for example. each will be wrapped in block with vars, but block not printed.
@@ -121,7 +121,8 @@
   (unless (example-p e)
     (merror (intl:gettext "max-doc::format-example: Not an example ~a") e))
   (format nil "~a" (concatenate 'string 
-                                (form-ent example-pretext "~%~a~%" (wrap-text :text x :width 80 :indent 3 ))
+                    (form-ent example-pretext "~%~a~%" 
+                              (wrap-text :text (max-doc::format-doc-text x) :width 80 :indent 3 ))
                                 (if (example-code-res e)
                                     (format-input-output-list-dead (example-code-res e))
                                   (format-input-output-list (example-code e) (example-vars e)))
@@ -141,7 +142,7 @@
   (format nil "~a" (concatenate 'string 
         (if (example-pretext e)
             (form-ent example-pretext "~%~a~%"  ; "~%\\end{Verbatim}~%~a~%\\begin{Verbatim}[frame=single]~%"
-           (max-doc:latex-esc (wrap-text :text x :width 80 :indent 3 )))
+                      (wrap-text :text (max-doc::format-doc-text-latex x) :width 80 :indent 3 ))
           "")
         "~%\\begin{Verbatim}[frame=single]~%"
        (if (example-code-res e)

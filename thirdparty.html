@@ -332,8 +332,7 @@ op function for aex. returns op if <I>e</I> is not an aex. </P><P><B>Arguments</
  <B>aex</B>(<I>e</I>)
 Converts expression <I>e</I> to an array representation. The input expression <I>e</I> is returned unchanged if it is already an array expression or is a symbol or number or specially represented maxima expression. This function converts only at the first level. </LI></UL><P>
 <B>Arguments</B>
-<TT>aex</TT> requires either zero or one arguments.
-.</P><P><B>Options</B>
+<TT>aex</TT> requires either zero or one arguments.</P><P><B>Options</B>
 <TT>aex</TT> takes options with default values: <TT>adj-&gt;true</TT>.
 </P><!--TOC subsection Function: aex_cp-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc11">3.3</A>  Function: aex_cp<A NAME="sec:aex_cp"></A></H3><!--SEC END --><P>
@@ -840,8 +839,7 @@ Print all sections of maxdoc documentation. This does not include other document
 <B>print_sections_latex</B>( :optional <I>filename</I>)</P><P>mext package: defmfun1</P><P>
 <B>Description</B>
 Print all sections of maxdoc documentation currently loaded in latex format to the file <I>filename</I>. This does not include other documentation databases, such as the main maxima documentation. </P><P><B>Arguments</B>
-<TT>print_sections_latex</TT> requires either zero or one arguments.
-<I>filename</I>, which must be a string.</P><!--TOC subsection Option variable: read_docs_with_pager-->
+<TT>print_sections_latex</TT> requires either zero or one arguments. If present, the argument <I>filename</I> must be a a string.</P><!--TOC subsection Option variable: read_docs_with_pager-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc44">5.6</A>  Option variable: read_docs_with_pager<A NAME="sec:read_docs_with_pager"></A></H3><!--SEC END --><P>
 <A NAME="read_docs_with_pager"></A></P><P>
 default value <CODE>true</CODE>.</P><P><B>Description</B>
@@ -1428,8 +1426,8 @@ This should be modified to allow applying test to more than just the most recent
 <B>nreverse</B>(<I>e</I>)</P><P>mext package: lists_aex</P><P>
 <B>Description</B>
 Destructively reverse the arguments of expression <I>e</I>. This is more efficient than using reverse. </P><P><B>Arguments</B>
-<TT>nreverse</TT> requires one argument <I>e</I>, which must be non-atomic.</P><P><B>Examples</B></P><P>Be careful not to use &lt;a&gt; after applying nreverse. Assign the result to 
-another variable. </P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+<TT>nreverse</TT> requires one argument <I>e</I>, which must be non-atomic.</P><P><B>Examples</B></P><P>Be careful not to use <I>a</I> after applying nreverse. Do assign the result 
+to another variable. </P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -2355,8 +2353,7 @@ Set the working directory to the value it had when mext was loaded. </LI><LI CLA
 Set the working directory to <I>dir</I>. </LI></UL><P>
 <B>Description</B>
 Set the working directory for maxima/lisp. With some lisps, such as cmu lisp the system directory is changed as well. This should be made uniform across lisp implementations. </P><P><B>Arguments</B>
-<TT>chdir</TT> requires either zero or one arguments.
-<I>dir</I>, which must be a string.</P><!--TOC subsection Function: dir_exists-->
+<TT>chdir</TT> requires either zero or one arguments. If present, the argument <I>dir</I> must be a a string.</P><!--TOC subsection Function: dir_exists-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc136">15.2</A>  Function: dir_exists<A NAME="sec:dir_exists"></A></H3><!--SEC END --><P>
 <A NAME="dir_exists"></A>
 <B>dir_exists</B>(<I>dir</I>)</P><P>mext package: mext_defmfun1</P><P>
@@ -2411,15 +2408,13 @@ Returns a list of all installed mext distributions. </P><P><B>Arguments</B>
 <B>mext_test</B>( :optional <I>dists</I>)</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
 Run the test suites for a mext distribution or list of distributions. With no argument, a subfolder named <CODE>rtests</CODE> is searched for in the current directory. </P><P><B>Arguments</B>
-<TT>mext_test</TT> requires either zero or one arguments.
-<I>dists</I>, which must be a string, a symbol, or a list of strings or symbols.</P><!--TOC subsection Function: popdir-->
+<TT>mext_test</TT> requires either zero or one arguments. If present, the argument <I>dists</I> must be a a string, a symbol, or a list of strings or symbols.</P><!--TOC subsection Function: popdir-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc145">15.11</A>  Function: popdir<A NAME="sec:popdir"></A></H3><!--SEC END --><P>
 <A NAME="popdir"></A>
 <B>popdir</B>( :optional <I>n</I>)</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
 Pop a value from the current directory stack and chdir to this value. If <I>n</I> is given, pop <I>n</I> values and chdir to the last value popped. </P><P><B>Arguments</B>
-<TT>popdir</TT> requires either zero or one arguments.
-<I>n</I>, which must be a non-negative integer.</P><!--TOC subsection Function: probe_file-->
+<TT>popdir</TT> requires either zero or one arguments. If present, the argument <I>n</I> must be a a non-negative integer.</P><!--TOC subsection Function: probe_file-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc146">15.12</A>  Function: probe_file<A NAME="sec:probe_file"></A></H3><!--SEC END --><P>
 <A NAME="probe_file"></A></P><P>
 <B>Calling</B>

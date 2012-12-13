@@ -311,7 +311,7 @@ is replaced with replacement."
                    (format nil "~{~a ~}" (cdr x)))
                   (t
                    (maxima::merror1 "max-doc: unknown call description argument ~s" x)))
-          (format-doc-text-latex (list 'var x))))
+          (format-doc-text-latex (list :var x))))
                       (call-desc-args cd))))  ;; map latex-esc over args in next line
   (format nil "\\item[] {\\bf ~a}(~{~a~^, ~})~%  ~a~%~%" (latex-esc (call-desc-name cd)) args
           (wrap-text :text (format-doc-text-latex (call-desc-text cd)) :width *latex-text-width* :indent 0 ) )))
@@ -525,8 +525,8 @@ must be keyword,value pairs for the doc entry struct."
           (concatenate 'string (format nil "   ~a requires "
                                        (format-doc-text (list :code name)))
                        (defmfun1::format-nargs-expected nmin nmax (not (null rest-args))  nil)
-                       (if (and (= nmin 1) (= nmax 1))  "" (format nil ".~%"))
-                       (format-arg-specs1 rest-args name (append req optional) )
+                       (if (and (< nmin 2) (= nmax 1))  "" (format nil ".~%"))
+                       (format-arg-specs1 name req optional rest-args)
                        (if rest-args (format-arg-specs-rest name rest-args)
                            ""))))))
 
@@ -538,10 +538,16 @@ must be keyword,value pairs for the doc entry struct."
                              (maxima::maybe-invert-string-case (symbol-name arg))) *format-codes-default*)
           (defmfun1::get-arg-spec-to-english type)))
 
-(defun format-single-spec (rest-args arg type)
-  (format nil (if rest-args  ". The first argument ~a must be ~a.~%"
-                  " ~a, which must be ~a.~%")
-;          (maxima::maybe-invert-string-case 
+(defun format-single-spec (req optional rest-args arg type)
+ "rest-args is form after &rest in defmfun1 lambada list. arg is name of a single arg,
+  type is a type spec from defmfun1."
+  (format nil 
+          (cond ((and rest-args req)
+                 ". The first argument ~a must be ~a.~%") ; one or more args
+                (optional
+                 ". If present, the argument ~a must be a ~a.~%") ; zero or one arg
+                (t
+                 " ~a, which must be ~a.~%")) ; exactly one arg
            (format-doc-text (list 'arg
                                   (maxima::maybe-invert-string-case (symbol-name arg))) *format-codes-default*)
           (defmfun1::get-arg-spec-to-english type)))
@@ -554,13 +560,17 @@ must be keyword,value pairs for the doc entry struct."
                 (defmfun1::get-arg-spec-to-english type))
         "")))
 
-(defun format-arg-specs1 (rest-args name arg-list)
+(defun format-arg-specs1 (name req optional rest-args)
+ "name is maxima function name (no $). The remaining three
+  args are forms for required, optional, and rest from the
+  lambda list."
   (declare (ignore name))
-  (let ( (arg-count 0) (res))
+  (let ((arg-count 0) (res)
+        (arg-list (append req optional)))
     (if (= 1 (length arg-list))
         (let ((arg (car arg-list)))
           (if (> (length arg) 1)
-            (setf res (list (format-single-spec rest-args (first arg) (second arg))))
+            (setf res (list (format-single-spec req optional rest-args (first arg) (second arg))))
             (setf res (list (format nil ".~%")))))
         (dolist (r arg-list)
           (incf arg-count)
@@ -619,7 +629,7 @@ must be keyword,value pairs for the doc entry struct."
                  (form-ent entry-implementation "~%Implementation:~%   ~a~%" 
                            (wrap-text :text (format-doc-text x) :width *text-width* :indent *indent2*))
                  (form-ent entry-author
-                     "~%  Author~p: ~a.~%" (length x) (comma-separated-english x) x)
+                     "~%  Author~p: ~a.~%" (length x) (comma-separated-english x))
 ;;                 (form-ent entry-copyright ; there should be some control of how much is printed
 ;;                     "~%  Copyright (C) ~{~a ~}.~%" x)
                  (format nil "~%"))))

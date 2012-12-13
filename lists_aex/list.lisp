@@ -558,9 +558,9 @@
 
 (max-doc:see-also "nreverse" "reverse")
 (examples:clear-add-example "nreverse"
-                       '( :pretext "Be careful not to use <a> after applying nreverse. Assign the result to another variable."
-                          :vars "[a,b]"         
-                          :code ("a : lrange(10), b : nreverse(a)" "a : lrange(10,ot->ar), b : nreverse(a)")))
+ '( :pretext ("Be careful not to use " :arg "a" " after applying nreverse. Do assign the result to another variable.")
+    :vars "[a,b]"         
+    :code ("a : lrange(10), b : nreverse(a)" "a : lrange(10,ot->ar), b : nreverse(a)")))
 
 
 
