@@ -132,7 +132,7 @@ ia a list of three elements: hame, protocol, contents."
 ;; from common lisp cookbook
 (defun replace-all (string part replacement &key (test #'char=))
 "Returns a new string in which all the occurences of the part 
-is replaced with replacement."
+ are replaced with replacement."
     (with-output-to-string (out)
       (loop with part-length = (length part)
             for old-pos = 0 then (+ pos part-length)
@@ -220,7 +220,6 @@ is replaced with replacement."
  "Return a string of formatted text from a text description list and table that
   takes format codes to strings."
   (let ((txt (if (listp text-descr) text-descr (list text-descr))))
-;    (format t " TOP ~s~%" txt)
     (do* ((txt1 txt (cdr txt1))
           (item (car txt) (car txt1))
           (res))
@@ -503,7 +502,6 @@ must be keyword,value pairs for the doc entry struct."
 (defun format-doc-section (s)
   (with-output-to-string (maxima::*standard-outptut*)
     (print-doc-section s)))
-;;  (let ((stream maxima::*standard-outptut*))
 
 (defun print-doc-entry (e)
   (format t "~a" (format-doc-entry e)))

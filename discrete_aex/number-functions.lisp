@@ -2,19 +2,15 @@
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
-;;; the Free Software Foundation; either version 2 of the License, or
+;;; the Free Software Foundation; either version 3 of the License, or
 ;;; (at your option) any later version.
 
 (in-package :maxima)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (max-doc:set-cur-sec 'max-doc::number-theory-fandv)
 (defmfun1:set-mext-package "discrete_aex")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (declaim (optimize (speed 3) (space 0) (debug 0)))
-
 
 (defun from-digits2  ( digits &optional (base 10))
   "This may be faster than from-digits3 for base <= 10"
@@ -28,20 +24,19 @@
   :desc ( var "base" " need not be number, but may be, for instance, a symbol. If "
   var "base" " is a number it must be an integer between 2 and 36. " var "digits"
   " may be a string rather than a list.")
-  (if (stringp digits)
+  (when (stringp digits)
       (if (and (numberp base) (echeck-arg :radix base))
           (return-from $from_digits (parse-integer digits :radix base))
           (setf digits (cons nil (loop for c across digits collect (digit-char-p c)) ))))
-  (progn
     (pop digits)
     (if (and (numberp base) (echeck-arg :radix base))
         (from-digits3 digits base)
         (let ((n (length digits)) (sum 0))
           (loop for i fixnum from (1- n) downto 0 do
                (setf sum (add sum  (mul `((mexpt simp) ,base ,i) (pop digits)))))
-          (meval sum)))))
+          (meval sum))))
 
-(max-doc::see-also "from_digits" '("integer_digits" "integer_string"))
+(max-doc:see-also "from_digits" '("integer_digits" "integer_string"))
 (add-call-desc '( "from_digits" ("digits")
                  ("returns the integer represented by the decimal digits in the list " :arg "digits" "."))
                '( "from_digits" ("digits" "base")
@@ -61,15 +56,15 @@
                   digits)))))
 
 (add-call-desc '( "integer_digits" ("n")
-                 ("returns a list of the base 10 digits of " :arg "n" "."))
+                  ("returns a list of the base 10 digits of " :arg "n" "."))
                '("integer_digits" ("n" "base")
                  ("returns a list of the base " :arg "base" " digits of " :arg "n" "."))
                '("integer_digits" ("n" "base" "len")
                  ("returns a list of the base " :arg "base" " digits of " :arg "n"
                   " padded with 0's so that the total length of the list is " :arg "len" ".")))
-(max-doc::see-also "integer_digits" '("from_digits" "integer_string"))
+(max-doc:see-also "integer_digits" '("from_digits" "integer_string"))
 
-(max-doc::implementation "integer_digits"
+(max-doc:implementation "integer_digits"
  '( "gcl is much faster than the others. " :code "integer_digits(2^(10^6))" ": typical times for lisps:
  ccl-1.7-r15184M = 65s, sbcl-1.0.52.0.debian = 1.5s,  allegro-8.2 = 23s, Mma-3.0 = 5s,
  gcl-2.6.7 = 0.11s, Mma-8 = 0.04s.
@@ -104,7 +99,7 @@
                '( "integer_string" ("n" ("lit" "\"ordinal\""))
                  ("returns a string containing the english word form of the ordinal (counting) number " :arg "n" ".")))
 
-(max-doc::see-also "integer_string" '("integer_digits" "from_digits"))
+(max-doc:see-also "integer_string" '("integer_digits" "from_digits"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -149,9 +144,9 @@
           (loop  until (= 1 (sbit a p)) do (incf p)))
         (f- n c))))
 
-(max-doc::implementation "prime_pi_soe" "This is not the most efficient way to compute primes.");
+(max-doc:implementation "prime_pi_soe" "This is not the most efficient way to compute primes.");
 
-(max-doc::see-also "prime_pi_soe" '("prime_pi" "next_prime" "prev_prime"))
+(max-doc:see-also "prime_pi_soe" '("prime_pi" "next_prime" "prev_prime"))
 
 ;; copied from rosetta code, and modified a bit. This could also have been
 ;; done as above.
@@ -183,8 +178,7 @@
 
 (max-doc::oeis "catalan_number" "A000108")
 
-(examples::clear-examples "catalan_number")
-(examples::add-example "catalan_number"
+(examples:clear-add-example "catalan_number"
                        '( :pretext "The catalan number for n from 1 through 12."
                           :code "map(catalan_number,lrange(12))")
                        '( :pretext "The n'th catalan number."
@@ -204,8 +198,7 @@
 
 (max-doc::oeis "divisor_summatory" "A006218")
 
-(examples::clear-examples "divisor_summatory")
-(examples::add-example "divisor_summatory"
+(examples:clear-add-example "divisor_summatory"
                        '( :pretext "D(n) for n from 1 through 12"
                           :code "map(divisor_summatory,lrange(12))"))
 
@@ -217,12 +210,10 @@
           (setf prod (* prod (expt k (floor (/ n k))))))
     prod))
 
-
-
 (defun divisor-function-1 (n)
  "divisor function with x=1."
   (let* ( (factors (cdr ($ifactors n))) (prod 1) (r (length factors)) )
-    (dotimes (i  r)
+    (dotimes (i r)
       (let ((multiplicity (third (car factors))) (prime (second (car factors))))
         (setf factors (cdr factors))
         (setf prod (* prod (/ (1- (expt prime (1+ multiplicity) )) (1- prime))))))
@@ -239,26 +230,25 @@
 
 (defmfun1 ($divisor_function :doc) ((n :non-neg-int) &optional (x :number 0 ))
   :desc ("The divisor function " :math "\\sigma_x(n)" ". If " :arg "x" " is omitted it takes the default value "
-  :math "0" ". Currently, complex values for x are not supported.")
-  (cond ( (= 0 x) (divisor-function-0 n) )
-        ( (= 1 x) (divisor-function-1 n) )
+  :math "0" ". Currently, complex values for x are not supported. After writing this, I noticed that
+  the function is implemented in the maxima core and is callled " :emref "divsum" ".")
+  (cond ( (= 0 x) (divisor-function-0 n) ) ; These are for efficiency, but I think
+        ( (= 1 x) (divisor-function-1 n) ) ; the advantage is negligible.
         ( t
           (let* ( (factors (cdr ($ifactors n))) (prod 1) (r (length factors)) )
-            (dotimes (i  r)
+            (dotimes (i r)
               (let ((multiplicity (third (car factors))) (prime (second (car factors))))
                 (setf factors (cdr factors))
                 (setf prod (* prod (/ (1- (expt prime (* (1+ multiplicity) x))) (1- (expt prime x)))))))
             prod))))
 
-
 (max-doc::oeis "divisor_function" '("A000005 for x=0" "A000203 for x=1"))
-
 
 (defmfun1 ($perfect_p :doc) ((n :pos-int))
   :desc ("Returns true if " :arg "n" " is a perfect number. Otherwise, returns false.")
   (if (= n (- ($divisor_function n 1) n)) t nil))
 
-(max-doc::implementation "perfect_p"
+(max-doc:implementation "perfect_p"
   '("This function computes divisors. It would be far more efficient to use a table of
    known perfect numbers, as very few of them are accessible by current computer hardware."))
 
@@ -266,8 +256,7 @@
   :desc ("Returns true if " :arg "n" " is an abundant number. Otherwise, returns false.")
   (if (< n (- ($divisor_function n 1) n)) t nil))
 
-(examples::clear-examples "abundant_p")
-(examples::add-example "abundant_p"
+(examples:clear-add-example "abundant_p"
                        '( :pretext "The abundant numbers between 1 and 100"
                           :code "select(lrange(100),abundant_p)"))
 
@@ -280,12 +269,10 @@
   :desc ("Returns true if " :arg "n" " and " :arg "m" " are amicable, and false otherwise.")
   (and (not (= m n)) (= ($aliquot_sum n) m) (= ($aliquot_sum m) n)))
 
-(examples::clear-examples "amicable_p")
-(examples::add-example "amicable_p"
-                       '( :pretext "The first few amicable pairs."
-                          :code "map(lambda([x],amicable_p(first(x),second(x))), [[220, 284], 
-        [1184, 1210], [2620, 2924], [5020, 5564], [6232, 6368]])"))
-
+(examples:clear-add-example "amicable_p"
+ '( :pretext "The first few amicable pairs."
+    :code "map(lambda([x],amicable_p(first(x),second(x))), [[220, 284], 
+          [1184, 1210], [2620, 2924], [5020, 5564], [6232, 6368]])"))
 
 ;; TODO: allow keeping only the later part of the sequence. Look for periods greater than 1
 ;;(defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) &optional (n2 0 n2-supplied-p :non-neg-int ) )
@@ -300,19 +287,16 @@
     (if (= cur last) (setf seq (cdr seq)))
     (cons '(mlist simp) (nreverse seq))))
 
-(examples::clear-examples "aliquot_sequence")
-(examples::add-example "aliquot_sequence"
-                       '( :pretext "Perfect numbers give a repeating sequence of period 1."
-                                   :code "imap(lambda([x],aliquot_sequence(x,100)),[6,28,496,8128])")
-                       '( :pretext "Aspiring numbers are those which are not perfect, but terminate with a repeating perfect number."
-                                   :code "imap(lambda([x],aliquot_sequence(x,100)),[25, 95, 119, 143, 417, 445, 565, 608, 650, 652, 675, 685])"))
 
-
-
+(examples:clear-add-example "aliquot_sequence"
+ '( :pretext "Perfect numbers give a repeating sequence of period 1."
+    :code "imap(lambda([x],aliquot_sequence(x,100)),[6,28,496,8128])")
+ '( :pretext "Aspiring numbers are those which are not perfect, but terminate with a repeating perfect number."
+    :code "imap(lambda([x],aliquot_sequence(x,100)),[25, 95, 119, 143, 417, 445, 565, 608, 650, 652, 675, 685])"))
 
 ($set_match_form '((mlist) $aliquot_sum $divisor_function $divisor_summatory ))
 
-(max-doc::see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" "divisor_summatory" "perfect_p" "abundant_p"))
+(max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" "divisor_summatory" "perfect_p" "abundant_p"))
 
 
 #|
