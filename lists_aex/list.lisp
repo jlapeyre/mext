@@ -297,6 +297,7 @@
                        
 (max-doc::see-also "nest_list" '("nest" "fold" "fold_list"))
 
+;; try making fixnum declarations here. probably makes no difference at all.
 (defmfun-ae ($nest_while :doc) (f x test &optional (min 1 supplied-min-p :non-neg-int)
                                 (max 1 supplied-max-p :non-neg-int) &opt ($compile t :bool)  )
   (option-compile-lambda test)
@@ -458,11 +459,11 @@
 
 (defmacro max-list::fold-call (call-type)
  `(let ((res (,call-type f x (car v))))
-    (if ar-p (setf res ($aex res)))
+    (when ar-p (setf res ($aex res)))
     (do ((v1 (cdr v) (cdr v1)))
         ((null v1) res)
       (setf res (,call-type f res (car v1)))
-      (if ar-p (setf res ($aex res))))))
+      (when ar-p (setf res ($aex res))))))
 
 (defmfun-ae $fold (f x (v :non-atom) &opt ($compile t :bool))
   (option-compile-lambda f)
