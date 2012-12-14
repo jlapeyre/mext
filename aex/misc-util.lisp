@@ -79,7 +79,7 @@
           (if (null compile-file-name)
               (format t "Unable to find the file '~a'~%." fname)
             (let ((res ($compile_file1 compile-file-name)))
-              (if (and res (third res))
+              (when (and res (third res))
                   (load (third res))))))))
 
 (ddefmacro option-compile-lambda (func)

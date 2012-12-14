@@ -478,7 +478,6 @@
     (if (rule-expr-p a) (push (cdr a) opts)
       (maxima::merror1 "put name of func here: Found a non-option argument '~a' in a list of options." a))))
 
-
 (defun err-prefix (name)
   (unless (stringp name) (setf name ($sconcat name)))
   (format nil "~a:" name))

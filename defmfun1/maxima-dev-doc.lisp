@@ -122,7 +122,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(if (doc-system::ds-registered-p "devel-doc")
+(when (doc-system::ds-registered-p "devel-doc")
     (doc-system::ds-de-register "devel-doc"))
 
 (doc-system::ds-make-and-register

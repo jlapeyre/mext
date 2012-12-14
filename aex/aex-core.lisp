@@ -415,14 +415,13 @@ refers to the head."
 ;; use this because initializing array with intial contents is so slow in gcl
 ;; assume 'to' is a sequence already large enough to hold 'from'
 (defun aex-copy-to-vector (from to)
-  (if (listp from)
+  (when (listp from)
       (do* ( (e from (cdr e))
              (i 0 (1+ i))
             (x (car from) (car e)))
           ( (null e) to)
         (declare (fixnum i))
-        (setf (elt to i) x))
-    nil))
+        (setf (elt to i) x))))
 
 ;; is used
 (defmfun1 ($aex_new :doc) ((n :non-neg-int) &optional (head mlist))
@@ -619,7 +618,7 @@ refers to the head."
 ;; used only in iargs, which is used in rtests
 (defun aex-cp-args (x)
   "return lisp array copy of aex expr"
-  (if (aex-p x) (gjl::copy-array (aex-arr x)) nil))
+  (when (aex-p x) (gjl::copy-array (aex-arr x))))
 
 ;; is used
 (defun aex-mk-head-args (h args)
@@ -627,12 +626,12 @@ refers to the head."
 
 ;; is used
 (defmfun-aeo ($aex_cp :doc) ( (e :non-atom)  &optional head)
-  (if (and head (atom head)) (setf head (list head 'msimp)))
+  (when (and head (atom head)) (setf head (list head 'msimp)))
   (cond ( (aex-p e)
           (make-aex :head (if head head (aex-head e)) :arr (gjl::copy-array (aex-arr e))
                     :adjustable (if adj-type-p adj-type (aex-adjustable e))))
         ( t
-          (if head (setf e (cons head (cdr e))))
+          (when head (setf e (cons head (cdr e))))
           ($aex e (rule-opt '$adj adj-type)))))
 
 (add-call-desc '("aex_cp" ("e")
@@ -647,7 +646,7 @@ refers to the head."
          (make-aex :head (if head head (aex-head e)) :arr (gjl::copy-array (aex-arr e))
                    :adjustable (if adj-type-p adjustable (aex-adjustable e)) ))
         ( t
-         (if head (setf e (cons head (cdr e))))
+         (when head (setf e (cons head (cdr e))))
          (aex-to e :adjustable adjustable :element-type element-type))))
 
 ;; not used anywhere

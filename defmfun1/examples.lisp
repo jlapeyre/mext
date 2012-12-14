@@ -59,18 +59,18 @@
 
 (defun format-input-output-dead (code-res n)
   (concatenate 'string (format-one-input (first code-res) n)
-               (if (second code-res) (format-one-output (second code-res) n))))
+               (when (second code-res) (format-one-output (second code-res) n))))
 
 ;; we can dump this soon. keep just in case.
 (defun old-format-input-output-list (es vars)
-  (if (stringp es) (setf es (list es)))
+  (when (stringp es) (setf es (list es)))
   (format nil "~{~A~}"
           (loop for e in es for i from 1 to (length es) collect
                (format-input-output e vars i))))
 
 ;; evaluate code with vars in block and format results
 (defun format-input-output-list (es vars)
-  (if (stringp es) (setf es (list es)))
+  (when (stringp es) (setf es (list es)))
   (let* ( (cum-e (first es)) (es (cdr es)))
     (format nil "~{~A~}"
             (cons (format-input-output cum-e vars 1)
@@ -80,7 +80,7 @@
 
 ;; format code and results without any evaluation
 (defun format-input-output-list-dead (ecode)
-  (if (stringp (first ecode)) (setf ecode (list ecode)))
+  (when (stringp (first ecode)) (setf ecode (list ecode)))
   (format nil "~{~A~}"
           (loop for ec in ecode for i from 1 to (length ecode) collect
                (format-input-output-dead ec i))))
@@ -154,7 +154,7 @@
 (maxima::ddefun format-examples-latex (name)
   "Format as a string the list of examples for topic 'name'."
   (let* ((el (gethash name *examples-hash*)))
-    (if el (concatenate 'string 
+    (when el (concatenate 'string 
                         (format nil (concatenate 'string
   "\\noindent{\\bf Examples}~%~{~A~}~%")
          (loop for e in (reverse el) collect (format nil (format-example-latex e))))

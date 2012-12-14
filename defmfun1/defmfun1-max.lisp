@@ -37,12 +37,12 @@
   `((,nargs 0) ; count args passed when calling
    (defmfun1-func-name ',name) ; save this name for echeck-arg macro below. Wasteful as most funcs never use it.
    ,@(loop for n in all-args collect ; write default bindings for req and &optional
-           (if (null (car n)) 
+           (if (null (car n))
                (merror1 (intl:gettext "defmfun1: null argument name in definition of ~a.
  Did you omit a pair of parens?~%") name)
           (if (listp (car n)) `,(cons (cadar n) (cdr n)) (if (length1p n) `,(car n) `,n))))
    ,@(loop for n in (get-hash-keys supplied-p-hash) collect `,(gethash n supplied-p-hash))
-   ,@(if rest (cdr rest)))) ; binding for &rest arg
+   ,@(when rest (cdr rest)))) ; binding for &rest arg
 
 (defun defmfun1-write-assignments (name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h)
   `(tagbody ; set required and &optional args to values supplied by call
@@ -53,7 +53,7 @@
             (push `(if (endp ,restarg) (go out)) res)
             (push `(incf ,nargs) res)
             (push `(setf ,targ (pop ,restarg)) res)
-            (if (gethash targ supplied-p-hash) (push `(setf ,(gethash targ supplied-p-hash) t) res))
+            (when (gethash targ supplied-p-hash) (push `(setf ,(gethash targ supplied-p-hash) t) res))
             (dolist (tst (gethash targ reqo-spec))
               (push (defmfun1::check-and-error tst targ name args) res))
             (dolist (pp (gethash targ pp-spec-h))
@@ -61,7 +61,7 @@
    out))
 
 (defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec)
-  (if opt `((dolist (ospec ,opt-args) ; set option variables to supplied values.
+  (when opt `((dolist (ospec ,opt-args) ; set option variables to supplied values.
                 (dbind (var val) ospec
                        (cond ,@(do* ( (optl opt (cdr optl))
                                       (topt (car opt) (car optl))
@@ -74,7 +74,7 @@
                                     (push
                                      `((eq ',opt-name var)
                                        (setf ,opt-var  val)
-                                       ,@(if (gethash optns supplied-p-hash)
+                                       ,@(when (gethash optns supplied-p-hash)
                                              `((setf ,(gethash optns supplied-p-hash) t)))
                                        ,@(do ((tst (gethash opt-name reqo-spec) (cdr tst))
                                               (res))
@@ -129,7 +129,7 @@
         (setf doc-content (second body)) (setf body (cddr body)))
       (loop while (and (listp (car body)) (eq 'declare (caar body))) do
            (push (car body) declare-form) (setf body (cdr body)))
-       (if (defmfun1::are-some-args-held name) (setf defun-type 'defmspec))
+       (when (defmfun1::are-some-args-held name) (setf defun-type 'defmspec))
        `(progn
           ,(when (member :doc directives)
                  `(max-doc::add-doc-entry1 :e 
@@ -143,7 +143,7 @@
           (defmfun1::record-mext-package ',name defmfun1::*mext-package*)
           (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) ; Here is the function definition
             ,@doc-string
-            ,@(if (eq defun-type 'defmspec) `((setf ,args (cdr ,args))))
+            ,@(when (eq defun-type 'defmspec) `((setf ,args (cdr ,args))))
             (let* ,(defmfun1-write-let-bindings name nargs all-args supplied-p-hash rest)
               (declare (ignorable defmfun1-func-name))
               (declare (fixnum ,nargs))
@@ -154,9 +154,9 @@
 ;;                ,(if opt `(defmfun1::collect-opt-args ,args ,nreq) `(list ,args)) ; filter options from other args                
                 (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
                    ,(defmfun1-write-assignments name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h)
-                   ,@(if rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
-                   (if (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest))
-                   ,@(if (null rest) `((if ,restarg ,(defmfun1::narg-error-or-message 
+                   ,@(when rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
+                   (when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest))
+                   ,@(when (null rest) `((if ,restarg ,(defmfun1::narg-error-or-message 
                                                        name args restarg nargs nreq nreqo rest))))
                    ,@(defmfun1-write-rest-assignments name args rest reqo-spec)
                    ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec)
@@ -211,7 +211,7 @@
  (maxima-symbol-to-string name)
  (let ((oh (gethash name defmfun1::*option-table*)))
    (cons '(mlist simp)
-         (if oh (let (ol)  ; (cadr v) to get rid of quote
+         (when oh (let (ol)  ; (cadr v) to get rid of quote
                   (maphash (lambda (k v)
                              (push ($sconcat `((|$Rule| simp) ,(if (listp k) (car k) k) ,(cadr v))) ol)) oh)
                   ol)))))
@@ -223,7 +223,7 @@
  (maxima-symbol-to-string name)
  (let ((oh (gethash name defmfun1::*attributes-table*)))
    (cons '(mlist simp)
-         (if oh (let (ol)  ; (cadr v) to get rid of quote
+         (when oh (let (ol)  ; (cadr v) to get rid of quote
                   (maphash (lambda (k v)
                              (declare (ignore v))
                              (push k ol )) oh)
@@ -231,9 +231,9 @@
 
 ;; why do functions defined by this macro return false ?
 (defmacro mk-maxima-attribute (max-attribute attribute doc-string)
- (if (symbolp attribute) (setf attribute (symbol-name attribute)))
+ (when (symbolp attribute) (setf attribute (symbol-name attribute)))
  (setf attribute (string-upcase attribute))
- (if (symbolp max-attribute) (setf max-attribute (symbol-name max-attribute)))
+ (when (symbolp max-attribute) (setf max-attribute (symbol-name max-attribute)))
  (setf max-attribute (string-upcase max-attribute))
  (let ((set-doc-str 
          (list (format nil "Set the `~a' attribute for function(s) " (string-downcase max-attribute))
@@ -289,8 +289,6 @@
 (meval '((MDEFMACRO SIMP) (($->) $A $B)
  (($BUILDQ) ((MLIST) ((MSETQ) $A $A) ((MSETQ) $B $B))
   ((|$Rule|) ((MQUOTE) $A) $B))))
-
-
 
 ;; prevent operator "->" from being clobbered by kill(all)
 (push "->" *mopl*)
