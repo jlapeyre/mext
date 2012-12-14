@@ -64,8 +64,8 @@ Traverses at most n elements of e."
         (if (> len n) n len))
     (do ( (e e (cdr e))
           (i 0 (1+ i) ))
-;;        ( (or (= n i) (null e)) (if (null e)  i i))  ; why did I have this ??
-        ( (or (= n i) (null e)) i)
+;;        ((or (= n i) (null e)) (if (null e)  i i))  ; why did I have this ??
+        ((or (= n i) (null e)) i)
       (declare (fixnum i)))))
 
 (defun length-eq (e n)
@@ -134,7 +134,6 @@ return nil."
   (let ((pos (string-ends-with-pos string substr)))
     (if pos (subseq string 0 pos)
       nil)))
-
 
 (defun keyword-p (sym)
   (and (symbolp sym)

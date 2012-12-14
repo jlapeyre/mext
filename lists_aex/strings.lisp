@@ -60,7 +60,7 @@ will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
 (defmacro mk-string-sub (name sign)
   (let ((np (if (eq 'neg sign) t nil)))
     `(defun ,name (s i1 i2 i3)
-       ,@(if np `((setf i3 (- i3))))
+       ,@(when np `((setf i3 (- i3))))
        (let* ((n1 (truncate (1+ (- ,@(if np `(i1 i2) `(i2 i1)))) i3))
               (s1 (make-string n1)))
          (loop for i from ,@(if np `((1- i1) downto i2) `(i1 to i2)) by i3

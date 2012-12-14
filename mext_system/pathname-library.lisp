@@ -128,7 +128,7 @@
 ;; Non-portable features:  1) we assume :up means parent dir in lisp
 ;;  2) we assume ".." means parent dir in platform.
 (defun fix-trailing-updir (pname)
-  (if (stringp pname) (setf pname (parse-namestring pname)))  
+  (when (stringp pname) (setf pname (parse-namestring pname)))
   (let* ((posdir (fpathname-directory (pathname-as-directory pname)))
          (chk (car (last posdir))))
     (if (equal ".." chk)
@@ -148,7 +148,7 @@
 ;; Preserves all components of pathname
 ;; Probably not portable as written. :up is not standard
 (defun compact-pathname (pname)
-  (if (stringp pname) (setf pname (parse-namestring pname)))
+  (when (stringp pname) (setf pname (parse-namestring pname)))
   (setf pname (fix-trailing-updir pname))
   (let* ((dir (reverse (fpathname-directory pname)))
          (odir nil))
@@ -157,7 +157,7 @@
       (let ((count 0))
         (loop while (eq :up (car dir)) do
               (incf count) (setf dir (cdr dir)))
-        (if (> count 0) (setf dir (nthcdr count dir))))
+        (when (> count 0) (setf dir (nthcdr count dir))))
       (setf odir (cons (car dir) odir)))
     (fmake-pathname :directory odir :defaults pname)))
 
@@ -182,7 +182,7 @@
 ;; gcl make-pathname is not ansi compliant. I model the error message on sbcl
 #+gcl (defun gcl-make-pathname (&rest args)
         (let ((dir-spec (getf args :directory)))
-          (if dir-spec
+          (when dir-spec
               (cond ( (stringp dir-spec)
                       (setf (getf args :directory) (list :root dir-spec))) ; fix this
                     ( (listp dir-spec)
@@ -210,7 +210,7 @@
 ;;  We choose :up
 #+gcl (defun gcl-pathname-directory (&rest args)
         (let ((dir-spec (apply 'cl::pathname-directory args)))
-          (if (and (listp dir-spec) (not (null dir-spec)))
+          (when (and (listp dir-spec) (not (null dir-spec)))
             (let ((word1 (car dir-spec)))
               (if (and (symbolp word1) (eq :ROOT word1))
                   (setf dir-spec (cons :ABSOLUTE (cdr dir-spec)))
@@ -228,7 +228,7 @@
           (if (null field-key)
               (loop for key in '(:DIRECTORY :NAME :TYPE :VERSION :HOST :DEVICE) do
                     (let ((res (mext-maxima::pathname-component pathname key)))
-                      (if (or (eq :wild res) (and (stringp res) (find #\* res))) (return t))))
+                      (when (or (eq :wild res) (and (stringp res) (find #\* res))) (return t))))
             (let ((res (mext-maxima::pathname-component pathname field-key)))
               (or (eq :wild res) (and (stringp res) (find #\* res)))))))
 
@@ -346,7 +346,7 @@
 (defun copy-file-all-components (source-file source-ext source-dir 
                                              target-file target-ext target-dir)
 ; next line needed by clisp maxima. and must not be present for sbcl,ecl,gcl.  we should look into a general approach.
-#+clisp  (if (stringp target-dir) (setf target-dir (pathname-as-directory target-dir)))
+#+clisp  (when (stringp target-dir) (setf target-dir (pathname-as-directory target-dir)))
   (let ((source-path (fmake-pathname :name source-file :type source-ext :directory source-dir))
         (target-path (fmake-pathname :name target-file :type target-ext :directory target-dir)))
     (format t "Copying '~a' to '~a'~%" source-path target-path)
@@ -563,8 +563,9 @@ by PATHNAME-AS-DIRECTORY."
        (pathname-as-directory (truename pathspec)))
   #+gcl
   (let ((pname (compact-pathname pathspec))) ; can use neither truename nor probefile
-    (if pname 
-        (gcl-directory-pathname-p (pathname-as-file pname))))
+    (if pname     ; why if here ?
+        (gcl-directory-pathname-p (pathname-as-file pname)) 
+      nil))
   #-(or :allegro :lispworks :gcl )
   (let ((result (file-exists-p pathspec)))
     (and result

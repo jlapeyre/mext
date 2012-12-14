@@ -278,7 +278,6 @@ This was copied from maxima source init-cl.lisp.")
                          (if (null res) nil 
                            (if (listp res) res (list res))))
                        (list *system-name*))))))
-;    (format t "!!!!! install-dir ~s~%" install-dir)
     install-dir))
 
 (defun find-target-full-pathname (cfpn install-dir source-full-pathname)
@@ -328,7 +327,7 @@ This was copied from maxima source init-cl.lisp.")
  or distributions ?"
   (loop for name in (list-installed-distributions) do
         (let ((file (mext-mxt-file-search name)))
-          (if file (load file))))
+          (when file (load file))))
   t)
 
 (defun install-mext-description (distname)
@@ -423,7 +422,7 @@ This was copied from maxima source init-cl.lisp.")
             (let ((inlist (list-directory testdir)))
               (loop for file in inlist do
                     (let ((posn (search "rtest" (pathname-name file))))
-                      (if (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
+                      (when (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
                           (setf testdir-list (cons (namestring file) testdir-list)))))))
       (setf maxima::$testsuite_files (cons '(maxima::mlist maxima::simp) testdir-list)))
     (maxima::$run_testsuite)))
@@ -474,7 +473,7 @@ This was copied from maxima source init-cl.lisp.")
 
 (defun add-to-dont-kill (&rest items )
   (loop for item in items do
-        (if (not (member item maxima::allbutl)) (push item maxima::allbutl))))
+        (when (not (member item maxima::allbutl)) (push item maxima::allbutl))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -570,12 +569,12 @@ This was copied from maxima source init-cl.lisp.")
 
 ;; load file in a subdir dir, or use *default-pathname-defaults*
 (defmfun $load_in_dsubdir (file &optional dir)
-  (if (and dir ($listp dir)) (setf dir (cdr dir)))
+  (when (and dir ($listp dir)) (setf dir (cdr dir)))
   (let* ((abs-dir (mext:fpathname-directory *default-pathname-defaults*))
          (new-dir (if dir (append abs-dir dir) abs-dir)))
-    (if ($listp file) (setf file (cdr file)))
+    (when ($listp file) (setf file (cdr file)))
     (mext-maxima::ensure-list file)
-    (if (and file (find #\. (car file)))
+    (when (and file (find #\. (car file)))
         (format t "load_in_subdir: warning: dot in filename that should have no extension.~%"))
     (let ((nfile (length file)))
       (cond ((= 1 nfile)
@@ -588,13 +587,13 @@ This was copied from maxima source init-cl.lisp.")
 
 ;; use load_pathname if defined, else *default-pathname-defaults*
 (defmfun $load_in_subdir (file &optional dir)
-  (if (and dir ($listp dir)) (setf dir (cdr dir)))
+  (when (and dir ($listp dir)) (setf dir (cdr dir)))
   (let* ((abs-dir (mext:fpathname-directory
                    (if $load_pathname $load_pathname *default-pathname-defaults*)))
          (new-dir (if dir (append abs-dir dir) abs-dir)))
-    (if ($listp file) (setf file (cdr file)))
+    (when ($listp file) (setf file (cdr file)))
     (mext-maxima::ensure-list file)
-    (if (and file (find #\. (car file)))
+    (when (and file (find #\. (car file)))
         (format t "load_in_subdir: warning: dot in filename that should have no extension.~%"))
     (let ((nfile (length file)))
       (cond ((= 1 nfile)
@@ -607,15 +606,15 @@ This was copied from maxima source init-cl.lisp.")
 (defmfun $load_files_in_subdir (files &optional dir)
   (unless ($listp files)
     (merror (format nil "List of files ~a is not a list." files)))
-  (if (and dir ($listp dir)) (setf dir (cdr dir)))
+  (when (and dir ($listp dir)) (setf dir (cdr dir)))
   (let* ((abs-dir (mext:fpathname-directory
                          (if $load_pathname $load_pathname *default-pathname-defaults*)))
          (new-dir (if dir (append abs-dir dir) abs-dir)))
     (setf files (cdr files))
     (loop for file in files do
-          (if ($listp file) (setf file (cdr file)))
+          (when ($listp file) (setf file (cdr file)))
           (mext-maxima::ensure-list file)
-          (if (and file (find #\. (car file)))
+          (when (and file (find #\. (car file)))
               (format t "load_files_in_subdir: warning: dot in filename that should have no extension.~%"))
           (let ((nfile (length file)))
             (cond ((= 1 nfile)

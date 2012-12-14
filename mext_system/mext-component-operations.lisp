@@ -35,7 +35,7 @@
                (bpname-to-clean (if binary-full-pathname (mext:fmake-pathname  :type ext :defaults binary-full-pathname))))
 ;          (format t "bpname-to-clean 1 ~s~%" bpname-to-clean)
 ;          (format t " pname-to-clean 1 ~s~%" pname-to-clean)
-          (if pname-to-clean
+          (when pname-to-clean
               (let ((probed-to-clean (probe-file pname-to-clean)))
                 (when (and probed-to-clean (not (equal probed-to-clean source-full-pathname)))
                   (or *oos-test*
@@ -43,7 +43,7 @@
                         (format t "cleaning probed: ~s, source: ~s~%" probed-to-clean source-full-pathname)
                         (format t " Cleaning '~s'~%" pname-to-clean)
                         (delete-file pname-to-clean))))))
-          (if (not (null bpname-to-clean))
+          (when (not (null bpname-to-clean))
               (let ((bprobed-to-clean (probe-file bpname-to-clean)))
                 (when (and bprobed-to-clean (not (equal bprobed-to-clean source-full-pathname)))
                   (or *oos-test*
@@ -109,7 +109,7 @@
          (args (cdr args))
          (output-file (getf args :OUTPUT-FILE)))
     (format t "Got output file ~s~%" output-file)
-    (if output-file   (maxima::$mext_compile_file source-file output-file)
+    (if output-file (maxima::$mext_compile_file source-file output-file)
       (maxima::$mext_compile_file source-file))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
