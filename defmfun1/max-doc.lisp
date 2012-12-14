@@ -667,8 +667,7 @@ must be keyword,value pairs for the doc entry struct."
                    (if (> (length (entry-contents e)) 0)
                        (format nil "~a~%~a~%~a~%" (sect "Description") (wrap-text 
                                :text (format-doc-text-latex (entry-contents e) *format-codes-latex* )
-                               :width *latex-text-width* :indent 0) (skip))
-                     (format nil ""))
+                               :width *latex-text-width* :indent 0) (skip)) "")
                    (let ((sspec (format-arg-specs name)))
                      (if (> (length sspec) 0) 
                        (format nil "~a~%~a~%~a~%" (sect "Arguments") (latex-esc (format nil "~a" sspec)) (skip))
@@ -720,10 +719,10 @@ must be keyword,value pairs for the doc entry struct."
 
 (if *max-doc-top* t (init-doc-top-level))
 
-(if (doc-system::ds-registered-p "max-doc")
+(when (doc-system::ds-registered-p "max-doc")
     (doc-system::ds-de-register "max-doc"))
 
-(if (doc-system::ds-registered-p "max-doc-sec")
+(when (doc-system::ds-registered-p "max-doc-sec")
     (doc-system::ds-de-register "max-doc-sec"))
 
 ;; Register two documentation systems: max-doc for
