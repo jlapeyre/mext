@@ -266,10 +266,10 @@
 (defun mk-opt-check (spec-name err-mssg-spec body)
   (unless (listp err-mssg-spec) (setf err-mssg-spec (list err-mssg-spec)))
   (if (listp spec-name)
-      (progn 
-        (mk-arg-check2 'option spec-name (cons "Value '~a' for option '~a'" err-mssg-spec) body))
-      (progn 
-        (mk-arg-check1 'option spec-name (cons "Value '~a' for option '~a'" err-mssg-spec) body))))
+;      (progn 
+        (mk-arg-check2 'option spec-name (cons "Value '~a' for option '~a'" err-mssg-spec) body)
+;      (progn 
+        (mk-arg-check1 'option spec-name (cons "Value '~a' for option '~a'" err-mssg-spec) body)))
 
 (defun get-pp-func (spec-name)
   (pre-proc-func (gethash spec-name *arg-preprocess-table*)))
@@ -315,7 +315,7 @@
  call nil to get the second message."
   `(defun ,name  (spec-name arg-list name call)
    (let ((spec-args (if (listp spec-name) (rest spec-name) nil)))
-    (if (listp spec-name) (setf spec-name (car spec-name)))
+    (when (listp spec-name) (setf spec-name (car spec-name)))
     (let* ((espec (gethash spec-name ,hash))
            (arg-list1 (format-args arg-list))
            (specl-str (not-comma-separated-english (cadr espec)))
@@ -405,7 +405,7 @@
                  name nospecs (doc-system:get-source-file-name) (doc-system:get-source-package))))
 ;;                                        name nospecs  maxima::$load_pathname))) ; does not work for more than one reason
             (push (if (length1p nospecs) nospecs (list (first nospecs) `(quote ,(second nospecs))) ) argt1) ; quote default values
-            (if (length-eq nospecs 3) (setf (gethash (first nospecs) supplied-p-hash) (third nospecs)))
+            (when (length-eq nospecs 3) (setf (gethash (first nospecs) supplied-p-hash) (third nospecs)))
             (push wspecs argt-spec)
             (push wppspecs pp-spec)))
       (setf (getf arg-specs argt) (nreverse argt-spec))
