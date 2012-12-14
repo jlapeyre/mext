@@ -232,7 +232,7 @@ ia a list of three elements: hame, protocol, contents."
             (pop txt1)
             (cond ((member sitem '("CODE" "CODEDOT" "CODECOMMA")  :test #'equal)
                    (let* ((delim (loop for char in '(#\# #\$ #\~ #\@ #\& #\- #\% \#^ \#?) do
-                                       (if (not (find char s)) (return char))))
+                                       (when (not (find char s)) (return char))))
                           (str (format nil "\\verb~a~a~a" delim s delim)))
                      (push 
                       (cond ((string= sitem "CODE") str)
@@ -250,10 +250,10 @@ ia a list of three elements: hame, protocol, contents."
                   (t
 ;                   (format t "~s ~s ~s~%" sitem s es)
                    (if fmt (push
-                            (if (stringp fmt)
+;                            (if (stringp fmt)
                                 (format nil fmt
                                  (if (listp s) (format-doc-text-latex s code-table)
-                                   (if (eq :math item) s es))))
+                                   (if (eq :math item) s es)))
                             res)
                      (maxima::merror1 "max-doc: Unrecognized format code: ~a." item)))))
         (push (latex-esc item) res)))))
@@ -282,7 +282,7 @@ ia a list of three elements: hame, protocol, contents."
     (format nil "~{~a~^, ~}"
             (loop for arg in args collect
                   (progn 
-                    (if (listp arg) (setf arg (car arg)))
+                    (when (listp arg) (setf arg (car arg)))
                     (setf arg (latex-esc (maxima::maybe-invert-string-case (format nil "~a" arg))))
                     (format nil code arg))))))
 
@@ -422,16 +422,16 @@ ia a list of three elements: hame, protocol, contents."
    to accomodate loading code several times."
   (let* ((entry (apply #'make-entry e))
          (name (entry-name entry)))
-    (if (get-doc-entry :es name)
+    (when (get-doc-entry :es name)
         (if *ignore-silently* (return-from add-doc-entry1 t)
           (format t "add-doc-entry: ** warning replacing entry '~a'~%" name)))
-    (if (not (section-p section))
+    (when (not (section-p section))
         (let ((nsec (get-doc-sec section)))
           (if nsec
               (setf section nsec)
             (maxima::merror1 "max-doc::add-doc-entry1: can't find section for tag ~a." section))))
     (setf (entry-section entry) (section-name section))
-    (if *current-distribution* (setf (entry-distribution entry) *current-distribution*))
+    (when *current-distribution* (setf (entry-distribution entry) *current-distribution*))
     (setf (gethash name (section-hash section)) entry)
     (setf (gethash name max-doc::*max-doc-deffn-defvr-hashtable*) entry)))
 
@@ -460,7 +460,7 @@ must be keyword,value pairs for the doc entry struct."
         (loop for section1 in sections do
               (let ((item (gethash es (section-hash 
                                        (gethash section1 *max-doc-section-hashtable*)))))
-                (if item (return item)))))
+                (when item (return item)))))
   (gethash es (section-hash section))))
 
 ;; not used
@@ -513,7 +513,7 @@ must be keyword,value pairs for the doc entry struct."
   "make string like: foo requires between 3 and 6 arguments"
   (let* ((keyname (concatenate 'string "$" name))
          (lambda-info (defmfun1::get-lambda-list-etc keyname)))
-    (if lambda-info
+    (when lambda-info
         (let* ((arg-list (second lambda-info))
                (req (getf  arg-list :req))
                (optional (getf arg-list :optional ))
@@ -602,14 +602,13 @@ must be keyword,value pairs for the doc entry struct."
                    (format nil "~a.~%"
                            (format-doc-text 
                             (list "  default value " 'code (entry-default-value e)) *format-codes-default* )))
-;                   (format nil "  default value `~a'~%" (entry-default-value e)))
-                 (if (> (length (entry-call-desc-list e)) 0)
+                 (if (> (length (entry-call-desc-list e)) 0)  ; doesn't this put a nil in the list ?
                      (format nil "Calling:~%~a"
                              (format-call-desc-list (entry-call-desc-list e))))
                  (if (> (length (entry-contents e)) 0)
                      (format nil "Description:~%~a~%" (wrap-text 
-                               :text (format-doc-text (entry-contents e) *format-codes-default* ) :width *text-width* :indent *indent1*))
-                     (format nil ""))
+                               :text (format-doc-text (entry-contents e) *format-codes-default* ) 
+                               :width *text-width* :indent *indent1*)) "")
                  (let ((sspec (format-arg-specs name)))
                    (when (> (length sspec) 0) (format nil "Arguments:~%~a" sspec)))
                  (let ((opts (maxima::$foptions name)))
