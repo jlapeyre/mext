@@ -83,7 +83,7 @@
 
 (defmacro mk-attribute (attribute max-attribute)
  "Make accessor and query functions for an attribute. set- , unset- , is- ."
- (if (symbolp attribute) (setf attribute (symbol-name attribute)))
+ (when (symbolp attribute) (setf attribute (symbol-name attribute)))
  (setf attribute (string-upcase attribute))
   `(progn 
      (defun ,(intern (concatenate 'string "SET-" attribute)) (name)
@@ -135,9 +135,8 @@
   (format nil "~{~a~^, ~}"
           (loop for arg in args collect
                 (progn 
-                  (if (listp arg) (setf arg (car arg)))
+                  (when (listp arg) (setf arg (car arg)))
                   (maxima::maybe-invert-string-case (format nil "<~a>" arg))))))
-;     (max-doc::format-doc-text (list 'arg arg) max-doc::*format-codes-latex*))))))
 
 (defun error-or-message (name mssg)
   "name is function name. mssg is error message. print message,
@@ -152,7 +151,7 @@
          (dbind (name &rest args) spec-name
                 (let ((code (gethash name *arg-check-func-table*)))
                   (if code
-                      `(lambda (e) ,(apply code args))                      
+                      `(lambda (e) ,(apply code args))
                       (maxima::merror "defmfun1::get-check-func: No code registered for check type ~a~%" name)))))
         ((keyword-p spec-name)
          (let ((code (gethash spec-name *arg-check-func-table*)))
@@ -259,10 +258,10 @@
 (defun mk-arg-check (spec-name err-mssg-spec body)
   (unless (listp err-mssg-spec) (setf err-mssg-spec (list err-mssg-spec)))
   (if (listp spec-name)
-      (progn 
-        (mk-arg-check2 'arg spec-name (cons "Argument '~a'" err-mssg-spec) body))
-      (progn
-        (mk-arg-check1 'arg spec-name (cons "Argument '~a'" err-mssg-spec) body))))
+;      (progn 
+        (mk-arg-check2 'arg spec-name (cons "Argument '~a'" err-mssg-spec) body)
+;      (progn
+        (mk-arg-check1 'arg spec-name (cons "Argument '~a'" err-mssg-spec) body)))
 
 (defun mk-opt-check (spec-name err-mssg-spec body)
   (unless (listp err-mssg-spec) (setf err-mssg-spec (list err-mssg-spec)))
