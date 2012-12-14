@@ -5,6 +5,7 @@
   (:export 
    :gaif 
    :cmp-length
+   :length-eq
    :comma-separated-english
    :copy-array-type
 ;   :copy-array  conflicts with symbol in graphs
@@ -22,10 +23,10 @@
    :or-comma-separated-english
    :print-hash-entry 
    :remove-terminal-substring
+   :replace-all
    :split-by-one-space
    :string-ends-with-pos 
    :wrap-text)))
-
 
 (if (find-package :mext-maxima ) t  
   (defpackage :mext-maxima (:use common-lisp :gjl.lisp-util)

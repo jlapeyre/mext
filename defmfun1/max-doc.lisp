@@ -105,11 +105,11 @@
     (maxima::merror1 (intl:gettext "max-doc::add-call-desc: Arguments are not all lists. In file (no not really in this file) ~a")
      maxima::$load_pathname))
   "Enter a list of descriptions of how to call the function. Each description
-ia a list of three elements: hame, protocol, contents."
+   is a list of three elements: name, protocol, contents."
   (mapc #'add-call-desc-one args))
 
 (defun add-call-desc-one (arg)
-  (unless (= 3 (length arg))
+  (unless (length-eq arg 3)
     (maxima::merror1 "max-doc:add-call-desc: expected a list of three items in a call description, found ~s~%" (length arg)))
   (destructuring-bind (name args text) arg
     (let ((cd (make-call-desc :name name :args args :text text))
@@ -129,28 +129,11 @@ ia a list of three elements: hame, protocol, contents."
         (t (maxima::merror1 (intl:gettext 
            "max-doc:set-format-codes-table Unknown code name ~s.") code-name))))
 
-;; from common lisp cookbook
-(defun replace-all (string part replacement &key (test #'char=))
-"Returns a new string in which all the occurences of the part 
- are replaced with replacement."
-    (with-output-to-string (out)
-      (loop with part-length = (length part)
-            for old-pos = 0 then (+ pos part-length)
-            for pos = (search part string
-                              :start2 old-pos
-                              :test test)
-            do (write-string string out
-                             :start old-pos
-                             :end (or pos (length string)))
-            when pos do (write-string replacement out)
-            while pos)))
-
 (defun latex-esc (str)
-  (replace-all 
-   (replace-all 
-    (replace-all str "_" "\\_")
-    "^" "\\^")
-   "$" "\\$"))
+  (let ((res str))
+    (loop for pair in '( ("_" "\\_") ("^" "\\^") ("$" "\\$"))
+          do (setf res (replace-all res (first pair) (second pair))))
+    res))
 
 ;; like fill-hash-from-list, but make string from keys
 (defun fill-format-codes (hash-table element-list)
@@ -197,8 +180,6 @@ ia a list of three elements: hame, protocol, contents."
 (defun format-doc-text (text-descr &optional (code-table *format-codes-default*))
  "Return a string of formatted text from a text description list and table that
   takes format codes to strings."
-; (format  t "~s~%" text-descr)
-; (maxima::merror1 "hi")
   (let ((txt (if (listp text-descr) text-descr (list text-descr))))
     (do* ((txt1 txt (cdr txt1))
           (item (car txt) (car txt1))
@@ -261,7 +242,6 @@ ia a list of three elements: hame, protocol, contents."
         (push (latex-esc item) res)))))
 
 (defun format-call-desc (cd)
-;  (format t "Call desc ~s~%" cd)
   (let ((args (mapcar (lambda (x) 
         (if (listp x)
             (cond ((equal (car x) "list")
@@ -329,7 +309,6 @@ ia a list of three elements: hame, protocol, contents."
        (if entry
            (setf (,slot entry) val)
            (maxima::merror1 "max-doc:~a: No entry for doc item ~a" ',setter-name name)))))
-
 
 (def-setter author entry-author)
 (def-setter see-also entry-see-also)

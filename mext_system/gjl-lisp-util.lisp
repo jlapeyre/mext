@@ -74,8 +74,7 @@ elements of e."
   (declare (fixnum n))
   (= (cmp-length e  (1+ n)) n))
 
-;; no gensym. only makes sense to call this on a symbol
-;; called only for sideeffect.
+;; no gensym.
 (defmacro ensure-list (e)
   "Singleton to list maybe. Return e if e is a
    list and (list e) otherwise."
@@ -173,7 +172,7 @@ but the contents are not copied."
                  :adjustable adjustable )))
 
 
-;; from Gene Michael Stover, but he had ~(~a~) in the default case,
+;; Adapted from Gene Michael Stover. One change is that he had ~(~a~) in the default case,
 ;; which lowercases the text.
 (defmacro mk-comm-sep-eng ( name (one (two-a two-b) (three-start three-last)))
   `(defun ,name (lst)
@@ -185,18 +184,16 @@ but the contents are not copied."
               (format nil (concatenate 'string ,three-start "~{ ~a~#[~;, " ,three-last
                                        "~:;,~]~}")   lst))))))
 
-
 (mk-comm-sep-eng comma-separated-english ("" ("" "and") ("" "and")))
 (mk-comm-sep-eng or-comma-separated-english ("" ("" "or") ("" "or")))
 (mk-comm-sep-eng not-comma-separated-english ("not " ("neither " "nor") ("not one of: " "or")))
 
-
 ;; taken from common lisp cookbook. By whom ?
 (defun split-by-one-space (string)
-    "Returns a list of substrings of string
-divided by ONE space each.
-Note: Two consecutive spaces will be seen as
-if there were an empty string between them."
+ "Returns a list of substrings of string
+  divided by ONE space each.
+  Note: Two consecutive spaces will be seen as
+  if there were an empty string between them."
     (loop for i = 0 then (1+ j)
           as j = (position #\Space string :start i)
           collect (subseq string i j)
@@ -214,17 +211,18 @@ if there were an empty string between them."
                           ":;~A~> ~}")))
     (format nil str text)))
 
-;;  original (format nil "I have~{ ~(~A~)~#[~;, and~:;,~]~}." lst)
-
-#| this works
-;; from Gene Michael Stover
-(defun comma-separated-english (lst)
-  "Returns a string of a comma separated list of items in  lst,
-  with and before the final item."
-  (let ((n (cmp-length lst 3)))
-    (cond ((= 0 n) "")
-          ((= 1 n) (format nil "~a" (car lst)))
-          ((= 2 n) (format nil "~a and ~a" (car lst) (cadr lst)))
-          (t
-           (format nil "~{ ~(~A~)~#[~;, and~:;,~]~}" lst)))))
-|#
+;; from common lisp cookbook
+(defun replace-all (string part replacement &key (test #'char=))
+"Returns a new string in which all the occurences of the part 
+ are replaced with replacement."
+    (with-output-to-string (out)
+      (loop with part-length = (length part)
+            for old-pos = 0 then (+ pos part-length)
+            for pos = (search part string
+                              :start2 old-pos
+                              :test test)
+            do (write-string string out
+                             :start old-pos
+                             :end (or pos (length string)))
+            when pos do (write-string replacement out)
+            while pos)))
