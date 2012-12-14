@@ -190,7 +190,7 @@
                     when (or (not (typep xa 'fixnum)) (< (the fixnum xa) 1)
                              (> (the fixnum xa) n) (= 1 (bit visited (the fixnum (1- (the fixnum xa))))))
                     do (setf flag t)
-                    do (if flag (return)) (setf (bit visited (the fixnum (1- (the fixnum xa)))) 1))
+                    do (when flag (return)) (setf (bit visited (the fixnum (1- (the fixnum xa)))) 1))
               (not flag))
           (do* ((x (cdr ain) (cdr x))
                 (x1 (car x) (car x)))  ; "the fixnum" did not improve speed here much if at all.
@@ -227,7 +227,7 @@
                     when (or (< (the fixnum xa) 1)
                          (> (the fixnum xa) n) (= 1 (bit visited (the fixnum (1- (the fixnum xa))))))
                     do (setf flag t)
-                    do (if flag (return)) (setf (bit visited (the fixnum (1- (the fixnum xa)))) 1))
+                    do (when flag (return)) (setf (bit visited (the fixnum (1- (the fixnum xa)))) 1))
               (not flag))
           (do* ((x (cdr ain) (cdr x))
                 (x1 (car x) (car x)))  ; "the fixnum" did not improve speed here much if at all.

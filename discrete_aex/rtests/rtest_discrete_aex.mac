@@ -69,5 +69,9 @@ select(lrange(100),abundant_p);
 select(lrange(10^4),perfect_p);
 [6, 28, 496, 8128]$
 
+aliquot_sequence(100,100);
+[100, 117, 65, 19, 1, 0]$
+
+
 kill(a,num);
 done;

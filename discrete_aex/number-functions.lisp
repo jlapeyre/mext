@@ -284,7 +284,7 @@
           (setf last cur)
           (setf cur (- (divisor-function-1 cur) cur))
           (setf seq (cons cur seq)))
-    (if (= cur last) (setf seq (cdr seq)))
+    (when (= cur last) (setf seq (cdr seq)))
     (cons '(mlist simp) (nreverse seq))))
 
 
