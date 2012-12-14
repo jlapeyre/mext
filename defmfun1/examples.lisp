@@ -195,9 +195,9 @@
   'maxima::$done)
 
 (max-doc:clear-call-desc "examples")
-(max-doc:add-call-desc '( "examples" ("item") ("Print examples for the topic " arg "item"
+(max-doc:add-call-desc '( "examples" ("item") ("Print examples for the topic " :arg "item"
                               ". Note these examples are different from those extracted from the
-            maxima manual with the command " code "example" ".")))
+            maxima manual with the command " :code "example" ".")))
 
 (maxima::defmfun1 (maxima::$examples_add :doc) ( (item :or-string-symbol)
                                                  (text :string)
@@ -208,10 +208,10 @@
 
 (max-doc::clear-call-desc "examples_add")
 (max-doc::add-call-desc '( "examples_add" ("item" "text" "protected-var-list" "code")
-                          ("Add an example for item " arg "item" ". " arg "text" " will be printed
- before the example is displayed. " arg "protected-var-list" " is string giving a list of variables
+                          ("Add an example for item " :arg "item" ". " :arg "text" " will be printed
+ before the example is displayed. " :arg "protected-var-list" " is string giving a list of variables
  such as \"[x,y]\" that appear in the example code. The example code will be wrapped in a block
- that makes "  arg "protected-var-list" " local. " arg "code" " may be a string or list of strings
+ that makes "  :arg "protected-var-list" " local. " :arg "code" " may be a string or list of strings
  that is/are the example code.")))
 
 (add-example "examples_add" '( :pretext "Add an example for the function 'last'."

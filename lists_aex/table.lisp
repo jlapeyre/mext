@@ -312,7 +312,6 @@
   floating point number, it is truncated into an integer.
   This type of iterator is the fastest, since no variable is bound.")))
 
-
 (add-call-desc '( "table" ("expr" ("list" "variable" "initial" "end" "step") )
     ("Returns a list of evaluated expressions where " :arg "variable" " (a symbol) is set
       to a value. The first element of the returned list is " :arg "expression" " evaluated

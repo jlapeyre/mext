@@ -135,6 +135,7 @@ return nil."
     (if pos (subseq string 0 pos)
       nil)))
 
+;; where did I find this ?
 (defun keyword-p (sym)
   (and (symbolp sym)
        (eq #\: (elt  (format nil "~s" sym) 0))))

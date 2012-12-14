@@ -256,7 +256,7 @@ refers to the head."
 ;; is used
 (defmfun1 ($ilength :doc)  ((e :or-non-atom-subvar))
  :desc ("Returns the length of the expression " :argdot "e" " This is like maxima "
- code "length" ", but here, " :arg "e" " can be either an aex or a lex.")
+ :emref "length" ", but here, " :arg "e" " can be either an aex or a lex.")
   (if (aex-p e) (length (aex-arr e))
      (progn (setf e (if ($listp e) e
                            (specrepcheck e)))

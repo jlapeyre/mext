@@ -538,7 +538,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <A NAME="ilength"></A>
 <B>ilength</B>(<I>e</I>)</P><P>mext package: aex</P><P>
 <B>Description</B>
-Returns the length of the expression <I>e</I>. This is like maxima <CODE>length</CODE>, but here, <I>e</I> can be either an aex or a lex. </P><P><B>Arguments</B>
+Returns the length of the expression <I>e</I>. This is like maxima <TT>length</TT>, but here, <I>e</I> can be either an aex or a lex. </P><P><B>Arguments</B>
 <TT>ilength</TT> requires one argument <I>e</I>, which must be a subscripted variable or non-atomic.</P><!--TOC subsection Function: ipart-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc22">3.14</A>  Function: ipart<A NAME="sec:ipart"></A></H3><!--SEC END --><P>
 <A NAME="ipart"></A></P><P>
@@ -986,7 +986,7 @@ The pathname to the pager program used for reading paged output, eg for document
 <A NAME="pager_string"></A>
 <B>pager_string</B>(<I>s</I>)</P><P>mext package: aex</P><P>
 <B>Description</B>
-Read the string <I>s</I> in the pager given by the maxima variable <CODE>pager_command</CODE>.This works at least with gcl under linux. </P><P><B>Arguments</B>
+Read the string <I>s</I> in the pager given by the maxima variable NILThis works at least with gcl under linux. </P><P><B>Arguments</B>
 <TT>pager_string</TT> requires one argument <I>s</I>, which must be a string.</P><!--TOC subsection Function: restore-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc59">8.3</A>  Function: restore<A NAME="sec:restore"></A></H3><!--SEC END --><P>
 <A NAME="restore"></A>
@@ -1507,9 +1507,9 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc81">9.18</A>  Argument type: sequence specifier<A NAME="sec:sequence specifier"></A></H3><!--SEC END --><P>
 <A NAME="sequence specifier"></A></P><P>
 <B>Description</B>
-A sequence specification specifies a subsequence of the elements in an expression. A single positive number <I>n</I> means the first <I>n</I> elements. −<I>n</I> means the last <I>n</I> elements. A list of three numbers <CODE>[i1,i2,i3]</CODE> means the <CODE>i1</CODE>th through the <CODE>i2</CODE>th stepping by <CODE>i3</CODE>. If <CODE>i1</CODE> 
-or <CODE>i2</CODE> are negative, they count from the end. If <CODE>i3</CODE> is negative, stepping is down and <CODE>i1</CODE> must be greater than or equal to <CODE>i2</CODE>. If <CODE>i3</CODE> is omitted, it is taken to be 1. A sequence specifiier can also be one of ’all ’none or ’reverse, which mean all elements, no 
-elements or all elements in reverse order respectively. </P><P><B>See also</B>
+A sequence specification specifies a subsequence of the elements in an expression. A single positive number <I>n</I> means the first <I>n</I> elements. −<I>n</I> means the last <I>n</I> elements. A list of three numbers <CODE>[i1,i2,i3]</CODE> means the <CODE>i1</CODE>th through the <CODE>i2</CODE>th stepping by NIL If <CODE>i1</CODE> or 
+<CODE>i2</CODE> are negative, they count from the end. If <CODE>i3</CODE> is negative, stepping is down and <CODE>i1</CODE> must be greater than or equal to NIL If <CODE>i3</CODE> is omitted, it is taken to be 1. A sequence specifiier can also be one of ’all ’none or ’reverse, which mean all elements, no elements or all 
+elements in reverse order respectively. </P><P><B>See also</B>
 <A HREF="#take"><TT>take</TT></A> and <A HREF="#string_take"><TT>string_take</TT></A>.</P><!--TOC subsection Function: table-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc82">9.19</A>  Function: table<A NAME="sec:table"></A></H3><!--SEC END --><P>
 <A NAME="table"></A></P><P>mext package: lists_aex</P><P>
@@ -2197,7 +2197,7 @@ n_tanh calls the lisp numeric function ?tanh. This function accepts only float o
 <A NAME="cmplength"></A>
 <B>cmplength</B>(<I>e</I>, <I>n</I>)</P><P>mext package: aex</P><P>
 <B>Description</B>
-return the smaller of <I>n</I> and <CODE>length(e)</CODE>. This is useful if <I>e</I> is very large and <I>n</I> is small, so that computing the entire length of <I>e</I> is inefficient. Expression <I>e</I> can be either a list or an array. </P><P><B>Arguments</B>
+return the smaller of <I>n</I> and NIL This is useful if <I>e</I> is very large and <I>n</I> is small, so that computing the entire length of <I>e</I> is inefficient. Expression <I>e</I> can be either a list or an array. </P><P><B>Arguments</B>
 <TT>cmplength</TT> requires two arguments.
 The second argument <I>n</I> must be a non-negative integer.</P><P><B>See also</B>
 <A HREF="#length0p"><TT>length0p</TT></A>, <A HREF="#length_eq"><TT>length_eq</TT></A>, and <A HREF="#length1p"><TT>length1p</TT></A>.</P><P><B>Implementation</B>
@@ -2370,7 +2370,7 @@ Return a list of the directories on the directory stack. This list is manipulate
 <A NAME="dont_kill"></A>
 <B>dont_kill</B>( :rest <I>item</I>)</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
-Add the <I>items</I>s to the list of symbols that are not killed by <CODE>kill(all)</CODE>. This facility is part of the maxima core, but is apparantly unused. Maybe putting a property in the symbol’s property list would be better. </P><P><B>Arguments</B>
+Add the <I>items</I>s to the list of symbols that are not killed by NIL This facility is part of the maxima core, but is apparantly unused. Maybe putting a property in the symbol’s property list would be better. </P><P><B>Arguments</B>
 <TT>dont_kill</TT> requires zero or more arguments.</P><P><B>Attributes</B>
 dont_kill has attributes: [hold_all]</P><!--TOC subsection Function: dont_kill_share-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc139">15.5</A>  Function: dont_kill_share<A NAME="sec:dont_kill_share"></A></H3><!--SEC END --><P>
@@ -2383,7 +2383,7 @@ Prevent symbols in maxima share package <I>package</I> from being killed by <TT>
 <A NAME="get_dont_kill"></A>
 <B>get_dont_kill</B>()</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
-Returns the list of symbols that are not killed by <CODE>kill(all)</CODE>. Items are added to this list with <A HREF="#dont_kill"><TT>dont_kill</TT></A>. </P><P><B>Arguments</B>
+Returns the list of symbols that are not killed by NIL Items are added to this list with <A HREF="#dont_kill"><TT>dont_kill</TT></A>. </P><P><B>Arguments</B>
 <TT>get_dont_kill</TT> requires zero arguments.</P><!--TOC subsection Function: mext_clear-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc141">15.7</A>  Function: mext_clear<A NAME="sec:mext_clear"></A></H3><!--SEC END --><P>
 <A NAME="mext_clear"></A>

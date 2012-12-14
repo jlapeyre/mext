@@ -155,55 +155,60 @@ ia a list of three elements: hame, protocol, contents."
 ;; like fill-hash-from-list, but make string from keys
 (defun fill-format-codes (hash-table element-list)
   (mapcar (lambda (pair) 
-            (setf (gethash (symbol-name (first pair)) hash-table) (second pair))) element-list)
+            (setf (gethash (first pair) hash-table) (second pair))) element-list)
   hash-table)
 
 (fill-format-codes *format-codes-text*
-   '( (code "`~a'")  (codedot "`~a'.")  (codecomma "`~a',") 
-      (mref "`~a'")  (mrefdot "`~a'.")  (mrefcomma "`~a',") 
-      (emref "`~a'")  (emrefdot "`~a'.")  (emrefcomma "`~a',") 
-      (arg "<~a>")   (argdot "<~a>.")   (argcomma "<~a>,")
-      (var "<~a>")   (vardot "<~a>.")   (varcomma "<~a>,")
-      (opt "<~a>")   (optdot "<~a>.")   (optcomma "<~a>,")
-      (dquote "\"~a\"") (dquotedot "\"~a\".") (dquotecomma "\"~a\",")
-      (math "~a")
-      (dmath "~a") (dots " ... ")))
+   '( (:code "`~a'")  (:codedot "`~a'.")  (:codecomma "`~a',") 
+      (:mref "`~a'")  (:mrefdot "`~a'.")  (:mrefcomma "`~a',") 
+      (:emref "`~a'")  (:emrefdot "`~a'.")  (:emrefcomma "`~a',") 
+      (:arg "<~a>")   (:argdot "<~a>.")   (:argcomma "<~a>,")
+      (:var "<~a>")   (:vardot "<~a>.")   (:varcomma "<~a>,")
+      (:opt "<~a>")   (:optdot "<~a>.")   (:optcomma "<~a>,")
+      (:dquote "\"~a\"") (:dquotedot "\"~a\".") (:dquotecomma "\"~a\",")
+      (:math "~a")
+      (:dmath "~a") (:dots " ... ")))
 
 ;; mref, mrefdot, mrefcomma below are not used. caught in earlier branch
 ;; emref etc. should eventually do external links
 (fill-format-codes *format-codes-latex*
-   '( (code "{\\tt ~a}")  (codedot "{\\tt ~a}.")  (codecomma "{\\tt ~a},") 
-      (mref "{\\tt ~a}")  (mrefdot "{\\tt ~a}.")  (mrefcomma "{\\tt ~a},")
-      (emref "{\\tt ~a}")  (emrefdot "{\\tt ~a}.")  (emrefcomma "{\\tt ~a},")
-      (arg "{\\it ~a}")   (argdot "{\\it ~a}.")   (argcomma "{\\it ~a},")
-      (var "{\\it ~a}")   (vardot "{\\it ~a}.")   (varcomma "{\\it ~a},")
-      (opt "{\\it ~a}")   (optdot "{\\it ~a}.")   (optcomma "{\\it ~a},")
-      (dquote "``~a''") (dquotedot "``~a''.") (dquotecomma "``~a'',")
-      (math "$~a$")
-      (dmath "~%$$~a$$~%") (dots "\\ldots")))
+   '( (:code "{\\tt ~a}")  (:codedot "{\\tt ~a}.")  (:codecomma "{\\tt ~a},") 
+      (:mref "{\\tt ~a}")  (:mrefdot "{\\tt ~a}.")  (:mrefcomma "{\\tt ~a},")
+      (:emref "{\\tt ~a}")  (:emrefdot "{\\tt ~a}.")  (:emrefcomma "{\\tt ~a},")
+      (:arg "{\\it ~a}")   (:argdot "{\\it ~a}.")   (:argcomma "{\\it ~a},")
+      (:var "{\\it ~a}")   (:vardot "{\\it ~a}.")   (:varcomma "{\\it ~a},")
+      (:opt "{\\it ~a}")   (:optdot "{\\it ~a}.")   (:optcomma "{\\it ~a},")
+      (:dquote "``~a''") (:dquotedot "``~a''.") (:dquotecomma "``~a'',")
+      (:math "$~a$")
+      (:dmath "~%$$~a$$~%") (:dots "\\ldots")))
 
 (defun make-texi-codes (table codes)
  "Make a table of symbols to codes for texi. E.g. var --> @var{~a}"
   (loop for code in codes do
-        (let ((name (symbol-name code)))
+        (let ((name code))
           (setf (gethash name table) (format nil "@~a{~~a}" (string-downcase name))))))
 
 (make-texi-codes *format-codes-texi*
-   '( code codecomma codedot var varcomma vardot
-      mref mrefcomma mrefdot arg argcomma argdot
-      var varcomma vardot opt optcomma optdot
-      math dmath dots))
+   '( :code :codecomma :codedot :var :varcomma :vardot
+      :mref :mrefcomma :mrefdot :arg :argcomma :argdot
+      :var :varcomma :vardot :opt :optcomma :optdot
+      :math :dmath :dots))
 
 (defun format-doc-text (text-descr &optional (code-table *format-codes-default*))
  "Return a string of formatted text from a text description list and table that
   takes format codes to strings."
+; (format  t "~s~%" text-descr)
+; (maxima::merror1 "hi")
   (let ((txt (if (listp text-descr) text-descr (list text-descr))))
     (do* ((txt1 txt (cdr txt1))
           (item (car txt) (car txt1))
           (res))
         ((null txt1) (format nil "~{~a~}" (nreverse res)))
-      (if (symbolp item) 
-          (let ((fmt (gethash (symbol-name item) code-table)))
+      (if (symbolp item)
+          (let ((fmt (gethash item code-table)))
+            (unless (keyword-p item) 
+              (format t "max-doc: Format symbol not a keyword ~s, in ~s." item txt)
+              (maxima::merror1 "An error"))
             (if fmt
                 (progn (pop txt1)
                        (push (format nil fmt
@@ -213,9 +218,7 @@ ia a list of three elements: hame, protocol, contents."
         (push item res)))))
 
 ;; we should try to refactor the text and latex code at some point.
-;; lots of things to fix:
-;;  *require documentation descriptions to always use
-;;   colons with symbols, eg :arg, so that we can dispense with symbol-name and strings.
+;; lots of things to clean up.
 (defun format-doc-text-latex (text-descr &optional (code-table *format-codes-latex*))
  "Return a string of formatted text from a text description list and table that
   takes format codes to strings."
@@ -225,32 +228,31 @@ ia a list of three elements: hame, protocol, contents."
           (res))
         ((null txt1) (format nil "~{~a~}" (nreverse res)))
       (if (symbolp item)
-          (let* ((sitem (symbol-name item))
-                 (fmt (gethash sitem code-table))
+          (let* ((fmt (gethash item code-table))
                  (s (cadr txt1))
                  (es (latex-esc s)))
+            (unless (keyword-p item) 
+              (format t "max-doc: Format symbol not a keyword ~s, in ~s." item txt)
+              (maxima::merror1 "An error"))
             (pop txt1)
-            (cond ((member sitem '("CODE" "CODEDOT" "CODECOMMA")  :test #'equal)
+            (cond ((member item '(:code :codedot :codecomma)  :test #'equal)
                    (let* ((delim (loop for char in '(#\# #\$ #\~ #\@ #\& #\- #\% \#^ \#?) do
                                        (when (not (find char s)) (return char))))
                           (str (format nil "\\verb~a~a~a" delim s delim)))
                      (push 
-                      (cond ((string= sitem "CODE") str)
-                            ((string= sitem "CODEDOT") (format nil "~a." str))
-                            ((string= sitem "CODECOMMA") (format nil "~a," str)))
+                      (cond ((eq item :code) str)
+                            ((eq item :code) (format nil "~a." str))
+                            ((eq item :codecomma) (format nil "~a," str)))
                       res)))
-                  ((member sitem '("MREF" "MREFDOT" "MREFCOMMA")  :test #'equal)
-                  ; (format t "~s ~s~%" sitem s)
+                  ((member item '(:mref :mrefdot :mrefcomma)  :test #'equal)
                    (let ((str (format nil "\\hyperlink{~a}{{\\tt ~a}}" s es)))
                      (push 
-                      (cond ((string= sitem "MREF") str)
-                            ((string= sitem "MREFDOT") (format nil "~a." str))
-                            ((string= sitem "MREFCOMMA") (format nil "~a," str)))
+                      (cond ((eq item :mref) str)
+                            ((eq item :mrefdot) (format nil "~a." str))
+                            ((eq item :mrefcomma) (format nil "~a," str)))
                       res)))
                   (t
-;                   (format t "~s ~s ~s~%" sitem s es)
                    (if fmt (push
-;                            (if (stringp fmt)
                                 (format nil fmt
                                  (if (listp s) (format-doc-text-latex s code-table)
                                    (if (eq :math item) s es)))
@@ -259,17 +261,18 @@ ia a list of three elements: hame, protocol, contents."
         (push (latex-esc item) res)))))
 
 (defun format-call-desc (cd)
+;  (format t "Call desc ~s~%" cd)
   (let ((args (mapcar (lambda (x) 
         (if (listp x)
             (cond ((equal (car x) "list")
-                   (let* ((fmt (gethash (symbol-name 'arg) *format-codes-default*))
+                   (let* ((fmt (gethash :arg *format-codes-default*))
                           (fmt1 (format nil "[~~{~a~~^, ~~}]" fmt)))
                      (format nil fmt1 (cdr x))))
                   ((equal (car x) "lit")
                    (format nil "~{~a ~}" (cdr x)))
                   (t
                    (maxima::merror1 "max-doc: unknown call description argument ~s" x)))
-          (format-doc-text (list 'var x) *format-codes-default*)))
+          (format-doc-text (list :var x) *format-codes-default*)))
                       (call-desc-args cd))))
   (format nil "    ~a(~{~a~^, ~})~%  ~a~%~%" (call-desc-name cd) args
           (wrap-text :text (format-doc-text (call-desc-text cd) *format-codes-default*) :width 80 :indent *indent3* ) )))
@@ -278,7 +281,7 @@ ia a list of three elements: hame, protocol, contents."
   (format nil "~{~a~}" (nreverse (mapcar #'format-call-desc cd-list))))
 
 (defun format-arg-list (args)
-  (let ((code (gethash (symbol-name 'arg)  *format-codes-default*)))
+  (let ((code (gethash :arg *format-codes-default*)))
     (format nil "~{~a~^, ~}"
             (loop for arg in args collect
                   (progn 
@@ -303,7 +306,7 @@ ia a list of three elements: hame, protocol, contents."
   (let ((args (mapcar (lambda (x) 
         (if (listp x)
             (cond ((equal (car x) "list")
-                   (let* ((fmt (gethash (symbol-name 'arg) *format-codes-latex*))
+                   (let* ((fmt (gethash :arg *format-codes-latex*))
                           (fmt1 (format nil "[~~{~a~~^, ~~}]" fmt)))
                      (format nil fmt1 (cdr x))))
                   ((equal (car x) "lit")
@@ -532,7 +535,7 @@ must be keyword,value pairs for the doc entry struct."
   (format nil "    The ~:R argument ~a must be ~a.~%"
           arg-count
 ;          (maxima::maybe-invert-string-case 
-           (format-doc-text (list 'arg 
+           (format-doc-text (list :arg 
                              (maxima::maybe-invert-string-case (symbol-name arg))) *format-codes-default*)
           (defmfun1::get-arg-spec-to-english type)))
 
@@ -546,7 +549,7 @@ must be keyword,value pairs for the doc entry struct."
                  ". If present, the argument ~a must be a ~a.~%") ; zero or one arg
                 (t
                  " ~a, which must be ~a.~%")) ; exactly one arg
-           (format-doc-text (list 'arg
+           (format-doc-text (list :arg
                                   (maxima::maybe-invert-string-case (symbol-name arg))) *format-codes-default*)
           (defmfun1::get-arg-spec-to-english type)))
 
@@ -601,7 +604,7 @@ must be keyword,value pairs for the doc entry struct."
                  (if (null (entry-default-value e))  ""
                    (format nil "~a.~%"
                            (format-doc-text 
-                            (list "  default value " 'code (entry-default-value e)) *format-codes-default* )))
+                            (list "  default value " :code (entry-default-value e)) *format-codes-default* )))
                  (if (> (length (entry-call-desc-list e)) 0)  ; doesn't this put a nil in the list ?
                      (format nil "Calling:~%~a"
                              (format-call-desc-list (entry-call-desc-list e))))
@@ -631,11 +634,6 @@ must be keyword,value pairs for the doc entry struct."
 ;;                     "~%  Copyright (C) ~{~a ~}.~%" x)
                  (format nil "~%"))))
 
-;(defun func-sec-latex (sec)
-;  (format nil "\\subsubsection{~a}" sec))
-;(defun func-sec-latex (sec)
-;  (format nil "\\noindent{\\bf ~a}" sec))
-
 (defun format-doc-entry-latex (e)
   "called by system documentation routines."
   (let* ((name (entry-name e))
@@ -658,7 +656,7 @@ must be keyword,value pairs for the doc entry struct."
                    (if (null (entry-default-value e))  ""
                      (format nil "~a.~%~%"
                              (format-doc-text-latex 
-                              (list "  default value " 'code (entry-default-value e)) *format-codes-latex* )))
+                              (list "  default value " :code (entry-default-value e)) *format-codes-latex* )))
                    (if (> (length (entry-call-desc-list e)) 0)
 ;;  conveters dont like this  (format nil "~a~%\\begin{itemize}\\itemsep5pt \\parskip0pt \\parsep0pt ~%~a\\end{itemize}~%"
                        (format nil "~a~%\\begin{itemize}~%~a\\end{itemize}~%"

@@ -1,6 +1,5 @@
 (in-package "COMMON-LISP-USER")
 
-
 (if (find-package :gjl.lisp-util ) t  (defpackage :gjl.lisp-util (:use common-lisp)
   (:nicknames :gjl)
   (:export 

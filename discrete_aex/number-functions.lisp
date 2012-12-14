@@ -21,8 +21,8 @@
     (parse-integer (format nil fs digits) :radix base)))
 
 (defmfun1 ($from_digits :doc)  ( (digits :or-ae-list-string :ensure-lex) &optional (base 10))
-  :desc ( var "base" " need not be number, but may be, for instance, a symbol. If "
-  var "base" " is a number it must be an integer between 2 and 36. " var "digits"
+  :desc ( :var "base" " need not be number, but may be, for instance, a symbol. If "
+  :var "base" " is a number it must be an integer between 2 and 36. " :var "digits"
   " may be a string rather than a list.")
   (when (stringp digits)
       (if (and (numberp base) (echeck-arg :radix base))
@@ -105,7 +105,7 @@
 
 (defmfun1 $prime_pi_soe1 ((n :non-neg-int))
   :desc ("The prime counting function. The algorithm is the sieve of Eratosthenes.
-   Internally an array of " var "n" " bits is used.")
+   Internally an array of " :var "n" " bits is used.")
   (if (= 0 n) 0
       (let ((a (make-array (+ n 1) :element-type 'bit :initial-element 1 :adjustable nil ))
             (c 1))
@@ -125,7 +125,7 @@
 ;; dunno which are the important ones.
 (defmfun1 ($prime_pi_soe :doc)  ((n :non-neg-int))
   :desc ("The prime counting function. The algorithm is the sieve of Eratosthenes.
-   Internally an array of " var "n" " bits is used.")
+   Internally an array of " :var "n" " bits is used.")
   (if (= 0 n) 0
       (let ((a (make-array (+ n 1) :element-type 'bit :initial-element 1 :adjustable nil ))
             (c 1)
@@ -172,7 +172,7 @@
 
 
 (defmfun1 ($catalan_number :doc) (n)
- :desc ("Returns the " var "n" "th catalan number.")
+ :desc ("Returns the " :var "n" "th catalan number.")
   (if (numberp n) (/ ($binomial (* 2 n) n) (+ n 1))
       (meval (mul (list '(mexpt simp) (add 1 n) -1) ($binomial (mul 2 n) n)))))
 

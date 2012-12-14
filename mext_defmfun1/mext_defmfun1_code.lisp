@@ -23,7 +23,7 @@
 
 (defmfun1 ($dirstack :doc) ()
   :desc ("Return a list of the directories on the directory stack. This list is
- manipulated with " mref "chdir" ", " mrefcomma "updir" " and " mrefdot "popdir")
+ manipulated with " :mref "chdir" ", " :mrefcomma "updir" " and " :mrefdot "popdir")
   (cons '(mlist simp) mext::*pwd-directory-stack*))
 
 (defmfun1 ($dir_exists :doc) ((dir :string))

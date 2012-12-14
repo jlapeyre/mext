@@ -204,9 +204,9 @@
 (max-doc::set-cur-sec 'max-doc::options)
 
 (defmfun1 ($foptions :doc) ( (name :or-string-symbol) )
- :desc ("Return a list of allowed options to " code "defmfun1"
-  " function " argdot "name"
-  " I would prefer to call this " code "options" ", but that name is taken
+ :desc ("Return a list of allowed options to " :code "defmfun1"
+  " function " :argdot "name"
+  " I would prefer to call this " :code "options" ", but that name is taken
  by an unused, undocumented function.")
  (maxima-symbol-to-string name)
  (let ((oh (gethash name defmfun1::*option-table*)))

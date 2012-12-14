@@ -19,7 +19,7 @@
 ;; This is, however slower, I suppose because of allocating memory.
 
 (defmfun-ae ($ae_random_permutation :doc) ( (a :non-atom)  )
-  :desc ("returns " var "a" " with subexpressions permuted randomly.")
+  :desc ("returns " :var "a" " with subexpressions permuted randomly.")
   (let* ( (a1 (aex-cp a)) ; aex-cp is like aex_cp, but no arg checks , etc.
           (n (aex-length a1)))
     (declare (fixnum n))
@@ -210,8 +210,8 @@
 
 (defmfun1 ($permutation_p1 :doc) (ain)
  :desc 
-  ("This is the same as " mrefcomma "permutation_p" " but, if the input is a list,
-   it assumes all elements in the input list are fixnum integers, while " mref "permutation_p" 
+  ("This is the same as " :mrefcomma "permutation_p" " but, if the input is a list,
+   it assumes all elements in the input list are fixnum integers, while " :mref "permutation_p" 
    " does not.")
   (if ($ae_listp ain)
       (let* ((n (ilength ain))
