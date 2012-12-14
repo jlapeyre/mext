@@ -77,11 +77,6 @@
             (and (find force '(:new-source :new-source-and-dependents :new-source-all) :test #'eq)
 		 (needs-compilation component nil)))
     (let ((cfpn (component-full-pathname component file-type)))
-   ;      (format t "!!!!! rootdir ~s~%" (component-root-dir component file-type))
-   ;      (format t "!!!!! cpn ~s~%" (component-pathname component file-type))
-   ;      (format t "!!!!! cfpn ~s~%" cfpn)
-   ;      (format t "!!!!! cspn ~s~%" (component-source-pathname component ))
-   ;      (format t "!!!!! dfpnd ~s~%" (mext:pathname-as-directory *default-pathname-defaults*))
       (mext::install-file cfpn data))))
 
 ;;; install source files to a subdir of user dir

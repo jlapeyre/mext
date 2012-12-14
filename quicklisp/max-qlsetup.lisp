@@ -6,7 +6,7 @@
   (let* ((setup (make-pathname :name "setup" :type "lisp"
                                :directory (pathname-directory *quicklisp-pathname*)))
          (probed (probe-file setup)))
-    (if probed 
+    (when probed 
         (progn 
           #+openmcl
           (progn (format t "ccl: loading asdf~%")
@@ -16,7 +16,7 @@
             (loop for dir in 
                   (list *load-pathname* 
                         (mext:subdir-pathname '( "quicklisp" ) mext::*mext-user-dir-as-string*)) do
-                  (if dir
+                  (when dir
                       (let* ((pn (merge-pathnames max-ql dir))
                              (ppn (probe-file pn)))
                         (when ppn (return (load ppn)))))))))))

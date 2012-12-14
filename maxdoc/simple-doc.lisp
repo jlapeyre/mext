@@ -81,8 +81,8 @@
 
 ;;;;;;;;;; test interface
 
-(if (doc-system::ds-registered-p "simple-doc")
-    (doc-system::ds-de-register "simple-doc"))
+(when (doc-system::ds-registered-p "simple-doc")
+  (doc-system::ds-de-register "simple-doc"))
 
 (doc-system::ds-make-and-register
  :name "simple-doc"
