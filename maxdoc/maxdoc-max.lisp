@@ -77,7 +77,25 @@
     (if entry (max-doc:print-doc-entry-latex entry)
       (format t "Can't find maxdoc entry '~a'.~%" item))))
 
-;; (max-doc::set-cur-sec 'max-doc::number-theory-fandv)
+(defun keywordify (s)
+  (intern (subseq (symbol-name s) 1) :keyword))
+
+(defmfun1:set-hold-all '$maxdoc)
+(defmfun1 ($maxdoc :doc) ((name :string) docs)
+  :desc ("Add maxdoc documentation entry for item " :arg "name"
+    " specified by " :argdot "docs")
+    (max-doc:add-doc-entry (list :name name :contents (do-maxdoc docs)))
+    '$done)
+
+(defun do-maxdoc (x)
+  (cond ((stringp x) x)
+        (($listp x)
+         (loop for e in (cdr x) append
+               (if (stringp e) (list e)
+                 (do-maxdoc e))))
+        ((listp x)
+         (list (keywordify (caar x)) (cadr x)))
+        (t (merror (format nil "bad maxdoc argument ~a " x)))))
 
 ;; (defmfun1 ($oeis :doc) ( (n :string) )
 ;;   "Search for a maxima function corresponding to the online encyclopedia
@@ -90,25 +108,3 @@
 
 ;;(defmfun1 $set_doc_section ((s :string))
 ;;                            nil)
-
-;; print the entry
-;; doesnt work correctly
-#|
-(defmfun1 $doc_entry ( (es :string) (ss :string) )
-  (let ((e (max-doc::get-doc-entry :es es :secs ss)))
-    (format t "~a ~a: ~a~%" (max-doc::entry-type e) (max-doc::entry-name e)
-            (max-doc::entry-protocol e))
-    (format t "~a~%" (max-doc::entry-contents e))))
-|#
-
-#|
-(defun print-doc-entry (e)
-  "Called by system documentation routines in cl-info.lisp."
-  (let ((name (max-doc::entry-name e)))
-    (format t "~% -- ~a ~a: ~a~%~%" (max-doc::entry-type e) name
-            (max-doc::entry-protocol e))
-    (format t "~a~%~%" (max-doc::entry-contents e))
-    (let ((opts ($foptions name)))
-      (if (> (length opts) 1)
-          (format t " ~a takes options with default values:~% ~a~%~%" name ($sconcat opts))))))
-|#

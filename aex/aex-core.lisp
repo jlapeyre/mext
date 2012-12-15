@@ -226,7 +226,7 @@ refers to the head."
 (defmfun $ipart (e &rest inds)
   (i-part e inds))
 
- (add-doc-entry "ipart" )
+(add-doc-entry "ipart" )
 (add-call-desc '("ipart" ("e" "ind1" "ind2" "..." )
  ("Returns the part of expression " :arg "e" " specified by indices. "
   :arg "e" " may be a mixed (lex and aex) representation expression. When used as an lvalue, ipart

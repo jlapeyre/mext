@@ -15,6 +15,7 @@
   :language :mext-maxima
   :components
    ((:file "alt_eigen_code" :load-only t)
+    (:file "alt_eigen_doc" :load-only t)
     (:file "alt_eigen_compile" :load-only nil)))
 
 #+ecl (mk:defsystem alt_eigen
@@ -22,6 +23,7 @@
   :language :mext-maxima
   :components
    ((:file "alt_eigen_code" :load-only t)
+    (:file "alt_eigen_doc" :load-only t)
     (:file "alt_eigen_compile" :load-only t)))
 
 (mk:defsystem load-alt_eigen
