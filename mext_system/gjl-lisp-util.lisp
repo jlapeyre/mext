@@ -7,41 +7,7 @@
 
 ;; This file contains code that is not specific to maxima. Some is taken or modified from other
 ;; libraries. It would be better to learn an organized way to use those libraries
-
 (in-package "COMMON-LISP-USER")
-;(declaim (optimize (speed 3) (space 0) (safety 0) #-gcl (debug 0)))
-
-;; probably need to do this differently for different lisps.
-
-#|
-;;   :copy-array  conflicts with symbol in graphs
-(if (find-package :gjl.lisp-util ) t  (defpackage :gjl.lisp-util (:use common-lisp)
-  (:export 
-   :gaif 
-   :cmp-length
-   :comma-separated-english
-   :copy-array-type
-   :copy-array
-   :dbind 
-   :dump-hash
-   :ensure-list
-   :fill-hash-from-list
-   :get-hash-keys 
-   :get-hash-vals
-   :get-or-make-subhash
-   :anit
-   :keyword-p
-   :length-eq 
-   :length1p 
-   :not-comma-separated-english
-   :or-comma-separated-english
-   :print-hash-entry 
-   :remove-terminal-substring
-   :split-by-one-space
-   :string-ends-with-pos 
-   :wrap-text
-)))
-|#
 
 (in-package :gjl.lisp-util)
 

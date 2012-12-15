@@ -10,9 +10,11 @@ load(mext);
 require(mext_defmfun1);
 require(defmfun1);
 require(discrete_aex);
+/*
 require(store);
 require(quicklisp);
 require(prime_pi);
 require(nelder_mead);
+*/
 
 print_sections_latex("./thirdparty.tex");

@@ -190,7 +190,7 @@
   :desc ("Returns the divisor summatory function "
          :math "D(x)" " for " :argdot "x"  " The divisor function " :math "d(n)" " counts
  the number of unique divisors of the natural number " :math "n" ". "
-  :math "D(x)" " is the sum of " :math "d(n)" " over " :math "n \\le x")
+  :math "D(x)" " is the sum of " :math "d(n)" " over " :tmath ("n \\le x" "n <= x") ".")
   (let ((sum 0) (u (floor (sqrt x))) (nx (floor x)))
                     (loop for i from 1 to u do
                           (setf sum (+ sum (floor (/ nx i)))))
@@ -228,8 +228,12 @@
         (setf prod (* prod (1+ onefact)))))
     prod))
 
+;         :tmath ( "\\sigma_{x}(n)" "sigma_x(n)")
 (defmfun1 ($divisor_function :doc) ((n :non-neg-int) &optional (x :number 0 ))
-  :desc ("The divisor function " :math "\\sigma_x(n)" ". If " :arg "x" " is omitted it takes the default value "
+  :desc ("Returns the divisor function, or sum of positive divisors function " 
+      :lif ((:dmath "\\sigma_{x}(n)=\\sum_{d|n} d^x," "where " :math "d|x"
+          " means " :math "d" " divides " :math "n") "sigma_x(n)")
+         ". If " :arg "x" " is omitted it takes the default value "
   :math "0" ". Currently, complex values for x are not supported. After writing this, I noticed that
   the function is implemented in the maxima core and is callled " :emref "divsum" ".")
   (cond ( (= 0 x) (divisor-function-0 n) ) ; These are for efficiency, but I think

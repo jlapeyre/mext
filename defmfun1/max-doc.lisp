@@ -149,7 +149,7 @@
       (:var "<~a>")   (:vardot "<~a>.")   (:varcomma "<~a>,")
       (:opt "<~a>")   (:optdot "<~a>.")   (:optcomma "<~a>,")
       (:dquote "\"~a\"") (:dquotedot "\"~a\".") (:dquotecomma "\"~a\",")
-      (:math "~a")
+      (:math "~a") (:tmath "~a") (:lif "~a")
       (:dmath "~a") (:dots " ... ")))
 
 ;; mref, mrefdot, mrefcomma below are not used. caught in earlier branch
@@ -162,7 +162,7 @@
       (:var "{\\it ~a}")   (:vardot "{\\it ~a}.")   (:varcomma "{\\it ~a},")
       (:opt "{\\it ~a}")   (:optdot "{\\it ~a}.")   (:optcomma "{\\it ~a},")
       (:dquote "``~a''") (:dquotedot "``~a''.") (:dquotecomma "``~a'',")
-      (:math "$~a$")
+      (:math "$~a$") (:tmath "$~a$") (:lif "~a")
       (:dmath "~%$$~a$$~%") (:dots "\\ldots")))
 
 (defun make-texi-codes (table codes)
@@ -191,10 +191,11 @@
               (format t "max-doc: Format symbol not a keyword ~s, in ~s." item txt)
               (maxima::merror1 "An error"))
             (if fmt
-                (progn (pop txt1)
-                       (push (format nil fmt
-                                     (if (listp (car txt1)) (format-doc-text (car txt1) code-table)
-                                       (car txt1))) res))
+                (let ((txt2 (progn (pop txt1) (car txt1))))
+                  (when (member item '(:lif :tmath)) (setf txt2 (second txt2)))
+                  (push (format nil fmt
+                                (if (listp txt2) (format-doc-text txt2 code-table) txt2))
+                        res))
               (maxima::merror1 "max-doc: Unrecognized format code: ~a." item)))
         (push item res)))))
 
@@ -210,8 +211,7 @@
         ((null txt1) (format nil "~{~a~}" (nreverse res)))
       (if (symbolp item)
           (let* ((fmt (gethash item code-table))
-                 (s (cadr txt1))
-                 (es (latex-esc s)))
+                 (s (cadr txt1)))
             (unless (keyword-p item) 
               (format t "max-doc: Format symbol not a keyword ~s, in ~s." item txt)
               (maxima::merror1 "An error"))
@@ -226,17 +226,19 @@
                             ((eq item :codecomma) (format nil "~a," str)))
                       res)))
                   ((member item '(:mref :mrefdot :mrefcomma)  :test #'equal)
-                   (let ((str (format nil "\\hyperlink{~a}{{\\tt ~a}}" s es)))
+                   (let ((str (format nil "\\hyperlink{~a}{{\\tt ~a}}" s (latex-esc s))))
                      (push 
                       (cond ((eq item :mref) str)
                             ((eq item :mrefdot) (format nil "~a." str))
                             ((eq item :mrefcomma) (format nil "~a," str)))
                       res)))
                   (t
+                   (when (member item '(:lif :tmath))
+                     (setf s (first s)))
                    (if fmt (push
                                 (format nil fmt
                                  (if (listp s) (format-doc-text-latex s code-table)
-                                   (if (eq :math item) s es)))
+                                   (if (member item '(:math :tmath :dmath)) s (latex-esc s))))
                             res)
                      (maxima::merror1 "max-doc: Unrecognized format code: ~a." item)))))
         (push (latex-esc item) res)))))

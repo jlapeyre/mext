@@ -1,20 +1,21 @@
 (in-package "COMMON-LISP-USER")
 
+;   :copy-array  conflicts with symbol in graphs
 (if (find-package :gjl.lisp-util ) t  (defpackage :gjl.lisp-util (:use common-lisp)
   (:nicknames :gjl)
   (:export 
-   :gaif 
+   :gaif
    :cmp-length
    :length-eq
    :comma-separated-english
    :copy-array-type
-;   :copy-array  conflicts with symbol in graphs
    :dbind 
    :dump-hash
    :ensure-list
    :fill-hash-from-list
    :get-hash-keys 
    :get-or-make-subhash
+   :replace-all
    :anit
    :keyword-p
    :length-eq 
@@ -23,7 +24,6 @@
    :or-comma-separated-english
    :print-hash-entry 
    :remove-terminal-substring
-   :replace-all
    :split-by-one-space
    :string-ends-with-pos 
    :wrap-text)))
@@ -53,4 +53,3 @@
              :subdir-of-contrib
              :load-asdf
 )))
-;    (:import-from :gjl.lisp-util :ensure-list)))
