@@ -187,10 +187,13 @@
 
 
 (defmfun1 ($divisor_summatory :doc) ((x :non-neg-number) )
-  :desc ("Returns the divisor summatory function "
-         :math "D(x)" " for " :argdot "x"  " The divisor function " :math "d(n)" " counts
- the number of unique divisors of the natural number " :math "n" ". "
-  :math "D(x)" " is the sum of " :math "d(n)" " over " :tmath ("n \\le x" "n <= x") ".")
+  :desc 
+  ("Returns the divisor summatory function "
+   :math "D(x)" " for " :argdot "x"  " The " :mref "divisor_function" " " 
+   :tmath ("\\sigma_0(n)" "sigma_0(n)") " counts
+   the number of unique divisors of the natural number " :math "n" ". "
+   :math "D(x)" " is the sum of " :tmath ("\\sigma_0(n)" "sigma_0(n)") 
+   " over " :tmath ("n \\le x" "n <= x") ".")
   (let ((sum 0) (u (floor (sqrt x))) (nx (floor x)))
                     (loop for i from 1 to u do
                           (setf sum (+ sum (floor (/ nx i)))))
@@ -281,8 +284,10 @@
 ;; TODO: allow keeping only the later part of the sequence. Look for periods greater than 1
 ;;(defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) &optional (n2 0 n2-supplied-p :non-neg-int ) )
 (defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) )
-  :desc ("Returns the first " :arg "n" " elements (counting from zero) in the aliquot sequence of "
-  :argdot "k" " The sequence is truncated at an element if it is zero or repeats the previous element.")
+  :desc (" The aliquot sequence is a recursive sequence in which each term is the sum 
+    of the proper divisors of the previous term. This function returns the first " :arg "n" 
+   " elements (counting from zero) in the aliquot sequence whose first term is " :argdot "k" 
+   " The sequence is truncated at an element if it is zero or repeats the previous element.")
   (let ( (seq (list k)) (cur k) (last 0) )
     (loop for i from 0 to n until (or (= 0 cur) (= cur last)) do
           (setf last cur)
@@ -290,7 +295,6 @@
           (setf seq (cons cur seq)))
     (when (= cur last) (setf seq (cdr seq)))
     (cons '(mlist simp) (nreverse seq))))
-
 
 (examples:clear-add-example "aliquot_sequence"
  '( :pretext "Perfect numbers give a repeating sequence of period 1."

@@ -1674,7 +1674,8 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <A NAME="aliquot_sequence"></A>
 <B>aliquot_sequence</B>(<I>k</I>, <I>n</I>)</P><P>mext package: discrete_aex</P><P>
 <B>Description</B>
-Returns the first <I>n</I> elements (counting from zero) in the aliquot sequence of <I>k</I>. The sequence is truncated at an element if it is zero or repeats the previous element. </P><P><B>Arguments</B>
+The aliquot sequence is a recursive sequence in which each term is the sum of the proper divisors of the previous term. This function returns the first <I>n</I> elements (counting from zero) in the aliquot sequence whose first term is <I>k</I>. The sequence is truncated at an element if it is zero or 
+repeats the previous element. </P><P><B>Arguments</B>
 <TT>aliquot_sequence</TT> requires two arguments.
 The first argument <I>k</I> must be a positive integer.
 The second argument <I>n</I> must be a non-negative integer.</P><P><B>Examples</B></P><P>Perfect numbers give a repeating sequence of period 1. </P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
@@ -1790,8 +1791,8 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 Returns the divisor function, or sum of positive divisors function </P><TABLE CLASS="display dcenter"><TR VALIGN="middle"><TD CLASS="dcell">σ<SUB><I>x</I></SUB>(<I>n</I>)=</TD><TD CLASS="dcell"><TABLE CLASS="display"><TR><TD CLASS="dcell" ALIGN="center">&nbsp;</TD></TR>
 <TR><TD CLASS="dcell" ALIGN="center"><FONT SIZE=6>∑</FONT></TD></TR>
 <TR><TD CLASS="dcell" ALIGN="center"><I>d</I>|<I>n</I></TD></TR>
-</TABLE></TD><TD CLASS="dcell"> <I>d</I><SUP><I>x</I></SUP></TD></TR>
-</TABLE><P>, where <I>d</I>|<I>x</I> means <I>d</I> divides <I>x</I>. If <I>x</I> is omitted it takes the default value 0. Currently, complex values for x are not supported. After writing this, I noticed that the function is 
+</TABLE></TD><TD CLASS="dcell"> <I>d</I><SUP><I>x</I></SUP>,</TD></TR>
+</TABLE><P>where <I>d</I>|<I>x</I> means <I>d</I> divides <I>n</I>. If <I>x</I> is omitted it takes the default value 0. Currently, complex values for x are not supported. After writing this, I noticed that the function is 
 implemented in the maxima core and is callled <TT>divsum</TT>. </P><P><B>Arguments</B>
 <TT>divisor_function</TT> requires either one or two arguments.
 The first argument <I>n</I> must be a non-negative integer.
@@ -1802,7 +1803,7 @@ divisor_function has attributes: [match_form]</P><P>OEIS number: A000005 for x=0
 <A NAME="divisor_summatory"></A>
 <B>divisor_summatory</B>(<I>x</I>)</P><P>mext package: discrete_aex</P><P>
 <B>Description</B>
-Returns the divisor summatory function <I>D</I>(<I>x</I>) for <I>x</I>. The divisor function <I>d</I>(<I>n</I>) counts the number of unique divisors of the natural number <I>n</I>. <I>D</I>(<I>x</I>) is the sum of <I>d</I>(<I>n</I>) over <I>n</I> ≤ <I>x</I>. </P><P><B>Arguments</B>
+Returns the divisor summatory function <I>D</I>(<I>x</I>) for <I>x</I>. The <A HREF="#divisor function"><TT>divisor function</TT></A> σ<SUB>0</SUB>(<I>n</I>) counts the number of unique divisors of the natural number <I>n</I>. <I>D</I>(<I>x</I>) is the sum of <I>d</I>(<I>n</I>) over <I>n</I> ≤ <I>x</I>. </P><P><B>Arguments</B>
 <TT>divisor_summatory</TT> requires one argument <I>x</I>, which must be a non-negative number.</P><P><B>Attributes</B>
 divisor_summatory has attributes: [match_form]</P><P><B>Examples</B></P><P>D(n) for n from 1 through 12 </P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
