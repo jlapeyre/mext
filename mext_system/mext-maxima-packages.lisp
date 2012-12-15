@@ -25,6 +25,8 @@
    :print-hash-entry 
    :remove-terminal-substring
    :split-by-one-space
+   :split-by-one-newline
+   :split-by-space-and-newline
    :string-ends-with-pos 
    :wrap-text)))
 

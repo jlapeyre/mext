@@ -155,6 +155,7 @@ but the contents are not copied."
 (mk-comm-sep-eng not-comma-separated-english ("not " ("neither " "nor") ("not one of: " "or")))
 
 ;; taken from common lisp cookbook. By whom ?
+;; Splits s
 (defun split-by-one-space (string)
  "Returns a list of substrings of string
   divided by ONE space each.
@@ -165,17 +166,54 @@ but the contents are not copied."
           collect (subseq string i j)
           while j))
 
+;; gjl adapted above to get this.
+(defun split-by-one-newline (string)
+ "Returns a list of substrings of string
+  divided by ONE newline each.
+  Note: Two consecutive newlines will be seen as
+  if there were a single newline between them."
+    (loop for i = 0 then (1+ j)
+          as j = (position #\Newline string :start i)
+          collect (let ((res (subseq string i j)))
+                    (if (string= "" res) (format nil "~%") res))
+          while j))
+
+(defun split-by-space-and-newline (string)
+  (loop for str in (split-by-one-newline string) append
+        (remove "" (split-by-one-space str) :test #'equal )))
+
 ;; (make-sequence 'string 4 :initial-element #\Space)
-(defun wrap-text (&key text (width 70) (indent 0))
+;; Don't know where I got this. It is very similar to Gene Michael Stover's code,
+;; which also leaves a spurious space at the end.
+(defun wrap-text1 (&key text (width 70) (indent 0))
   (setf text (remove #\Newline text))
   (cond ( (stringp text) (setf text (remove "" (split-by-one-space text) :test #'equal )))
         ( (listp text) t)
-        (t (error "lisp-utils::wrap-text: argument must be a string or a list.")))
+        (t (error "gjl:wrap-text: argument must be a string or a list.")))
   (let*
       ((spaces (make-sequence 'string indent :initial-element #\Space))
        (str (concatenate 'string spaces "~{~<~%" spaces "~1,"  (format nil "~d" width)
                           ":;~A~> ~}")))
     (format nil str text)))
+
+;; adapted from above. This one removes single newlines. n newlines
+;; are converted to n-1 newlines.
+;; gjl dec 2012, added ~^ to format
+;; Final loop puts indent spaces before a requested newline.
+;; 
+(defun wrap-text (&key text (width 70) (indent 0))
+  (cond ( (stringp text) (setf text (split-by-space-and-newline text)))
+        ( (listp text) t)
+        (t (error "gjl:wrap-text: argument must be a string or a list.")))
+  (let*
+      ((spaces (make-sequence 'string indent :initial-element #\Space))
+       (spaces-1 (make-sequence 'string (if (> indent 0) (1- indent) 0) :initial-element #\Space))
+       (fmt (concatenate 'string spaces "~{~<~%" spaces "~1,"  (format nil "~d" width)
+                          ":;~A~>~^ ~}"))
+       (nlstr (format nil "~%"))
+       (indent-nl (format nil "~%~a" spaces-1))
+       (text1 (loop for e in text collect (if (string= nlstr e) indent-nl e))))
+    (format nil fmt text1)))
 
 ;; from common lisp cookbook
 (defun replace-all (string part replacement &key (test #'char=))

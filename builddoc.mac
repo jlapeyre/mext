@@ -10,6 +10,8 @@ load(mext);
 require(mext_defmfun1);
 require(defmfun1);
 require(discrete_aex);
+require(alt_eigen);
+
 /*
 require(store);
 require(quicklisp);

@@ -1,0 +1,17 @@
+maxdoc("alt_eigen", [
+"Find the eigenvectors and eigenvalues of the square, unblocked matrix ",
+ argdot("m"), " alt_eigen takes options ", argcomma("var"),
+ argcomma("maxdegree"), " and ", argdot("orthogonal"),
+ par("The options may be omitted an are specified as follows (with default values shown)"),
+ par(""),
+ codedot("alt_eigen(m, 'var = z, 'maxdegree = 1, 'orthogonal = false)")
+]);
+
+/* Find the eigenvectors and eigenvalues of square unblocked matrix; specifically:
+
+    alt_eigen(m, 'var = z, 'maxdegree = n, 'orthogonal = bool)
+
+maxdegree -- try to solve factors of the characteristic poly with degree n or less,
+orthogonal -- when true, eigenvectors with geometric multiplicity two or more are sent thru gramm schmidt.
+
+Computing the characteristic polynomial is much faster with ratmx : true. */

@@ -12,10 +12,12 @@
 
 (in-package :maxima)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+
 (use-package :gjl.lisp-util :max-doc)
 
 (max-doc:set-cur-sec 'max-doc::doc-fandv)
+(doc-system:set-source-file-name "maxdoc-max.lisp")
+(doc-system:set-source-package "maxdoc")
 
 (defmfun1 $add_doc_section ((s :string))
   (if (not (null (max-doc::get-doc-sec s)))
@@ -77,9 +79,6 @@
     (if entry (max-doc:print-doc-entry-latex entry)
       (format t "Can't find maxdoc entry '~a'.~%" item))))
 
-(defun keywordify (s)
-  (intern (subseq (symbol-name s) 1) :keyword))
-
 (defmfun1:set-hold-all '$maxdoc)
 (defmfun1 ($maxdoc :doc) ((name :string) docs)
   :desc ("Add maxdoc documentation entry for item " :arg "name"
@@ -96,6 +95,11 @@
         ((listp x)
          (list (keywordify (caar x)) (cadr x)))
         (t (merror (format nil "bad maxdoc argument ~a " x)))))
+
+(defmfun1 ($maxdoc_split_text :doc) ((text :string))
+  :desc ("Split the string " :arg "text" " into a list of strings, using a sequence
+ of one or more spaces as the delimeter. Single newlines are removed.")
+  (cons '(mlist simp) (gjl:split-by-space-and-newline text)))
 
 ;; (defmfun1 ($oeis :doc) ( (n :string) )
 ;;   "Search for a maxima function corresponding to the online encyclopedia

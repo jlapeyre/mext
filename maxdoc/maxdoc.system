@@ -16,6 +16,7 @@
     (:file "info-database")
     (:file "maxdoc-entries")
     (:file "mext-maxdoc-entries")
+    (:file "maxima-utils")
     (:file "maxdoc-max")
     (:file "simple-doc")
     (:file "simple-doc-max")))

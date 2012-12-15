@@ -6,6 +6,7 @@ mext_provide( "maxdoc",
     "info-database",
     "maxdoc-entries",
     "mext-maxdoc-entries",
+    "maxima-utils",
     "maxdoc-max",
     "simple-doc",
     "simple-doc-max"]);

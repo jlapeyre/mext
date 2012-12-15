@@ -148,6 +148,7 @@
       (:arg "<~a>")   (:argdot "<~a>.")   (:argcomma "<~a>,")
       (:var "<~a>")   (:vardot "<~a>.")   (:varcomma "<~a>,")
       (:opt "<~a>")   (:optdot "<~a>.")   (:optcomma "<~a>,")
+      (:par "~%~%~a")
       (:dquote "\"~a\"") (:dquotedot "\"~a\".") (:dquotecomma "\"~a\",")
       (:math "~a") (:tmath "~a") (:lif "~a")
       (:dmath "~a") (:dots " ... ")))
@@ -162,6 +163,7 @@
       (:var "{\\it ~a}")   (:vardot "{\\it ~a}.")   (:varcomma "{\\it ~a},")
       (:opt "{\\it ~a}")   (:optdot "{\\it ~a}.")   (:optcomma "{\\it ~a},")
       (:dquote "``~a''") (:dquotedot "``~a''.") (:dquotecomma "``~a'',")
+      (:par "~%~%~a")
       (:math "$~a$") (:tmath "$~a$") (:lif "~a")
       (:dmath "~%$$~a$$~%") (:dots "\\ldots")))
 
@@ -222,7 +224,7 @@
                           (str (format nil "\\verb~a~a~a" delim s delim)))
                      (push 
                       (cond ((eq item :code) str)
-                            ((eq item :code) (format nil "~a." str))
+                            ((eq item :codedot) (format nil "~a." str))
                             ((eq item :codecomma) (format nil "~a," str)))
                       res)))
                   ((member item '(:mref :mrefdot :mrefcomma)  :test #'equal)

@@ -17,6 +17,8 @@
 maximas="smaxima"
 
 # Build just the mext_system
+# Note that if mext system has already been loade, eg in your startup
+# file, this will probably fail.
 build_mext () {
     for maxima in $maximas
     do
