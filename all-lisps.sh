@@ -80,6 +80,7 @@ print_max_doc () {
  done
 }
 
+mkdir "./logfiles"
 build_mext
 build_mext_packages
 #build_one_mext_package
