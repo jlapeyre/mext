@@ -137,7 +137,7 @@
           (defmfun1::set-default-options ',name ',opt) ; only for user, not used in macro or function body
           (defmfun1::save-lambda-list-etc ',name ',arg-specs)
           (defmfun1::save-preprocess-specs ',name ',pp-specs)
-          (defmfun1::record-mext-package ',name defmfun1::*mext-package*)
+          (defmfun1:record-mext-package ',name defmfun1::*mext-package*)
           (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) ; Here is the function definition
             ,@doc-string
             ,@(when (eq defun-type 'defmspec) `((setf ,args (cdr ,args))))

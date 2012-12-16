@@ -61,9 +61,12 @@
   (setf *mext-package* name))
 
 (defun record-mext-package (name package)
-  (when package
-    (setf name (maxima::$sconcat name))
-    (setf (gethash name *mext-package-table*) package)))
+ "Record fact that string `name' is in mext packge `package'.
+  This may be called with the current package *mext-package*,
+  which may not be set, in which case, we do nothing."
+ (when package
+   (setf name (maxima::$sconcat name))
+   (setf (gethash name *mext-package-table*) package)))
 
 (defun get-mext-package-for-function (name)
   (setf name (maxima::$sconcat name))

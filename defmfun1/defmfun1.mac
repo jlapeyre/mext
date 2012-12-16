@@ -7,8 +7,8 @@ mext_provide(
   "maxima-dev-doc",
   "arg-spec-definitions",
   "defmfun1",
-  "max-doc",
-  "max-doc-sections",
+  "maxdoc",
+  "maxdoc-sections",
   "defmfun1-max",
   "examples",
   "infix-rule"]);

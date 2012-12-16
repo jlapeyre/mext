@@ -2,7 +2,23 @@
 
 maxdoc_set_cur_sec("fvequations");
 
+/* function `alt_eigen' is in the mext package `alt_eigen'. */
+mext_package_record("alt_eigen","alt_eigen");
+
 maxdoc("alt_eigen", [
+  code("alt_eigen(mat, ['var=x, 'maxdegree=n, 'orthogonal=boolean])"), par(""),
+  "Express the eigenvectors of the matrix ", arg("mat"), " as a polynomial in the ",
+  "eigenvalue " , argdot("var"), " When the degree of a factor of the characteristic ",
+  " polynomial has degree ", arg("maxdegree"), " or less, the code attempts
+  to find all the roots of the factor. The optional variables ", arg("var"), ", ",
+  arg("maxdegree"), " (default 1), ", " and ", arg("orthogonal"), " (default false)
+  can be in any order. When the dimension of an eigenspace
+  is greater than one and ", arg("orthogonal"), " is true, the list of eigenvectors is orthogonal."]);
+
+maxdoc_author("alt_eigen","Barton Willis");
+maxdoc_copyright("alt_eigen",[ 2011, "Barton Willis"]);
+
+/* Earlier version of help text 
 "Find the eigenvectors and eigenvalues of the square, unblocked matrix ",
  argdot("m"), " alt_eigen takes options ", argcomma("var"),
  argcomma("maxdegree"), " and ", argdot("orthogonal"),
@@ -13,12 +29,10 @@ maxdoc("alt_eigen", [
  "eigenvectors with geometric multiplicity two or more are sent through a
  gramm-schmidt procedure."
 ]);
-
-maxdoc_author("alt_eigen","Barton Willis");
-maxdoc_copyright("alt_eigen",[ 2011, "Barton Willis"]);
+*/
 
 /*
-  The following is not yet implemented. The examples are in alt_eigen_doc1.lisp
+  The following is not yet implemented in maxima. Thus, the examples are in alt_eigen_doc1.lisp
 
  maxdoc_examples("alt_eigen", [ code_text(
   text(["The eigenvectors of ", codecomma("matrix([1,2],[4,5])"), " are "]),

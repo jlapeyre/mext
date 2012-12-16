@@ -82,6 +82,12 @@
     (if entry (max-doc:print-doc-entry-latex entry)
       (format t "Can't find maxdoc entry '~a'.~%" item))))
 
+;; Translate documentation specification from maxima to lisp.
+;; This is only tested thus far with alt_eigen.
+;; Some example code and description code works fine. I inadvertently
+;; changed the syntax with the new examples slot code-text. 
+;; `do-maxdoc' will not work with code-text. The new syntax is
+;; probably worth keeping anyway. A short, similar routine will
 (defun do-maxdoc (x)
  "Convert a maxima expression to a lisp expression specifying
   documentation. We need a similar routine for examples, etc."
@@ -143,6 +149,26 @@
  " This section will be used by functions such as " :mrefcomma "maxdoc"
  " and " :mrefdot "maxdoc_author")
  (max-doc:set-cur-sec-shortname shortname)
+ '$done)
+
+(defmfun1 ($maxdoc_set_mext_package :doc) ((packagename :string))
+ :desc 
+ ("Set the current mext package name for maxdoc to " :argdot "packagename"
+ "This name will be used by functions specifying documentation for functions
+ until the name is set to another value. When documenting functions written in
+ maxima code, calling " :mref "mext_record_package" " is probably more useful.")
+ (defmfun1:set-mext-package packagename)
+ '$done)
+
+(defmfun1 ($mext_package_record :doc) ((docitem :or-string-symbol) (packagename :string))
+ :desc 
+ ("Set the mext packagename for the function or variable "
+  :arg "docitem" " to " :argdot "packagename"
+  "This name will be used when displaying documentation."
+  "The function " :mref "maxdoc_set_mext_package" " is useful for setting
+  the package name of a group of functions, but there is currently no maxima
+  hook for doing this.")
+ (defmfun1:record-mext-package docitem packagename)
  '$done)
 
 ;; (defmfun1 ($oeis :doc) ( (n :string) )

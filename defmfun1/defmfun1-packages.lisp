@@ -34,10 +34,12 @@
     (:use :common-lisp :gjl.lisp-util)
     (:import-from :maxima :$sconcat :merror)
     (:export :rule :set-mext-package :get-mext-package-for-function
+             :record-mext-package
              :set-hold-all)))
 
 (if (find-package :max-doc ) t 
   (defpackage :max-doc (:use :common-lisp :gjl.lisp-util)
+    (:nicknames :maxdoc) ; I want to switch from max-doc to maxdoc
     (:export :add-doc-sec :add-doc-entry :add-doc-entry1 
      :add-call-desc :add-call-desc1
      :clear-call-desc :implementation :latex-esc :print-doc-section :print-doc-entry

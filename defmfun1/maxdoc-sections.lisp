@@ -21,7 +21,7 @@
 ;;; to load them immediately after max-doc.lisp, so that the files
 ;;; that use them can be loaded in any order.
 
-(in-package :max-doc)
+(in-package :maxdoc)
 
 ;;(add-doc-sec '( :tag maxima::$misc :name  "Miscellaneous Functions"))
 
