@@ -1,17 +1,125 @@
+/*  maxdoc documentation for alt_eigen */
+
+maxdoc_set_cur_sec("fvequations");
+
 maxdoc("alt_eigen", [
 "Find the eigenvectors and eigenvalues of the square, unblocked matrix ",
  argdot("m"), " alt_eigen takes options ", argcomma("var"),
  argcomma("maxdegree"), " and ", argdot("orthogonal"),
- par("The options may be omitted an are specified as follows (with default values shown)"),
- par(""),
- codedot("alt_eigen(m, 'var = z, 'maxdegree = 1, 'orthogonal = false)")
+ par("The options may be omitted and are specified as follows (with default values shown)"),
+ dcode("alt_eigen(m, 'var = z, 'maxdegree = 1, 'orthogonal = false)"),
+ "This function tries to solve factors of the characteristic poly with degree ",
+ arg("maxdegree"), " or less. When ", arg("orthogonal"), " is true, ",
+ "eigenvectors with geometric multiplicity two or more are sent through a
+ gramm-schmidt procedure."
 ]);
 
-/* Find the eigenvectors and eigenvalues of square unblocked matrix; specifically:
+maxdoc_author("alt_eigen","Barton Willis");
+maxdoc_copyright("alt_eigen",[ 2011, "Barton Willis"]);
 
-    alt_eigen(m, 'var = z, 'maxdegree = n, 'orthogonal = bool)
+/*
+  The following is not yet implemented. The examples are in alt_eigen_doc1.lisp
 
-maxdegree -- try to solve factors of the characteristic poly with degree n or less,
-orthogonal -- when true, eigenvectors with geometric multiplicity two or more are sent thru gramm schmidt.
+ maxdoc_examples("alt_eigen", [ code_text(
+  text(["The eigenvectors of ", codecomma("matrix([1,2],[4,5])"), " are "]),
 
-Computing the characteristic polynomial is much faster with ratmx : true. */
+ n(1),
+
+  ex(["alt_eigen(matrix([1,2],[4,5]),'var=z);",
+     "[z^2=6*z+3,[matrix([2],[z-1])]]"]),
+
+ text(["Substituting the two roots of ", code("z^2=6*z+3"), " in to the column vector ",
+       code("matrix([2],[z-1])"), " gives the two eigenvectors. To find explicit ",
+       " expressions for these eigenvectors, set ", var("maxdegree"),  " to ", math("2"),
+      "; thus"]),
+
+ ex(["alt_eigen(matrix([1,2],[4,5]),'var=z, 'maxdegree=2);",
+     "[z=2*sqrt(3)+3,[matrix([2],[2*sqrt(3)+2])],z=3-2*sqrt(3),
+   [matrix([2],[2-2*sqrt(3)])]]"]),
+
+ text("Here is a matrix with a degenerate eigenvalue:")]);
+
+ ex([ ["m : matrix([5,6,5,6,5,6],[6,5,6,5,6,5],[5,6,5,6,5,6],[6,5,6,5,6,5],
+   [5,6,5,6,5,6],[6,5,6,5,6,5])$", false],
+      ["alt_eigen(m,'var=z);",
+      "[z=-3,[matrix([-1],[1],[-1],[1],[-1],[1])],z=0,[matrix([0],[-1],[0],[1],[0],[0]),
+   matrix([0],[0],[0],[-1],[0],[1]), matrix([0],[0],[1],[0],[-1],[0]),
+   matrix([1],[0],[-1],[0],[0],[0])],z=33,[matrix([-1],[-1],[-1],[-1],[-1],[-1])]]"]]),
+
+ text(["There are four eigenvectors with eigenvalue ", math("0"), ". To find an orthogonal basis for ",
+   "this eigenspace, set the optional variable ", var("orthogonal"), " to true; thus"]),
+
+ ex(["alt_eigen(m,'var=z, 'orthogonal=true);",
+     "[z=-3,[matrix([-1],[1],[-1],[1],[-1],[1])],z=0,[matrix([1],[0],[-1/2],[0],
+   [-1/2],[0]), matrix([0],[0],[1],[0],[-1],[0]),matrix([0],[-1/2],[0],[-1/2],[0],[1]),
+   matrix([0],[-1],[0],[1],[0],[0])],z=33,[matrix([-1],[-1],[-1],[-1],[-1],[-1])]]"])]);
+
+*/
+
+/*
+
+  The following works, but extending it is complicated. The examples are instead
+  in alt_eigen_doc1.lisp. The problem is not maxima vs. lisp: The code in the
+  lisp file will probably work immediately if translated to the form below.
+ 
+maxdoc_examples("alt_eigen",
+ [pretext(["The eigenvectors of matrix ",code("matrix([1,2],[4,5])"), " are"]),
+  code("alt_eigen(matrix([1,2],[4,5]),'var=z)")],
+ [pretext(["Substituting the two roots of ",code("z^2=6*z+3"),
+   " in to the column vector ", code("matrix([2],[z-1])"), " gives the
+     two eigenvectors. To find explicit expressions for these eigenvectors, set maxdegree to ",
+     math("2"),"; thus"]),
+    code("alt_eigen(matrix([1,2],[4,5]),'var=z, 'maxdegree=2)")],
+ [
+    pretext("Here is a matrix with a degenerate eigenvalue:"),
+    vars("[m]"),
+    code(["m : matrix([5,6,5,6,5,6],[6,5,6,5,6,5],[5,6,5,6,5,6],[6,5,6,5,6,5],[5,6,5,6,5,6],[6,5,6,5,6,5])$",
+         "alt_eigen(m,'var=z)"])]);
+
+*/
+
+/*
+Code for expressing eigenvectors as polynomials in the eigenvalues. For examples, see the file rtest_alt_eigen.mac.
+
+alt_eigen(mat, ['var=x, 'maxdegree=n, 'orthogonal=boolean])
+
+Express the eigenvectors of the matrix mat as a polynomial in the eigenvalue var. When the
+degree of a factor of the characteristic polynomial has degree maxdegree or less, the code attempts
+to find all the roots of the factor. The optional variables var, maxdegree (default 1),
+and orthogonal (default false) can be in any order. When the dimension of an eigenspace
+is greater than one and orthogonal is true, the list of eigenvectors is orthogonal.
+
+Examples:
+
+Assuming the file alt_eigen.mac is in a folder that Maxima can find, start by loading the file.
+
+(%i1) load('alt_eigen)$
+
+The eigenvectors of matrix([1,2],[4,5]), are
+
+(%i2) alt_eigen(matrix([1,2],[4,5]),'var=z);
+(%o2) [z^2=6*z+3,[matrix([2],[z-1])]]
+
+Substituting the two roots of z^2=6*z+3 in to the column vector matrix([2],[z-1]) gives the
+two eigenvectors. To find explicit expressions for these eigenvectors, set maxdegree to 2; thus
+
+(%i3) alt_eigen(matrix([1,2],[4,5]),'var=z, 'maxdegree=2);
+(%o3) [z=2*sqrt(3)+3,[matrix([2],[2*sqrt(3)+2])],z=3-2*sqrt(3),[matrix([2],[2-2*sqrt(3)])]]
+
+Here is a matrix with a degenerate eigenvalue:
+
+(%i4) m : matrix([5,6,5,6,5,6],[6,5,6,5,6,5],[5,6,5,6,5,6],[6,5,6,5,6,5],[5,6,5,6,5,6],[6,5,6,5,6,5])$
+
+(%i5) alt_eigen(m,'var=z);
+(%o5) [z=-3,[matrix([-1],[1],[-1],[1],[-1],[1])],z=0,[matrix([0],[-1],[0],[1],[0],[0]),matrix([0],[0],[0],[-1],[0],[1]),
+matrix([0],[0],[1],[0],[-1],[0]),matrix([1],[0],[-1],[0],[0],[0])],z=33,[matrix([-1],[-1],[-1],[-1],[-1],[-1])]]
+
+There are four eigenvectors with eigenvalue 0. To find an orthogonal basis for this eigenspace, set the
+optional variable orthogonal to true; thus
+
+(%i6) alt_eigen(m,'var=z, 'orthogonal=true);
+(%o6) [z=-3,[matrix([-1],[1],[-1],[1],[-1],[1])],z=0,[matrix([1],[0],[-1/2],[0],[-1/2],[0]),
+matrix([0],[0],[1],[0],[-1],[0]),matrix([0],[-1/2],[0],[-1/2],[0],[1]),
+matrix([0],[-1],[0],[1],[0],[0])],z=33,[matrix([-1],[-1],[-1],[-1],[-1],[-1])]]
+
+*/

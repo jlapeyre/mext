@@ -1,12 +1,12 @@
 ;; This file must be loaded as uncompiled lisp, at least with gcl.
 ;; Otherwise, the infix notation is not recognized by maxima
 
+(in-package :maxima)
+
 ;; copied from translation of maxima code
 ;; Use of Rule is just to be compatible with mixima
 ;;infix("->")$
 ;;"->"(a,b) ::= buildq([a:a,b:b],Rule('a,b));
-(in-package :maxima)
-
 (meval '(($infix simp) "->"))
 (meval '((MDEFMACRO SIMP) (($->) $A $B)
  (($BUILDQ) ((MLIST) ((MSETQ) $A $A) ((MSETQ) $B $B))

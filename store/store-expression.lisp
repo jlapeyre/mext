@@ -50,3 +50,4 @@
                                    ("factor(graph_charpoly(c,x));" "(x-3)*(x-1)^5*(x+2)^4")
                                    ("store(\"graph.cls\",c)$" nil)
                                    ("factor(graph_charpoly( restore(\"graph.cls\"), x));" "(x-3)*(x-1)^5*(x+2)^4"))))
+

@@ -41,8 +41,10 @@
     (:export :add-doc-sec :add-doc-entry :add-doc-entry1 
      :add-call-desc :add-call-desc1
      :clear-call-desc :implementation :latex-esc :print-doc-section :print-doc-entry
+     :format-doc-text :format-doc-text-latex
      :print-doc-entry-latex :print-doc-section-latex :author :copyright
-     :set-cur-sec :get-doc-entry :get-cur-sec :see-also :see-also-group)))
+     :set-cur-sec :set-cur-sec-shortname :get-doc-entry 
+     :get-cur-sec :see-also :see-also-group)))
 
 (if (find-package :maxima-dev-doc ) t (defpackage :maxima-dev-doc (:use :common-lisp :gjl.lisp-util)))
 ;;       (:export :ddefmfun :ddefun :ddefvar :ddefparameter )))
@@ -50,7 +52,8 @@
 (if (find-package :simple-doc ) t (defpackage :simple-doc (:use :common-lisp :gjl.lisp-util)))
 
 (if (find-package :doc-system ) t (defpackage :doc-system (:use :common-lisp :gjl.lisp-util)
-         (:export :set-source-package :set-source-file-name
+         (:export :ds-registered-p :ds-de-register :ds-make-and-register 
+                  :set-source-package :set-source-file-name
                   :get-source-file-name :get-source-package)))
 
 (if (find-package :descr1 ) t (defpackage :descr1 (:use :common-lisp :gjl.lisp-util)))
@@ -60,7 +63,7 @@
 (if (find-package :examples ) t (defpackage :examples (:use :common-lisp :gjl.lisp-util)
             (:import-from :maxima :$sconcat :merror
              :mfuncall   :$eval_string)
-            (:export :add-expample :clear-example :clear-add-example 
+            (:export :add-example :clear-example :clear-add-example 
                      :format-examples :format-examples-latex :wrap-text)))
 
 ;; ??? why this ?

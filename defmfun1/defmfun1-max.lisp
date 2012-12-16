@@ -1,37 +1,32 @@
-;;; Copyright (C) 2012 John Lapeyre
-;;;
-;;; This program is free software; you can redistribute it and/or modify
-;;; it under the terms of the GNU General Public License as published by
-;;; the Free Software Foundation; either version 2 of the License, or
-;;; (at your option) any later version.
+;;;  defmfun1 is a function definition macro for relatively high-level maxima
+;;;  functions.
+;;;  Copyright (C) (2012) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
 
 (in-package :maxima)
 (use-package :gjl.lisp-util)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (max-doc:set-cur-sec 'max-doc::misc-fandv)
 
 (doc-system:set-source-file-name "defmfun1-max.lisp")
 (doc-system:set-source-package "maxima")
 
-;;(format t ">>args ~s~%>>argl ~s~%>>specl ~s~%" args arg-list arg-specs)
-;; (format t ">>args ~s~%>>argl ~s~%>>specl ~s~%" args arg-list arg-specs)
-;;(format t  ">> grouped args ~s~%" (defmfun1::group-args args))
-;; Could have used destructuring bind for parts of the parameter specification. I can't
-;; recall why I didn't.
+;;; "Define a function to be called from Maxima. Expands into a `defmfun' or `defmspec' macro.
+;;;  Provides:
+;;;  * optional argument (keyword) support at the maxima level.
+;;;  * automated argument checking.
+;;;  * more detailed, consistent error messages.
+;;;  `defmfun1' takes a lambda list that is very similar to `defun'.
+;;;  `&optional' `&rest' `&aux' are more or less the same. `&req' can be given
+;;;  for required arguments. These keywords can each occur mulitiple times
+;;;  in the lambda list."
 
-#|
-  "Define a function to be called from Maxima. Expands ultimately into defmfun macro.
-   Provides:
-   * optional argument (keyword) support at the maxima level.
-   * automated argument checking.
-   * more detailed error messages.
-   defmfun1 takes a lambda list that is very similar to defun.
-   &optional &rest &aux are more or less the same. &req can be given
-   for required arguments. These keywords can each occur mulitiple times
-   in the lambda list."
-|#
+;(format t ">>args ~s~%>>argl ~s~%>>specl ~s~%" args arg-list arg-specs)
+; (format t ">>args ~s~%>>argl ~s~%>>specl ~s~%" args arg-list arg-specs)
+;(format t  ">> grouped args ~s~%" (defmfun1::group-args args))
+; Could have used destructuring bind for parts of the parameter specification. I can't
+; recall why I didn't.
 
 (defun defmfun1-write-let-bindings (name nargs all-args supplied-p-hash rest)
   `((,nargs 0) ; count args passed when calling
@@ -45,7 +40,8 @@
    ,@(when rest (cdr rest)))) ; binding for &rest arg
 
 (defun defmfun1-write-assignments (name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h)
-  `(tagbody ; set required and &optional args to values supplied by call
+ "Write code to set required and &optional args to values supplied by call."
+  `(tagbody 
      ,@(do* ((reqo1 reqo (cdr reqo1))
              (targ (caar reqo) (caar reqo1))
              (res))
@@ -61,7 +57,8 @@
    out))
 
 (defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec)
-  (when opt `((dolist (ospec ,opt-args) ; set option variables to supplied values.
+  "Write code to set option variables to supplied values."
+  (when opt `((dolist (ospec ,opt-args) 
                 (dbind (var val) ospec
                        (cond ,@(do* ( (optl opt (cdr optl))
                                       (topt (car opt) (car optl))

@@ -89,16 +89,16 @@
                 :shortname "fvstrings"))
 
 ;; misc-util.lisp.  Don't know if we are using this
-(max-doc::add-doc-sec '( :tag misc-util :name "Miscellaneous utilities"
+(add-doc-sec '( :tag misc-util :name "Miscellaneous utilities"
                          :shortname "miscutils"))
 
-(max-doc::add-doc-sec '( :tag func-def-fandv :name "Functions and Variables for Function Definition"
+(add-doc-sec '( :tag func-def-fandv :name "Functions and Variables for Function Definition"
                          :shortname "fvfunctiondefinition"))
 
-(max-doc::add-doc-sec '( :tag program-flow-fandv :name "Functions and Variables for Program Flow"
+(add-doc-sec '( :tag program-flow-fandv :name "Functions and Variables for Program Flow"
                          :shortname "fvflow"))
 
-(max-doc::add-doc-sec '( :tag predicates-fandv :name "Functions and Variables for Predicates"
+(add-doc-sec '( :tag predicates-fandv :name "Functions and Variables for Predicates"
                          :shortname "fvpredicates"))
 
 (add-doc-sec '( :tag number-theory-fandv :name "Functions and Variables for Number Theory"

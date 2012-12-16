@@ -19,4 +19,5 @@ require(prime_pi);
 require(nelder_mead);
 */
 
+/*print_copyrights : true$ */
 print_sections_latex("./thirdparty.tex");

@@ -16,7 +16,8 @@
   :components
    ((:file "alt_eigen_code" :load-only t)
     (:file "alt_eigen_doc" :load-only t)
-    (:file "alt_eigen_compile" :load-only nil)))
+    (:file "alt_eigen_doc1" :source-extension "lisp" :load-only nil)
+    (:file "alt_eigen_compile" :load-only t)))
 
 #+ecl (mk:defsystem alt_eigen
   :source-extension "mac"
@@ -24,6 +25,7 @@
   :components
    ((:file "alt_eigen_code" :load-only t)
     (:file "alt_eigen_doc" :load-only t)
+    (:file "alt_eigen_doc1" :source-extension "lisp" :load-only nil)
     (:file "alt_eigen_compile" :load-only t)))
 
 (mk:defsystem load-alt_eigen

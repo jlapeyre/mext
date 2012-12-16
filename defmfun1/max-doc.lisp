@@ -13,7 +13,7 @@
 (defstruct (sections)
   (list (make-array 0 :adjustable t :fill-pointer 0))
   (hash (make-hash-table :test 'equal))
-  (name-hash (make-hash-table :test 'equal)))
+  (shortname-hash (make-hash-table :test 'equal)))
 
 (defstruct (section)
   (name nil)
@@ -87,6 +87,9 @@
 (defvar max-doc::*max-doc-oeis-hashtable*
   (make-hash-table :test 'equal))
 
+(defvar maxima::$print_authors t)
+(defvar maxima::$print_copyrights nil)
+
 (defun add-call-desc1 (name args text)
   (let ((cd (make-call-desc :name name :args args :text text))
         (entry (get-doc-entry :es name)))
@@ -150,6 +153,7 @@
       (:opt "<~a>")   (:optdot "<~a>.")   (:optcomma "<~a>,")
       (:par "~%~%~a")
       (:dquote "\"~a\"") (:dquotedot "\"~a\".") (:dquotecomma "\"~a\",")
+      (:dcode "~%~%`~a'~%~%")
       (:math "~a") (:tmath "~a") (:lif "~a")
       (:dmath "~a") (:dots " ... ")))
 
@@ -163,8 +167,9 @@
       (:var "{\\it ~a}")   (:vardot "{\\it ~a}.")   (:varcomma "{\\it ~a},")
       (:opt "{\\it ~a}")   (:optdot "{\\it ~a}.")   (:optcomma "{\\it ~a},")
       (:dquote "``~a''") (:dquotedot "``~a''.") (:dquotecomma "``~a'',")
-      (:par "~%~%~a")
+      (:par "~%~%~%~a")
       (:math "$~a$") (:tmath "$~a$") (:lif "~a")
+      (:dcode "~%\\begin{verbatim}~%~a~%\\end{verbatim}~%~%")
       (:dmath "~%$$~a$$~%") (:dots "\\ldots")))
 
 (defun make-texi-codes (table codes)
@@ -240,7 +245,7 @@
                    (if fmt (push
                                 (format nil fmt
                                  (if (listp s) (format-doc-text-latex s code-table)
-                                   (if (member item '(:math :tmath :dmath)) s (latex-esc s))))
+                                   (if (member item '(:math :tmath :dmath :dcode)) s (latex-esc s))))
                             res)
                      (maxima::merror1 "max-doc: Unrecognized format code: ~a." item)))))
         (push (latex-esc item) res)))))
@@ -308,7 +313,7 @@
 ;; created a function for setting a slot
 (defmacro def-setter (setter-name slot)
   `(defun ,setter-name (name val)
-     (if (listp val) t (setf val (list val)))
+     (unless (listp val) (setf val (list val)))
      (let ((entry (get-doc-entry :es name)))
        (if entry
            (setf (,slot entry) val)
@@ -360,6 +365,11 @@
         (t
          (maxima::merror1 (intl:gettext "max-doc::set-cur-sec Can't set current section to ~m. Not a section struct or tag.") sec-tag))))
 
+(defun set-cur-sec-shortname (shortname)
+ "Set the current doc section from its shortname, which is a string. Error checking
+  should be done by the calll to get-doc-sec-shortname."
+  (setf *current-section* (get-doc-sec-shortname shortname)))
+
 (defun set-cur-dist (distname)
   (cond ((stringp distname)
          (if (gethash distname mext-maxima::*installed-dist-table*)
@@ -381,7 +391,10 @@
       (let* ((new-sec
               (apply #'make-section sec-spec))
              (tag (section-tag new-sec))
-             (name (section-name new-sec)))
+             (name (section-name new-sec))
+             (shortname (section-shortname new-sec)))
+        (unless shortname
+          (maxima::merror1 (intl:gettext "max-doc:add-doc-sec: no shortname specified in section specification: ~M") sec-spec))
         (if (null tag)
             (maxima::merror1 (intl:gettext "max-doc::add-doc-sec: no tag specified in section specification: ~M") sec-spec)
             (if (exists-section tag)
@@ -389,6 +402,7 @@
                     (maxima::merror1 "section ~a already exists." ))
                 (progn 
                   (setf (gethash tag (sections-hash *max-doc-top*)) new-sec)
+                  (setf (gethash shortname (sections-shortname-hash *max-doc-top*)) new-sec) ; easier for maxima access
                   (vector-push-extend tag (sections-list *max-doc-top*))
                   (setf (gethash name max-doc::*max-doc-section-hashtable*) new-sec)
                   (set-cur-sec new-sec)))))))
@@ -400,6 +414,16 @@
         (if h h
             (maxima::merror1 "max-doc::get-doc-sec: section with tag ~a does not exist." sec-tag)))
       (maxima::merror1 "max-doc::get-doc-sec: argument ~a not a section tag." sec-tag)))
+
+(defun get-doc-sec-shortname (shortname)
+  "Return documentation section structure specified by string shortname. We don't need two
+  separate hashes with the same information. But, I want to avoid symbol-hell compounded by
+  access from maxima."
+  (if (stringp shortname)
+   (let ((h (gethash shortname (sections-shortname-hash *max-doc-top*))))
+     (if h h
+       (maxima::merror1 "max-doc:get-doc-sec-shortname section with shortname ~a does not exist." shortname)))
+   (maxima::merror1 "max-doc:get-doc-sec-shortname argument ~a not a string." shortname)))
 
 ; add-doc-entry is more convenient
 (defun add-doc-entry1 (&key e  (section *current-section*) (distribution *current-distribution*))
@@ -440,7 +464,7 @@ must be keyword,value pairs for the doc entry struct."
   (add-doc-entry1  :e e ))
 
 (defun get-doc-entry (&key es (section *current-section*))
-  "return the doc entry for 'es'."
+  "return the doc entry for string 'es'."
   (if (eq section :all)
       (let ((sections (get-hash-keys max-doc::*max-doc-section-hashtable*)))
         (loop for section1 in sections do
@@ -567,8 +591,16 @@ must be keyword,value pairs for the doc entry struct."
 
 ;; should be macrolet
 (defmacro form-ent (slot &body body)
+"Format the information in documentation slot as a string if it exists,
+ else return empty string."
   `(let ((x (,slot e)))
      (if x
+       (format nil ,@body)  "")))
+
+(defmacro form-ent-cond (slot test &body body)
+ "same as form-ent, but a test must also be satisfied"
+  `(let ((x (,slot e)))
+     (if (and x ,test)
        (format nil ,@body)  "")))
 
 (defun format-doc-entry (e)
@@ -611,10 +643,10 @@ must be keyword,value pairs for the doc entry struct."
                  (form-ent entry-see-also "~%See also: ~a.~%" (comma-separated-english x))
                  (form-ent entry-implementation "~%Implementation:~%   ~a~%" 
                            (wrap-text :text (format-doc-text x) :width *text-width* :indent *indent2*))
-                 (form-ent entry-author
+                 (form-ent-cond entry-author maxima::$print_authors
                      "~%  Author~p: ~a.~%" (length x) (comma-separated-english x))
-;;                 (form-ent entry-copyright ; there should be some control of how much is printed
-;;                     "~%  Copyright (C) ~{~a ~}.~%" x)
+                 (form-ent-cond entry-copyright maxima::$print_copyrights
+                     "~%  Copyright (C) ~{~a ~}.~%" x)
                  (format nil "~%"))))
 
 (defun format-doc-entry-latex (e)
@@ -623,7 +655,7 @@ must be keyword,value pairs for the doc entry struct."
          (fname (latex-esc name))
          (*format-codes-default* *format-codes-latex*))
     (flet ((skip () (format nil "~%\\vspace{5 pt}~%"))
-           (sect (sec) (format nil "\\noindent{\\bf ~a}" sec)))
+           (sect (sec) (format nil "\\noindent{\\bf ~a}\\hspace{5pt}" sec)))
       (concatenate 'string
                    (format nil "\\subsection{~a: ~a\\label{sec:~a}}~%\\hypertarget{~a}{}~%" 
                            (entry-type e) fname name name)
@@ -677,10 +709,18 @@ must be keyword,value pairs for the doc entry struct."
                            (sect "Implementation")
                            (wrap-text :text (format-doc-text-latex x) :width *latex-text-width* :indent 0)
                            (skip))
-                 (form-ent entry-author
-                           "~%~a~%~a.~%~a~%" 
-                           (sect (format nil "Author~p" (length x)))  (comma-separated-english x)
-                           (skip))
+                   (form-ent-cond entry-author maxima::$print_authors
+                             "~%~a~%~a.~%~a~%" 
+                             (sect (format nil "Author~p" (length x)))  (comma-separated-english x)
+                             (skip))
+                   (form-ent-cond entry-copyright maxima::$print_copyrights
+                             "~%~a~%~{~a~^ ~}.~%~a~%"
+                             (sect "Copyright")
+                             (loop for e in x collect
+                                   (cond ((stringp e) (latex-esc e))
+                                         ((numberp e) (format nil "(~a)" e))
+                                         (t e)))
+                             (skip))
                  (format nil "~%")))))
   
 (defun search-key (key item)

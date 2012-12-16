@@ -18,9 +18,11 @@ build_several (package_list) :=
 build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "aex",
                 "lists_aex", "discrete_aex" ]);
 
+
 build_several([ "quicklisp", "store" ]);
 
 /* Uncomment this if you have prime_pi package in a subdir of the parent dir */
+
 updir();
 if stringp(dir_exists("prime_pi_maxima")) then
  (chdir("prime_pi_maxima"),
@@ -31,13 +33,15 @@ popdir();
 /* Third party packages adapted to mext */
 /* "finance" loads rather slowly */
 
-/*
+
 build_several(["alt_eigen"]);
+
+
 build_several(["nelder_mead", "pw", "discrete",
           "coma", "circuits", "implicit"]);
-*/
+
 /* Examples from contrib and share */
-/*
+
 build_several(["bernstein", "grobner"]);
-*/
+
 kill(buildall_mext,build_several);

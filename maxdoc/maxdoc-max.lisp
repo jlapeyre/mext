@@ -13,7 +13,10 @@
 (in-package :maxima)
 (mext:mext-optimize)
 
-(use-package :gjl.lisp-util :max-doc)
+(use-package :gjl.lisp-util)
+(use-package :max-doc)
+(use-package :examples)
+;(use-package :gjl.lisp-util :max-doc :examples)
 
 (max-doc:set-cur-sec 'max-doc::doc-fandv)
 (doc-system:set-source-file-name "maxdoc-max.lisp")
@@ -79,6 +82,19 @@
     (if entry (max-doc:print-doc-entry-latex entry)
       (format t "Can't find maxdoc entry '~a'.~%" item))))
 
+(defun do-maxdoc (x)
+ "Convert a maxima expression to a lisp expression specifying
+  documentation. We need a similar routine for examples, etc."
+  (cond ((stringp x) x)
+        ((numberp x) x)
+        (($listp x)
+         (loop for e in (cdr x) append
+               (if (stringp e) (list e)
+                 (do-maxdoc e))))
+        ((listp x)
+         (list (keywordify (caar x)) (do-maxdoc (cadr x))))
+        (t (merror (format nil "do-maxdoc: bad argument ~a " x)))))
+
 (defmfun1:set-hold-all '$maxdoc)
 (defmfun1 ($maxdoc :doc) ((name :string) docs)
   :desc ("Add maxdoc documentation entry for item " :arg "name"
@@ -86,20 +102,48 @@
     (max-doc:add-doc-entry (list :name name :contents (do-maxdoc docs)))
     '$done)
 
-(defun do-maxdoc (x)
-  (cond ((stringp x) x)
-        (($listp x)
-         (loop for e in (cdr x) append
-               (if (stringp e) (list e)
-                 (do-maxdoc e))))
-        ((listp x)
-         (list (keywordify (caar x)) (cadr x)))
-        (t (merror (format nil "bad maxdoc argument ~a " x)))))
+;; Note that this works for some, but not all examples. The
+;; code-text slot in an example uses a different syntax that
+;; is not parsed correctly by `do-maxdoc'.
+(defmfun1:set-hold-all '$maxdoc_examples)
+(defmfun1 ($maxdoc_examples :doc) ((name :string) &rest examples)
+ :desc ("Add maxdoc examples entry for item " :arg "name"
+        " specified by " :argdot "examples")
+ (format t "!!! ~s~%~%" examples)
+ (let ((exs (loop for ex in examples collect
+                (do-maxdoc ex))))
+   (format t "Example text: ~s~%~%" exs)
+   (apply #'examples:add-example (cons name exs)))
+ '$done)
 
 (defmfun1 ($maxdoc_split_text :doc) ((text :string))
   :desc ("Split the string " :arg "text" " into a list of strings, using a sequence
  of one or more spaces as the delimeter. Single newlines are removed.")
   (cons '(mlist simp) (gjl:split-by-space-and-newline text)))
+
+(defmfun1 ($maxdoc_author :doc) ((name :string) (author :string-or-listof))
+  :desc ("Set the author(s) for the documentation item " :argdot "name")
+  (when (listp author) (pop author))
+  (max-doc:author name author)
+  '$done)
+
+(defmfun1 ($maxdoc_copyright :doc) ((name :string) copyright)
+  :desc ("Set the copyright information for the documentation item " :argdot "name"
+  " " :arg "copyright" " should typically be a list whose first element is an integer
+ (the year), with the remaining strings naming the copyright holder. This copyright
+ information will not be printed with documentation, unless " :var "print_copyrights"
+ " is true.")
+  (when (listp copyright) (pop copyright))
+  (max-doc:copyright name copyright)
+  '$done)
+
+(defmfun1 ($maxdoc_set_cur_sec :doc) ((shortname :string))
+ :desc 
+ ("Set the current section for maxdoc to " :argdot "shortname"
+ " This section will be used by functions such as " :mrefcomma "maxdoc"
+ " and " :mrefdot "maxdoc_author")
+ (max-doc:set-cur-sec-shortname shortname)
+ '$done)
 
 ;; (defmfun1 ($oeis :doc) ( (n :string) )
 ;;   "Search for a maxima function corresponding to the online encyclopedia

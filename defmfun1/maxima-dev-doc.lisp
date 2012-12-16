@@ -37,16 +37,16 @@
 (defun new-make-doc-item (name protocol contents )
   (make-doc-item :name name :contents contents
                  :protocol protocol
-                 :package (doc-system::get-source-package)
-                 :source-file  (doc-system::get-source-file-name)))
+                 :package (doc-system:get-source-package)
+                 :source-file  (doc-system:get-source-file-name)))
 
 
 (defun new-make-doc-var-item (name contents var-type)
   (make-doc-item :name name :contents contents
                  :protocol nil
                  :type var-type
-                 :package (doc-system::get-source-package)
-                 :source-file (doc-system::get-source-file-name)))
+                 :package (doc-system:get-source-package)
+                 :source-file (doc-system:get-source-file-name)))
 
 
 (defun add-item (name-str protocol docstring)
@@ -122,10 +122,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when (doc-system::ds-registered-p "devel-doc")
-    (doc-system::ds-de-register "devel-doc"))
+(when (doc-system:ds-registered-p "devel-doc")
+    (doc-system:ds-de-register "devel-doc"))
 
-(doc-system::ds-make-and-register
+(doc-system:ds-make-and-register
  :name "devel-doc"
  :data *developer-doc-hash*
  :search-key-func #'search-key

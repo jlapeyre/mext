@@ -1,5 +1,20 @@
+;;;  Argument specifications for functions defined via defmfun1.
+;;;  Copyright (2012) John Lapeyre. Licensed under GPL, v3 or greater.
+
 (if (find-package :defmfun1 ) t (defpackage :defmfun1 (:use :common-lisp :gjl.lisp-util )))
 (in-package :defmfun1)
+
+;;; Argument specs defined here may be placed in the lambda list of
+;;; `defmfun1' function definitions. For example
+;;; `(defmfun1 $f1 ((str :string) (n :integer)) ...)'
+;;; When the defmfun1 function is called, the arguments are tested
+;;; with the code in these specs. If the test fails, one of the
+;;; following happens: 1) An error is signaled with `merror1', which
+;;; is very similar to `merror'. 2) The error message is printed, but
+;;; no error is signaled and the input form is returned. 3) No error
+;;; message is printed and the input form is returned. Which of these
+;;; happens may be controlled for each function at run time by setting
+;;; attributes.
 
 (defvar *arg-spec-definitions* `(
                      (:function "a function"
@@ -40,7 +55,7 @@
                      ((:int-range 2) "an integer between ~a and ~a"
                        int-range-check)
                      (:uint-64 ,(format nil (concatenate 'string "equivalent to an unsigned 64 bit integer~%"
-                           " (ie an integer between 0 and 2 to the power 64)~%"
+                           " (that is, an integer between 0 and 2 to the power 64)~%"
                           "(We need to modify the doc system so we can use notation for powers in arg check strings.~%"))
                       (and (integerp e) (>= e 0) (< e 18446744073709551616)))
                      (:not-zero "an expression that is not zero"
@@ -87,10 +102,16 @@
 (defvar *opt-spec-definitions* '(
                      (:out-rep  "a valid expression representation.~%   (It must be either 'ml' or 'ar')"
                       (member e '(maxima::$ml maxima::$ar)))
-                     (:bool  "a boolean value. It must be true or false."
+                     (:bool  "a Boolean value. It must be true or false."
                       (member e '(t nil)))
                      ( (:int-range 2) "an integer between ~a and ~a"
                       int-range-check)
                      (:non-neg-int "a non-negative integer."
                       (and (integerp e) (>= e 0)))))
 
+
+;;  LocalWords:  defmfun Lapeyre GPL defpackage gjl util str merror
+;;  LocalWords:  defvar arg numberp stringp listof maxima listp cdr
+;;  LocalWords:  pathname pathnamep ae lex aex integerp ellipt pos ar
+;;  LocalWords:  uint radix symbolp mapatom subvar subscripted bool
+;;  LocalWords:  subvarp

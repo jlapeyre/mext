@@ -4,8 +4,10 @@ our_mext_list : mext_list();
 
 our_test_list : [mext_system,aex,lists_aex,discrete_aex];
 
-/* our_extra_test_list : [pw,implicit,alt_eigen]; */
-our_extra_test_list : [];
+/*
+our_extra_test_list : [pw,implicit,alt_eigen];
+*/
+ our_extra_test_list : [];
 
 /*
 if member("store", our_mext_list) then our_test_list :
@@ -13,7 +15,6 @@ if member("store", our_mext_list) then our_test_list :
 if member("prime_pi", our_mext_list) then our_test_list :
         cons("prime_pi",our_test_list);
 */
-
 mext_test(append(our_test_list,our_extra_test_list));
 
 kill(our_mext_list, our_test_list, out_extra_test_list);
