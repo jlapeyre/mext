@@ -86,8 +86,6 @@ This was copied from maxima source init-cl.lisp.")
 
 (defvar *homedir-pathname* (pathname-as-directory (pathname (maxima::maxima-getenv "HOME"))))
 
-(defvar $homedir (namestring *homedir-pathname*))
-
 ;; These are nil when the first maxima prompt is printed.
 #+(or clisp cmu) (setf *default-pathname-defaults* (ext:default-directory))
 #+openmcl (setf *default-pathname-defaults* (ccl::current-directory))

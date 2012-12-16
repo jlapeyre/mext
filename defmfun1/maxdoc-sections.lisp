@@ -53,10 +53,6 @@
 (add-doc-sec '( :tag combinatorics-fandv :name "Functions and Variables for Combinatorics"
                 :shortname "fvcombinatorics"))
 
-;; descr1.lisp
-(add-doc-sec '( :tag doc-fandv :name "Functions and Variables for Documentation"
-                :shortname "fvdocumentation"))
-
 ;; lisp-numeric.lisp
 (add-doc-sec '( :tag numerics-fandv :name "Functions and Variables for Numerics"
                 :shortname "fvnumerics"

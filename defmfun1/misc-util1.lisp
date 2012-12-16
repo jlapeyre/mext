@@ -12,8 +12,6 @@
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (use-package :gjl.lisp-util)
 
-(defvar $pager_command "/usr/bin/less")
-
 (defvar *merror1-last-message* nil)
 (defvar *merror1-last-code* nil)
 
@@ -97,8 +95,6 @@
                                         :if-exists :supersede)
                      ,@body)
      (read-file-with-pager ofile)))
-
-(defvar $error_code nil)
 
 (defun merror1 (sstring &rest l &aux code)
   "This is like merror, but don't tell the user to do something that

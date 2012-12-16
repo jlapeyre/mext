@@ -11,28 +11,29 @@
 
 (use-package :max-doc)
 
-(add-doc-entry1  :section 'max-doc::doc-fandv 
-                 :e '(
-                    :name "read_docs_with_pager"
-                    :type "Option variable"
-                    :default-value "true"
-                     :contents
-                     "If read_docs_with_pager is true then documentation printed
-by describe() or ? or ?? is read with a pager. This will most
-likely only work with a command line interface under linux/unix
-with certain lisp implementations."))
+;; (add-doc-entry1  :section 'max-doc::doc-fandv 
+;;                  :e '(
+;;                     :name "read_docs_with_pager"
+;;                     :type "Option variable"
+;;                     :default-value "true"
+;;                      :contents
+;;                      "If read_docs_with_pager is true then documentation printed
+;; by describe() or ? or ?? is read with a pager. This will most
+;; likely only work with a command line interface under linux/unix
+;; with certain lisp implementations."))
 
-;; from misc-util1.lisp
-(max-doc::set-cur-sec 'max-doc::io-fandv)
-(add-doc-entry1 :section 'max-doc::io-fandv
- :e '(
-      :name "pager_command"
-      :type "Option variable"
-      :default-value "/usr/bin/less"
-      :see-also ("read_docs_with_pager")
-      :contents
-"The pathname to the pager program used for reading paged output,
- eg for documentation."))
+;; This is done automatically now.
+;; (max-doc::set-cur-sec 'max-doc::io-fandv)
+;; (add-doc-entry1 :section 'max-doc::io-fandv
+;;  :e '(
+;;       :name "pager_command"
+;;       :type "Option variable"
+;;       :default-value "/usr/bin/less"
+;;       :see-also ("read_docs_with_pager")
+;;       :contents
+;; "The pathname to the pager program used for reading paged output,
+;;  eg for documentation."))
+
 
 #|
 (add-doc-entry1 :section 'max-doc::strings-fandv

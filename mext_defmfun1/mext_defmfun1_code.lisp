@@ -5,6 +5,9 @@
 (max-doc:set-cur-sec 'max-doc::runtime-fandv)
 (defmfun1:set-mext-package "mext_defmfun1")
 
+(maxdoc:mdefmvar $homedir (namestring mext::*homedir-pathname*)
+ "The user's home directory.")
+
 (defmfun1 ($chdir :doc) ( &optional (dir :string))
   "Set the working directory for maxima/lisp. With some lisps, such as cmu lisp the system
  directory is changed as well. This should be made uniform across lisp implementations."

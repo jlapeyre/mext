@@ -1,14 +1,7 @@
-;;; Copyright (C) 2012 John Lapeyre
+;;;  Functions to make maxdoc documentation entries from maxima.
 ;;;
-;;; This program is free software; you can redistribute it and/or modify
-;;; it under the terms of the GNU General Public License as published by
-;;; the Free Software Foundation; either version 2 of the License, or
-;;; (at your option) any later version.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
-
-;;; Some of these functions may be generally useful. But
-;;; right now, they are for debugging.
+;;;  Copyright (C) (2012) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
 
 (in-package :maxima)
 (mext:mext-optimize)
@@ -16,7 +9,6 @@
 (use-package :gjl.lisp-util)
 (use-package :max-doc)
 (use-package :examples)
-;(use-package :gjl.lisp-util :max-doc :examples)
 
 (max-doc:set-cur-sec 'max-doc::doc-fandv)
 (doc-system:set-source-file-name "maxdoc-max.lisp")

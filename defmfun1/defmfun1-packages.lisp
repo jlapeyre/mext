@@ -42,7 +42,7 @@
     (:nicknames :maxdoc) ; I want to switch from max-doc to maxdoc
     (:export :add-doc-sec :add-doc-entry :add-doc-entry1 
      :add-call-desc :add-call-desc1
-     :clear-call-desc :implementation :latex-esc :print-doc-section :print-doc-entry
+     :clear-call-desc :mdefmvar :implementation :latex-esc :print-doc-section :print-doc-entry
      :format-doc-text :format-doc-text-latex
      :print-doc-entry-latex :print-doc-section-latex :author :copyright
      :set-cur-sec :set-cur-sec-shortname :get-doc-entry 

@@ -21,9 +21,7 @@
 
 (max-doc:set-cur-sec 'max-doc::misc-util)
 
-;; TODO this is documented as an internal var. This should be documented as a user
-;; var. Do we have a facility for this ?
-(ddefvar $compile_lambda_verbose nil
+(maxdoc:mdefmvar $compile_lambda_verbose nil
   "If this is true, then print translated code when automatically compiling lambda functions
   passed as arguments. This is done in the macro option-compile-lambda."  )
 

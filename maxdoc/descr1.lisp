@@ -11,15 +11,19 @@
 
 (defvar *prompt-prefix* "")
 (defvar *prompt-suffix* "")
-(defvar maxima::$read_docs_with_pager nil)
 
-(max-doc::set-cur-sec 'max-doc::doc-fandv)
+(maxdoc:set-cur-sec 'max-doc::doc-fandv)
 
-;; TODO, add a max-doc entry for this
-(max-doc::defmvar maxima::$doc_system_list nil
-  "A list of the documenatation system that will be searched by ? and ??.
- This can be set to all avaliable systems with the function set_all_doc_systems.
- Also, if this variable is false, then all documentation is enabled.")
+(maxdoc:mdefmvar maxima::$read_docs_with_pager nil
+ ("If true, then documenation printed by " :emref "describe" " or ? or ?? is sent through the pager
+  specified by " :mrefdot "pager_command" " This will most
+ likely only work with a command line interface under linux/unix
+ with certain lisp implementations."))
+
+(maxdoc:mdefmvar maxima::$doc_system_list nil
+  ("A list of the documenatation systems that will be searched by ? and ??.
+ This can be set to all avaliable systems with the function " :mrefdot "set_all_doc_systems"
+ " If this variable is false, then all documentation is enabled."))
 
 (maxima::defmfun1 (maxima::$set_all_doc_systems :doc)  ()
   "Enable all documentation databases for describe, ? and ??.

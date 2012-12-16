@@ -87,9 +87,6 @@
 (defvar max-doc::*max-doc-oeis-hashtable*
   (make-hash-table :test 'equal))
 
-(defvar maxima::$print_authors t)
-(defvar maxima::$print_copyrights nil)
-
 (defun add-call-desc1 (name args text)
   (let ((cd (make-call-desc :name name :args args :text text))
         (entry (get-doc-entry :es name)))
@@ -337,14 +334,23 @@
        (let ((others (remove e see-list)))
          (see-also e others))))
 
-(defmacro defmvar (var &body val-and-doc)
+;; use mdefmvar instead of defmvar to avoid issue of shadowing, importing, etc.
+(defmacro mdefmvar (var &body val-and-doc)
   (if (= (length val-and-doc) 2)
-      (let ((doc (second val-and-doc)))
+      (let* ((doc (second val-and-doc))
+             (val (first val-and-doc))
+             (val1 (cond ((eq t val) "true")
+                         ((null val) "false")
+                         (t val)))
+             (pass-arg (if (stringp val)
+                           val-and-doc (list val))))
+;        (format t "Doc is ~s~%" doc)
         `(progn
-           (add-doc-entry '(:name ,(maxima::$sconcat var)
+           (add-doc-entry '( :name ,(maxima::$sconcat var)
                              :type "Variable"
+                             :default-value ,val1
                              :contents ,doc))
-           (maxima::defmvar ,var ,@val-and-doc)))))
+           (maxima::defmvar ,var ,@pass-arg)))))
 
 (defun implementation (name implemention-string)
   (let ((entry (get-doc-entry :es name)))
@@ -473,7 +479,30 @@ must be keyword,value pairs for the doc entry struct."
                 (when item (return item)))))
   (gethash es (section-hash section))))
 
-;; not used
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-doc-sec '( :tag doc-fandv :name "Functions and Variables for Documentation"
+                :shortname "fvdocumentation"))
+
+(mdefmvar maxima::$print_authors t
+ "If true, then print the names of the authors with maxdoc documentation.")
+
+(mdefmvar maxima::$print_copyrights nil
+ "If true, then print copyright information with maxdoc documentation.")
+
+(mdefmvar maxima::$print_implementation t
+ "If true, then print implmentation information with maxdoc documentation.")
+
+;; Should not be in documentation section
+(maxdoc:mdefmvar $error_code nil
+ ( "This is an error code set by " :codedot "merror1"))
+
+(maxdoc:mdefmvar $pager_command "/usr/bin/less"
+ "The pathname to the system command used for paged output, for
+ instance, for reading documentation.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun print-doc-item (e)
   (cond ((entry-p e)
          (print-doc-entry e))
@@ -641,7 +670,7 @@ must be keyword,value pairs for the doc entry struct."
                  (examples:format-examples name)
                  (form-ent entry-oeis "~%OEIS number: ~a.~%" (comma-separated-english x))
                  (form-ent entry-see-also "~%See also: ~a.~%" (comma-separated-english x))
-                 (form-ent entry-implementation "~%Implementation:~%   ~a~%" 
+                 (form-ent-cond entry-implementation maxima::$print_implementation "~%Implementation:~%   ~a~%" 
                            (wrap-text :text (format-doc-text x) :width *text-width* :indent *indent2*))
                  (form-ent-cond entry-author maxima::$print_authors
                      "~%  Author~p: ~a.~%" (length x) (comma-separated-english x))
@@ -705,7 +734,7 @@ must be keyword,value pairs for the doc entry struct."
                              (comma-separated-english 
                                          (loop for e in x collect
                                                (format nil "\\hyperlink{~a}{{\\tt ~a}}" e (latex-esc e)))) (skip))
-                   (form-ent entry-implementation "~%~a~%~a~%~a~%"
+                   (form-ent-cond entry-implementation maxima::$print_implementation "~%~a~%~a~%~a~%"
                            (sect "Implementation")
                            (wrap-text :text (format-doc-text-latex x) :width *latex-text-width* :indent 0)
                            (skip))
