@@ -367,7 +367,7 @@ The first argument <I>e</I> must be non-atomic.</P><P><B>Options</B>
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc12">3.4</A>  Function: aex_get<A NAME="sec:aex_get"></A></H3><!--SEC END --><P>
 <A NAME="aex_get"></A></P><P>
 <B>Description</B>
-Returns the <I>n</I>th part of aexpr <I>e</I>. A value of 0 for <I>n</I> is not allowed. This is more efficient than <A HREF="#aexg"><TT>aexg</TT></A>, which allows <I>n</I> equal to zero.</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+Returns the <I>n-1</I>th part of aexpr <I>e</I>. A value of <I>n</I> less than 0 is not allowed. This is more efficient than <A HREF="#aexg"><TT>aexg</TT></A>, which returns the head of the expression when <I>n</I> is equal to zero.</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -929,7 +929,7 @@ If true, then print copyright information with maxdoc documentation.</P><!--TOC 
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc53">5.15</A>  Variable: print_implementation<A NAME="sec:print_implementation"></A></H3><!--SEC END --><P>
 <A NAME="print_implementation"></A></P><P>
 default value <CODE>true</CODE>.</P><P><B>Description</B>
-If true, then print implmentation information with maxdoc documentation.</P><!--TOC subsection Function: print_maxdoc_entry-->
+If true, then print implementation information with maxdoc documentation.</P><!--TOC subsection Function: print_maxdoc_entry-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc54">5.16</A>  Function: print_maxdoc_entry<A NAME="sec:print_maxdoc_entry"></A></H3><!--SEC END --><P>
 <A NAME="print_maxdoc_entry"></A>
 <B>print_maxdoc_entry</B>(<I>item</I>)</P><P>mext package: defmfun1</P><P>
@@ -2383,7 +2383,7 @@ n_tanh calls the lisp numeric function ?tanh. This function accepts only float o
 <A NAME="cmplength"></A>
 <B>cmplength</B>(<I>e</I>, <I>n</I>)</P><P>mext package: aex</P><P>
 <B>Description</B>
-return the smaller of <I>n</I> and <CODE>length(e)</CODE>. This is useful if <I>e</I> is very large and <I>n</I> is small, so that computing the entire length of <I>e</I> is inefficient. Expression <I>e</I> can be either a list or an array.</P><P><B>Arguments</B>
+return the smaller of <I>n</I> and <CODE>length(e)</CODE>. This is useful if <I>e</I> is very large and <I>n</I> is small, so that computing the entire length of <I>e</I> is inefficient. Expression <I>e</I> can be either a lex of aex expression.</P><P><B>Arguments</B>
 <TT>cmplength</TT> requires two arguments.
 The second argument <I>n</I> must be a non-negative integer.</P><P><B>See also</B>
 <A HREF="#length0p"><TT>length0p</TT></A>, <A HREF="#length_eq"><TT>length_eq</TT></A>, and <A HREF="#length1p"><TT>length1p</TT></A>.</P><P><B>Implementation</B>
@@ -2418,7 +2418,7 @@ length_eq is implemented with defmfun1, which slows things down a bit. So be cau
 <A NAME="type_of"></A>
 <B>type_of</B>(<I>e</I> :optional <I>verbose</I>)</P><P>mext package: aex</P><P>
 <B>Description</B>
-Return something like the ‘type’ of a maxima expression. This is a bit ill defined currently. <A HREF="#type_of"><TT>type_of</TT></A> uses the lisp function type-of.</P><P><B>Arguments</B>
+Return something like the ‘type’ of a maxima expression. This is a bit ill defined currently. <A HREF="#type_of"><TT>type_of</TT></A> uses the lisp function <CODE>type-of</CODE>.</P><P><B>Arguments</B>
 <TT>type_of</TT> requires either one or two arguments.</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
@@ -2557,7 +2557,7 @@ Return a list of the directories on the directory stack. This list is manipulate
 <A NAME="dont_kill"></A>
 <B>dont_kill</B>( :rest <I>item</I>)</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
-Add the <I>items</I>s to the list of symbols that are not killed by <CODE>kill(all)</CODE>. This facility is part of the maxima core, but is apparantly unused. Maybe putting a property in the symbol’s property list would be better.</P><P><B>Arguments</B>
+Add the <I>item</I>s to the list of symbols that are not killed by <CODE>kill(all)</CODE>. This facility is part of the maxima core, but is apparantly unused. Maybe putting a property in the symbol’s property list would be better.</P><P><B>Arguments</B>
 <TT>dont_kill</TT> requires zero or more arguments.</P><P><B>Attributes</B>
 dont_kill has attributes: [hold_all]</P><!--TOC subsection Function: dont_kill_share-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc152">15.5</A>  Function: dont_kill_share<A NAME="sec:dont_kill_share"></A></H3><!--SEC END --><P>
