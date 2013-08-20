@@ -491,7 +491,7 @@ must be keyword,value pairs for the doc entry struct."
  "If true, then print copyright information with maxdoc documentation.")
 
 (mdefmvar maxima::$print_implementation t
- "If true, then print implmentation information with maxdoc documentation.")
+ "If true, then print implementation information with maxdoc documentation.")
 
 ;; Should not be in documentation section
 (maxdoc:mdefmvar $error_code nil

@@ -100,6 +100,8 @@
                                          (every #'integerp (cdr e)))))))
 
 (defvar *opt-spec-definitions* '(
+                     (:symbol "a symbol"
+                              (symbolp e))
                      (:out-rep  "a valid expression representation.~%   (It must be either 'ml' or 'ar')"
                       (member e '(maxima::$ml maxima::$ar)))
                      (:bool  "a Boolean value. It must be true or false."

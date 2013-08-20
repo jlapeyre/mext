@@ -54,7 +54,7 @@
 
 (defmfun1:set-hold-all '$dont_kill)
 (defmfun1 ($dont_kill :doc) (&rest item)
-  :desc ("Add the " :arg "items" "s to the list of symbols that are not killed
+  :desc ("Add the " :arg "item" "s to the list of symbols that are not killed
           by " :codedot "kill(all)" " This facility is part of the maxima core,
           but is apparantly unused. Maybe putting a property in the symbol's
           property list would be better.")

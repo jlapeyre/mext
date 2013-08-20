@@ -8,7 +8,7 @@
   :desc ( "return the smaller of " :arg "n" " and " :codedot "length(e)"
   " This is useful if " :arg "e" " is very large and " :arg "n" " is small, so that
    computing the entire length of " :arg "e" " is inefficient. Expression "
-  :arg "e" " can be either a list or an array.")
+  :arg "e" " can be either a lex of aex expression.")
   (declare (fixnum n))
   (if (aex-p e)
       (let ((len (length (aex-arr e))))
@@ -18,7 +18,7 @@
         ( (or (= n i) (null e)) (if (null e) (1- i) i))
       (declare (fixnum i)))))
 
-(max-doc::implementation "cmplength" "cmplength is implemented with defmfun1, which slows
+(maxdoc:implementation "cmplength" "cmplength is implemented with defmfun1, which slows
   things down a bit. So be cautious using it in a tight loop.")
 
 (defmfun1 ($length_eq :doc) ( (e :or-string-non-atom) (n 0 :non-neg-int)) ; 0 to quiet compiler
@@ -35,7 +35,7 @@
         ((aex-p e) (= n (length (aex-arr e))))
         (t (= n (length e)))))
 
-(max-doc::implementation "length_eq" "length_eq is implemented with defmfun1, which slows
+(maxdoc:implementation "length_eq" "length_eq is implemented with defmfun1, which slows
   things down a bit. So be cautious using it in a tight loop.")
   
 (defmfun1 ($length1p :doc) ( (e :or-string-non-atom))
@@ -48,7 +48,7 @@
         (t  ; try it anyway
          (= 1 (length e)))))
 
-(max-doc::implementation "length1p" "length1p is implemented with defmfun1, which slows
+(maxdoc:implementation "length1p" "length1p is implemented with defmfun1, which slows
   things down a bit. So be cautious using it in a tight loop.")
 
 (defmfun1 ($length0p :doc) ( (e :or-string-non-atom))
@@ -59,14 +59,14 @@
         ((aex-p e) (= 0 (length (aex-arr e))))
         (t  (= 0 (length e)))))
 
-(max-doc::implementation "length0p" "length0p is implemented with defmfun1, which slows
+(maxdoc:implementation "length0p" "length0p is implemented with defmfun1, which slows
   things down a bit. So be cautious using it in a tight loop.")
 
-(max-doc::see-also-group '( "length0p" "cmplength" "length_eq" "length1p"))
+(maxdoc:see-also-group '( "length0p" "cmplength" "length_eq" "length1p"))
 
 (defmfun1 ($type_of :doc) (e &optional verbose)
  :desc ("Return something like the `type' of a maxima expression. This
- is a bit ill defined currently. " :mref "type_of" " uses the lisp function type-of.")
+ is a bit ill defined currently. " :mref "type_of" " uses the lisp function " :codedot "type-of")
   (cond ( (aex-p e)
           (if verbose (list '(mlist simp) ($op e) 'aex)
             ($aeop e)))
