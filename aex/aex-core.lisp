@@ -89,9 +89,10 @@ refers to the head."
 (add-doc-entry1 :e '( :name "aex_get"
                       :protocol "aex_get(e,n)"
                       :contents
-  ("Returns the " :arg "n" "th part of aexpr " :argdot "e" " A value
-    of " :math "0" " for " :arg "n" " is not allowed. This is more efficient than "
-    :mrefcomma "aexg" " which allows " :arg "n" " equal to zero.")))
+  ("Returns the " :arg "n-1" "th part of aexpr " :argdot "e"
+    " A value of " :arg "n" " less than 0 is not allowed. This is more efficient than "
+    :mrefcomma "aexg" " which returns the head of the expression when " 
+    :arg "n" " is equal to zero.")))
 
 (defmfun $aex_get (e n)
   (aref (aex-arr e) n))

@@ -13,8 +13,8 @@
 # lisp implementations. Allegro worked with an earlier version
 # of this software, as well.
 
-#maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-maximas="smaxima"
+maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
+#maximas="smaxima"
 
 # Build just the mext_system
 # Note that if mext system has already been loade, eg in your startup
@@ -83,7 +83,11 @@ print_max_doc () {
 mkdir "./logfiles"
 build_mext
 build_mext_packages
+
+# don't need this
 #build_one_mext_package
+
 parse_build_logs
 test_mext_packages
 parse_test_logs
+
