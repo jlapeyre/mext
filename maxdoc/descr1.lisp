@@ -82,6 +82,7 @@
 
 ;; modified, cl-info.lisp, 5.28
 ;; Check each database in $doc_system_list, or all all if it is nil
+;; Note tha the stock code changed between 5.28 and 5.30
 (defun info-exact (x)
   (info-database::autoload-maxima-index)
   (let* ((names (if (eq nil maxima::$doc_system_list) (doc-system::ds-list)
@@ -101,6 +102,9 @@
         t))))
 
 ;; modified, cl-info.lisp, 5.28
+;; caadr instead of car
+;; 
+;; Stock function changed from 5.28 to 5.30
 (defun some-inexact (x inexact-matches)
   (some #'(lambda (y)
 ;;            ( format t "comparing ~a and ~a~%" x y)
@@ -108,6 +112,7 @@
 
 ;; modified from display-items in cl-info.lisp, 5.28
 ;; Check all databases in $doc_system_list
+;; Note that display-items is modified in 5.30.0.
 (defun info (x)
   "Display a list of inexact matches and prompt the user to choose some."
   (info-database::autoload-maxima-index)
@@ -144,6 +149,7 @@
 ;; Replace the stock Maxima command with our own version.
 ;; Modified from from src/macdes.lisp
 ;; We call our own versions of info and info-exact, rather than cl-info version
+;; No change in original code from 5.28 to 5.30
 (maxima::defmspec maxima::$describe (x)
   (setf x (cdr x))
   (let ((topic (maxima::$sconcat (car x)))
@@ -153,8 +159,6 @@
     (if exact-p
         (info-exact topic)
         (info topic))))
-;;(t
-;;          (merror1 "describe: describe requires a list"))))
 
 ;; Following is original code from Maxima 5.28
 ;; (defmspec $describe (x)

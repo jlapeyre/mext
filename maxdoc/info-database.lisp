@@ -22,7 +22,7 @@
 
 ;; modified only as noted from cl-info.lisp, 5.28
 ;; Called in str-item below
-;; Note that Maxima 5.30 has extensively rewritten this function.
+;; Note that Maxima 5.30 has extensively rewritten this function to include a path
 (defun read-info-text (x)
   (declare (special maxima::*maxima-infodir* maxima::*maxima-lang-subdir*))
   (let* ((value x) ;; (cdr x) in cl-info.lisp
