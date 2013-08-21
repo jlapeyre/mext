@@ -3,6 +3,9 @@
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Note that these copies do not collide with original Maxima code, because
+;; we are in a different package.
+
 ;; exact copy, cl-info.lisp, 5.28
 ;; This is called from info-exact in descr1.lisp
 (defun autoload-maxima-index ()
@@ -19,6 +22,7 @@
 
 ;; modified only as noted from cl-info.lisp, 5.28
 ;; Called in str-item below
+;; Note that Maxima 5.30 has extensively rewritten this function.
 (defun read-info-text (x)
   (declare (special maxima::*maxima-infodir* maxima::*maxima-lang-subdir*))
   (let* ((value x) ;; (cdr x) in cl-info.lisp

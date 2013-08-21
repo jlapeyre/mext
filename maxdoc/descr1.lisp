@@ -141,6 +141,7 @@
           (maybe-read-with-pager (doc-system::print-match-items wanted)))))
     (not (null tem))))
 
+;; Replace the stock Maxima command with our own version.
 ;; Modified from from src/macdes.lisp
 ;; We call our own versions of info and info-exact, rather than cl-info version
 (maxima::defmspec maxima::$describe (x)

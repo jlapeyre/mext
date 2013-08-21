@@ -143,6 +143,8 @@
                                       names))
                #'string-lessp :key #'caadr)) ;; note we sort on second element in list.
 
+;; exact copy cl-info.lisp, 5.28
+;; Not sure why we don't use the maxima version
 (defun regex-sanitize (s)
   "Precede any regex special characters with a backslash."
   (let
@@ -158,9 +160,14 @@
 					     `(#\\ ,c) `(,c))) (coerce s 'list)))
             'string)))
 
+;; Modified from cl-info.lisp, 5.28
+;; Note that Maxima 5.30 has extensively rewritten the original function.
 (defun inexact-topic-match (topic names)
   (collect-regex-matches (regex-sanitize topic) names))
 
+;; Modified from cl-info.lisp, 5.28
+;; Note that Maxima 5.30 has extensively rewritten the original function,
+;; largely to be more efficient, as I have done here.
 (defun exact-topic-match (topic names)
   (collect-regex-matches (concatenate 'string "^" (regex-sanitize topic) "$") names))
 
