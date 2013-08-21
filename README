@@ -6,7 +6,7 @@ mext maxima third party code installation system.
  the Free Software Foundation; either version 3 of the License, or
  (at your option) any later version.
 
-Release 0.01 works with Maxima 5.28, but not with 5.30.
+Release v0.0.3 works with Maxima 5.28, but not with 5.30.
 
 This repository containts the mext packaging system and packages for
 the Maxima computer algebra system.
