@@ -1,0 +1,3 @@
+* Wed Aug 21 17:52:47 CEST 2013
+  0.01 -- This version works with Maxima 5.28
+  It does not work 5.30, and probably not with 5.29

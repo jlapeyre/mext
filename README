@@ -1,10 +1,15 @@
 mext maxima third party code installation system.
 
- Copyright (C) 2012 John Lapeyre
+ Copyright (C) 2012,2013 John Lapeyre
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 3 of the License, or
  (at your option) any later version.
+
+Release 0.01 works with Maxima 5.28, but not with 5.30.
+
+This repository containts the mext packaging system and packages for
+the Maxima computer algebra system.
 
 This folder tree contains the mext system, as well as several packages
 for which it was written: defmfun1, aex, and code that depends on
