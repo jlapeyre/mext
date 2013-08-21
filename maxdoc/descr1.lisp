@@ -80,6 +80,57 @@
     (all items)
     (none 'none)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Moved from doc-system
+
+;; This function only called by the next two functions
+(defun collect-regex-matches (regex-string names)
+  "Collect the query matches from multiple doc systems
+   and sort the results."
+  (cl-info::autoload-maxima-index) ; this should really be elsewhere
+  (let ((res (apply 'append (mapcar #'(lambda (name)
+                             (doc-system::ds-find-regex-matches regex-string
+                              (doc-system::ds-table-get name)))
+                         names))))
+    res)
+  (stable-sort (apply 'append (mapcar #'(lambda (name)
+                                          (doc-system::ds-find-regex-matches regex-string
+                                                                 (doc-system::ds-table-get name)))
+                                      names))
+               #'string-lessp :key #'caadr)) ;; note we sort on second element in list.
+
+;; exact copy cl-info.lisp, 5.28
+;; Not sure why we don't use the maxima version
+;; This is only called by following functions
+(defun regex-sanitize (s)
+  "Precede any regex special characters with a backslash."
+  (let
+    ((L (coerce maxima-nregex::*regex-special-chars* 'list)))
+
+    ; WORK AROUND NREGEX STRANGENESS: CARET (^) IS NOT ON LIST *REGEX-SPECIAL-CHARS*
+    ; INSTEAD OF CHANGING NREGEX (WITH POTENTIAL FOR INTRODUCING SUBTLE BUGS)
+    ; JUST APPEND CARET TO LIST HERE
+    (setq L (cons #\^ L))
+
+    (coerce (apply #'append
+                   (mapcar #'(lambda (c) (if (member c L :test #'eq)
+					     `(#\\ ,c) `(,c))) (coerce s 'list)))
+            'string)))
+
+;; Modified from cl-info.lisp, 5.28
+;; Note that Maxima 5.30 has extensively rewritten the original function.
+;; Why is this function here ?
+(defun inexact-topic-match (topic names)
+  (collect-regex-matches (regex-sanitize topic) names))
+
+;; Modified from cl-info.lisp, 5.28
+;; Note that Maxima 5.30 has extensively rewritten the original function,
+;; largely to be more efficient, as I have done here.
+(defun exact-topic-match (topic names)
+  (collect-regex-matches (concatenate 'string "^" (regex-sanitize topic) "$") names))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; modified, cl-info.lisp, 5.28
 ;; Check each database in $doc_system_list, or all all if it is nil
 ;; Note tha the stock code changed between 5.28 and 5.30
@@ -87,7 +138,7 @@
   (info-database::autoload-maxima-index)
   (let* ((names (if (eq nil maxima::$doc_system_list) (doc-system::ds-list)
                     (cdr maxima::$doc_system_list)))
-         (exact-matches (doc-system::exact-topic-match x names)))
+         (exact-matches (exact-topic-match x names)))
     (if (null exact-matches)
       (progn
         (format t (intl:gettext "  No exact match found for topic `~a'.~% ~
@@ -96,7 +147,7 @@
       (progn
         (format t "~%")
         (maybe-read-with-pager (doc-system::print-match-items exact-matches))
-        (if (some-inexact x (doc-system::inexact-topic-match x names))
+        (if (some-inexact x (inexact-topic-match x names))
             (progn
             (format t "  There are also some inexact matches for `~a'.~%  Try `?? ~a' to see them.~%~%" x x)))
         t))))
@@ -119,7 +170,7 @@
   (let ((names (if (eq nil maxima::$doc_system_list) (doc-system::ds-list)
                     (cdr maxima::$doc_system_list)))
          wanted tem)
-    (setf tem (doc-system::inexact-topic-match x names))
+    (setf tem (inexact-topic-match x names))
     (when tem
       (let ((nitems (length tem)))
         (when (> nitems 1)

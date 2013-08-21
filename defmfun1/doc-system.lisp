@@ -131,6 +131,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Why are the following four functions here and not in maxdoc ?
 ;; It seems they are only called from there ???
+;; I copied these to maxdoc. Now the following four are not
+;; called by any code. They should be removed.
 
 ;; This function only called by the next two functions
 (defun collect-regex-matches (regex-string names)
