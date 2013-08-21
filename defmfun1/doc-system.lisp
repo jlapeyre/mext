@@ -135,50 +135,52 @@
 ;; called by any code. They should be removed.
 
 ;; This function only called by the next two functions
-(defun collect-regex-matches (regex-string names)
-  "Collect the query matches from multiple doc systems
-   and sort the results."
-  (cl-info::autoload-maxima-index) ; this should really be elsewhere
-  (let ((res (apply 'append (mapcar #'(lambda (name)
-                             (ds-find-regex-matches regex-string
-                              (ds-table-get name)))
-                         names))))
-    res)
-  (stable-sort (apply 'append (mapcar #'(lambda (name)
-                                          (ds-find-regex-matches regex-string
-                                                                 (ds-table-get name)))
-                                      names))
-               #'string-lessp :key #'caadr)) ;; note we sort on second element in list.
+;; (defun collect-regex-matches (regex-string names)
+;;   "Collect the query matches from multiple doc systems
+;;    and sort the results."
+;;   (cl-info::autoload-maxima-index) ; this should really be elsewhere
+;;   (let ((res (apply 'append (mapcar #'(lambda (name)
+;;                              (ds-find-regex-matches regex-string
+;;                               (ds-table-get name)))
+;;                          names))))
+;;     res)
+;;   (stable-sort (apply 'append (mapcar #'(lambda (name)
+;;                                           (ds-find-regex-matches regex-string
+;;                                                                  (ds-table-get name)))
+;;                                       names))
+;;                #'string-lessp :key #'caadr)) ;; note we sort on second element in list.
 
 ;; exact copy cl-info.lisp, 5.28
 ;; Not sure why we don't use the maxima version
 ;; This is only called by following functions
-(defun regex-sanitize (s)
-  "Precede any regex special characters with a backslash."
-  (let
-    ((L (coerce maxima-nregex::*regex-special-chars* 'list)))
+;; (defun regex-sanitize (s)
+;;   "Precede any regex special characters with a backslash."
+;;   (let
+;;     ((L (coerce maxima-nregex::*regex-special-chars* 'list)))
 
     ; WORK AROUND NREGEX STRANGENESS: CARET (^) IS NOT ON LIST *REGEX-SPECIAL-CHARS*
     ; INSTEAD OF CHANGING NREGEX (WITH POTENTIAL FOR INTRODUCING SUBTLE BUGS)
     ; JUST APPEND CARET TO LIST HERE
-    (setq L (cons #\^ L))
+    ;; (setq L (cons #\^ L))
 
-    (coerce (apply #'append
-                   (mapcar #'(lambda (c) (if (member c L :test #'eq)
-					     `(#\\ ,c) `(,c))) (coerce s 'list)))
-            'string)))
+    ;; (coerce (apply #'append
+    ;;                (mapcar #'(lambda (c) (if (member c L :test #'eq)
+    ;;     				     `(#\\ ,c) `(,c))) (coerce s 'list)))
+    ;;         'string)))
 
 ;; Modified from cl-info.lisp, 5.28
 ;; Note that Maxima 5.30 has extensively rewritten the original function.
 ;; Why is this function here ?
-(defun inexact-topic-match (topic names)
-  (collect-regex-matches (regex-sanitize topic) names))
+
+;; (defun inexact-topic-match (topic names)
+;;   (collect-regex-matches (regex-sanitize topic) names))
 
 ;; Modified from cl-info.lisp, 5.28
 ;; Note that Maxima 5.30 has extensively rewritten the original function,
 ;; largely to be more efficient, as I have done here.
-(defun exact-topic-match (topic names)
-  (collect-regex-matches (concatenate 'string "^" (regex-sanitize topic) "$") names))
+
+;; (defun exact-topic-match (topic names)
+;;   (collect-regex-matches (concatenate 'string "^" (regex-sanitize topic) "$") names))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
