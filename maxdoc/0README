@@ -1,0 +1,20 @@
+Wed Aug 21 19:51:10 CEST 2013
+
+Note that some code here relies on defmfun1/doc-system.lisp.
+Some of the doc system had to be moved there, so that defmfun1
+will be aware of it.
+
+This is my best understanding, reading my code after a year or so.
+But there may be some errors:
+
+The mext or maxdoc or whatever doc system interacts with/ borrows
+from the Maxima documentation system in three files:
+
+defmfun1/doc-system.lisp
+maxdoc/descr1.lisp
+maxdoc/info-database.lisp
+
+The only code that replaces (overwrites) the stock Maxima code is
+$describe, which is defined in descr1.lisp.
+But, $describe calls code that effectively replacest the
+stock maxima code.
