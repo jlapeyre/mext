@@ -134,10 +134,10 @@
           (maybe-read-with-pager (doc-system::print-match-items wanted)))))
     (not (null tem))))
 
-
+;; Copied and modified from src/macdes.lisp
+;; We call our own versions of info and info-exact, rather than cl-info version
 (maxima::defmspec maxima::$describe (x)
   (setf x (cdr x))
-;;  (format t "Describge got length:~a ~a~%" (length x)  x)
   (let ((topic (maxima::$sconcat (car x)))
         (exact-p (or (null (cadr x)) (eq (cadr x) 'maxima::$exact)))
         (*prompt-prefix* maxima::*prompt-prefix*)
@@ -147,3 +147,13 @@
         (info topic))))
 ;;(t
 ;;          (merror1 "describe: describe requires a list"))))
+
+;; Following is original code from Maxima 5.28
+;; (defmspec $describe (x)
+;;   (let ((topic ($sconcat (cadr x)))
+;; 	(exact-p (or (null (caddr x)) (eq (caddr x) '$exact)))
+;; 	(cl-info::*prompt-prefix* *prompt-prefix*)
+;; 	(cl-info::*prompt-suffix* *prompt-suffix*))
+;;     (if exact-p
+;; 	(cl-info::info-exact topic)
+;; 	(cl-info::info-inexact topic))))
