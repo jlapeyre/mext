@@ -5,9 +5,10 @@
 ;;; the Free Software Foundation; either version 2 of the License, or
 ;;; (at your option) any later version.
 
+;;; Below `EC' denotes 'exact copy'
+
 (in-package :descr1)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
 (defvar *prompt-prefix* "")
 (defvar *prompt-suffix* "")
@@ -35,6 +36,7 @@
        (maxima::read-output-with-pager ,@body)
        (progn ,@body)))
 
+;; EC cl-info.lisp, 5.28
 (defun print-prompt (prompt-count)
   (format t "~&~a~a~a"
 	  *prompt-prefix*
@@ -43,6 +45,7 @@
 	      (intl:gettext "Still waiting: "))
 	  *prompt-suffix*))
 
+;; EC cl-info.lisp, 5.28
 (defvar +select-by-keyword-alist+
   '((noop "") (all "a" "al" "all") (none "n" "no" "non" "none")))
 
