@@ -49,6 +49,7 @@
 (defvar +select-by-keyword-alist+
   '((noop "") (all "a" "al" "all") (none "n" "no" "non" "none")))
 
+;; EC cl-info.lisp, 5.28
 (defun parse-user-choice (nitems)
   (loop
      with line = (read-line) and nth and pos = 0
@@ -70,6 +71,7 @@
          (format *debug-io* (intl:gettext "~&Ignoring trailing garbage in input.")))
        (return (cons keyword list)))))
 
+;; EC cl-info.lisp, 5.28
 (defun select-info-items (selection items)
   (case (pop selection)
     (noop (loop
@@ -78,6 +80,8 @@
     (all items)
     (none 'none)))
 
+;; modified, cl-info.lisp, 5.28
+;; Check each database in $doc_system_list, or all all if it is nil
 (defun info-exact (x)
   (info-database::autoload-maxima-index)
   (let* ((names (if (eq nil maxima::$doc_system_list) (doc-system::ds-list)
@@ -93,17 +97,17 @@
         (maybe-read-with-pager (doc-system::print-match-items exact-matches))
         (if (some-inexact x (doc-system::inexact-topic-match x names))
             (progn
-;;              (format t "the iineacfd aare ~a~%" (doc-system::inexact-topic-match x names))
-;;              (format t " x is ~a~%" x)
             (format t "  There are also some inexact matches for `~a'.~%  Try `?? ~a' to see them.~%~%" x x)))
         t))))
 
+;; modified, cl-info.lisp, 5.28
 (defun some-inexact (x inexact-matches)
   (some #'(lambda (y)
 ;;            ( format t "comparing ~a and ~a~%" x y)
                   (not (equal y x))) (mapcar #'caadr inexact-matches)))
 
-
+;; modified from display-items in cl-info.lisp, 5.28
+;; Check all databases in $doc_system_list
 (defun info (x)
   "Display a list of inexact matches and prompt the user to choose some."
   (info-database::autoload-maxima-index)
@@ -137,7 +141,7 @@
           (maybe-read-with-pager (doc-system::print-match-items wanted)))))
     (not (null tem))))
 
-;; Copied and modified from src/macdes.lisp
+;; Modified from from src/macdes.lisp
 ;; We call our own versions of info and info-exact, rather than cl-info version
 (maxima::defmspec maxima::$describe (x)
   (setf x (cdr x))
