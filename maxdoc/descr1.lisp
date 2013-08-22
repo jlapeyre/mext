@@ -87,8 +87,7 @@
 (defun collect-regex-matches (regex-string names)
   "Collect the query matches from multiple doc systems
    and sort the results."
-  (info-database::load-maxima-index)
-;;  (cl-info::autoload-maxima-index) ; this should really be elsewhere
+  (info-database::load-maxima-index) ; not sure if this is needed here
   (let ((res (apply 'append (mapcar #'(lambda (name)
                              (doc-system::ds-find-regex-matches regex-string
                               (doc-system::ds-table-get name)))
@@ -135,12 +134,8 @@
 ;; modified, cl-info.lisp, 5.28
 ;; Check each database in $doc_system_list, or all all if it is nil
 ;; Note that the stock code changed between 5.28 and 5.30
-;; We have two copies of autoload-maxima-index in two packages and call each.
-;; I think there is no reason for this.
 (defun info-exact (x)
-;;  (info-database::autoload-maxima-index)
   (info-database::load-maxima-index)
-;;  (cl-info::autoload-maxima-index)
   (let* ((names (if (eq nil maxima::$doc_system_list) (doc-system::ds-list)
                     (cdr maxima::$doc_system_list)))
          (exact-matches (exact-topic-match x names)))
@@ -171,9 +166,7 @@
 ;; Note that display-items is modified in 5.30.0.
 (defun info (x)
   "Display a list of inexact matches and prompt the user to choose some."
-;  (info-database::autoload-maxima-index)
   (info-database::load-maxima-index)
-;;  (cl-info::autoload-maxima-index)
   (let ((names (if (eq nil maxima::$doc_system_list) (doc-system::ds-list)
                     (cdr maxima::$doc_system_list)))
          wanted tem)

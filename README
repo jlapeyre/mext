@@ -6,9 +6,9 @@ mext maxima third party code installation system.
  the Free Software Foundation; either version 3 of the License, or
  (at your option) any later version.
 
-Release v0.0.3 works with Maxima 5.28, but not with 5.30.
+The latest code works with Maxima 5.28, and most of it works with 5.30.
 
-This repository containts the mext packaging system and packages for
+This repository contains the mext packaging system and packages for
 the Maxima computer algebra system.
 
 This folder tree contains the mext system, as well as several packages
@@ -21,13 +21,14 @@ to 'package'.)
 
 See the file 'INSTALL' for installation instructions.
 
-Much of the third party software uses the maxdoc documentation system,
-with documentation embedded in the source code.  This allows printing
-online documentation via ? and ??.  A latex translator is also
-available. A texi translator is partially done.  See the output in the
-files thirdparty.{tex,pdf,html}. The latex file is created by loading
-mext packages and then giving the command print_sections_latex(); to
-print the documentation for all loaded packages.
+Much of the third party software packaged here uses the maxdoc
+documentation system, with documentation embedded in the source code.
+This allows printing online documentation via ? and ??.  A latex
+translator is also available. A texi translator is partially done.
+See the output in the files thirdparty.{tex,pdf,html}. The latex file
+is created by loading mext packages and then giving the command
+print_sections_latex(); to print the documentation for all loaded
+packages.
 
 The mext system packages the distributions in a more-or-less
 uniform way. They are built and installed using only maxima,
@@ -206,4 +207,4 @@ LocalWords:  mext maxima defmfun aex contrib perl linux gcl sbcl ccl
 LocalWords:  clisp cmucl ecl subdirectory rtests subfolders distname
 LocalWords:  defsystem asdf pathnames pathname ansi clozure chdir pwd
 LocalWords:  truename runtime nelder pw Lapeyre GPL Mommer piecewise
-LocalWords:  expr init
+LocalWords:  expr init maxdoc texi thirdparty tex pdf html

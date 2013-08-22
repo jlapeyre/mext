@@ -14,12 +14,11 @@
 # of this software, as well.
 
 #maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-#maximas="smaxima"
-maximas="smaxima-30"
+maximas="smaxima"
+#maximas="smaxima-30"
 
-build_package_script="build_essential.mac"
-#build_package_script="buildall1.mac"
-
+#build_package_script="build_essential.mac"
+build_package_script="buildall1.mac"
 
 # Build just the mext_system
 # Note that if mext system has already been loade, eg in your startup

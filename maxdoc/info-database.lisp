@@ -6,25 +6,9 @@
 ;; Note that these copies do not collide with original Maxima code, because
 ;; we are in a different package.
 
-;; exact copy, cl-info.lisp, 5.28
-;; This is called from info-exact in descr1.lisp
-
 (defun load-maxima-index ()
   (if (fboundp 'cl-info::autoload-maxima-index)
       (autoload-maxima-index)))
-    
-;(defun autoload-maxima-index ()
-  ;; Autoload the index, but make sure we use a sensible *read-base*.
-  ;; See bug 1951964.  GCL doesn't seem to have
-  ;; with-standard-io-syntax.  Is just binding *read-base* enough?  Is
-  ;; with-standard-io-syntax too much for what we want?
-;  #-gcl
-;  (with-standard-io-syntax
-;    (maxima::mfuncall 'cause-maxima-index-to-load))
-;  #+gcl
-;  (let ((*read-base* 10.))
-;    (maxima::mfuncall 'cause-maxima-index-to-load)))
-
 
 ;; modified only as noted from cl-info.lisp, 5.28
 ;; Called in str-item below

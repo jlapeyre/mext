@@ -119,8 +119,14 @@ Any distribution not listed here depends only on mext_system.
   quicklisp -> maxdoc
   store -> quicklisp  
 
+OTHER INSTALLATION INSTRUCTIONS
 
+For building mext and packages for multiple (or one) version of
+maxima/lisp on linux, see the file all-lisps.sh.
 
+For building latex and html of the documentation, see builddoc.sh.
+
+-------------------------------------
 LocalWords:  maxima wxmaxima gcl ccl linux github
 LocalWords:  subfolder google username timestamps
 LocalWords:  defsystem ibuild quicklisp asdf aex
