@@ -8,17 +8,18 @@
 
 ;; exact copy, cl-info.lisp, 5.28
 ;; This is called from info-exact in descr1.lisp
-(defun autoload-maxima-index ()
+
+;(defun autoload-maxima-index ()
   ;; Autoload the index, but make sure we use a sensible *read-base*.
   ;; See bug 1951964.  GCL doesn't seem to have
   ;; with-standard-io-syntax.  Is just binding *read-base* enough?  Is
   ;; with-standard-io-syntax too much for what we want?
-  #-gcl
-  (with-standard-io-syntax
-    (maxima::mfuncall 'cause-maxima-index-to-load))
-  #+gcl
-  (let ((*read-base* 10.))
-    (maxima::mfuncall 'cause-maxima-index-to-load)))
+;  #-gcl
+;  (with-standard-io-syntax
+;    (maxima::mfuncall 'cause-maxima-index-to-load))
+;  #+gcl
+;  (let ((*read-base* 10.))
+;    (maxima::mfuncall 'cause-maxima-index-to-load)))
 
 ;; modified only as noted from cl-info.lisp, 5.28
 ;; Called in str-item below
