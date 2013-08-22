@@ -65,6 +65,12 @@
   "Print item. Called by doc-system interface."
  (format nil "~A~%~%" (read-info-text item)))
 
+(when (not (boundp 'cl-info::*info-deffn-defvr-hashtable*))
+  (let ((info-tables
+         (gethash (first (get-hash-keys cl-info::*info-tables*)) cl-info::*info-tables*)))
+    (defparameter cl-info::*info-deffn-defvr-hashtable* (first info-tables))
+    (defparameter cl-info::*info-section-hashtable* (second info-tables))))
+
 (unless (doc-system::ds-registered-p "info-deffn-defvr")
   (doc-system::ds-make-and-register
    :name "info-deffn-defvr"
