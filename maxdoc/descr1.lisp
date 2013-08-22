@@ -87,7 +87,8 @@
 (defun collect-regex-matches (regex-string names)
   "Collect the query matches from multiple doc systems
    and sort the results."
-  (cl-info::autoload-maxima-index) ; this should really be elsewhere
+  (info-database::load-maxima-index)
+;;  (cl-info::autoload-maxima-index) ; this should really be elsewhere
   (let ((res (apply 'append (mapcar #'(lambda (name)
                              (doc-system::ds-find-regex-matches regex-string
                               (doc-system::ds-table-get name)))
@@ -138,7 +139,8 @@
 ;; I think there is no reason for this.
 (defun info-exact (x)
 ;;  (info-database::autoload-maxima-index)
-  (cl-info::autoload-maxima-index)
+  (info-database::load-maxima-index)
+;;  (cl-info::autoload-maxima-index)
   (let* ((names (if (eq nil maxima::$doc_system_list) (doc-system::ds-list)
                     (cdr maxima::$doc_system_list)))
          (exact-matches (exact-topic-match x names)))
@@ -170,7 +172,8 @@
 (defun info (x)
   "Display a list of inexact matches and prompt the user to choose some."
 ;  (info-database::autoload-maxima-index)
-  (cl-info::autoload-maxima-index)
+  (info-database::load-maxima-index)
+;;  (cl-info::autoload-maxima-index)
   (let ((names (if (eq nil maxima::$doc_system_list) (doc-system::ds-list)
                     (cdr maxima::$doc_system_list)))
          wanted tem)

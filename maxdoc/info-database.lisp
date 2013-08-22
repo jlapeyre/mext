@@ -9,6 +9,10 @@
 ;; exact copy, cl-info.lisp, 5.28
 ;; This is called from info-exact in descr1.lisp
 
+(defun load-maxima-index ()
+  (if (fboundp 'cl-info::autoload-maxima-index)
+      (autoload-maxima-index)))
+    
 ;(defun autoload-maxima-index ()
   ;; Autoload the index, but make sure we use a sensible *read-base*.
   ;; See bug 1951964.  GCL doesn't seem to have
@@ -20,6 +24,7 @@
 ;  #+gcl
 ;  (let ((*read-base* 10.))
 ;    (maxima::mfuncall 'cause-maxima-index-to-load)))
+
 
 ;; modified only as noted from cl-info.lisp, 5.28
 ;; Called in str-item below
