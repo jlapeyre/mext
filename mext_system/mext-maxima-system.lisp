@@ -583,6 +583,8 @@ This was copied from maxima source init-cl.lisp.")
              (merror 
               (intl:gettext "File specification ~a is neither a string nor a list of one or two strings.~%")))))))
 
+;; Maxima 5.30 has a bug that prevents $load_pathname from being set with 'maxima -b'
+;; So tests fail in this case.
 ;; use load_pathname if defined, else *default-pathname-defaults*
 (defmfun $load_in_subdir (file &optional dir)
   (when (and dir ($listp dir)) (setf dir (cdr dir)))

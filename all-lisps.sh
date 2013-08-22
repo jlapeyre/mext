@@ -13,8 +13,8 @@
 # lisp implementations. Allegro worked with an earlier version
 # of this software, as well.
 
-maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
-#maximas="smaxima"
+#maximas="smaxima gmaxima clmaxima emaxima cmumaxima ccmaxima"
+maximas="smaxima"
 #maximas="smaxima-30"
 
 #build_package_script="build_essential.mac"

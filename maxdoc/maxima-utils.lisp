@@ -5,4 +5,5 @@
 (doc-system:set-source-package "maxdoc")
 
 (maxima::ddefun keywordify (s)
+  "Convert a Maxima symbol to a lisp keyword. E.g. `$a' -> `:a' ."
   (intern (subseq (symbol-name s) 1) :keyword))

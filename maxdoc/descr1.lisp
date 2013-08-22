@@ -133,7 +133,9 @@
 
 ;; modified, cl-info.lisp, 5.28
 ;; Check each database in $doc_system_list, or all all if it is nil
-;; Note tha the stock code changed between 5.28 and 5.30
+;; Note that the stock code changed between 5.28 and 5.30
+;; We have two copies of autoload-maxima-index in two packages and call each.
+;; I think there is no reason for this.
 (defun info-exact (x)
   (info-database::autoload-maxima-index)
   (let* ((names (if (eq nil maxima::$doc_system_list) (doc-system::ds-list)

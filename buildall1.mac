@@ -33,14 +33,11 @@ popdir();
 /* Third party packages adapted to mext */
 /* "finance" loads rather slowly */
 
-/*
-build_several(["alt_eigen"]);
 
+build_several(["alt_eigen"]);
 
 build_several(["nelder_mead", "pw", "discrete",
           "coma", "circuits", "implicit"]);
-
-*/
 
 /* Examples from contrib and share */
 
