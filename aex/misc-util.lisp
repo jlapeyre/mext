@@ -23,7 +23,7 @@
 
 (maxdoc:mdefmvar $compile_lambda_verbose nil
   "If this is true, then print translated code when automatically compiling lambda functions
-  passed as arguments. This is done in the macro option-compile-lambda."  )
+  passed as arguments. This is done in the macro option-compile-lambda.")
 
 ;; this one does not rely on the list  *compiled-lisp-file-extension* above
 

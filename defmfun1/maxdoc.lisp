@@ -335,6 +335,7 @@
          (see-also e others))))
 
 ;; use mdefmvar instead of defmvar to avoid issue of shadowing, importing, etc.
+;; defmvar is defined in src/commac.lisp
 (defmacro mdefmvar (var &body val-and-doc)
   (if (= (length val-and-doc) 2)
       (let* ((doc (second val-and-doc))
@@ -344,13 +345,12 @@
                          (t val)))
              (pass-arg (if (stringp val)
                            val-and-doc (list val))))
-;        (format t "Doc is ~s~%" doc)
-        `(progn
-           (add-doc-entry '( :name ,(maxima::$sconcat var)
-                             :type "Variable"
-                             :default-value ,val1
-                             :contents ,doc))
-           (maxima::defmvar ,var ,@pass-arg)))))
+         `(progn
+            (add-doc-entry '( :name ,(maxima::$sconcat var)
+                              :type "Variable"
+                              :default-value ,val1
+                              :contents ,doc))
+            (maxima::defmvar ,var ,@pass-arg)))))
 
 (defun implementation (name implemention-string)
   (let ((entry (get-doc-entry :es name)))
@@ -494,12 +494,18 @@ must be keyword,value pairs for the doc entry struct."
  "If true, then print implementation information with maxdoc documentation.")
 
 ;; Should not be in documentation section
+;; should not $error_code  and $pager_command be in package maxima ?
 (maxdoc:mdefmvar $error_code nil
  ( "This is an error code set by " :codedot "merror1"))
 
 (maxdoc:mdefmvar $pager_command "/usr/bin/less"
  "The pathname to the system command used for paged output, for
  instance, for reading documentation.")
+
+;; only for bug hunting
+;(maxdoc:mdefmvar maxima::$compile_lambda_verbose nil
+;  "If this is true, then print translated code when automatically compiling lambda functions
+;  passed as arguments. This is done in the macro option-compile-lambda."  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

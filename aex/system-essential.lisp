@@ -78,6 +78,7 @@
            ((and (setq y (safe-get x 'reversealias))
                  (not (and (member x $aliases :test #'eq) (get x 'noun))))
             (setq y (exploden (stripdollar y))))
+;  Following two lines disappeared between 5.28 and 5.30
            ((setq y (rassoc x aliaslist :test #'eq))
             (return (msize (car y) l r lop rop)))
            ((null (setq y (exploden x))))

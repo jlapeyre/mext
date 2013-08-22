@@ -17,7 +17,8 @@
     (:file "ifunctions")
     (:file "system-essential")
     (:file "mset")
-    (:file "lisp-numeric")))
+    (:file "lisp-numeric")
+))
 
 ;; neither compile nor load when building
 (mk:defsystem load-aex
