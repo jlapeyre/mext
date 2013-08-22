@@ -4,10 +4,12 @@ in this directory. Be aware that this will download
 and install quicklisp from the internet. mext uses
 quicklisp for asdf 'systems'.
 
+This package is used by the `store' package.
+
 After building and loading, try
 
  ?? quicklisp
 
 to see some help.
 
-This package is used by the `store' package.
+

@@ -146,7 +146,7 @@
 (defmfun1 ($maxdoc_set_mext_package :doc) ((packagename :string))
  :desc 
  ("Set the current mext package name for maxdoc to " :argdot "packagename"
- "This name will be used by functions specifying documentation for functions
+ " This name will be used by functions specifying documentation for functions
  until the name is set to another value. When documenting functions written in
  maxima code, calling " :mref "mext_record_package" " is probably more useful.")
  (defmfun1:set-mext-package packagename)
