@@ -9,3 +9,5 @@ After building and loading, try
  ?? quicklisp
 
 to see some help.
+
+This package is used by the `store' package.
