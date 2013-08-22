@@ -9,3 +9,8 @@
 *.lib
 hide2/
 hide/
+logfiles/
+latextest/
+*.wxm
+thirdparty.tex
+
