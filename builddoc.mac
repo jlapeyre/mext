@@ -7,6 +7,9 @@ load(mext);
    may be loaded anyway.
 */
 
+require('all);
+
+/*
 require(mext_defmfun1);
 require(defmfun1);
 require(discrete_aex);
@@ -15,6 +18,7 @@ require(store);
 require(quicklisp);
 require(prime_pi);
 require(nelder_mead);
+*/
 
 /*print_copyrights : true$ */
 print_sections_latex("./thirdparty.tex");

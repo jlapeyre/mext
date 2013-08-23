@@ -673,7 +673,8 @@ refers to the head."
 ;; This would probably be more efficient if the recursively called function
 ;; were just a defun, so that argument checking is not done.
 (defmfun1 ($deep_copy :doc) (e)
-  :desc ( "Deep copy expression " :arg "e" " which may be of mixed lex/aex representation." )
+  :desc ( "Deep copy expression " :arg "e" " which may be of mixed lex/aex representation. "
+   "An exact copy is made; that is, the representation is preserved at all levels.")
   (cond ( (aex-p e)
           (let* ((ar (aex-arr e))
                  (n (length ar))
