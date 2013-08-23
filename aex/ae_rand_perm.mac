@@ -26,7 +26,7 @@
 
 rand_perm(a) := block([a1,n,j,tmp],
   modedeclare([j,n],fixnum),
-  a1 : aex_cp(a),
+  a1 : aex_cp(a), /* copy a to an aex representation */
   n : ilength(a1),
   for i from 0 thru n-1 do (
     j : i + random(n-i),
