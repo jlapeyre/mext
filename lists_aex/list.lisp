@@ -424,7 +424,8 @@
 
 (defmfun1 ($imap :doc) (f (expr :non-atom) &opt ($compile t :bool))
   :desc ("Maps functions of a single argument. I guess that " :emref "map" " handles more
-   types of input without error. But " :mref "imap" " can be much faster for some inputs.")
+   types of input without error. But " :mref "imap" " can be much faster for some inputs."
+    " This is especially true if a lambda function is passed to imap, as it can be compiled.")
   (option-compile-lambda f)
   (if (aex-p expr)
         (if (functionp f) (max-list::imap-aex-call funcall) (max-list::imap-aex-call mfuncall))
