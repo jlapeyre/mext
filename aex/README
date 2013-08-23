@@ -2,9 +2,10 @@ aex
 
 aex allows representing maxima expressions with lisp arrays.
 
- Maxima lists and list-like expressions can be represented by
- lisp arrays. This can be more efficient, for instance
- random access to elements is neccessary. For example
+With this package, maxima lists and list-like expressions can be
+represented by lisp arrays. This can be more efficient, for instance
+random access to elements is neccessary. For example
+
  (%i1) lrange(5);
  (%o1) [1,2,3,4,5]
  (%i2) lrange(5, ot->ar);

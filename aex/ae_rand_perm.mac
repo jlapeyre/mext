@@ -1,15 +1,33 @@
 /*
 
-  Return a random permutation of the arguments of a.
-  This is for testing or demonstration. We actually
-  use a lisp version. But this is almost as fast.
+  rand_perm
+  
+  Return a random permutation of the arguments of <a>.
+  <a> can be a either a lex or an aex expression.
+
+  This is for testing or demonstration. The function
+  `ae_random_permuatation' is actually written in lisp.  But this is
+  version is almost as fast. In plain vanilla Maxima, an efficient
+  implementation would copy the list `a' to a vector.  This is
+  essentially what we do here, but in an organized way.
+
+  For example   
+
+  (%i1) load(mext)$ require(lists_aex)$
+  (%i3) load("./aex/ae_rand_perm.mac")$
+  (%i4) a : lrange(10);
+  (%o4)                   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  (%i5) ap : rand_perm(a);
+  (%o5)                       ~[3,5,7,8,9,1,10,4,2,6]
+  (%i6) b : rand_perm(ap);
+  (%o6)                       ~[2,4,9,1,7,10,5,6,3,8]
 
 */
 
 rand_perm(a) := block([a1,n,j,tmp],
   modedeclare([j,n],fixnum),
   a1 : aex_cp(a),
-  n : length(a1),
+  n : ilength(a1),
   for i from 0 thru n-1 do (
     j : i + random(n-i),
     tmp : aex_get(a1,i),
