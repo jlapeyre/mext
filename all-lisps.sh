@@ -13,8 +13,8 @@
 # lisp implementations. Allegro worked with an earlier version
 # of this software, as well.
 
-#maximas="smaxima smaxima-30 gmaxima clmaxima emaxima cmumaxima ccmaxima"
-maximas="smaxima"
+maximas="smaxima smaxima-30 gmaxima gmaxima-30 clmaxima emaxima cmumaxima ccmaxima ccmaxima-30"
+#maximas="smaxima"
 #maximas="smaxima-30"
 
 #build_package_script="build_essential.mac"
@@ -74,7 +74,6 @@ parse_build_logs () {
       ./parse_testlog.pl build logfiles/$maxima.mextlog
     done
 }
-
 
 # print the big document page
 print_max_doc () {

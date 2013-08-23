@@ -647,7 +647,7 @@ This was copied from maxima source init-cl.lisp.")
     (if (or (not registered) force)
         (let ((file (mext-maxima::mext-file-search name)))
           (if file (progn (format t "loading ~a~%" file) ($load file))
-            (merror "Unable to find '~a'." name)))
+            (merror "mext require: Unable to find '~a'." name)))
       t)))
 
 ;; identical. I want to switch to this name
