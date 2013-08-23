@@ -38,9 +38,10 @@
 
 (max-doc:see-also "from_digits" '("integer_digits" "integer_string"))
 (add-call-desc '( "from_digits" ("digits")
-                 ("returns the integer represented by the decimal digits in the list " :arg "digits" "."))
+                 ("returns the integer represented by the decimal digits in the list or string " :arg "digits" "."))
                '( "from_digits" ("digits" "base")
-                 ("returns the integer represented by the base " :arg "base" " digits in the list " :arg "digits" ".")))
+                 ("returns the integer represented by the base " :arg "base" " digits in the list or string" 
+                  :arg "digits" ".")))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
