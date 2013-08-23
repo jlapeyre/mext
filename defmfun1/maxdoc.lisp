@@ -192,7 +192,7 @@
       (if (symbolp item)
           (let ((fmt (gethash item code-table)))
             (unless (keyword-p item) 
-              (format t "max-doc: Format symbol not a keyword ~s, in ~s." item txt)
+              (format t "max-doc: Markup tag `~s' is not a keyword, in ~s." item txt)
               (maxima::merror1 "An error"))
             (if fmt
                 (let ((txt2 (progn (pop txt1) (car txt1))))
@@ -336,21 +336,30 @@
 
 ;; use mdefmvar instead of defmvar to avoid issue of shadowing, importing, etc.
 ;; defmvar is defined in src/commac.lisp
+;; TODO: checking for, or handling number of args should be improved.
+;; TODO: rewrite so that the eval is not neccessary.
+;;       It is needed for $homedir in mext_defmfun1/mext_defmfun1_code.lisp.
+;; Where does the unwanted newline come from  when printing the error message (inside `~m') ?
 (defmacro mdefmvar (var &body val-and-doc)
-  (if (= (length val-and-doc) 2)
-      (let* ((doc (second val-and-doc))
-             (val (first val-and-doc))
-             (val1 (cond ((eq t val) "true")
-                         ((null val) "false")
-                         (t val)))
-             (pass-arg (if (stringp val)
-                           val-and-doc (list val))))
-         `(progn
-            (add-doc-entry '( :name ,(maxima::$sconcat var)
-                              :type "Variable"
-                              :default-value ,val1
-                              :contents ,doc))
-            (maxima::defmvar ,var ,@pass-arg)))))
+  (let ( (length-val-and-doc (length val-and-doc))
+         (max-varname (maxima::$sconcat var)))
+    (if (= length-val-and-doc 2)
+        (let* ((doc (second val-and-doc))
+               (val (eval (first val-and-doc)))
+               (val1 (cond ((eq t val) "true")
+                           ((null val) "false")
+                           (t val)))
+               (pass-arg (if (stringp val)
+                             val-and-doc (list val))))
+          `(progn
+             (add-doc-entry '( :name ,max-varname
+                               :type "Variable"
+                               :default-value ,val1
+                               :contents ,doc))
+             (maxima::defmvar ,var ,@pass-arg)))
+      (maxima::merror1 (intl:gettext 
+                        "max-doc:mdefmvar : ~m arguments given in definition of `~m'; three are expected.~%")
+                       (+ 1 length-val-and-doc) max-varname))))
 
 (defun implementation (name implemention-string)
   (let ((entry (get-doc-entry :es name)))

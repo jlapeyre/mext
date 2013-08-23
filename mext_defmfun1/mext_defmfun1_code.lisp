@@ -11,6 +11,8 @@
 (maxdoc:mdefmvar $homedir (namestring mext::*homedir-pathname*)
  "The user's home directory.")
 
+;; For testing error message
+;;(maxdoc:mdefmvar $anotherhomedir (namestring mext::*homedir-pathname*) )
 
 ;; redefined
 (defmfun1 ($chdir :doc) ( &optional (dir :string))
