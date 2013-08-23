@@ -4,6 +4,11 @@
 (max-doc:set-cur-sec 'max-doc::predicates-fandv)
 (defmfun1:set-mext-package "aex")
 
+;; used in rtests
+(defmfun1 ($aex_p :doc) (e)
+ :desc ("Returns true if " :arg "e" " is an aex expression, otherwise false.")
+  (aex-p e))
+
 (defmfun1 ($cmplength :doc) (e (n 0 :non-neg-int)) ; 0 to quiet compiler
   :desc ( "return the smaller of " :arg "n" " and " :codedot "length(e)"
   " This is useful if " :arg "e" " is very large and " :arg "n" " is small, so that
@@ -97,3 +102,5 @@
                        '( :pretext "type_of returns the type of the lisp struct corresponding to a maxima object."
                             :code-res ( ("load(graphs)$" nil)
                                         ("type_of(new_graph())" "  graph"))))
+
+

@@ -11,6 +11,8 @@
   implementation would copy the list `a' to a vector.  This is
   essentially what we do here, but in an organized way.
 
+  Do `compile(rand_perm)' to make it more efficient.
+
   For example   
 
   (%i1) load(mext)$ require(lists_aex)$

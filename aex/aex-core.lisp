@@ -698,10 +698,6 @@ refers to the head."
   (if-aex x (length (aex-arr x))
             ($length x)))
 
-;; used in rtests
-(defmfun $aex_p (x)
-  (aex-p x))
-
 ;; is used
 (defmfun $ae_listp (e)
   (if (aex-p e) (eq (car (aex-head e)) 'mlist)
