@@ -670,6 +670,8 @@ refers to the head."
             e))
 
 ;; used in rtest
+;; This would probably be more efficient if the recursively called function
+;; were just a defun, so that argument checking is not done.
 (defmfun1 ($deep_copy :doc) (e)
   :desc ( "Deep copy expression " :arg "e" " which may be of mixed lex/aex representation." )
   (cond ( (aex-p e)
@@ -681,14 +683,14 @@ refers to the head."
             (dotimes (i n)
               (setf x (elt ar i))
                 (setf (elt ar1 i)
-                      (if (or (listp x) (aex-p x)) ($alex_copy_tree x) x )))
+                      (if (or (listp x) (aex-p x)) ($deep_copy x) x )))
             e1))
         ( (listp e)
           (do* ( (e1 e (cdr e1))
                 (res)
                 (x (car e) (car e1)))
               ( (null e1) (nreverse res))
-            (setf res (cons (if (or (listp x) (aex-p x)) ($alex_copy_tree  x) x  ) res))))
+            (setf res (cons (if (or (listp x) (aex-p x)) ($deep_copy  x) x  ) res))))
         (t e)))
   
 ;; not used
