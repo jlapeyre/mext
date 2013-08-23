@@ -8,7 +8,7 @@
 
 (defun load-maxima-index ()
   (if (fboundp 'cl-info::autoload-maxima-index)
-      (autoload-maxima-index)))
+      (cl-info::autoload-maxima-index)))
 
 ;; modified only as noted from cl-info.lisp, 5.28
 ;; Called in str-item below

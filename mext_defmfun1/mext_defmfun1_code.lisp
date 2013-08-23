@@ -1,5 +1,8 @@
 (in-package :maxima)
 
+;;; Functions that are marked `redefined' were defined previously without defmfun1
+;;; in mext-maxima-system.lisp.
+
 (doc-system:set-source-file-name "mext_defmfun1_code.lisp")
 (doc-system:set-source-package "mext_defmfun1")
 (max-doc:set-cur-sec 'max-doc::runtime-fandv)
@@ -8,6 +11,8 @@
 (maxdoc:mdefmvar $homedir (namestring mext::*homedir-pathname*)
  "The user's home directory.")
 
+
+;; redefined
 (defmfun1 ($chdir :doc) ( &optional (dir :string))
   "Set the working directory for maxima/lisp. With some lisps, such as cmu lisp the system
  directory is changed as well. This should be made uniform across lisp implementations."
@@ -19,11 +24,13 @@
                         '( "chdir" ("dir")
                            ("Set the working directory to " :arg "dir" ".")))
 
+;; redefined
 (defmfun1 ($popdir :doc) ( &optional (n 1 :non-neg-int))
   :desc ( "Pop a value from the current directory stack and chdir to this value.
  If " :arg "n" " is given, pop " :arg "n" " values and chdir to the last value popped.")
   (mext::popdir n))
 
+;; redefined
 (defmfun1 ($dirstack :doc) ()
   :desc ("Return a list of the directories on the directory stack. This list is
  manipulated with " :mref "chdir" ", " :mrefcomma "updir" " and " :mrefdot "popdir")
@@ -34,19 +41,23 @@
   (let ((res  (mext::mext-dir-exists-p dir)))
     (if res (namestring res) nil)))
 
+;; redefined
 (defmfun1 ($pwd :doc) ()
   "Return the current working directory."
   (mext::pwd))
 
+;; redefined
 (defmfun1 ($mext_test :doc) ( &optional (dists :or-string-symbol-or-listof))
   :desc ("Run the test suites for a mext distribution or list of distributions. With
  no argument, a subfolder named " :code "rtests" " is searched for in the current directory.")
   (mext::mext-test dists))
 
+;; redefined
 (defmfun1 ($mext_list :doc) ()
   "Returns a list of all installed mext distributions."
     (mext::mext-list))
 
+;; redefined
 (defmfun1 ($mext_clear :doc) ()
   "Clears the list of mext packages that have been loaded with require.
    Subsequent calls to require will reload the packages."
@@ -74,13 +85,14 @@
     (mext:do-dont-kill-share name))
   '$done)
 
-
+;; redefined
 (defmfun1 ($mext_info :doc) ((distname :or-string-symbol))
   :desc ("Print information about installed mext distribution " :arg "distname"
     ". The list of installed  distributions is built by calling " :mref "mext_list" ".")
     (or (mext::mext-info distname)
         (merror1 (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") ($sconcat distname))))
 
+;; redefined
 (defmfun1 ($require :doc) ((distname :or-string-symbol) &optional force)
   :desc ( "Load the mext pacakge " :arg "distname" " and register that it has been loaded."
  " " :code "require('all)" " will load all installed mext packages. If " :arg "force" " is true,
