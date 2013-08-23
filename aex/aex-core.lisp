@@ -667,8 +667,8 @@ refers to the head."
             e))
 
 ;; used in rtest
-(defmfun $alex_copy_tree (e)
-   "Copy tree for mixed ml and ar expressions."
+(defmfun1 ($alex_copy_tree :doc) (e)
+  :desc ( "Deep copy a mixed lex/aex expression. This should be renamed and better documented." )
   (cond ( (aex-p e)
           (let* ((ar (aex-arr e))
                  (n (length ar))
