@@ -489,10 +489,10 @@ refers to the head."
       (list 1 s))))
 
 ;; is used
-(defmfun $raex (x &optional spec )
-  "Convert to aexpr at specified levels"
+(defmfun1 ($raex :doc) (e &optional spec )
+  :desc ("Convert " :arg "e" " to aex representation at the specified levels.")
   (setf spec (canon-level-spec spec))
-  (raex1 x 1 (first spec) (second spec)))
+  (raex1 e 1 (first spec) (second spec)))
 
 (defun raex (x &optional spec )
   "Same as above, but call from lisp code."
@@ -501,8 +501,9 @@ refers to the head."
 
 ;; is used
 ;; convert to aexpr at all levels
-(defmfun $faex (x)
-  (raex1 x 1 1 '$inf))
+(defmfun1 ($faex :doc) (e)
+ :desc ("deep copy " :arg "e" " converting to aex representation at all levels.")
+  (raex1 e 1 1 '$inf))
 
 ;; is used
 (defun raex1 (x d d1 d2)
@@ -543,9 +544,10 @@ refers to the head."
                     xout))))))
 
 ;; is used
-(defmfun $rlex (x &optional spec )
+(defmfun1 ($rlex :doc) (e &optional spec )
+  :desc ("Deep copy, converting " :arg "e" " to lex representation at the specified levels.") 
   (setf spec (canon-level-spec spec))
-  (rlex1 x 1 (first spec) (second spec)))
+  (rlex1 e 1 (first spec) (second spec)))
 
 (defun rlex (x &optional spec )
   "Same as above, but call from lisp code."
@@ -553,8 +555,9 @@ refers to the head."
   (rlex1 x 1 (first spec) (second spec)))
 
 ;; is used
-(defmfun $flex (x )
-  (rlex1 x 1 1 '$inf))
+(defmfun1 ($flex :doc) (e)
+ :desc ("deep copy " :arg "e" " converting to lex representation at all levels.")
+  (rlex1 e 1 1 '$inf))
 
 ;; is used
 (defun rlex1 (x d d1 d2)
@@ -667,8 +670,8 @@ refers to the head."
             e))
 
 ;; used in rtest
-(defmfun1 ($alex_copy_tree :doc) (e)
-  :desc ( "Deep copy a mixed lex/aex expression. This should be renamed and better documented." )
+(defmfun1 ($deep_copy :doc) (e)
+  :desc ( "Deep copy expression " :arg "e" " which may be of mixed lex/aex representation." )
   (cond ( (aex-p e)
           (let* ((ar (aex-arr e))
                  (n (length ar))

@@ -231,7 +231,7 @@ aex_p( ipart( flex(faex( [1,[2,3]])), 2));
 false$
 
 /* recursively copy tree of mixed expressions */
-(kill(e,e1), e : << 1,2, [3,<<4,f(a,b)>>] >>, e1 : alex_copy_tree(e), is(e=e1));
+(kill(e,e1), e : << 1,2, [3,<<4,f(a,b)>>] >>, e1 : deep_copy(e), is(e=e1));
 true$
 
 /* destructive set */
