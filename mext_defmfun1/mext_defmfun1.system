@@ -3,8 +3,8 @@
 (in-package :mext-maxima)
 
 (create-distribution "mext_defmfun1"
-  :loader "load-mext_defmfun1")
-;  :install-only "mext_defmfun1-rtests")
+  :loader "load-mext_defmfun1"
+  :install-only "mext_defmfun1-rtests")
 
 ;(in-package :cl-user)
 
@@ -19,8 +19,8 @@
   :components
    ((:file "mext_defmfun1")))
   
-;; (mk:defsystem mext_defmfun1-rtests
-;;   :source-extension "mac"
-;;   :source-pathname "rtests"
-;;   :components
-;;     ( (:file "rtest_mext_defmfun1")))
+(mk:defsystem mext_defmfun1-rtests
+  :source-extension "mac"
+  :source-pathname "rtests"
+  :components
+    ( (:file "rtest_mext_defmfun1")))

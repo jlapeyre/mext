@@ -1,0 +1,29 @@
+/*
+  This is for testing changes to more-or-less essential parts of mext/defmfun1.
+  So only a few packages are built.
+*/
+
+load(mext);
+
+/*
+ gcl works only with load_in_dsubdir and chdir(), the other lisps
+ work also with load_in_subdir and updir()... why ?
+*/ 
+
+buildall_mext (package) := (
+  chdir(package),
+  load_in_dsubdir(["ibuild","mac"]),
+  chdir());
+
+build_several (package_list) := 
+ for package in package_list do
+   buildall_mext(package);
+
+build_several([  "maxdoc" ]);
+
+build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "aex",
+                "lists_aex", "discrete_aex" ]);
+
+/* build_several([ "quicklisp", "store" ]); */
+
+kill(buildall_mext,build_several);

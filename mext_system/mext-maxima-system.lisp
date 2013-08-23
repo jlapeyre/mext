@@ -679,9 +679,6 @@ This was copied from maxima source init-cl.lisp.")
 (defmfun $updir (&optional (n 1))
   (mext::updir n))
 
-(defmfun $list_directory ( &optional dirname)
-  (mext::maxima-list-directory dirname))
-
 ;; run rtests. If dists is nil then look only in dir "rtests"
 ;; Otherwise dists is a symbol or string naming a  mext dist,
 ;; or a list of these. We search for a folder 'rtests' in the

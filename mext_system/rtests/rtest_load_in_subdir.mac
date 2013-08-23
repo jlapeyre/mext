@@ -84,19 +84,15 @@ stringp(pwd());
 true$
 
 /* Problem 21 */
-listp(list_directory());
-true$
-
-/* Problem 22 */
 listp(dirstack());
 true$
 
-/* Problem 23 */
+/* Problem 22 */
 mext_info(mext_system);
 done$
 
 /**********************************/
-/* Problem 24 */
+/* Problem 23 */
 (kill(a,our_curdir,alen),true)$
 true$
 

@@ -38,11 +38,6 @@
  manipulated with " :mref "chdir" ", " :mrefcomma "updir" " and " :mrefdot "popdir")
   (cons '(mlist simp) mext::*pwd-directory-stack*))
 
-(defmfun1 ($dir_exists :doc) ((dir :string))
-  :desc ("Returns the pathname as a string  if " :arg "dir" " exists, and " :code "false" " otherwise.")
-  (let ((res  (mext::mext-dir-exists-p dir)))
-    (if res (namestring res) nil)))
-
 ;; redefined
 (defmfun1 ($pwd :doc) ()
   "Return the current working directory."
@@ -64,6 +59,26 @@
   "Clears the list of mext packages that have been loaded with require.
    Subsequent calls to require will reload the packages."
     (mext::mext-clear))
+
+;; redefined
+(defmfun1 ($mext_info :doc) ((distname :or-string-symbol))
+  :desc ("Print information about installed mext distribution " :arg "distname"
+    ". The list of installed  distributions is built by calling " :mref "mext_list" ".")
+    (or (mext::mext-info distname)
+        (merror1 (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") ($sconcat distname))))
+
+;; redefined
+(defmfun1 ($require :doc) ((distname :or-string-symbol) &optional force)
+  :desc ( "Load the mext pacakge " :arg "distname" " and register that it has been loaded."
+ " " :code "require('all)" " will load all installed mext packages. If " :arg "force" " is true,
+ then " :arg "distname" " is loaded even if it has been loaded previously.")
+  (mext:mext-require distname force))
+
+;; redefined
+(defmfun1 ($updir :doc) (&optional (n 1 :non-neg-int))
+ :desc ("Change the working directory to be " :arg "n" " (or 1 if " :arg "n" " is not given) subdirectories "
+   "higher than the current working directory.")
+  (mext::updir n))
 
 (defmfun1:set-hold-all '$dont_kill)
 (defmfun1 ($dont_kill :doc) (&rest item)
@@ -87,16 +102,12 @@
     (mext:do-dont-kill-share name))
   '$done)
 
-;; redefined
-(defmfun1 ($mext_info :doc) ((distname :or-string-symbol))
-  :desc ("Print information about installed mext distribution " :arg "distname"
-    ". The list of installed  distributions is built by calling " :mref "mext_list" ".")
-    (or (mext::mext-info distname)
-        (merror1 (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") ($sconcat distname))))
+(defmfun1 ($dir_exists :doc) ((dir :string))
+  :desc ("Returns the pathname as a string  if " :arg "dir" " exists, and " :code "false" " otherwise.")
+  (let ((res  (mext::mext-dir-exists-p dir)))
+    (if res (namestring res) nil)))
 
-;; redefined
-(defmfun1 ($require :doc) ((distname :or-string-symbol) &optional force)
-  :desc ( "Load the mext pacakge " :arg "distname" " and register that it has been loaded."
- " " :code "require('all)" " will load all installed mext packages. If " :arg "force" " is true,
- then " :arg "distname" " is loaded even if it has been loaded previously.")
-  (mext:mext-require distname force))
+(defmfun1 ($list_directory :doc) ( &optional (dir :string))
+  :desc ("Returns a directory listing for " :arg "dir" " or the current directory if no argument is given.")
+  (mext::maxima-list-directory dir))
+
