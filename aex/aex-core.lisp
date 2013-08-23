@@ -737,12 +737,16 @@ refers to the head."
 
 ;; Moved these from elsewhere.
 ;; is used in rtests
-(defmfun1 $iop ((expr :or-non-atom-subvar))
+(defmfun1 ($iop :doc) ((expr :or-non-atom-subvar))
+  :desc ("returns the main operator of the expression " :arg "expr"
+  ", which may be either a lex or aex expression. This works like `op', but is more general.")
   (if-aex expr (getop (car (aex-head expr)))
             ($part expr 0)))
 
 ;; is used in rtests
-(defmfun-ae $iargs (e)
+(defmfun-ae ($iargs :doc) ((e :or-non-atom-subvar))
+  :desc ("returns a list of the arguments of " :arg "e"
+     ", which may be either a lex or aex expression. This works like `args', but is more general.")
   (defmfun-final-to-ae
       (if-aex e (aex-mk-head-args '(mlist simp) (aex-cp-args e))
               (progn (atomchk (setq e (format1 e)) '$args nil)
