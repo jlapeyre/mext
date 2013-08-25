@@ -1,0 +1,3 @@
+/* mext_require("lists_aex"); */
+mext_provide("numerical",
+  [ "nintegrate" ]);

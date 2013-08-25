@@ -109,7 +109,9 @@
                      ( (:int-range 2) "an integer between ~a and ~a"
                       int-range-check)
                      (:non-neg-int "a non-negative integer."
-                      (and (integerp e) (>= e 0)))))
+                      (and (integerp e) (>= e 0)))
+                     (:non-neg-number "a non-negative number"
+                      (and (numberp e) (>= e 0)))))
 
 
 ;;  LocalWords:  defmfun Lapeyre GPL defpackage gjl util str merror

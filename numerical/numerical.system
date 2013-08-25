@@ -1,0 +1,25 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing numerical
+
+(in-package :mext-maxima)
+
+(create-distribution "numerical"
+  :loader "load-numerical"
+  :install-only "numerical-rtests")
+
+(mk:defsystem numerical
+  :source-extension "lisp"
+  :components
+   ((:file "nintegrate")))
+
+;; neither compile nor load when building
+(mk:defsystem load-numerical
+  :source-extension "mac"
+  :components
+   ((:file "numerical")))
+  
+(mk:defsystem numerical-rtests
+              :source-extension "mac"
+              :source-pathname "rtests"
+              :components
+              ((:file "rtest_numerical")))

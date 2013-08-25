@@ -1,0 +1,19 @@
+/* We need something more sensible in here */
+
+/*
+  Some examples are in src/numerical/quadpack.lisp
+*/
+
+listp(nintegrate(x^3*log(abs((x^2-1)*(x^2-2))),[x,0,3]));
+true;
+
+listp(nintegrate(x^3*log(abs((x^2-1)*(x^2-2))),[x,0,3],[1,sqrt(2)]));
+true;
+
+listp(nintegrate(x^2*exp(-4*x), [x, 0, inf]));
+true;
+
+/* Don't know how to do this one
+  quad_qag(cos(log(x)/x)/x, x,0,1,6); fails
+nintegrate(cos(log(x)/x)/x,  [x,0,1]);
+*/

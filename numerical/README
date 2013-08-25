@@ -1,0 +1,6 @@
+Sun Aug 25 12:34:11 CEST 2013
+
+nintegrate --
+High-level numerical integration.
+This is only a simple front-end. It is not
+very powerful and not very featureful.
