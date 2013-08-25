@@ -81,6 +81,9 @@
                ((equal base "ordinal") "~:R")
                ((equal base "cardinal") "~R")
                ((stringp base)
+;                (defmfun1::error-or-message "integer_string" ; this is not enough
+;                  (format nil "integer_string: base ~s is not a radix or one of \"roman\", \"cardinal\", or \"ordinal\""
+;                          base)))
                 (merror1 "integer_string: base ~s is not a radix or one of \"roman\", \"cardinal\", or \"ordinal\"" base))
                (pad
                 (format nil "~~~a,~a,'0R" base pad))

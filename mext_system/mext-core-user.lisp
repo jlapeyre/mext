@@ -8,5 +8,5 @@
 (if (find-package :mext-maxima ) t
   (progn
     ($load  "mext_load.lisp")
-    (loop for mext-package in '( "mext_defmfun1" "lists_aex" "discrete_aex" ) do
+    (loop for mext-package in '( "mext_defmfun1" "lists_aex" "discrete_aex" "numerical" ) do
       ($require mext-package))))
