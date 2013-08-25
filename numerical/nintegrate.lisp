@@ -38,6 +38,9 @@
 
 (in-package :maxima)
 
+(max-doc:set-cur-sec 'max-doc::numerical-fandv)
+(defmfun1:set-mext-package "numerical")
+
 (defmfun1 ($nintegrate :doc) ( expr (varspec :list) &optional (singlist :list) &opt 
           ($words t :bool) ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number)
           ($epsrel 1d-8 :non-neg-number) ($method "automatic" :string))

@@ -61,6 +61,16 @@
  more efficient than using the standard maxima versions. But, for most applications, the
  standard maxima versions are probably ok."))
 
+
+;; lisp-numeric.lisp
+(add-doc-sec '( :tag numerical-fandv :name "Functions and Variables for Numerical Computation"
+                :shortname "fvnumerical"
+     :contents "Functions for numerical computations: Numeric integration;
+ Mathematical functions--- cos,sin,etc. ---that accept only
+ numerical arguments. Tests of loops in untranslated code show that these are much
+ more efficient than using the standard maxima versions. But, for most applications, the
+ standard Maxima versions are probably ok."))
+
 ;; max-doc-entries.lisp
 (add-doc-sec '( :tag io-fandv :name "Functions and Variables for Input and Output"
                 :shortname "fvio"))

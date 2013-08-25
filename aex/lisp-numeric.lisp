@@ -1,6 +1,6 @@
 (in-package :maxima)
 (mext:mext-optimize)
-(max-doc:set-cur-sec 'max-doc::numerics-fandv)
+(max-doc:set-cur-sec 'max-doc::numerical-fandv)
 (defmfun1:set-mext-package "aex")
 
 ;;; Checking number of arguments appears not to work. Reviewing
