@@ -252,7 +252,9 @@
       
 (mk-maxima-attribute match_form match-form "If the argument checks for a function call fail,
  and the attribute `match_form' is set, then rather than signaling an error, the unevaluated form
- is returned. Furthemore, if the attribute `nowarn' is not set, then a warning message is printed.")
+ is returned. Furthemore, if the attribute `nowarn' is not set, then a warning message is printed.
+ Currently, only automatic argument checks generated from the defmfun1 protocol are controlled.
+ Argument checks and errors written within the body of the functions occur regardless of function attributes.")
 
 (mk-maxima-attribute nowarn nowarn "If the argument checks for a function call fail,
  and the attribute `match_form' is set, and the attribute `nowarn' is set, then rather than signaling an error, the unevaluated form
