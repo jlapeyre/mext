@@ -1,17 +1,25 @@
-/* We need something more sensible in here */
-
 /*
   Some examples are in src/numerical/quadpack.lisp
 */
 
-listp(nintegrate(x^3*log(abs((x^2-1)*(x^2-2))),[x,0,3]));
+/* close enough */
+(ce(x,y,eps) := is(abs(first(x)-y)<eps), true);
 true;
 
-listp(nintegrate(x^3*log(abs((x^2-1)*(x^2-2))),[x,0,3],[1,sqrt(2)]));
+ce(nintegrate(x^3*log(abs((x^2-1)*(x^2-2))),[x,0,3]), 52.7407484, 1d-7)$
 true;
 
-listp(nintegrate(x^2*exp(-4*x), [x, 0, inf]));
+ce(nintegrate(x^3*log(abs((x^2-1)*(x^2-2))),[x,0,3],[1,sqrt(2)]),52.7407483, 1d-7)$
 true;
+
+ce(nintegrate(x^2*exp(-4*x), [x, 0, inf]),0.03125, 1d-10)$
+true;
+
+ce(nintegrate(sin(sin(x)), [x, 0, 2]), 1.247056058, 1d-8)$
+true;
+
+kill(ce)$
+done;
 
 /* Don't know how to do this one
   quad_qag(cos(log(x)/x)/x, x,0,1,6); fails
