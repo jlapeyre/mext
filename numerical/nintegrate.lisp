@@ -195,4 +195,8 @@ supplied. This cannot be done with a single call to quadpack routines.")
   :ex ("nintegrate(1/sqrt(abs(1-x)) * exp(-x),[x,0,inf], calls->true)"
        "[1.72821,1.87197e-10,660, no problems,
  [quad_qagi(%e^-x/sqrt(abs(x-1)),x,1.0,inf,epsrel = 1.e-8,epsabs = 0,limit = 200),
-  quad_qagp(%e^-x/sqrt(abs(x-1)),x,0,1.0,[],epsrel = 1.e-8,epsabs = 0,limit = 200)]]"))))
+  quad_qagp(%e^-x/sqrt(abs(x-1)),x,0,1.0,[],epsrel = 1.e-8,epsabs = 0,limit = 200)]]")
+  :text ("Here we must supply the roots of " :code "sin(x)" " within the range of integration.")
+  :ex ("nintegrate(1/(sqrt(sin(x))),[x,0,10], [%pi,2*%pi,3*%pi])"
+    "[10.48823021716687 - 6.769465521725385 %i, 9.597496930524585e-8, 1596, no problems]"))))
+                                                                   

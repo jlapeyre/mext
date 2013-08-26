@@ -76,16 +76,37 @@ true;
 ce(nintegrate(1/(1-x)^(1/5), [x,0,1]),1.25, 1e-10)$
 true;
 
+ce(nintegrate(airy_ai(10*log(x)),[x,0,1]), .06392250187680061, 1e-9)$
+true;
+
+ce(nintegrate(sin(10^3*sqrt(x)),[x,0,1]),-.001123104393500761, 1e-10)$
+true;
+
+ce(nintegrate(log(x),[x,0,1]), -1, 1e-12)$
+true;
+
+cec(nintegrate(log(log(x)),[x,0,1]), %pi * %i - .5772156649015613, 1e-10)$
+true;
+
+cec(nintegrate(sqrt(log(x)),[x,0,1]), sqrt(%pi)*%i/2, 1e-8)$
+true;
+
+ce(nintegrate(log(x)^2,[x,0,1]), 2, 1e-13)$
+true;
+
+ce(nintegrate(1/(sqrt(1-x)*x^(1/5)),[x,0,1]), beta(1/2,4/5), 1e-8)$
+true;
+
+/* Must explicitly give the roots of sin(x) within integration range */
+cec(nintegrate(1/(sqrt(sin(x))),[x,0,10], [%pi,2*%pi,3*%pi]),
+     10.48823021716687 - 6.769465521725385 * %i, 1e-7)$
+true;   
+
+
+
 /*
 
 Look at, or include these from Mma docs.
-
-nintegrate(log(x),[x,0,1]);
-nintegrate(log(log(x)),[x,0,1]);
-nintegrate(sqrt(log(x)),[x,0,1]);
-nintegrate(log(x)^2,[x,0,1]);
-nintegrate(1/(sqrt(1-x)*x^(1/5)),[x,0,1]);
-nintegrate(1/(sqrt(sin(x))),[x,0,10]);
 
 Hmmm compare following to Mathematica:
 nintegrate(sqrt(log(x-7)),[x,0,20]);
@@ -115,6 +136,12 @@ nintegrate(1/sqrt(x) + cos(x), [x,0,5000], subint->1000);
 
 nintegrate(sin(x)/sqrt(x),[x,0,5000],subint->1000);
 
+Converges slowly
+nintegrate(sin(1/x)*cos(1/(1-x)),[x,0,1],subint->10000);
+
+This says OK, but it is not efficient
+nintegrate(sin(1/x)*cos(1/(1-x)),[x,0,1],subint->20000, epsrel->1e-6);
+
 */
 
 kill(ce)$
@@ -127,7 +154,10 @@ done;
 
   nintegrate(exp(%i*x*x),[x,minf,inf]); fails
 
-  The error estimates given here are too low, I think
+  The error estimates given here are too low, I think.
+   No , maybe not too low.
   nintegrate(exp(%i*x*x),[x,-200,200],subint->10000);
   [1.25170114 %i + 1.25804682, 2.507635982e-8, 760578, no problems]
+
+
 */
