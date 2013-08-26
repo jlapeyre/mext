@@ -111,3 +111,9 @@
   :desc ("Returns a directory listing for " :arg "dir" " or the current directory if no argument is given.")
   (mext::maxima-list-directory dir))
 
+
+(defmfun1 ($mext_list_loaded :doc) ()
+  :desc ("Returns a list of mext packages currently loaded.")
+  ($sort (cons '(mlist simp) (get-hash-keys mext-maxima::*loaded-dist-table*))))
+
+(max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear"))
