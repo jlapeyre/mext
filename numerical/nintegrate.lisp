@@ -43,10 +43,10 @@
 
 (defmfun1 ($nintegrate :doc) ( expr (varspec :list) &optional (singlist :list) &opt 
           ($words t :bool) ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number)
-          ($epsrel 1d-8 :non-neg-number) ($method "automatic" :string))
+          ($epsrel 1d-8 :non-neg-number)) ; ($method "automatic" :string))
   :desc ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in "
   :argdot "varspec" " At present nintegrate is not very capable."
-  " It does automatically choose and combine qags, qagp, and qagi. See the Maxima documentation for quadpack." )
+  " However, it does automatically choose and combine qags, qagp, and qagi. See the Maxima documentation for quadpack." )
   (let* ( (vp (rest varspec)) (var (first vp))
           (lo (second vp)) (hi (third vp))
           (quad-ops (list (nint::mkopt $epsrel) (nint::mkopt $epsabs)
