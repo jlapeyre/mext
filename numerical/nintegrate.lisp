@@ -6,7 +6,14 @@
 
 ;;; TODO
 ;;; Using qagi with qagp works, but it should be refactored and generalized.
+;;; Make better combined error estimate.
 ;;; Everything else.
+
+;;; Note what happens to sqrt(x). We do this before trying to integrate!
+;;; (%i58) rectform(sqrt(x));
+;;;              atan2(0, x)                     atan2(0, x)
+;;;(%o58) %i sin(-----------) sqrt(abs(x)) + cos(-----------) sqrt(abs(x))
+;;;                   2                               2
 
 (in-package :nintegrate)
 
@@ -26,7 +33,7 @@
      "bad integrand behavior" "failed to converge" "probably divergent or slowly convergent"
      "invalid input"))
 
-;; This should take a list of results
+;; This should take a list of results, rather than just two
 (defun combine-quad-results (r1 r2)
  "Add the results of integrating over two intervals. Make an attempt
   to write reasonable information fields. Really Should do sqrt of sqs of errors."
@@ -36,8 +43,34 @@
        (+ (third r1) (third r2)) (+ (fourth r1) (fourth r2))
        (if (> (fifth r1) (fifth r2)) (fifth r1) (fifth r2))))
 
+(defun combine-real-imag-results (r1 r2)
+  (cond ((and (consp r1) (consp r2))
+         (list '(maxima::mlist maxima::simp) (maxima::simplify `((maxima::mplus) ,(second r1) ,(second r2)))
+               (+ (third r1) (third r2)) (+ (fourth r1) (fourth r2))
+               (if (> (fifth r1) (fifth r2)) (fifth r1) (fifth r2))))
+        ((consp r1) r1)
+        (t r2)))
+
 ;; To reiterate: this could use refactoring!
 (defun do-quad-pack (expr var lo hi singlist quad-ops)
+;  (format t "~a~%" (maxima::$sconcat expr))
+  (when (not singlist)
+    (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1))))
+          (nroots))
+;      (format t "All roots: ~a~%" (maxima::$sconcat roots))
+      (dolist (r (cdr roots))
+;        (format t "One root: ~a~%" (maxima::$sconcat r))
+        (let ((n (third r)))
+          (when (maxima::$numberp n)
+            (let ((nn (maxima::$float n)))
+              (when (not
+                     (or (and (maxima::$numberp hi) (> 1e-10 (abs (- nn hi))))
+                         (and (maxima::$numberp lo) (> 1e-10 (abs (- nn lo))))))
+;                  (and (not (or (not (maxima::$numberp hi)) (< 1e-10 (abs (- nn hi)))))
+;                         (not (or (not (maxima::$numberp lo)) (< 1e-10 (abs (- nn lo))))))
+                (push (maxima::$float n) nroots))))))
+      (setf singlist (cons '(maxima::mlist maxima::simp) (sort nroots  #'<)))
+      (format t "New singularity list ~a~%" (maxima::$sconcat nroots))))
   (cond ((and singlist (> (length singlist) 1))
          (cond ((and (eq 'maxima::$minf lo) (not (eq 'maxima::$inf hi)))
                 (let* ((nsinglist (cdr singlist))
@@ -83,7 +116,7 @@
          (apply 'maxima::mfuncall (append `(maxima::$quad_qags ,expr ,var ,lo ,hi) quad-ops)))
         ((or (eq 'maxima::$minf lo) (eq 'maxima::$inf hi))
          (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var ,lo ,hi) quad-ops)))
-        (t (merror1 "nintegrate: cannot compute this integral."))))
+        (t (maxima::merror1 "nintegrate: cannot compute this integral."))))
 
 (in-package :maxima)
 
@@ -93,34 +126,58 @@
 (defmfun1 ($nintegrate :doc) ( expr (varspec :list) &optional (singlist :list) &opt 
           ($words t :bool) ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number)
           ($epsrel 1d-8 :non-neg-number)) ; ($method "automatic" :string))
-  :desc ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in "
-  :argdot "varspec" " At present nintegrate is not very capable."
-  " However, it does automatically choose and combine qags, qagp, and qagi. See the Maxima documentation for quadpack." )
-  (let* ( (vp (rest varspec)) (var (first vp))
-          (lo (second vp)) (hi (third vp))
-          (quad-ops (list (nint::mkopt $epsrel) (nint::mkopt $epsabs)
-                          (nint::mkopt2 $limit $subint)))
-          (result (nint::do-quad-pack expr var lo hi singlist quad-ops)))
-    (cond ((consp result)
-           (when $words (setf (nth 4 result) (nth (nth 4 result) nint::*quad-error-codes*)))
-           result)
-          (t nil))))
+  :desc ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
+  :arg "varspec" " as ["  :argcomma "var" :argcomma "lo" :arg "hi" "]."
+  " Only one-dimensional integrals are implemented."
+  " " :mref "nintegrate" " automatically chooses and combines "
+  :emrefcomma "qags" :emrefcomma "qagp" " and " :emrefdot "qagi"
+  " Some support for complex numbers is implemented." " Some integrable singularities are found automatically."
+  " See the Maxima documentation for quadpack." )
+  (let* ((vp (rest varspec)) (var (first vp))
+         (lo (second vp)) (hi (third vp))
+         (quad-ops (list (nint::mkopt $epsrel) (nint::mkopt $epsabs)
+                         (nint::mkopt2 $limit $subint)))
+         (r-expr ($realpart expr))
+         (i-expr ($imagpart expr)))
+    (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi singlist quad-ops)))
+          (i-res (if (eq 0 i-expr) nil (nint::do-quad-pack i-expr var lo hi singlist quad-ops))))
+      (when (consp i-res)
+        (setf (second i-res) `((mtimes) $%i ,(second i-res))))
+      (let ((res (nint::combine-real-imag-results r-res i-res)))
+        (cond ((consp res)
+               (when $words (setf (nth 4 res) (nth (nth 4 res) nint::*quad-error-codes*)))
+               res)
+              (t nil))))))
 
-(examples:clear-add-example "nintegrate"
-                            '(:pretext "A list of intermediate points may be supplied. Compare the
-following to the equivalent calls in the documentation for quadpack. Note that some of these
-examples cannot be done with a single call to quadpack. These examples more or less exhaust
-the current capabilities of the nintegrate interface. (These examples are only meant to show the interface;
-there are no singularities here.)"
-                              :code-res 
-                              ( ("nintegrate(exp(-3*x^2),[x,minf,inf])" 
-                                 "[1.023326707946489, 4.845541074534523e-12, 270, no problems]")
-                                ("nintegrate(exp(-3*x^2),[x,-20,20])" 
-                                 "[1.023326707946489, 1.049488242728112e-12, 399, no problems]")
-                                ("nintegrate(exp(-3*x^2),[x,minf,inf] , [-1,0,1])"
-                                 "[1.023326707946489, 4.758672504515692e-12, 252, no problems]")
-                                ("nintegrate(exp(-3*x^2),[x,minf,20] , [-1,0,1])"
-                                 "[1.023326707946489, 2.471535082631379e-10, 294, no problems]")
-                                ("nintegrate(exp(-3*x^2),[x,-20,20] , [-1,0,1])"
-                                 "[1.023326707946489, 4.895483415855454e-10, 336, no problems]"))))
+(max-doc:see-also "nintegrate" '("quad_qags" "quad_qagi" "quad_qagp"))
 
+(examples:clear-add-example 
+ "nintegrate"
+ '(:code-text
+ (
+  :ex ("nintegrate(sin(sin(x)), [x,0,2])" "[1.24706, 1.38451e-14, 21, no problems]")
+  :text ("Integrate over a semi-infinite interval with an internal singularity. The location of the singularity is
+supplied. This cannot be done with a single call to quadpack routines.")
+  :ex ("nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf], [1] )" "[1.72821, 1.87197e-10, 660, no problems]")
+  :text ("If a list of possible singular points is not supplied, then they will be searched for using " :emrefdot "solve")
+  :ex ("nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf])" "[1.72821, 1.87197e-10, 660, no problems]")
+  :text ("In some cases, complex numbers are treated correctly. (The simplifier replaces " 
+       :code "cos(%i*x)" " with " :code "cosh(x)" " before the routine is called. So this works "
+       " with " :emref "quad_qags" " as well.)")
+  :ex ("nintegrate( cos(%i*x), [x,0,1])" "[1.1752, 1.30474e-14, 21, no problems]")
+  :ex ("sinh(1.0)" "1.1752")
+  :text ("But, the quadpack routines cannot handle the complex numbers in this example.")
+  :ex ("nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf])" "[.424436 %i + .690194, 4.988325e-9, 300, no problems]")
+  :text ("Return quadpack error code rather than error text.")
+  :ex ("nintegrate(sin(sin(x)), [x,0,2], words->false)" "[1.24706, 1.38451e-14, 21, 0]")
+  :text ("Request a relative error.")
+  :ex ("nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf], epsrel -> 1e-12)"
+       "[.424436 %i + .690194, 1.06796e-13, 480, no problems]")
+  :text ("Trying to do the integral with too few sub-intervals fails.")
+  :ex ("nintegrate(1/(1+x^2), [x, 0, inf], subint -> 2, epsrel -> 1e-10)"
+       "[1.5708, 2.57779e-10, 45, too many sub-intervals]")
+  :text ("This integral is not handled well. Giving limits of " :code "minf" " and " :code "inf" " fails.")
+  :ex ("nintegrate(exp(%i*x*x),[x,-200,200],subint->10000)"
+       "[1.25170114 %i + 1.25804682, 2.507635982e-8, 760578, no problems]")
+  :ex ("integrate(exp(%i*x*x),x,minf,inf)" "sqrt(%pi)*(%i/sqrt(2)+1/sqrt(2))")
+  :ex ("rectform(float(%))" "1.25331414*%i+1.25331414"))))

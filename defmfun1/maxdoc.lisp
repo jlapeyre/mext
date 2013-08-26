@@ -141,6 +141,13 @@
             (setf (gethash (first pair) hash-table) (second pair))) element-list)
   hash-table)
 
+;;; :code -- computer code as in other markup systems
+;;; :mref -- references to other entries in the maxdoc system
+;;; :emref -- references to stock Maxima command. (info docs)
+;;; :arg -- argument to function
+;;; :var -- other variable
+
+
 (fill-format-codes *format-codes-text*
    '( (:code "`~a'")  (:codedot "`~a'.")  (:codecomma "`~a',") 
       (:mref "`~a'")  (:mrefdot "`~a'.")  (:mrefcomma "`~a',") 
