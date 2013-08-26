@@ -53,7 +53,6 @@
         ((consp r1) r1)
         (t r2)))
 
-
 (defparameter *quad-names* '( :qagi maxima::$quad_qagi :qagp maxima::$quad_qagp :qags maxima::$quad_qags))
 
 (defun quad-call (f expr var lo hi q-ops &optional slist)
@@ -68,31 +67,23 @@
   (when (not singlist)
     (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1))))
           (nroots))
-;      (format t "All roots: ~a~%" (maxima::$sconcat roots))
       (dolist (r (cdr roots))
-;        (format t "One root: ~a~%" (maxima::$sconcat r))
         (let ((n (third r)))
           (when (maxima::$numberp n)
             (let ((nn (maxima::$float n)))
               (when (not
                      (or (and (maxima::$numberp hi) (> 1e-10 (abs (- nn hi))))
                          (and (maxima::$numberp lo) (> 1e-10 (abs (- nn lo))))))
-;                  (and (not (or (not (maxima::$numberp hi)) (< 1e-10 (abs (- nn hi)))))
-;                         (not (or (not (maxima::$numberp lo)) (< 1e-10 (abs (- nn lo))))))
                 (push (maxima::$float n) nroots))))))
       (setf singlist (cons '(maxima::mlist maxima::simp) (sort nroots  #'<)))))
-;      (format t "New singularity list ~a~%" (maxima::$sconcat nroots))))
   (cond ((and singlist (> (length singlist) 1))
          (cond ((and (eq 'maxima::$minf lo) (not (eq 'maxima::$inf hi)))
                 (let* ((nsinglist (cdr singlist))
                        (nlo (first nsinglist))
                        (int1
                         (quad-call :qagi expr var maxima::$minf nlo quad-ops))
-;                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var maxima::$minf ,nlo) quad-ops)))
                        (int2
                         (quad-call :qagp expr var nlo hi quad-ops (cons '(mlist simp) (cdr nsinglist)))))
-;                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagp ,expr ,var ,nlo ,hi 
-;                                                              ,(cons '(mlist simp) (cdr nsinglist))) quad-ops))))
                   (nint::combine-quad-results int1 int2)))
                ((and (not (eq 'maxima::$minf lo)) (eq 'maxima::$inf hi))
                 (let* ((nsinglist (cdr singlist))
@@ -100,11 +91,8 @@
                        (nhi (first rsinglist))
                        (n1singlist (reverse (cdr rsinglist)))
                        (int1 (quad-call :qagi expr var nhi 'maxima::$inf quad-ops))
-;                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var ,nhi maxima::$inf) quad-ops)))
                        (int2
                         (quad-call :qagp expr var lo nhi quad-ops (cons '(mlist simp) n1singlist))))
-;                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagp ,expr ,var ,lo ,nhi 
-;                                                              ,(cons '(mlist simp) n1singlist)) quad-ops))))
                   (nint::combine-quad-results int1 int2)))
                ((and (eq 'maxima::$minf lo) (eq 'maxima::$inf hi))
                 (let* ((nsinglist (cdr singlist))
@@ -115,27 +103,20 @@
                        (n1singlist (if (consp rsinglist) (reverse (cdr rsinglist)) nil))
                        (int1
                         (quad-call :qagi expr var lo nlo quad-ops))
-;                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var ,lo ,nlo) quad-ops)))
                        (int2
                         (quad-call :quagi expr var nhi hi quad-ops))
-;                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var ,nhi ,hi) quad-ops)))
                        (int3 (if (not (= nlo nhi))
                                  (quad-call :qagp expr var nlo nhi quad-ops (cons '(mlist simp) n1singlist))
-;                                 (apply 'maxima::mfuncall (append `(maxima::$quad_qagp ,expr ,var ,nlo ,nhi 
-;                                                                       ,(cons '(mlist simp) n1singlist)) quad-ops))
                                nil)))
                   (if (consp int3)
                       (nint::combine-quad-results (nint::combine-quad-results int1 int2) int3)
                     (nint::combine-quad-results int1 int2))))
                (t
                 (quad-call :qagp expr var lo hi quad-ops singlist))))
-;                (apply 'maxima::mfuncall (append `(maxima::$quad_qagp ,expr ,var ,lo ,hi ,singlist) quad-ops)))))
         ((and (not (eq 'maxima::$minf lo)) (not (eq 'maxima::$inf hi)))
          (quad-call :qags expr var lo hi quad-ops))
-;         (apply 'maxima::mfuncall (append `(maxima::$quad_qags ,expr ,var ,lo ,hi) quad-ops)))
         ((or (eq 'maxima::$minf lo) (eq 'maxima::$inf hi))
          (quad-call :qagi expr var lo hi quad-ops))
-;         (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var ,lo ,hi) quad-ops)))
         (t (maxima::merror1 "nintegrate: cannot compute this integral."))))
 
 (in-package :maxima)
