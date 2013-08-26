@@ -78,7 +78,7 @@ true;
 
 /*
 
-Try these from Mma docs.
+Look at, or include these from Mma docs.
 
 nintegrate(log(x),[x,0,1]);
 nintegrate(log(log(x)),[x,0,1]);
@@ -103,6 +103,17 @@ This gets there, but very slowly
 nintegrate(bessel_j(1,x),[x,1,30000],subint->10000);
 
 nintegrate(bessel_j(2,sqrt(2)*x)^2,[x,1,10^4],subint->10000);
+
+Converges too slowly
+nintegrate(sin(1/((5*x-1)*(5*x-2)*(5*x-3))),[x,0,1], subint->10000);
+
+This is worse
+nintegrate(sin(1/((5*x-1)*(5*x-2)*(5*x-3))),[x,0,1], [1/5,2/5,3/5],  subint->10000);
+
+Ok
+nintegrate(1/sqrt(x) + cos(x), [x,0,5000], subint->1000);
+
+nintegrate(sin(x)/sqrt(x),[x,0,5000],subint->1000);
 
 */
 
