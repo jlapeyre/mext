@@ -36,6 +36,55 @@
        (+ (third r1) (third r2)) (+ (fourth r1) (fourth r2))
        (if (> (fifth r1) (fifth r2)) (fifth r1) (fifth r2))))
 
+;; To reiterate: this could use refactoring!
+(defun do-quad-pack (expr var lo hi singlist quad-ops)
+  (cond ((and singlist (> (length singlist) 1))
+         (cond ((and (eq 'maxima::$minf lo) (not (eq 'maxima::$inf hi)))
+                (let* ((nsinglist (cdr singlist))
+                       (nlo (first nsinglist))
+                       (int1
+                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var maxima::$minf ,nlo) quad-ops)))
+                       (int2
+                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagp ,expr ,var ,nlo ,hi 
+                                                              ,(cons '(mlist simp) (cdr nsinglist))) quad-ops))))
+                  (nint::combine-quad-results int1 int2)))
+               ((and (not (eq 'maxima::$minf lo)) (eq 'maxima::$inf hi))
+                (let* ((nsinglist (cdr singlist))
+                       (rsinglist (reverse nsinglist))
+                       (nhi (first rsinglist))
+                       (n1singlist (reverse (cdr rsinglist)))
+                       (int1
+                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var ,nhi maxima::$inf) quad-ops)))
+                       (int2
+                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagp ,expr ,var ,lo ,nhi 
+                                                              ,(cons '(mlist simp) n1singlist)) quad-ops))))
+                  (nint::combine-quad-results int1 int2)))
+               ((and (eq 'maxima::$minf lo) (eq 'maxima::$inf hi))
+                (let* ((nsinglist (cdr singlist))
+                       (nlo (first nsinglist))
+                       (nnsinglist (cdr nsinglist))
+                       (rsinglist (reverse nnsinglist))
+                       (nhi (if (consp rsinglist) (first rsinglist) nlo))
+                       (n1singlist (if (consp rsinglist) (reverse (cdr rsinglist)) nil))
+                       (int1
+                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var ,lo ,nlo) quad-ops)))
+                       (int2
+                        (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var ,nhi ,hi) quad-ops)))
+                       (int3 (if (not (= nlo nhi))
+                                 (apply 'maxima::mfuncall (append `(maxima::$quad_qagp ,expr ,var ,nlo ,nhi 
+                                                                       ,(cons '(mlist simp) n1singlist)) quad-ops))
+                               nil)))
+                  (if (consp int3)
+                      (nint::combine-quad-results (nint::combine-quad-results int1 int2) int3)
+                    (nint::combine-quad-results int1 int2))))
+               (t
+                (apply 'maxima::mfuncall (append `(maxima::$quad_qagp ,expr ,var ,lo ,hi ,singlist) quad-ops)))))
+        ((and (not (eq 'maxima::$minf lo)) (not (eq 'maxima::$inf hi)))
+         (apply 'maxima::mfuncall (append `(maxima::$quad_qags ,expr ,var ,lo ,hi) quad-ops)))
+        ((or (eq 'maxima::$minf lo) (eq 'maxima::$inf hi))
+         (apply 'maxima::mfuncall (append `(maxima::$quad_qagi ,expr ,var ,lo ,hi) quad-ops)))
+        (t (merror1 "nintegrate: cannot compute this integral."))))
+
 (in-package :maxima)
 
 (max-doc:set-cur-sec 'max-doc::numerical-fandv)
@@ -51,53 +100,7 @@
           (lo (second vp)) (hi (third vp))
           (quad-ops (list (nint::mkopt $epsrel) (nint::mkopt $epsabs)
                           (nint::mkopt2 $limit $subint)))
-          (result
-           (cond ((and singlist (> (length singlist) 1))
-                  (cond ((and (eq '$minf lo) (not (eq '$inf hi)))
-                         (let* ((nsinglist (cdr singlist))
-                                (nlo (first nsinglist))
-                                (int1
-                                 (apply 'mfuncall (append `($quad_qagi ,expr ,var $minf ,nlo) quad-ops)))
-                                (int2
-                                 (apply 'mfuncall (append `($quad_qagp ,expr ,var ,nlo ,hi 
-                                                            ,(cons '(mlist simp) (cdr nsinglist))) quad-ops))))
-                           (nint::combine-quad-results int1 int2)))
-                        ((and (not (eq '$minf lo)) (eq '$inf hi))
-                         (let* ((nsinglist (cdr singlist))
-                                (rsinglist (reverse nsinglist))
-                                (nhi (first rsinglist))
-                                (n1singlist (reverse (cdr rsinglist)))
-                                (int1
-                                 (apply 'mfuncall (append `($quad_qagi ,expr ,var ,nhi $inf) quad-ops)))
-                                (int2
-                                 (apply 'mfuncall (append `($quad_qagp ,expr ,var ,lo ,nhi 
-                                                            ,(cons '(mlist simp) n1singlist)) quad-ops))))
-                           (nint::combine-quad-results int1 int2)))
-                        ((and (eq '$minf lo) (eq '$inf hi))
-                         (let* ((nsinglist (cdr singlist))
-                                (nlo (first nsinglist))
-                                (nnsinglist (cdr nsinglist))
-                                (rsinglist (reverse nnsinglist))
-                                (nhi (if (consp rsinglist) (first rsinglist) nlo))
-                                (n1singlist (if (consp rsinglist) (reverse (cdr rsinglist)) nil))
-                                (int1
-                                 (apply 'mfuncall (append `($quad_qagi ,expr ,var ,lo ,nlo) quad-ops)))
-                                (int2
-                                 (apply 'mfuncall (append `($quad_qagi ,expr ,var ,nhi ,hi) quad-ops)))
-                                (int3 (if (not (= nlo nhi))
-                                          (apply 'mfuncall (append `($quad_qagp ,expr ,var ,nlo ,nhi 
-                                                          ,(cons '(mlist simp) n1singlist)) quad-ops))
-                                        nil)))
-                           (if (consp int3)
-                               (nint::combine-quad-results (nint::combine-quad-results int1 int2) int3)
-                               (nint::combine-quad-results int1 int2))))
-                        (t
-                         (apply 'mfuncall (append `($quad_qagp ,expr ,var ,lo ,hi ,singlist) quad-ops)))))
-                 ((and (numberp lo) (numberp hi))
-                  (apply 'mfuncall (append `($quad_qags ,expr ,var ,lo ,hi) quad-ops)))
-                 ((or (eq '$minf lo) (eq '$inf hi))
-                  (apply 'mfuncall (append `($quad_qagi ,expr ,var ,lo ,hi) quad-ops)))
-                 (t (merror1 "nintegrate: cannot compute this integral.")))))
+          (result (nint::do-quad-pack expr var lo hi singlist quad-ops)))
     (cond ((consp result)
            (when $words (setf (nth 4 result) (nth (nth 4 result) nint::*quad-error-codes*)))
            result)

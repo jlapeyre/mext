@@ -6,3 +6,11 @@ This is only a simple front-end. It is not
 very powerful and not very featureful.
 It does put a few of the quadpack routines under
 a common interface.
+
+nintegrate does not handle:
+
+multi-dimensional integrals
+complex numbers
+arbitrary precision computation.
+
+...

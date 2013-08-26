@@ -18,6 +18,15 @@ true;
 ce(nintegrate(sin(sin(x)), [x, 0, 2]), 1.247056058, 1d-8)$
 true;
 
+ce(nintegrate(exp(exp(-x)), [x, 0, 5]), 6.31115283, 1e-8)$
+true;
+
+ce(nintegrate(x^x, [x, 1, 5]),1241.03328404, 1e-8)$
+true;
+
+ce(nintegrate(1/(1+x^2), [x, 0, inf]), 1.570796326794897, 1d-9)$
+true;
+
 kill(ce)$
 done;
 
