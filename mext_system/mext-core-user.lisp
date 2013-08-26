@@ -5,8 +5,12 @@
 ;; This file will be the first mext file loaded by the user:
 ;; e.g. load(mext_core);
 ;; The minimum mext system is loaded with load(mext).
-(if (find-package :mext-maxima ) t
-  (progn
-    ($load  "mext_load.lisp")
-    (loop for mext-package in '( "mext_defmfun1" "lists_aex" "discrete_aex" "numerical" ) do
-      ($require mext-package))))
+
+; Try to reload all, but don't force
+;(if (find-package :mext-maxima ) t
+;  (progn
+
+($load  "mext_load.lisp")
+(loop for mext-package in '( "mext_defmfun1" "lists_aex" "discrete_aex" "numerical" ) do
+      ($require mext-package))
+

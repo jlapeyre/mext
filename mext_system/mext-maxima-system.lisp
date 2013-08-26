@@ -403,6 +403,8 @@ This was copied from maxima source init-cl.lisp.")
 (defun mext-test  ( &optional dists )
  "Run regression tests in the sub-directories of the installed distributions.
  Dists is name or list of names of distributions."
+ (when (and (not (consp dists))(string= "all" (maxima::$sconcat dists)))
+   (setf dists (mext-list)))
   (let ((testdirs
          (cond (dists
                 (setf dists 

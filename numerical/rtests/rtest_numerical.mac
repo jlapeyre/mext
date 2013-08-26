@@ -76,6 +76,8 @@ true;
 ce(nintegrate(1/(1-x)^(1/5), [x,0,1]),1.25, 1e-10)$
 true;
 
+
+
 kill(ce)$
 done;
 
