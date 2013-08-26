@@ -43,27 +43,33 @@
 ; (format t "~a~%" ($sconcat r2))
  (list '(maxima::mlist maxima::simp) (+ (second r1) (second r2))
        (+ (third r1) (third r2)) (+ (fourth r1) (fourth r2))
-       (if (> (fifth r1) (fifth r2)) (fifth r1) (fifth r2))))
+       (if (> (fifth r1) (fifth r2)) (fifth r1) (fifth r2))
+       (append (sixth r1) (rest (sixth r2)))))
 
 (defun combine-real-imag-results (r1 r2)
   (cond ((and (consp r1) (consp r2))
          (list '(maxima::mlist maxima::simp) (maxima::simplify `((maxima::mplus) ,(second r1) ,(second r2)))
                (+ (third r1) (third r2)) (+ (fourth r1) (fourth r2))
-               (if (> (fifth r1) (fifth r2)) (fifth r1) (fifth r2))))
+               (if (> (fifth r1) (fifth r2)) (fifth r1) (fifth r2))
+               (append (sixth r1) (rest (sixth r2)))))
         ((consp r1) r1)
         (t r2)))
 
 (defparameter *quad-names* '( :qagi maxima::$quad_qagi :qagp maxima::$quad_qagp :qags maxima::$quad_qags))
 
 (defun quad-call (f expr var lo hi q-ops &optional slist)
-  (let ((fn (getf *quad-names* f)))
-    (if slist
-        (apply 'maxima::mfuncall (append `(,fn ,expr ,var ,lo ,hi ,slist) q-ops))
-      (apply 'maxima::mfuncall (append `(,fn ,expr ,var ,lo ,hi) q-ops)))))
+  (let* ((fn (getf *quad-names* f))
+         (call-list
+          (if slist
+              (append `(,fn ,expr ,var ,lo ,hi ,slist) q-ops)
+            (append `(,fn ,expr ,var ,lo ,hi) q-ops)))
+         (call-form (cons (list (car call-list) 'maxima::simp) (cdr call-list))))
+;    (format t "~a~%" (maxima::$sconcat call-form))
+    (append (apply 'maxima::mfuncall call-list) (list (list '(maxima::mlist maxima::simp) call-form)))))
 
 ;; To reiterate: this could use refactoring!
 (defun do-quad-pack (expr var lo hi singlist quad-ops)
-  (format t "~a~%" (maxima::$sconcat expr))
+;  (format t "~a~%" (maxima::$sconcat expr))
   (when (not singlist)
     (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1))))
           (nroots))
@@ -83,7 +89,7 @@
                        (int1
                         (quad-call :qagi expr var maxima::$minf nlo quad-ops))
                        (int2
-                        (quad-call :qagp expr var nlo hi quad-ops (cons '(mlist simp) (cdr nsinglist)))))
+                        (quad-call :qagp expr var nlo hi quad-ops (cons '(maxima::mlist simp) (cdr nsinglist)))))
                   (nint::combine-quad-results int1 int2)))
                ((and (not (eq 'maxima::$minf lo)) (eq 'maxima::$inf hi))
                 (let* ((nsinglist (cdr singlist))
@@ -92,7 +98,7 @@
                        (n1singlist (reverse (cdr rsinglist)))
                        (int1 (quad-call :qagi expr var nhi 'maxima::$inf quad-ops))
                        (int2
-                        (quad-call :qagp expr var lo nhi quad-ops (cons '(mlist simp) n1singlist))))
+                        (quad-call :qagp expr var lo nhi quad-ops (cons '(maxima::mlist simp) n1singlist))))
                   (nint::combine-quad-results int1 int2)))
                ((and (eq 'maxima::$minf lo) (eq 'maxima::$inf hi))
                 (let* ((nsinglist (cdr singlist))
@@ -106,7 +112,7 @@
                        (int2
                         (quad-call :quagi expr var nhi hi quad-ops))
                        (int3 (if (not (= nlo nhi))
-                                 (quad-call :qagp expr var nlo nhi quad-ops (cons '(mlist simp) n1singlist))
+                                 (quad-call :qagp expr var nlo nhi quad-ops (cons '(maxima::mlist simp) n1singlist))
                                nil)))
                   (if (consp int3)
                       (nint::combine-quad-results (nint::combine-quad-results int1 int2) int3)
@@ -126,7 +132,8 @@
 
 (defmfun1 ($nintegrate :doc) ( expr (varspec :list) &optional (singlist :list) &opt 
           ($words t :bool) ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number)
-          ($epsrel 1d-8 :non-neg-number)) ; ($method "automatic" :string))
+          ($epsrel 1d-8 :non-neg-number) ; ($method "automatic" :string))b
+          ($calls nil :bool))
   :desc ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
   :arg "varspec" " as ["  :argcomma "var" :argcomma "lo" :arg "hi" "]."
   " Only one-dimensional integrals are implemented."
@@ -145,6 +152,8 @@
       (when (consp i-res)
         (setf (second i-res) `((mtimes) $%i ,(second i-res))))
       (let ((res (nint::combine-real-imag-results r-res i-res)))
+        (if (not $calls)
+            (setf res (butlast res)))
         (cond ((consp res)
                (when $words (setf (nth 4 res) (nth (nth 4 res) nint::*quad-error-codes*)))
                res)
@@ -181,4 +190,9 @@ supplied. This cannot be done with a single call to quadpack routines.")
   :ex ("nintegrate(exp(%i*x*x),[x,-200,200],subint->10000)"
        "[1.25170114 %i + 1.25804682, 2.507635982e-8, 760578, no problems]")
   :ex ("integrate(exp(%i*x*x),x,minf,inf)" "sqrt(%pi)*(%i/sqrt(2)+1/sqrt(2))")
-  :ex ("rectform(float(%))" "1.25331414*%i+1.25331414"))))
+  :ex ("rectform(float(%))" "1.25331414*%i+1.25331414")
+  :text "Return a list of calls made to quadpack."
+  :ex ("nintegrate(1/sqrt(abs(1-x)) * exp(-x),[x,0,inf], calls->true)"
+       "[1.72821,1.87197e-10,660, no problems,
+ [quad_qagi(%e^-x/sqrt(abs(x-1)),x,1.0,inf,epsrel = 1.e-8,epsabs = 0,limit = 200),
+  quad_qagp(%e^-x/sqrt(abs(x-1)),x,0,1.0,[],epsrel = 1.e-8,epsabs = 0,limit = 200)]]"))))
