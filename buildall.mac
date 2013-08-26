@@ -3,7 +3,7 @@ load(mext);
 chdir(pathname_directory(load_pathname));
 
 for package in [ "defmfun1", "maxdoc", "mext_defmfun1", "aex",
-                 "lists_aex", "discrete_aex", "quicklisp", "store" ] do
+                 "lists_aex", "discrete_aex", "numerical", "quicklisp", "store" ] do
       load_in_subdir(["ibuild","mac"],[package]);
 
 /* other third party packages adapted to mext */
