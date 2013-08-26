@@ -76,7 +76,35 @@ true;
 ce(nintegrate(1/(1-x)^(1/5), [x,0,1]),1.25, 1e-10)$
 true;
 
+/*
 
+Try these from Mma docs.
+
+nintegrate(log(x),[x,0,1]);
+nintegrate(log(log(x)),[x,0,1]);
+nintegrate(sqrt(log(x)),[x,0,1]);
+nintegrate(log(x)^2,[x,0,1]);
+nintegrate(1/(sqrt(1-x)*x^(1/5)),[x,0,1]);
+nintegrate(1/(sqrt(sin(x))),[x,0,10]);
+
+Hmmm compare following to Mathematica:
+nintegrate(sqrt(log(x-7)),[x,0,20]);
+nintegrate(sqrt(log(x-7)),[x,0,20], [7,8]);
+rectform(float(rectform(integrate(sqrt(log(x-7)),x,0,20))));
+
+ NIntegrate[Sqrt[Log[x - 7]], {x, 0, 20}, Exclusions -> {7, 8}]
+
+Need lots of intervals here.
+nintegrate(exp(%i*x),[x,1,10^4], subint -> 10000);
+
+This does not work with infinite range.
+nintegrate(bessel_j(1,x),[x,1,inf],subint->10000);
+This gets there, but very slowly
+nintegrate(bessel_j(1,x),[x,1,30000],subint->10000);
+
+nintegrate(bessel_j(2,sqrt(2)*x)^2,[x,1,10^4],subint->10000);
+
+*/
 
 kill(ce)$
 done;

@@ -5,8 +5,10 @@
 ;;; High-level interface to numerical integration routines.
 
 ;;; TODO
-;;; Using qagi with qagp works, but it should be refactored and generalized.
-;;; Make better combined error estimate.
+;;; * Using qagi with qagp works, but it should be refactored and generalized.
+;;; * Make better combined error estimate.
+;;; * store calls to quadpack for diagnostics
+;;; * use assume(x>lo, x<hi) etc. when searching for roots.
 ;;; Everything else.
 
 ;;; Note what happens to sqrt(x). We do this before trying to integrate!
@@ -69,8 +71,8 @@
 ;                  (and (not (or (not (maxima::$numberp hi)) (< 1e-10 (abs (- nn hi)))))
 ;                         (not (or (not (maxima::$numberp lo)) (< 1e-10 (abs (- nn lo))))))
                 (push (maxima::$float n) nroots))))))
-      (setf singlist (cons '(maxima::mlist maxima::simp) (sort nroots  #'<)))
-      (format t "New singularity list ~a~%" (maxima::$sconcat nroots))))
+      (setf singlist (cons '(maxima::mlist maxima::simp) (sort nroots  #'<)))))
+;      (format t "New singularity list ~a~%" (maxima::$sconcat nroots))))
   (cond ((and singlist (> (length singlist) 1))
          (cond ((and (eq 'maxima::$minf lo) (not (eq 'maxima::$inf hi)))
                 (let* ((nsinglist (cdr singlist))
