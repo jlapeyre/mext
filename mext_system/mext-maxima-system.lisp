@@ -122,7 +122,7 @@ This was copied from maxima source init-cl.lisp.")
 (defvar *pwd-directory-stack* '())
 
 ;; for registering which mext distributions have been loaded.
-(defvar *installed-dist-table* (make-hash-table :test 'equal))
+(defvar *loaded-dist-table* (make-hash-table :test 'equal))
 
 ;; descriptions of distributions
 (defvar *dist-descr-table* (make-hash-table :test 'equal))
@@ -452,7 +452,7 @@ This was copied from maxima source init-cl.lisp.")
 
 (defun mext-clear ()
  "Clear list of loaded mext distributions."
- (clrhash *installed-dist-table*))
+ (clrhash *loaded-dist-table*))
 
 (defun mext-require (name &optional force)
   (setf name (maxima::$sconcat name))
@@ -461,7 +461,7 @@ This was copied from maxima source init-cl.lisp.")
                    (mext-require dist))
              'maxima::$done)
     (if (string= "mext_system" name) t
-      (let ((registered (gethash name *installed-dist-table*)))
+      (let ((registered (gethash name *loaded-dist-table*)))
         (if (or (not registered) force)
             (let ((file (mext-file-search name)))
               (if file (progn (format t "require loading ~a~%" file) (maxima::$load file) 'maxima::$done)
@@ -643,7 +643,7 @@ This was copied from maxima source init-cl.lisp.")
 ;; even with a path list supplied, while we only want to match files.
 (defmfun $mext_require (name &optional force)
   (setf name ($sconcat name))
-  (let ((registered (gethash name mext-maxima::*installed-dist-table*)))
+  (let ((registered (gethash name mext-maxima::*loaded-dist-table*)))
     (if (or (not registered) force)
         (let ((file (mext-maxima::mext-file-search name)))
           (if file (progn (format t "loading ~a~%" file) ($load file))
@@ -658,7 +658,7 @@ This was copied from maxima source init-cl.lisp.")
 ;; that it has been loaded
 ;; This should only be called from mext_provide
 (defmfun $mext_provided (name)
-  (setf (gethash ($sconcat name) mext-maxima::*installed-dist-table*) t))
+  (setf (gethash ($sconcat name) mext-maxima::*loaded-dist-table*) t))
 
 (defmfun $pwd ()
   (mext::pwd))

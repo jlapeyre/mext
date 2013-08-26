@@ -394,7 +394,7 @@
 
 (defun set-cur-dist (distname)
   (cond ((stringp distname)
-         (if (gethash distname mext-maxima::*installed-dist-table*)
+         (if (gethash distname mext-maxima::*loaded-dist-table*)
              (setf *current-distribution* distname)
            (maxima::merror1 (intl:gettext "max-doc::set-cur-dist 
  Can't set current distribution to ~m. The distribution does not exist.") distname)))

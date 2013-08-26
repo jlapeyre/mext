@@ -51,7 +51,7 @@
 
 ;; redefined
 (defmfun1 ($mext_list :doc) ()
-  "Returns a list of all installed mext distributions."
+  "Returns a list of all installed mext distributions. These are installed, but not neccessarily loaded."
     (mext::mext-list))
 
 ;; redefined
