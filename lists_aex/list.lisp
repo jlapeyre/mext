@@ -581,4 +581,5 @@
                   '( :code ("count([1,2,\"dog\"], 'numberp)" "count([1,2,\"dog\"], \"dog\")"
                             "count(lrange(10^4), lambda([x], is(mod(x,3) = 0)))"
                             "count( %%ff(1,2,\"dog\"), \"dog\")"
-                            "count(lrange(100,ot->ar), 'evenp)")))
+                            "count(lrange(100,ot->ar), 'evenp)"
+                            "count(lrange(10^5), 'primep)")))
