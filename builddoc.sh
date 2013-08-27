@@ -13,7 +13,7 @@ outfile=$filename.out
 logfile=$filename.log
 
 rm $auxfile $tocfile $outfile $logfile
-smaxima -b "./builddoc.mac" && pdflatex $texfile 
+smaxima -b "./builddoc.mac" && pdflatex $texfile && pdflatex $texfile
 
 rm $auxfile $tocfile $outfile $logfile $hauxfile $htocfile
 hevea $texfile && hevea $texfile

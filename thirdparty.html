@@ -2447,7 +2447,7 @@ support for complex numbers is implemented. Some integrable singularities are fo
 <TT>nintegrate</TT> requires either two or three arguments.
 The second argument <I>varspec</I> must be a list.
 The third argument <I>singlist</I> must be a list.</P><P><B>Options</B>
-<TT>nintegrate</TT> takes options with default values: <TT>epsrel-&gt;1.e-8</TT>, <TT>epsabs-&gt;0</TT>, <TT>subint-&gt;200</TT>, <TT>words-&gt;true</TT>.
+<TT>nintegrate</TT> takes options with default values: <TT>calls-&gt;false</TT>, <TT>epsrel-&gt;1.e-8</TT>, <TT>epsabs-&gt;0</TT>, <TT>subint-&gt;200</TT>, <TT>words-&gt;true</TT>.
 </P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
@@ -2633,6 +2633,40 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 </TD></TR>
 </TABLE></TD><TD><TABLE BORDER=0 CELLPADDING="1" CELLSPACING=0><TR><TD><PRE CLASS="verbatim">(%i12) rectform(float(%));
 (%o12) 1.25331414*%i+1.25331414
+</PRE></TD></TR>
+</TABLE></TD><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
+</TD></TR>
+</TABLE></TD></TR>
+<TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+</TABLE><P>Return a list of calls made to quadpack.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
+</TD></TR>
+</TABLE></TD></TR>
+<TR><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
+</TD></TR>
+</TABLE></TD><TD><TABLE BORDER=0 CELLPADDING="1" CELLSPACING=0><TR><TD><PRE CLASS="verbatim">(%i13) nintegrate(1/sqrt(abs(1-x)) * exp(-x),[x,0,inf], calls-&gt;true);
+(%o13) [1.72821,1.87197e-10,660, no problems,
+ [quad_qagi(%e^-x/sqrt(abs(x-1)),x,1.0,inf,epsrel = 1.e-8,epsabs = 0,limit = 200),
+  quad_qagp(%e^-x/sqrt(abs(x-1)),x,0,1.0,[],epsrel = 1.e-8,epsabs = 0,limit = 200)]]
+</PRE></TD></TR>
+</TABLE></TD><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
+</TD></TR>
+</TABLE></TD></TR>
+<TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
+</TD></TR>
+</TABLE></TD></TR>
+</TABLE></TD></TR>
+</TABLE><P>Here we must supply the roots of <CODE>sin(x)</CODE> within the range of integration.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
+</TD></TR>
+</TABLE></TD></TR>
+<TR><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
+</TD></TR>
+</TABLE></TD><TD><TABLE BORDER=0 CELLPADDING="1" CELLSPACING=0><TR><TD><PRE CLASS="verbatim">(%i14) nintegrate(1/(sqrt(sin(x))),[x,0,10], [%pi,2*%pi,3*%pi]);
+(%o14) [10.48823021716687 - 6.769465521725385 %i, 9.597496930524585e-8, 1596, no problems]
 </PRE></TD></TR>
 </TABLE></TD><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
