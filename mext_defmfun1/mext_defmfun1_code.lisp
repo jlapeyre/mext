@@ -118,3 +118,16 @@
   ($sort (cons '(mlist simp) (get-hash-keys mext-maxima::*loaded-dist-table*))))
 
 (max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear"))
+
+(maxdoc:mdefmvar $lisp_bin_ext mext-maxima::*binary-ext*
+"The extension of compiled lisp binaries for the lisp
+implementation used by Maxima. This should be read-only.
+Setting it has no effect.")
+
+(maxdoc:mdefmvar $maxima_version maxima::*autoconf-version*
+"The Maxima version number.")
+
+(maxdoc:mdefmvar $lisp_version (mext-maxima::lisp-version-string)
+"The lisp version number of the lisp implementation on which Maxima is running.")
+
+
