@@ -134,6 +134,8 @@ true;
      2.247091401841317e-13 %i + 2.675637489346627e-13
 
   A better method for this would be good.
+  In fact quad_qawo(1, x, 1, 10^4, 1, cos) works well. Faster, with fewer intervals
+  and no error. We could try to detect this somehow.
 */     
 
 cec(nintegrate(exp(%i*x),[x,1,10^4], subint -> 3000),rectform(float(integrate(exp(%i*x),x,1,10^4))),1e-12)$
@@ -148,8 +150,20 @@ ce(nintegrate(1/sqrt(x) + cos(x), [x,0,5000], subint->1000),
 true; 
 
 /*
- Might be better to use quadpack function with factor of sin(x), but
- we would need to detect it.
+ Following works, but it is slow.
+
+Correct result is:
+(sqrt(%pi) ((sqrt(2) %i + sqrt(2)) erf(50 %i + 50)
+ + (sqrt(2) %i - sqrt(2)) erf(50 %i - 50)))/4
+
+ = 1.251128192999533
+
+Following is much faster, but the routine does not allow us to go too close to 0.
+quad_qawo (1/sqrt(x), x, 1e-12, 5000, 1, sin, epsrel=1e-13);
+
+We would have to split the interval and integrate from, say 0 to 1
+and then 1 to 5000.
+ 
 */ 
 ce(nintegrate(sin(x)/sqrt(x),[x,0,5000],subint->1000),rectform(float(integrate(sin(x)/sqrt(x),x,0,5000))),
     1e-7)$

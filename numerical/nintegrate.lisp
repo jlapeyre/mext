@@ -7,8 +7,12 @@
 ;;; TODO
 ;;; * Using qagi with qagp works, but it should be refactored and generalized.
 ;;; * Make better combined error estimate.
-;;; * store calls to quadpack for diagnostics
 ;;; * use assume(x>lo, x<hi) etc. when searching for roots.
+;;; * use to_poly_solve
+;;; * use quad_qawo, etc. See notes in rtests.
+;;; * implement, or interface with gsl cquad
+;;; * find some code for adaptive meshes for multi-dimensional
+;;;   I think some of this is written in plain fortran.
 ;;; Everything else.
 
 ;;; Note what happens to sqrt(x). We do this before trying to integrate!
@@ -73,7 +77,7 @@
 This routine just calls `solve' and has some bugs. If no satisfying numbers are found, return `nil'."
     (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1))))
           (nroots))
-      (format t "lo ~a,  hi ~a, ~a~%" lo hi (maxima::$sconcat roots))
+;      (format t "lo ~a,  hi ~a, ~a~%" lo hi (maxima::$sconcat roots))
       (dolist (r (cdr roots))
         (let ((n (third r)))
           (when (maxima::$numberp n)
@@ -82,7 +86,7 @@ This routine just calls `solve' and has some bugs. If no satisfying numbers are 
                      (or (and (maxima::$numberp hi) (> 1e-10 (- hi nn)))
                          (and (maxima::$numberp lo) (> 1e-10 (- nn lo)))))
                 (push (maxima::$float n) nroots))))))
-      (format t "nroots ~a~%" nroots)
+;      (format t "nroots ~a~%" nroots)
       (if (consp nroots)
           (cons '(maxima::mlist maxima::simp) (sort nroots  #'<))
         nil)))
