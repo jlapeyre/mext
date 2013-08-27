@@ -66,17 +66,23 @@
     (append (apply 'maxima::mfuncall call-list) (list (list '(maxima::mlist maxima::simp) call-form)))))
 
 
-(defun list-fp-singularities (expr lo hi)
+;; Bug: numbers outside of range lo,hi should be excluded, but are not.
+(maxima::ddefun list-fp-singularities (expr lo hi)
+   "Try to return a Maxima list of floating point numbers representing the singularities between
+`lo' and `hi' (excluding these endpoints) in `expr'. This, of course, can't be done in general.
+This routine just calls `solve' and has some bugs. If no satisfying numbers are found, return `nil'."
     (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1))))
           (nroots))
+      (format t "lo ~a,  hi ~a, ~a~%" lo hi (maxima::$sconcat roots))
       (dolist (r (cdr roots))
         (let ((n (third r)))
           (when (maxima::$numberp n)
             (let ((nn (maxima::$float n)))
               (when (not
-                     (or (and (maxima::$numberp hi) (> 1e-10 (abs (- nn hi))))
-                         (and (maxima::$numberp lo) (> 1e-10 (abs (- nn lo))))))
+                     (or (and (maxima::$numberp hi) (> 1e-10 (- hi nn)))
+                         (and (maxima::$numberp lo) (> 1e-10 (- nn lo)))))
                 (push (maxima::$float n) nroots))))))
+      (format t "nroots ~a~%" nroots)
       (if (consp nroots)
           (cons '(maxima::mlist maxima::simp) (sort nroots  #'<))
         nil)))
