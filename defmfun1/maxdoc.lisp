@@ -464,6 +464,8 @@
             (maxima::merror1 "max-doc::add-doc-entry1: can't find section for tag ~a." section))))
     (setf (entry-section entry) (section-name section))
     (when *current-distribution* (setf (entry-distribution entry) *current-distribution*))
+    (when defmfun1::*mext-package*
+      (defmfun1::record-mext-package name defmfun1::*mext-package*))
     (setf (gethash name (section-hash section)) entry)
     (setf (gethash name max-doc::*max-doc-deffn-defvr-hashtable*) entry)))
 
