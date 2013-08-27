@@ -130,4 +130,7 @@ Setting it has no effect.")
 (maxdoc:mdefmvar $lisp_version (mext-maxima::lisp-version-string)
 "The lisp version number of the lisp implementation on which Maxima is running.")
 
+(maxdoc:mdefmvar $lisp_type (cl::lisp-implementation-type)
+"The name of the lisp implementation on which Maxima is running.")
+
 
