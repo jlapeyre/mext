@@ -319,6 +319,9 @@ This was copied from maxima source init-cl.lisp.")
   (loop for dir in (list-distribution-dirs)
         collect (car (last (fpathname-directory dir)))))
 
+(defun list-loaded-distributions ()
+  (get-hash-keys mext-maxima::*loaded-dist-table*))
+
 (defun scan-installed-distributions ()
 "Read the .mxt files from all installed distributions. This
  rebuilds the data-base of installed .mxt packages. (packages
@@ -403,8 +406,12 @@ This was copied from maxima source init-cl.lisp.")
 (defun mext-test  ( &optional dists )
  "Run regression tests in the sub-directories of the installed distributions.
  Dists is name or list of names of distributions."
- (when (and (not (consp dists))(string= "all" (maxima::$sconcat dists)))
-   (setf dists (mext-list)))
+ (when (not (consp dists))
+   (cond ((string= "all" (maxima::$sconcat dists))
+          (setf dists (mext-list)))
+         ((string= "loaded" (maxima::$sconcat dists))
+          (setf dists (maxima-list-loaded-distributions)))
+         (t nil)))
   (let ((testdirs
          (cond (dists
                 (setf dists 
@@ -451,6 +458,9 @@ This was copied from maxima source init-cl.lisp.")
   "List installed distributions."
   (scan-installed-distributions)
   (cons '(maxima::mlist maxima::simp) (list-installed-distributions)))
+
+(defun maxima-list-loaded-distributions ()
+  (maxima::$sort (cons '(maxima::mlist maxima::simp) (list-loaded-distributions))))
 
 (defun mext-clear ()
  "Clear list of loaded mext distributions."

@@ -46,8 +46,9 @@
 ;; redefined
 (defmfun1 ($mext_test :doc) ( &optional (dists :or-string-symbol-or-listof))
   :desc ("Run the test suites for a mext distribution or list of distributions. If "
- " the argument " :code "all" " is given, then all tests are run for all installed mext distributions. " "If no
- argument is given, a subfolder named " :code "rtests" " is searched for in the current directory.")
+ " the argument " :code "all" " is given, then all tests are run for all installed mext distributions. "
+ "If the argument " :code "loaded" " is given, then all tests are run for all loaded mext distributions. "
+ "If no argument is given, a subfolder named " :code "rtests" " is searched for in the current directory.")
   (mext::mext-test dists))
 
 ;; redefined
@@ -115,9 +116,8 @@
 
 (defmfun1 ($mext_list_loaded :doc) ()
   :desc ("Returns a list of mext packages currently loaded.")
-  ($sort (cons '(mlist simp) (get-hash-keys mext-maxima::*loaded-dist-table*))))
-
-
+  (mext::maxima-list-loaded-distributions))
+;  ($sort (cons '(mlist simp) (get-hash-keys mext-maxima::*loaded-dist-table*))))
 
 (maxdoc:mdefmvar $lisp_bin_ext mext-maxima::*binary-ext*
 "The extension of compiled lisp binaries for the lisp
@@ -145,4 +145,3 @@ for some packages, and may miss some functions.")
           (sort (copy-list (gethash name defmfun1::*mext-functions-table*)) #'string-lessp))))
 
 (max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear" "mext_list_package"))
-
