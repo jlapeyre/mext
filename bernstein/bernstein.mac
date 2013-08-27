@@ -1,2 +1,4 @@
+require(mext_defmfun1);
+dont_kill(bernstein_expand);
 mext_provide( "bernstein",
   ["bernstein", "bernstein_utilities"]);
