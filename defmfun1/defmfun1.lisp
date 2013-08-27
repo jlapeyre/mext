@@ -57,16 +57,23 @@
   "This hash-table stores the name of the mext package in which a function
    is defined.")
 
+(ddefvar *mext-functions-table* (make-hash-table :test 'equal)
+  "This hash-table stores a list of the user functions defined 
+in a  mext package.")
+
 (defun set-mext-package (name)
   (setf *mext-package* name))
 
 (defun record-mext-package (name package)
  "Record fact that string `name' is in mext packge `package'.
   This may be called with the current package *mext-package*,
-  which may not be set, in which case, we do nothing."
+  which may not be set, in which case, we do nothing. At the
+same time, push `name' onto a list keyed by `package' in
+the hash table *mext-functions-table*."
  (when package
    (setf name (maxima::$sconcat name))
-   (setf (gethash name *mext-package-table*) package)))
+   (setf (gethash name *mext-package-table*) package)
+   (push name (gethash package *mext-functions-table*))))
 
 (defun get-mext-package-for-function (name)
   (setf name (maxima::$sconcat name))

@@ -94,6 +94,10 @@ show how to install them one at a time.
 * require(packname) loads an installed package. These are listed
   via mext_list().
 
+* mext_list_package(packname) lists functions and variables
+  defined in `packname'. This only works if `packname' has
+  been loaded.
+
 * To see some documentation, try
   ?? runtime
   ?? lists
