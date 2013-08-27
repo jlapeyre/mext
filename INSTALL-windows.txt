@@ -1,0 +1,151 @@
+mext maxima distribution (or package) installer.
+
+INSTALLATION INSTRUCTIONS
+for wxmaxima on MS Windows.
+
+---------------------------------------------------
+
+1) Download the source from github (google for
+ maxima mext github), using the "download this
+ repository as a zip file" button.
+
+2) Right-click on the downloaded zip file and choose
+Extract all files. When prompted for a destination,
+click 'Browse...'. You can extract it anywhere, but
+here, we assume you browse to your home folder,
+ C:\Users\username.
+Click 'OK'. Click 'Extract. The files should be extracted
+to a folder called C:\Users\username\mext-master, or
+something like that.
+  
+ Warning: if the timestamps of the extracted files are in the future
+  with respect to your system, defsystem will compile in semi-infinite
+  loops, repeatedly ask questions, and ignore the answers. I have not
+  yet found found a way to defeat this.
+
+3) Install the mext_system distribution (package)
+to your user maxima folder, as follows:  All other
+distributions packaged for mext depend on
+mext_system (mext). 
+
+ * Open wxmaxima. 
+ * Click the menu File-->Load Package. 
+ * Browse to where you extracted the zip file and 
+   browse to the folder mext-master --> mext_system. 
+ * At the bottom right of the file dialog change the filter
+   from 'Maxima package (*.mac)' to
+   'Lisp package (*.lisp)'.
+ * Click on the LISP file `00mext-ibuild'. 
+ * Click 'open'.  
+
+If all goes well, mext should be installed.
+
+4) Install distributions packaged for mext. Just
+to be safe, restart maxima or wxmaxima. (menu item
+Maxima->Restart Maxima). Here we show how to
+install several distributions at once. Below we
+show how to install them one at a time.
+
+  NOTE: 
+   If you build or install the mext packages
+  'quicklisp' or 'store', you must have an
+  internet connection so that quicklisp can
+  download asdf lisp packages. These two packages
+  do *not* work with gcl, which is the lisp
+  used to build the standard version of Maxima
+  5.30.0 for windows.
+
+ * Edit the file mext-master\buildall.mac to include all or some of
+ the distributions. (there are some dependencies; see below.)
+
+  Note: Both of the packages 'discrete' and 'lists_aex' have a
+  function called `count'. If both are installed, errors can
+  occur. For instance, mext_test('all) will load them both and then
+  run tests, some of which will cause maxima to crash.
+  Renaming the function in one of the packages solves the problem.
+
+ * Click File-->Load Package and choose the file
+ mext-master\buildall.mac.  This should build and install all
+ packages. Maxima might seem to be hung sometimes, so you have to be
+ patient.
+
+ NOTE: If an error occurs, try fixing the problem, then restart maxima
+ and reload buildall.mac. For instance, if 'bernstein' is not
+ available, remove the string "bernstein" from buildall.mac, then
+ restart maxima before continuing.
+
+* Restart maxima, especially if you have built the package
+ `discrete'. There is a bug that prevents it from being
+  loaded twice.
+
+* Assuming you did not build both `discrete' and `lists_aex':
+ After restarting maxima. Type
+
+ load(mext_core);
+ mext_test('all);
+
+ If you did build both packages (without renaming 'count'), then
+ you can do mext_test() on individual packages. Try
+ ?? mext_test.
+
+* Some other commands to try are: (Use ?? to see documentation)
+  mext_list, mext_list_loaded.
+
+* require(packname) loads an installed package. These are listed
+  via mext_list().
+
+* To see some documentation, try
+  ?? runtime
+  ?? lists
+  ?? numeric
+  ?? combinat
+
+---------------------------------------------------
+
+* The prime counting function is packaged
+separately because the tables are relatively
+large. Google github prime_pi, to find this
+package.
+
+You can also try reading and loading testall.mac.
+
+To see some documentation, restart maxima and type
+ load(mext);
+ require('all);
+ print_maxdoc_sections();
+
+---------------------------------------------------
+* Installing one-by-one. Some distributions depend
+on others, so you have to install the dependencies
+first. (See the note below.)  To install one
+distribution, click File-->Load Package and choose
+the folder named for the distribution you want to
+load. Click on the file 'ibuild.mac' in this
+folder to build and install the distribution.
+
+Dependencies:  A depends on B is written A -> B
+All distributions depend on mext_system.
+Any distribution not listed here depends only on mext_system.
+
+  maxdoc -> defmfun1
+  aex -> maxdoc
+  lists_aex -> aex
+  discrete_aex -> lists_aex
+  alt_eigen -> maxdoc
+  nelder_mead -> maxdoc
+  quicklisp -> maxdoc
+  store -> quicklisp  
+
+OTHER INSTALLATION INSTRUCTIONS
+
+For building mext and packages for multiple (or one) version of
+maxima/lisp on linux, see the file all-lisps.sh.
+
+For building latex and html of the documentation, see builddoc.sh.
+
+-------------------------------------
+LocalWords:  maxima wxmaxima gcl ccl linux github
+LocalWords:  subfolder google username timestamps
+LocalWords:  defsystem ibuild quicklisp asdf aex
+LocalWords:  buildall testall maxdoc defmfun
+LocalWords:  eigen nelder

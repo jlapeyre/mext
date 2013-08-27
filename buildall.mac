@@ -1,31 +1,47 @@
 load(mext);
 
+/* Don't touch these lines */
+chdir(pathname_directory(load_pathname));
+build_several (package_list) := 
+ for package in package_list do
+  load_in_subdir(["ibuild","mac"],[package]);
+
 /*
-  Remove or comment out packages or lists of packages
+  Remove or comment out packages or lists of packages below
   that you do not want to or cannot compile/install.
 */
-
-chdir(pathname_directory(load_pathname));
 
 /*
   Following are more-or-less core packages by the author
   of the mext system.
 */
 
-for package in [
+build_several( [
             "defmfun1", "maxdoc", "mext_defmfun1", "aex",
-            "lists_aex", "discrete_aex", "numerical" ] do
-      load_in_subdir(["ibuild","mac"],[package]);
+            "lists_aex", "discrete_aex", "numerical" ]);
+
+/* Following are third party packages adapted to mext */
+/* Note: bernstein is not available in Maxima 5.25 */
+build_several( [
+            "nelder_mead", "alt_eigen", "pw",
+            "coma", "circuits", "implicit", "bernstein", "grobner" ]);
+
+/*
+ Both packages `discrete' and `lists_aex' have a function named
+ `count'. This will cause errors if they are loaded at the same
+  time.
+*/  
+/*
+build_several([ "discrete" ]);
+*/
 
 /*
    Following initiate an automatic download from the internet.
    They do not work with gcl.
 */   
+
+/*
 for package in [  "quicklisp", "store" ] do
       load_in_subdir(["ibuild","mac"],[package]);
 
-/* Following are third party packages adapted to mext */
-/* Note: bernstein is not available in maxima 5.25 */
-for package in [ "nelder_mead", "alt_eigen", "pw", "discrete",
-                  "coma", "circuits", "implicit", "bernstein", "grobner" ] do
-          load_in_subdir(["ibuild","mac"],[package]);
+*/
