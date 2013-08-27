@@ -1,10 +1,12 @@
 mext maxima third party code installation system.
 
+--------
  Copyright (C) 2012,2013 John Lapeyre
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 3 of the License, or
  (at your option) any later version.
+--------
 
 The latest code works with Maxima 5.28, and most of it works with 5.30.
 
@@ -20,6 +22,122 @@ of these as 'distributions' rather than 'packages', but we may change
 to 'package'.)
 
 See the file 'INSTALL' for installation instructions.
+
+--------
+Features in Brief:
+
+mext:
+
+* System for standardized compilation, installation, loading of packages.
+
+* Minimizes recompilation and reloading.
+
+* Standardized specification of dependencies. Dependencies are
+  loaded only once.
+
+* Concurrent (binary/source) installation for different Maxima and lisp versions.
+
+* Functions: chdir,list_directory,pwd,popdir,updir,dir_exists, etc.
+
+* mext_list,mext_list_loaded,mext_info to see info on installed
+  packages, loaded packages, etc.
+
+* mext_test(packname) to run rtests, which are installed in a
+  standard location.
+
+* Minimizes filename collision between packages.
+
+* Supports installation of stock Maxima `share' packages to mext system
+  directly from the Maxima installation. This allows the packages to
+  be compiled (once) and installed for multiple Maxima/lisp versions
+  and to be loaded (once) as dependencies, and to survive `kill(all)', and
+  to be tested quickly and easily. See for example `grobner'.
+
+* After mext is installed: Download third party mext package
+  'packname' and unzip.  Do `load("packname/ibuild.mac")' to build and
+  install software and rtests to a directory automatically named for
+  the running Maxima/lisp. Do `mext_test(packname)' to run installed tests.
+  Packager specifies which files are compiled or left as source, etc.
+  Currently, all but one third party package is in mext repository.
+
+Documentation systems:
+
+* Multiple documentation systems accessed via `describe' and ??
+
+* Two systems: one simple, one more full-featured for user documents.
+
+* Doc system for internal/devel documents.
+
+* Easy selection to include/exclude documentation from ??.
+
+* Examples integrated into documentation system.
+
+* Many ways to enter examples: Examples not executed before displaying;
+  or executed but with variables transparently localized.
+  (stock Maxima does not do this.)
+
+* Macros for user and internal functions and variables to automatically
+  generate documentation that is accessible immediately with ??.
+
+defmfun1:
+
+* lisp macro to define functions to be called from Maxima.
+
+* Automatic (optional) detailed argument checking.
+
+* Standardized option passing: 'opt->val'. Automatic, standarized
+  extraction, of required, optional, and option arguments.
+
+* Automatically (optionally) generate documentation using
+  various sources (such as argument checks.)
+
+* Standardized, automatic, error messages. No extra coding required.
+
+* Support 'attributes': e.g. for each function to switch between raising
+  error or returning input form, or printing warning. Attributes also
+  control argument evaluation.
+
+* Option 'compile' to automatically compile lambda functions passed
+  as arguments. Used in many functions listed below.
+
+aex:
+
+* expressions stored as lisp arrays, rather than lisp lists.
+
+* advantage is that `random access' is O(1), rather than O(n).
+
+* Many functions included in mext packages. These usually use standard
+  lisp lists for input and output, unless aex is requested. A main goal
+  is to code for and to test for efficiency.
+
+  lrange -- list of range of numbers.
+  table -- defmfun1 wrapper on Ziga Lenarcic's code.
+  constant_list,count,drop_while,fold,fold_list,
+  length_while, nest, nest_list, nest_while, nreverse, partition_list
+  select, take, take_while, tuples, string_drop, string_take,
+  with_output_to_string.
+
+  Some replacements of Maxima functions, less generally
+  applicable, but much more efficient in some cases.
+  icons (cons), imap (map), every1 (every).
+
+discrete:
+
+  Efficient routines for:
+  from_digits,integer_digits,integer_string,
+  ae_random_permutation,cycles_to_perm,
+  inverse_permutation,perm_to_cycles,perm_to_transpositions,
+  permutation_p,random_cycle,random_permutation_sym,
+  signature_permutation,transpositions_to_perm.
+
+numerical:
+
+* nintegrate -- currently a front end to quadpack.  Subdivides
+  interval, calls quadpack routines, combines results. Finds some
+  singularities and passes information to quadpack. Identifies and
+  separately integrates real and imaginary parts.
+ 
+--------
 
 Much of the third party software packaged here uses the maxdoc
 documentation system, with documentation embedded in the source code.
@@ -40,24 +158,36 @@ Most or all of this has been found to work on at least one
 platform running maxima with:
 linux gcl,sbcl,ccl,clisp,cmucl,ecl; win32 gcl,ccl.
 
-Features:
+This code can be used now, but is also experimental. It is an `add-on'
+to Maxima. But it overwrites some Maxima code (Only when you load
+it. It does not touch your Maxima installation!) The redefinitions are
+isolated: maxdoc/descr1.lisp and aex/system-essential.lisp. Much of
+this could be included in stock Maxima without breaking the test-suite,
+but for the time being, I decided to overwrite stock Maxima only
+when essential.
+
+Features, more details:
 
 * Only one subdirectory of the user directory is added to the maxima
 search paths. For each distribution, there is one file in this
 directory that loads code. The code for each distribution, as well as
 rtests, etc. are located in further subfolders that are not added to
-the maxima search path by default.  Actually the subdirectory that is
-put in the search path is named for the maxima version and the lisp
-implementation and the lisp version. So, different maxima and lisps
-can be used in parallel. This system is set up with load('mext);
+the maxima search path by default. This helps to reduce filename
+collisions.  Actually the subdirectory that is put in the search path
+is named for the maxima version and the lisp implementation and the
+lisp version. So, different maxima and lisps can be used in
+parallel. This system is set up with load('mext);
 
 * A distribution can be loaded with require('distname); or
 require("distname"); The distribution is registered for the session
-and subsequent calls to require('distname) do nothing. (clobbering
-by kill(all), has not been addressed yet.)
+and subsequent calls to require('distname) do nothing. Clobbering
+by kill(all), has been addressed. See `?? dont_kill'.
+
 
 * Installing binary only, source only, or a combination is
-supported.
+supported. In stock Maxima, there is often a good amount of reloading
+and recompiling every time a user loads code. The mext system and
+packages attempt to compile once and load compiled code when possible,
 
 * Installation and running of rtests is standardized:
  mext_test(dist1,dist2);
@@ -207,4 +337,7 @@ LocalWords:  mext maxima defmfun aex contrib perl linux gcl sbcl ccl
 LocalWords:  clisp cmucl ecl subdirectory rtests subfolders distname
 LocalWords:  defsystem asdf pathnames pathname ansi clozure chdir pwd
 LocalWords:  truename runtime nelder pw Lapeyre GPL Mommer piecewise
-LocalWords:  expr init maxdoc texi thirdparty tex pdf html
+LocalWords:  expr init maxdoc texi thirdparty tex pdf html popdir dir
+LocalWords:  updir packname filename grobner devel lrange Ziga tuples
+LocalWords:  Lenarcic's nreverse imap ae sym nintegrate quadpack dont
+LocalWords:  redefinitions
