@@ -141,8 +141,8 @@ Setting it has no effect.")
 if the package is not loaded. This function incorrectly returns an empty list
 for some packages, and may miss some functions.")
   (let ((name (maxima::$sconcat package)))
-    (cons '(mlist simp)
-          (sort (gethash name defmfun1::*mext-functions-table*) #'string-lessp))))
+    (cons '(mlist simp) ; hmm need copy below
+          (sort (copy-list (gethash name defmfun1::*mext-functions-table*)) #'string-lessp))))
 
 (max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear" "mext_list_package"))
 

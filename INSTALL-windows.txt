@@ -103,6 +103,7 @@ show how to install them one at a time.
   ?? lists
   ?? numeric
   ?? combinat
+  ?? mext
 
 ---------------------------------------------------
 
