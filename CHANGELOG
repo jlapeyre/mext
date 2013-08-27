@@ -1,3 +1,7 @@
+* Tue Aug 27 18:22:18 CEST 2013
+  No new version, but master branch works with
+  Maxima 5.30 (except for some bugs caused by 5.30)
+
 * Wed Aug 21 17:52:47 CEST 2013
   v0.0.3 -- This version works with Maxima 5.28
   It does not work 5.30, and probably not with 5.29
