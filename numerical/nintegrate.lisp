@@ -23,8 +23,15 @@
 
 ;;; Maybe the code in sin.lisp and defint.lisp can be used to analyze
 ;;; the integrands.
-;;; Following prints some debugging info:
-;;; (setf *debug-defint-log* t)
+;;; Possibly of interest:
+;;; sin.lisp:  (defun scep
+;;;            (defun integrator
+;;; csimp.lisp: (defun partition
+;;;             (defun islinear
+;;; $trigreduce
+
+;;; (partition $e '$x 1), removes a constant factor from $e,
+;;; returns a list (thefactor expression-with-factor-removed)
 
 (in-package :nintegrate)
 
