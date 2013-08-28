@@ -23,6 +23,8 @@
   (list (make-array 0 :adjustable t :fill-pointer 0))
   (hash (make-hash-table :test 'equal)))
 
+;; It seems that the `distribution' slot is not used
+;; We are storing this information in a hash table: *mext-package*
 (defstruct (entry)
   (name "" :type string)
   (type "Function" :type string)
