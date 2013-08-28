@@ -21,6 +21,11 @@
 ;;;(%o58) %i sin(-----------) sqrt(abs(x)) + cos(-----------) sqrt(abs(x))
 ;;;                   2                               2
 
+;;; Maybe the code in sin.lisp and defint.lisp can be used to analyze
+;;; the integrands.
+;;; Following prints some debugging info:
+;;; (setf *debug-defint-log* t)
+
 (in-package :nintegrate)
 
 ;; This should be moved to a more general location
