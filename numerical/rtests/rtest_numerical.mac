@@ -2,7 +2,7 @@
   Some examples are in src/numerical/quadpack.lisp
 */
 
-/* close enough */
+/* close enough tests */
 (kill(ce), ce(x,y,eps) := is(abs(first(x)-y)<eps),
 kill(cec), cec(x,y,eps) := is(abs(realpart(first(x))-realpart(y))
       + abs(imagpart(first(x))-imagpart(y)) < eps), true)$
@@ -66,9 +66,14 @@ true;
 cec(nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf]), .4244363835020222 * %i + .6901942235215709, 1e-8)$
 true;
 
-/* Excessive roundoff reported here. Probably for the integral that gives zero */
-cec(nintegrate( %i * exp(%i*x)/(1/2 + exp(%i*x)), [x,0,2*%pi]),
-    6.28318531*%i-1.05172327e-16, 1e-8)$
+/*
+  Excessive roundoff reported here. Probably for the integral that gives zero
+
+  Note that:
+  integrate( %i * exp(%i*x)/(1/2 + exp(%i*x)), x,0,2*%pi) --> 0
+  
+*/
+cec(nintegrate( %i * exp(%i*x)/(1/2 + exp(%i*x)), [x,0,2*%pi]), %i * 2 * %pi, 1e-8)$
 true;
 
 /* Singularity at end point */
@@ -93,6 +98,9 @@ true;
 ce(nintegrate(1/(1-x)^(1/5), [x,0,1]),1.25, 1e-10)$
 true;
 
+ce(nintegrate(1/x^(4/5), [x,0,1]),5, 1e-10)$
+true;
+
 ce(nintegrate(airy_ai(10*log(x)),[x,0,1]), .06392250187680061, 1e-9)$
 true;
 
@@ -114,7 +122,19 @@ true;
 ce(nintegrate(1/(sqrt(1-x)*x^(1/5)),[x,0,1]), beta(1/2,4/5), 1e-8)$
 true;
 
-/* Must explicitly give the roots of sin(x) within integration range */
+ce(nintegrate(1/(sqrt(1-x)*x^(4/5)),[x,0,1]), beta(1/5,1/2), 1e-8)$
+true;
+
+ce(nintegrate(log(2*x)/sqrt(1-x),[x,0,1]), 6 * log(2) - 4, 1e-8)$
+true;
+
+/*
+  Must explicitly give the roots of sin(x) within integration range
+  Omitting the singularities still works, but with reduced accuracy
+  and warnings.
+  But, with to_poly_solve and a little more work, we could compute these
+  roots automatically.
+*/
 cec(nintegrate(1/(sqrt(sin(x))),[x,0,10], [%pi,2*%pi,3*%pi]),
      10.48823021716687 - 6.769465521725385 * %i, 1e-7)$
 true;   
@@ -144,6 +164,12 @@ true;
 /* This is ok, but slow
   first(nintegrate(1/sqrt(x) + cos(x), [x,0,5000], subint->1000)) -
      float(integrate(1/sqrt(x) + cos(x), x,0,5000));
+
+  What would work: integrate each term, using qawo on the cosine part.
+  (I wonder when we are allowed to use symbolic integration, anyway)
+  quad_qawo(1, x, 0, 5000, 1, cos, epsrel=1e-9); This essentially does
+  analytic integration, anyway.
+
 */
 ce(nintegrate(1/sqrt(x) + cos(x), [x,0,5000], subint->1000),
    float(integrate(1/sqrt(x) + cos(x), x,0,5000)), 1e-12)$
@@ -204,6 +230,11 @@ nintegrate(sin(1/x)*cos(1/(1-x)),[x,0,1],subint->20000, epsrel->1e-6);
   quad_qag(cos(log(x)/x)/x, x,0,1,6); fails
   nintegrate(cos(log(x)/x)/x,  [x,0,1]);
 
+  Can do this transformation, but I am not sure how it helps
+  nintegrate( cos(-u*log(u))/(u), [u,1,1000], subint->1000);
+
+  ---------
+
   nintegrate(exp(%i*x*x),[x,minf,inf]); fails
 
   The error estimates given here are too low, I think.
@@ -211,5 +242,17 @@ nintegrate(sin(1/x)*cos(1/(1-x)),[x,0,1],subint->20000, epsrel->1e-6);
   nintegrate(exp(%i*x*x),[x,-200,200],subint->10000);
   [1.25170114 %i + 1.25804682, 2.507635982e-8, 760578, no problems]
 
+  integrate(cos(x*x),x) =
+    -sqrt(%pi)*((sqrt(2)*%i-sqrt(2))*erf((sqrt(2)*%i+sqrt(2))*x/2)
+                  +(sqrt(2)*%i+sqrt(2))*erf((sqrt(2)*%i-sqrt(2))*x/2))
+
+  integrate(cos(x*x),x,minf,inf) = sqrt(%pi)/sqrt(2) = 1.2533141373155
+
+  Maybe handle this by susbstituting  u = x^2, then
+  using qawo.
+
+  cos(x^2) dx --> cos(u)/sqrt(u) .
+
+  Not easy, qaqwo still has problems.
 
 */

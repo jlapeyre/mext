@@ -15,6 +15,12 @@
 ;;;   I think some of this is written in plain fortran.
 ;;; Everything else.
 
+;;; I rewrite/split integrals manually and use appropriate quadpack
+;;; routines. This is often not enough. It seems that using pattern matching
+;;; to rewrite integrals for quadpack (oscillatory, and log/power, etc.)
+;;; might not be worth much. Maybe more clever rewriting, or better numerical
+;;; routines are needed.
+
 ;;; Note what happens to sqrt(x). We do this before trying to integrate!
 ;;; (%i58) rectform(sqrt(x));
 ;;;              atan2(0, x)                     atan2(0, x)
