@@ -77,6 +77,8 @@
                                           (every #'(lambda (x) (symbolp x)) (cdr e))))
                      (:or-string-non-atom  ("a string" "non-atomic")
                       (or (stringp e) (not (maxima::$mapatom e))))
+                     (:or-symbol-subvar ("a symbol" "a subscripted variable")
+                       (or (symbolp e) (maxima::$subvarp e)))
                      (:non-atom "non-atomic"
                                 (not (maxima::$mapatom e)))
                      (:non-atom-list "non-atomic and represented by a lisp list"

@@ -160,6 +160,7 @@ This routine just calls `solve' and has some bugs. If no satisfying numbers are 
                          (nint::mkopt2 $limit $subint)))
          (r-expr ($realpart expr))
          (i-expr ($imagpart expr)))
+    (echeck-arg :or-symbol-subvar var)
     (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi singlist quad-ops)))
           (i-res (if (eq 0 i-expr) nil (nint::do-quad-pack i-expr var lo hi singlist quad-ops))))
       (when (consp i-res)
