@@ -32,6 +32,7 @@
 
 ;;; (partition $e '$x 1), removes a constant factor from $e,
 ;;; returns a list (thefactor expression-with-factor-removed)
+;;; m2 pattern matcher used in sin.lisp, defined in schatc.lisp
 
 (in-package :nintegrate)
 

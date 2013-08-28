@@ -164,10 +164,16 @@ quad_qawo (1/sqrt(x), x, 1e-12, 5000, 1, sin, epsrel=1e-13);
 We would have to split the interval and integrate from, say 0 to 1
 and then 1 to 5000.
  
-*/ 
+*/
+
+/*
+
+Slow and not too impressive
 ce(nintegrate(sin(x)/sqrt(x),[x,0,5000],subint->1000),rectform(float(integrate(sin(x)/sqrt(x),x,0,5000))),
     1e-7)$
 true;  
+
+*/
 
 kill(ce)$
 done;
