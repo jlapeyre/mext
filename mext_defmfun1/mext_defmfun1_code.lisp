@@ -1,3 +1,4 @@
+
 (in-package :maxima)
 
 ;;; Functions that are marked `redefined' were defined previously without defmfun1
@@ -15,11 +16,12 @@
 ;;(maxdoc:mdefmvar $anotherhomedir (namestring mext::*homedir-pathname*) )
 
 ;; redefined
+(mext::no-warning
 (defmfun1 ($chdir :doc) ( &optional (dir :string))
   "Set the working directory for maxima/lisp. With some lisps, such as cmu lisp the system
  directory is changed as well. This should be made uniform across lisp implementations."
   (let ((result (mext::chdir :dir dir :push t)))
-    (or result (merror1 (intl:gettext (format nil "chdir: ~a is not a directory" dir))))))
+    (or result (merror1 (intl:gettext (format nil "chdir: ~a is not a directory" dir)))))))
 
 (max-doc:add-call-desc '( "chdir" ()
                            ("Set the working directory to the value it had when mext was loaded."))
@@ -27,60 +29,69 @@
                            ("Set the working directory to " :arg "dir" ".")))
 
 ;; redefined
+(mext::no-warning
 (defmfun1 ($popdir :doc) ( &optional (n 1 :non-neg-int))
   :desc ( "Pop a value from the current directory stack and chdir to this value.
  If " :arg "n" " is given, pop " :arg "n" " values and chdir to the last value popped.")
-  (mext::popdir n))
+  (mext::popdir n)))
 
 ;; redefined
+(mext::no-warning
 (defmfun1 ($dirstack :doc) ()
   :desc ("Return a list of the directories on the directory stack. This list is
  manipulated with " :mref "chdir" ", " :mrefcomma "updir" " and " :mrefdot "popdir")
-  (cons '(mlist simp) mext::*pwd-directory-stack*))
+  (cons '(mlist simp) mext::*pwd-directory-stack*)))
 
 ;; redefined
+(mext::no-warning
 (defmfun1 ($pwd :doc) ()
   "Return the current working directory."
-  (mext::pwd))
+  (mext::pwd)))
 
 ;; redefined
+(mext::no-warning
 (defmfun1 ($mext_test :doc) ( &optional (dists :or-string-symbol-or-listof))
   :desc ("Run the test suites for a mext distribution or list of distributions. If "
  " the argument " :code "all" " is given, then all tests are run for all installed mext distributions. "
  "If the argument " :code "loaded" " is given, then all tests are run for all loaded mext distributions. "
  "If no argument is given, a subfolder named " :code "rtests" " is searched for in the current directory.")
-  (mext::mext-test dists))
+  (mext::mext-test dists)))
 
 ;; redefined
+(mext::no-warning
 (defmfun1 ($mext_list :doc) ()
   "Returns a list of all installed mext distributions. These are installed, but not neccessarily loaded."
-    (mext::mext-list))
+    (mext::mext-list)))
 
 ;; redefined
+(mext::no-warning
 (defmfun1 ($mext_clear :doc) ()
   "Clears the list of mext packages that have been loaded with require.
    Subsequent calls to require will reload the packages."
-    (mext::mext-clear))
+    (mext::mext-clear)))
 
 ;; redefined
+(mext::no-warning
 (defmfun1 ($mext_info :doc) ((distname :or-string-symbol))
   :desc ("Print information about installed mext distribution " :arg "distname"
     ". The list of installed  distributions is built by calling " :mref "mext_list" ".")
     (or (mext::mext-info distname)
-        (merror1 (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") ($sconcat distname))))
+        (merror1 (intl:gettext "mext_info: Unknown distribtuion '~a'.~%") ($sconcat distname)))))
 
 ;; redefined
+(mext::no-warning
 (defmfun1 ($require :doc) ((distname :or-string-symbol) &optional force)
   :desc ( "Load the mext pacakge " :arg "distname" " and register that it has been loaded."
  " " :code "require('all)" " will load all installed mext packages. If " :arg "force" " is true,
  then " :arg "distname" " is loaded even if it has been loaded previously.")
-  (mext:mext-require distname force))
+  (mext:mext-require distname force)))
 
 ;; redefined
+(mext::no-warning
 (defmfun1 ($updir :doc) (&optional (n 1 :non-neg-int))
  :desc ("Change the working directory to be " :arg "n" " (or 1 if " :arg "n" " is not given) subdirectories "
    "higher than the current working directory.")
-  (mext::updir n))
+  (mext::updir n)))
 
 (defmfun1:set-hold-all '$dont_kill)
 (defmfun1 ($dont_kill :doc) (&rest item)
@@ -124,6 +135,8 @@
 implementation used by Maxima. This should be read-only.
 Setting it has no effect.")
 
+;; build_info() does a lot of this. Probably don't need these thing. */
+
 (maxdoc:mdefmvar $maxima_version maxima::*autoconf-version*
 "The Maxima version number.")
 
@@ -132,6 +145,29 @@ Setting it has no effect.")
 
 (maxdoc:mdefmvar $lisp_type (cl::lisp-implementation-type)
 "The name of the lisp implementation on which Maxima is running.")
+
+#|
+
+This is from wxmaxima
+
+(defun $wxbuild_info ()
+  (let ((wxmaxima-version (cdr ($get '$wxmaxima '$version)))
+        (year (sixth cl-user:*maxima-build-time*))
+        (month (fifth cl-user:*maxima-build-time*))
+        (day (fourth cl-user:*maxima-build-time*))
+        (hour (third cl-user:*maxima-build-time*))
+        (minute (second cl-user:*maxima-build-time*))
+        (seconds (first cl-user:*maxima-build-time*)))
+    (format t "wxMaxima version: ~{~d~^.~}~%" wxmaxima-version)
+    (format t "Maxima version: ~a~%" *autoconf-version*)
+    (format t "Maxima build date: ~4,'0d-~2,'0d-~2,'0d ~2,'0d:~2,'0d:~2,'0d~%"
+            year month day hour minute seconds)
+    (format t "Host type: ~a~%" *autoconf-host*)
+    (format t "Lisp implementation type: ~a~%" (lisp-implementation-type))
+    (format t "Lisp implementation version: ~a~%" (lisp-implementation-version)))
+  "")
+
+|#
 
 ;; Note: this feature is new. Some functions and variables
 ;; are not properly registered.

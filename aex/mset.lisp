@@ -13,6 +13,7 @@
 "mset assigns y to x. This has been redefined by aex-maxima so that ipart can be
  used as an lvalue.")
 
+(mext::no-warning
 (defun mset (x y)
   (prog ()
      (cond ((or (null $setcheck)
@@ -63,7 +64,7 @@
             (return-from mset (i-part-set (eval (cadr x)) y (mapcar #'meval (cddr x)))))
 	   ((member 'array (cdar x) :test #'eq)
 	    (return (arrstore x y)))
-	   (t (merror (intl:gettext "assignment: cannot assign to ~M") x)))))
+	   (t (merror (intl:gettext "assignment: cannot assign to ~M") x))))))
 
 ;; This is just modified for i-part-set. But it will probably fail when subparts
 ;; are not translated properly. Don't know how translation works.

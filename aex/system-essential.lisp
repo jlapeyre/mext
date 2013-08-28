@@ -8,6 +8,7 @@
 ;; Document this!!
 
 ;; [1,2] not alike <<1,2>>, but it probably should be
+(mext::no-warning
 (defmfun alike1 (x y)
   (cond ((eq x y))
 	((atom x)
@@ -30,7 +31,7 @@
 		(not (atom (car y)))
 		(eq (caar x) (caar y))
 		(eq (memqarr (cdar x)) (memqarr (cdar y)))
-		(alike (cdr x) (cdr y))))))
+		(alike (cdr x) (cdr y)))))))
 
 
 (defun aex-alike1 (x y)
@@ -64,6 +65,7 @@
 
 ;;;  It appears that msize-atom must be changed, but not msize.
 
+(mext::no-warning
 (defun msize-atom (x l r)
   (prog (y)
      (cond ((numberp x) (setq y (exploden x)))
@@ -89,7 +91,7 @@
             (return (msize-array-object x l r)))
            ((aex-p x) (return (msize-aex x l r)))   ; NEW FOR AEX
            (t (setq y (cons #\? (slash y)))))
-     (return (msz y l r))))
+     (return (msz y l r)))))
 
 (defun msize-aex (x l r)
   (let ((x1 (aex-lex x)))

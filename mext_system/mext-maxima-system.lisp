@@ -14,6 +14,15 @@
 
 (mext-optimize)
 
+;; borrowed from wxmaxima by Andrej Vodopivec
+(defmacro no-warning (form)
+  #+sbcl `(handler-bind
+	     ((style-warning #'muffle-warning)
+              (sb-ext:compiler-note #'muffle-warning))
+	   ,form)
+  #+clisp `(let ((custom:*suppress-check-redefinition* t)) ,form)
+  #-(or sbcl clisp) `(progn ,form))
+
 ;;; Code for building, loading, installing a maxima
 ;;; distribution.  Here, 'distribution' means some third
 ;;; party code; maybe one file, or several files. Here,
