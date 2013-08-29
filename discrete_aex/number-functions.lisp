@@ -5,6 +5,9 @@
 ;;; the Free Software Foundation; either version 3 of the License, or
 ;;; (at your option) any later version.
 
+;;; TODO: echeck-arg now allows returning noun form. integer_string is
+;;;    using this. Need to change the rest.
+
 (in-package :maxima)
 (mext:mext-optimize)
 (max-doc:set-cur-sec 'max-doc::number-theory-fandv)
