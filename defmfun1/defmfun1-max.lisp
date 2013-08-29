@@ -179,8 +179,8 @@
   `(defmfun1 ,name ,args ,@body))
 
 ;; defmfun1-opt takes : name, list of opts, code to be inserted before body.
-(defmacro defmfun1-opt (name opts &rest code)
-  "Define a macro like defmfun1 that already has the options <opts> defined.
+(ddefmacro defmfun1-opt (name opts &rest code)
+  "Define a macro based on defmfun1 that already has the options <opts> defined.
    <name> is the name of the macro. <opts> is a list of &opt specifications for defmfun1.
    <code> is forms to be inserted before the body when expanding calls to macro <name>.
    Notice we check for a doc string in body, and move the <code> to the other side"
