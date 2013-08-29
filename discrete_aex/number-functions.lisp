@@ -5,9 +5,6 @@
 ;;; the Free Software Foundation; either version 3 of the License, or
 ;;; (at your option) any later version.
 
-;;; TODO: echeck-arg now allows returning noun form. integer_string is
-;;;    using this. Need to change the rest.
-
 (in-package :maxima)
 (mext:mext-optimize)
 (max-doc:set-cur-sec 'max-doc::number-theory-fandv)
@@ -28,11 +25,11 @@
   :var "base" " is a number it must be an integer between 2 and 36. " :var "digits"
   " may be a string rather than a list.")
   (when (stringp digits)
-      (if (and (numberp base) (echeck-arg :radix base))
+      (if (and (numberp base) (echeck-arg $from_digits :radix base))
           (return-from $from_digits (parse-integer digits :radix base))
           (setf digits (cons nil (loop for c across digits collect (digit-char-p c)) ))))
     (pop digits)
-    (if (and (numberp base) (echeck-arg :radix base))
+    (if (and (numberp base) (echeck-arg $from_digits :radix base))
         (from-digits3 digits base)
         (let ((n (length digits)) (sum 0))
           (loop for i fixnum from (1- n) downto 0 do
@@ -79,8 +76,7 @@
 (defmfun1 ($integer_string :doc) ((n :integer) &optional (base :or-radix-string 10) (pad :pos-int))
   (let ((fmt 
          (cond ((equal base "roman")
-                (when (echeck-arg :roman-integer n)
-                  (return-from $integer_string defmfun1-func-call))
+                (echeck-arg $integer_string :roman-integer n)
                 "~@R")
                ((equal base "ordinal") "~:R")
                ((equal base "cardinal") "~R")

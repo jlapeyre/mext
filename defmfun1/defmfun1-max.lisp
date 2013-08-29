@@ -63,7 +63,9 @@
             (dolist (tst (gethash targ reqo-spec))
               (push (defmfun1::check-and-error tst targ name args) res))
             (dolist (pp (gethash targ pp-spec-h))
-              (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
+              (push `(let ((tr (funcall ,(defmfun1::get-pp-func pp) ,targ)))
+                         (when (first tr) (setf ,targ (second tr)))) res)))
+;              (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
    out))
 
 (defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec)
@@ -185,7 +187,7 @@
 ;; done any of this. A workaround is to write the return-from by hand
 ;; in each function body.
 ;; Hmmm, maybe a macrolet would work, but that is a lot of trouble.
-(ddefmacro echeck-arg (spec-name arg)
+(ddefmacro echeck-arg-old (spec-name arg)
  "Check arg <arg> with <spec-name> and signal error with pretty message if check fails.
   For use within the body of a defmfun1 function."
   `(unless (funcall ,(defmfun1::get-check-func spec-name) ,arg)
@@ -194,6 +196,22 @@
        (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args)
        t))) ; return true if no error was signaled.
 ;;     (return-from defmfun1-func-name defmfun1-func-call)))
+
+;; Prefer this macro now, as it allows returning the noun form.
+;; Use within a defmfun1 body like this:
+;; (echeck-arg $funcname :testname var)
+;; This checks the variable `var' with the test :testname
+;; The $funcname is supplied for return-from, which needs a
+;; lexically scoped name. This makes defmfun1-func-name superfluous, so we should
+;; get rid of it.
+(ddefmacro echeck-arg (func-name spec-name arg)
+ "Check arg <arg> with <spec-name> and signal error with pretty message if check fails.
+  For use within the body of a defmfun1 function."
+  `(unless (funcall ,(defmfun1::get-check-func spec-name) ,arg)
+;     (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name nil)
+     (progn
+       (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args)
+       (return-from ,func-name defmfun1-func-call))))
 
 (defun mk-defmfun1-form (name args body)
   "Helper function for defmfun1-opt."
@@ -248,7 +266,6 @@
  " and " :vardot "nowarn" )
   (cons '(mlist simp) (sort (defmfun1::get-funcs-with-attribute attribute) #'string-lessp)))
 
-;; why do functions defined by this macro return false ?
 (defmacro mk-maxima-attribute (max-attribute attribute doc-string)
  (when (symbolp attribute) (setf attribute (symbol-name attribute)))
  (setf attribute (string-upcase attribute))
@@ -265,12 +282,14 @@
         :desc ,set-doc-str
         (loop for name in names do
               (maxima-symbol-to-string name)
-              (,(find-symbol (concatenate 'string "SET-" attribute) 'defmfun1) name)))
+              (,(find-symbol (concatenate 'string "SET-" attribute) 'defmfun1) name))
+        '$done)
       (defmfun1 (,(intern (concatenate 'string "$UNSET_" max-attribute)) :doc) ((names :or-string-symbol-or-listof :ensure-list))
         :desc ,unset-doc-str
         (loop for name in names do
               (maxima-symbol-to-string name)
-              (,(find-symbol (concatenate 'string "UNSET-" attribute) 'defmfun1) name))))))
+              (,(find-symbol (concatenate 'string "UNSET-" attribute) 'defmfun1) name))
+        '$done))))
       
 (mk-maxima-attribute match_form match-form "If the argument checks for a function call fail,
  and the attribute `match_form' is set, then rather than signaling an error, the unevaluated form

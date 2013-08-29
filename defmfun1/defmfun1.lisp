@@ -273,12 +273,10 @@ the hash table *mext-functions-table*."
 ;; Specify the preprocessing directive here.
 (dolist (one-pp '(
                   (:ensure-lex "is converted to a lisp list expression before processing"
-                   (maxima::$lex e))
+                   (list t (maxima::$lex e)))
                   (:ensure-list "is ensured to be lisp list before processing"
-                   (setf e (if  (listp e) (cdr e) (list e))))))
-  (apply #'mk-pre-proc one-pp))
-
-
+                   (list t (setf e (if  (listp e) (cdr e) (list e))))))
+  (apply #'mk-pre-proc one-pp)))
 
 (ddefparameter *pp-spec-types*
   (get-hash-keys *arg-preprocess-table*))
@@ -290,7 +288,6 @@ the hash table *mext-functions-table*."
       (unless txt (maxima::merror1 '$defmfun1_no_spec_mssg "No argument message for ~a." spec-name))
       (if args (apply #'format (append (list nil txt) args))
           txt))))
-    
 
 (defun mk-arg-check1 (arg-class spec-name err-mssg-spec body)
   (let* ((emsg (rest err-mssg-spec)))
@@ -305,7 +302,6 @@ the hash table *mext-functions-table*."
                   (or-comma-separated-english emsg))
             (setf (gethash spec-name *arg-check-mssg-table*) (list (car err-mssg-spec) (rest err-mssg-spec))))
           (t (merror "defmfun1::mk-arg-check: Unrecognized arg-class ~M" arg-class)))))
-
 
 (defun mk-arg-check2 (arg-class spec-name-and-args err-mssg-spec body)
   (let* ((emsg (rest err-mssg-spec)))
@@ -322,13 +318,14 @@ the hash table *mext-functions-table*."
                    (setf (gethash spec-name *arg-check-mssg-table*) (list (car err-mssg-spec) (rest err-mssg-spec))))
                  (t (maxima::merror "defmfun1::mk-arg-check: Unrecognized arg-class ~M" arg-class))))))
 
+;; arg spec names that are lists are actually (name number-of-parameters-passed-to-check-func)
+;; eg. see :int-range
 (defun mk-arg-check (spec-name err-mssg-spec body)
   (unless (listp err-mssg-spec) (setf err-mssg-spec (list err-mssg-spec)))
-  (if (listp spec-name)
-;      (progn 
-        (mk-arg-check2 'arg spec-name (cons "Argument '~a'" err-mssg-spec) body)
-;      (progn
-        (mk-arg-check1 'arg spec-name (cons "Argument '~a'" err-mssg-spec) body)))
+  (let ((err-mssg-spec-1 (cons "Argument '~a'" err-mssg-spec)))
+    (if (listp spec-name)
+        (mk-arg-check2 'arg spec-name err-mssg-spec-1 body)
+      (mk-arg-check1 'arg spec-name err-mssg-spec-1 body))))
 
 (defun mk-opt-check (spec-name err-mssg-spec body)
   (unless (listp err-mssg-spec) (setf err-mssg-spec (list err-mssg-spec)))

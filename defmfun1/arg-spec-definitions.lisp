@@ -16,6 +16,9 @@
 ;;; happens may be controlled for each function at run time by setting
 ;;; attributes.
 
+;;; TODO add check during macro expansion for the error
+;;; (:test var), when we should have (var :test)
+
 (defvar *arg-spec-definitions* `(
                      (:function "a function"
                                 (not (numberp e))) ; a bit fuzzy what this would mean
@@ -40,6 +43,9 @@
                      (:number-listof ("a list of numbers")
                                      (and (maxima::$listp e)
                                           (every #'(lambda (x) (numberp x)) (cdr e))))
+                     (:can-float "an expression that can be converted to a float"
+;                                (and (setf e (maxima::$float e)) (numberp e)))
+                                (numberp ($float e)))
                      (:complex-number  "a complex number" (complex_number_p e)) ; from ellipt.lisp
                      (:non-neg-number "a non-negative number"
                       (and (numberp e) (>= e 0)))
@@ -54,9 +60,10 @@
                                                          (cdr e)))))
                      ((:int-range 2) "an integer between ~a and ~a"
                        int-range-check)
-                     (:uint-64 ,(format nil (concatenate 'string "equivalent to an unsigned 64 bit integer~%"
-                           " (that is, an integer between 0 and 2 to the power 64)~%"
-                          "(We need to modify the doc system so we can use notation for powers in arg check strings.~%"))
+                     (:uint-64 ,(format nil (concatenate 'string 
+                         "equivalent to an unsigned 64 bit integer~%"
+                      " (that is, an integer between 0 and 2 to the power 64)~%"
+            "(We need to modify the doc system so we can use notation for powers in arg check strings.~%"))
                       (and (integerp e) (>= e 0) (< e 18446744073709551616)))
                      (:not-zero "an expression that is not zero"
                       (not (maxima::zerop1 e)))
