@@ -69,6 +69,8 @@
        (append (sixth r1) (rest (sixth r2)))))
 
 (defun combine-real-imag-results (r1 r2)
+; (format t "~a~%" (maxima::$sconcat r1))
+; (format t "~a~%" r1)
   (cond ((and (consp r1) (consp r2))
          (list '(maxima::mlist maxima::simp) (maxima::simplify `((maxima::mplus) ,(second r1) ,(second r2)))
                (+ (third r1) (third r2)) (+ (fourth r1) (fourth r2))

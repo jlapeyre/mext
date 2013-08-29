@@ -261,21 +261,6 @@
  and the attribute `match_form' is set, and the attribute `nowarn' is set, then rather than signaling an error, the unevaluated form
  is returned and no warning message is printed.")
 
-;; we can get rid  of these
-;; (defmfun1 ($set_match_form :doc) ((names :or-string-symbol-or-listof :ensure-list))
-;;   "Set 'match_form' attribute for function with symbol <name>. This
-;;    prints a warning message if the argument check fails, but returns the unevaluated form."
-;;   (loop for name in names do
-;;         (maxima-symbol-to-string name)
-;;         (defmfun1::set-match-form name)))
-
-;; (defmfun1 ($unset_match_form :doc) ((names :or-string-symbol-or-listof :ensure-list ))
-;;   "Unset 'match_form' attribute so that failed arg checks signal an error. This
-;;    attribute can be changed at runtime."
-;;   (loop for name in names do
-;;         (maxima-symbol-to-string name)
-;;         (defmfun1::unset-match-form name)))
-
 (max-doc::see-also-group '( "unset_match_form" "set_match_form" "set_nowarn" "unset_nowarn" "attributes"))
 
 ;; copied from translation of maxima code
