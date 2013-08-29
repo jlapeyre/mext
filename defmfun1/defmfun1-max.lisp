@@ -28,9 +28,19 @@
 ; Could have used destructuring bind for parts of the parameter specification. I can't
 ; recall why I didn't.
 
-(defun defmfun1-write-let-bindings (name nargs all-args supplied-p-hash rest)
+;; Here we write the bindings in the main `let*' wrapping the body of the function
+;; defmfun1-func-name and defmfun1-func-name are available to use in the body of the function.
+;; defmfun1-func-name is the name of the function
+;; defmfun1-func-call is the noun form of the function call
+;; defmfun1-func-call-args is the same, but just args
+;; For efficiency, these should perhaps only be optionally saved, if requested.
+;; Or better make some kind of macro that only writes them if needed.
+;; Also, we don't need all three of these. It could be rewritten.
+(defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest)
   `((,nargs 0) ; count args passed when calling
    (defmfun1-func-name ',name) ; save this name for echeck-arg macro below. Wasteful as most funcs never use it.
+   (defmfun1-func-call (cons (list ',name) ,args))
+   (defmfun1-func-call-args ,args)
    ,@(loop for n in all-args collect ; write default bindings for req and &optional
            (if (null (car n))
                (merror1 (intl:gettext "defmfun1: null argument name in definition of ~a.
@@ -142,8 +152,8 @@
           (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) 
             ,@doc-string
             ,@(when (eq defun-type 'defmspec) `((setf ,args (cdr ,args))))
-            (let* ,(defmfun1-write-let-bindings name nargs all-args supplied-p-hash rest)
-              (declare (ignorable defmfun1-func-name))
+            (let* ,(defmfun1-write-let-bindings name nargs args all-args supplied-p-hash rest)
+              (declare (ignorable defmfun1-func-name defmfun1-func-call defmfun1-func-call-args ))
               (declare (fixnum ,nargs))
               ,@declare-form ; moved out of body, because it must occur after parameter list
               (,@(if opt `(dbind (,opt-args ,restarg) (defmfun1::collect-opt-args ,args ,nreq))
@@ -167,13 +177,23 @@
  a function defined with defmfun1."
   `(funcall ,(defmfun1::get-check-func spec-name) ,arg))
 
-;; we need to write one of these has the function name supplied explicitly for
+;; We need to write one of these has the function name supplied explicitly for
 ;; use outside of a defmfun1 function.
+;; return-from does not work here because the block name is not evaluated.
+;; I can't think of a way to make this work without parsing the body of the
+;; function defined via defmfun1 and rewriting code. As of yet, I have not
+;; done any of this. A workaround is to write the return-from by hand
+;; in each function body.
+;; Hmmm, maybe a macrolet would work, but that is a lot of trouble.
 (ddefmacro echeck-arg (spec-name arg)
  "Check arg <arg> with <spec-name> and signal error with pretty message if check fails.
   For use within the body of a defmfun1 function."
   `(unless (funcall ,(defmfun1::get-check-func spec-name) ,arg)
-     (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name nil)))
+;     (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name nil)
+     (progn
+       (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args)
+       t))) ; return true if no error was signaled.
+;;     (return-from defmfun1-func-name defmfun1-func-call)))
 
 (defun mk-defmfun1-form (name args body)
   "Helper function for defmfun1-opt."

@@ -76,7 +76,8 @@
 (defmfun1 ($integer_string :doc) ((n :integer) &optional (base :or-radix-string 10) (pad :pos-int))
   (let ((fmt 
          (cond ((equal base "roman")
-                (echeck-arg :roman-integer n)
+                (when (echeck-arg :roman-integer n)
+                  (return-from $integer_string defmfun1-func-call))
                 "~@R")
                ((equal base "ordinal") "~:R")
                ((equal base "cardinal") "~R")

@@ -198,8 +198,18 @@ the hash table *mext-functions-table*."
 (defun error-or-message (name mssg)
   "name is function name. mssg is error message. print message,
    but do not signal an error if match_form is set."
-  (if (is-match-form name) (unless (is-nowarn name) (format t (concatenate 'string "Warning: " mssg)))
-      (maxima::merror1 mssg)))
+  (cond ((is-match-form name) 
+         (unless (is-nowarn name) (format t (concatenate 'string "Warning: " mssg)))
+         t)  ; return true here so that the calling function knows not to exit.
+        (t
+         (maxima::merror1 mssg)
+         nil)))
+
+;; (defun error-or-message (name mssg)
+;;   "name is function name. mssg is error message. print message,
+;;    but do not signal an error if match_form is set."
+;;   (if (is-match-form name) (unless (is-nowarn name) (format t (concatenate 'string "Warning: " mssg)))
+;;       (maxima::merror1 mssg)))
 
 (maxima::ddefun get-check-func (spec-name)
   "Return list defining a lambda function for argument check
@@ -380,10 +390,12 @@ the hash table *mext-functions-table*."
            (spstr (if spec-args (apply #'format (append (list nil specl-str) spec-args))
                                           specl-str))
            (call-str (format-call name call)))
-      (if call
-          (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
+      (cond (call
+             (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
                                        arg-list1 spstr  call-str))
-          (maxima::merror1 (format nil "~a ~? is ~a." pre-name (car espec)  arg-list1 spstr)))))))
+             nil)
+            (t
+             (maxima::merror1 (format nil "~a ~? is ~a." pre-name (car espec)  arg-list1 spstr))))))))
           
 
 (mk-signal-error signal-arg-error *arg-check-mssg-table*)
