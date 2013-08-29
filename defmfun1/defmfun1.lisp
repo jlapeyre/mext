@@ -84,6 +84,15 @@ symbols) being attribute names; and values being the value of the attribute, typ
                          (push k ol )) oh)
               ol))))
 
+(defun get-funcs-with-attribute (attr)
+ "Return a list of all functions with attribute `attr'."
+  (let ((all-funcs (get-hash-keys defmfun1::*attributes-table*))
+        (good-funcs))
+    (dolist (f all-funcs)
+      (when (member attr (get-attributes f))
+        (push f good-funcs)))
+    good-funcs))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar *mext-package* nil)

@@ -219,35 +219,13 @@
   :desc ("Returns a list of the `attributes' of function " :argdot "name")
   (cons '(mlist simp) (defmfun1::get-attributes name)))
 
-;; (defmfun1 ($attributes :doc) ((name :or-string-symbol) )
-;;   :desc ("Returns a list of the `attributes' of function " :argdot "name")
-;;  (maxima-symbol-to-string name)
-;;  (let ((oh (gethash name defmfun1::*attributes-table*)))
-;;    (cons '(mlist simp)
-;;          (when oh (let (ol)  ; (cadr v) to get rid of quote
-;;                   (maphash (lambda (k v)
-;;                              (declare (ignore v))
-;;                              (push k ol )) oh)
-;;                   ol)))))
-
 (defmfun1 ($attributes_find :doc) ( &optional (attribute :or-string-symbol))
   :desc (
-"Currently partly broken. Return a list of all functions for which the attribute "
- :arg "attribute" " is set, regardless of it's value.")
-  (format t "attr: ~a~%" attribute)
- (let* ((funcs (get-hash-keys defmfun1::*attributes-table*)))
-   (cond (attribute
-          (cons '(mlist simp) (loop :for f :in funcs :collect
-                (gethash attribute (gethash f defmfun1::*attributes-table*)))))
-         (t
-          (cons '(mlist simp)
-                (loop :for f :in funcs :collect
-                      (let* ((h (gethash f defmfun1::*attributes-table*))
-                             (as (get-hash-keys h)))
-                        (append  `((mlist simp) ,f)
-                              (loop :for a :in as :collect
-                                    (list '(mlist simp) a (gethash a h)))))))))))
-
+"Return a list of all functions for which the attribute "
+ :arg "attribute" " is set, regardless of it's value."
+ " Some attributes are " :varcomma "match_form" :varcomma "hold_all"
+ " and " :vardot "nowarn" )
+  (cons '(mlist simp) (sort (defmfun1::get-funcs-with-attribute attribute) #'string-lessp)))
 
 ;; why do functions defined by this macro return false ?
 (defmacro mk-maxima-attribute (max-attribute attribute doc-string)

@@ -17,7 +17,3 @@ table(sin(x),[x,0,2*%pi,%pi/4]);
 (errcatch( table(i) ), (is (error_code = args_too_few)));
 true$
 */
-
-
-
-
