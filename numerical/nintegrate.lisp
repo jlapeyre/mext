@@ -163,9 +163,9 @@ This routine just calls `solve' and has some bugs. If no satisfying numbers are 
 (defmfun1:set-mext-package "numerical")
 
 (defmfun1 ($nintegrate :doc) ( expr (varspec :list) &optional (singlist :list) &opt 
-          ($words t :bool) ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number)
-          ($epsrel 1d-8 :non-neg-number) ; ($method "automatic" :string))b
-          ($calls nil :bool))
+          ($calls nil :bool) ($words t :bool) 
+          ($info :bool t) ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number)
+          ($epsrel 1d-8 :non-neg-number)) ; ($method "automatic" :string))
   :desc ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
   :arg "varspec" " as ["  :argcomma "var" :argcomma "lo" :arg "hi" "]."
   " Only one-dimensional integrals are implemented."
@@ -188,8 +188,10 @@ This routine just calls `solve' and has some bugs. If no satisfying numbers are 
         (if (not $calls)
             (setf res (butlast res)))
         (cond ((consp res)
-               (when $words (setf (nth 4 res) (nth (nth 4 res) nint::*quad-error-codes*)))
-               res)
+               (cond ($info
+                       (when $words (setf (nth 4 res) (nth (nth 4 res) nint::*quad-error-codes*)))
+                       res)
+                     (t (second res))))
               (t nil))))))
 
 (max-doc:see-also "nintegrate" '("quad_qags" "quad_qagi" "quad_qagp"))

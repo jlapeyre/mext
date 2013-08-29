@@ -181,3 +181,6 @@ for some packages, and may miss some functions.")
           (sort (copy-list (gethash name defmfun1::*mext-functions-table*)) #'string-lessp))))
 
 (max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear" "mext_list_package"))
+
+(max-doc:see-also-group '("chdir" "pwd" "popdir" "updir" "dirstack" "list_directory"))
+

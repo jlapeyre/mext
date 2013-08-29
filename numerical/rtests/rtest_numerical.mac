@@ -1,5 +1,5 @@
 /*
-  Some examples are in src/numerical/quadpack.lisp
+  Some examples are in src/numerical/slatec/quadpack.lisp
 */
 
 /* close enough tests */
