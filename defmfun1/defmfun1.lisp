@@ -80,8 +80,8 @@ symbols) being attribute names; and values being the value of the attribute, typ
  (let ((oh (gethash name defmfun1::*attributes-table*)))
    (when oh (let (ol)  ; (cadr v) to get rid of quote
               (maphash (lambda (k v)
-                         (declare (ignore v))
-                         (push k ol )) oh)
+;                         (declare (ignore v))
+                         (when v (push k ol ))) oh)
               ol))))
 
 (defun get-funcs-with-attribute (attr)

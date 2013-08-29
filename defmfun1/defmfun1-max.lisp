@@ -222,7 +222,7 @@
 (defmfun1 ($attributes_find :doc) ( &optional (attribute :or-string-symbol))
   :desc (
 "Return a list of all functions for which the attribute "
- :arg "attribute" " is set, regardless of it's value."
+ :arg "attribute" " is set."
  " Some attributes are " :varcomma "match_form" :varcomma "hold_all"
  " and " :vardot "nowarn" )
   (cons '(mlist simp) (sort (defmfun1::get-funcs-with-attribute attribute) #'string-lessp)))
