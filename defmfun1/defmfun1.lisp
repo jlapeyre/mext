@@ -45,11 +45,46 @@
            "This hash-table stores option defintions for functions defined via defmfun1.
    The data in the table is only used for online documentation.")
 
+;;; ATTRIBUTES ;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Two levels of hash tables maybe not best implementation.
+;;; First step is to make an API to attributes.
+
 (ddefvar *attributes-table* (make-hash-table :test 'equal)
-  "This hash-table stores 'attribute' definitons for functions defined via defmfun1.
-   Currently, information on when to evaluate the arguments is stored here. 
-   I suppose ths could be specified in the lambda list, but it would probably be rather
-   cluttered.")
+"This hash-table stores 'attribute' definitons for functions defined via defmfun1.
+Keys are stringified function names; values are hash tables with: keys (maxima
+symbols) being attribute names; and values being the value of the attribute, typically
+`t' or `nil'.")
+
+(defun set-attribute (name att)
+  (setf name ($sconcat name))
+  (let ((nhash (get-or-make-subhash name *attributes-table*)))
+    (setf (gethash att nhash) t)))
+
+(defun unset-attribute (name att)
+  (setf name ($sconcat name))
+  (let ((nhash (get-or-make-subhash name *attributes-table*)))
+    (setf (gethash att nhash) nil)))
+
+;; does not yet distinguish between no attribute and nil
+(defun get-attribute (name att)
+  (setf name ($sconcat name))
+  (let ((nhash (gethash name *attributes-table*)))
+    (if nhash
+        (gethash att nhash)
+      nil)))
+
+(defun get-attributes (name)
+ "Return a lisp list of all attributes set for `name'."
+ (maxima::maxima-symbol-to-string name)
+ (let ((oh (gethash name defmfun1::*attributes-table*)))
+   (when oh (let (ol)  ; (cadr v) to get rid of quote
+              (maphash (lambda (k v)
+                         (declare (ignore v))
+                         (push k ol )) oh)
+              ol))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar *mext-package* nil)
 
@@ -79,15 +114,15 @@ the hash table *mext-functions-table*."
   (setf name (maxima::$sconcat name))
   (gethash name *mext-package-table*))
 
-
 (maxima::ddefun set-hold-all (name)
   "Set the $hold_all attribute for a defmfun1 function. The macro will expand to
    a defmspec, so that when the maxima function is called, the args are not evaluated.
    We convert name from a symbol to a string. This will cause conflict problems eventually,
    but using symbols now is not practical."
-  (setf name ($sconcat name))
-  (let ((nhash (get-or-make-subhash name *attributes-table*)))
-    (setf (gethash '$hold_all nhash) t)))
+  (set-attribute name 'maxima::$hold_all))
+;  (setf name ($sconcat name))
+;  (let ((nhash (get-or-make-subhash name *attributes-table*)))
+;    (setf (gethash 'maxima::$hold_all nhash) t)))
 
 (defmacro mk-attribute (attribute max-attribute)
  "Make accessor and query functions for an attribute. set- , unset- , is- ."
@@ -95,25 +130,30 @@ the hash table *mext-functions-table*."
  (setf attribute (string-upcase attribute))
   `(progn 
      (defun ,(intern (concatenate 'string "SET-" attribute)) (name)
-       (setf name ($sconcat name))
-       (let ((nhash (get-or-make-subhash name *attributes-table*)))
-         (setf (gethash ',max-attribute nhash) t)))
+       (set-attribute name ',max-attribute))
+;       (setf name ($sconcat name))
+;       (let ((nhash (get-or-make-subhash name *attributes-table*)))
+;         (setf (gethash ',max-attribute nhash) t)))
      (defun ,(intern (concatenate 'string "UNSET-" attribute)) (name)
-       (setf name ($sconcat name))
-       (let ((nhash (get-or-make-subhash name *attributes-table*)))
-         (setf (gethash ',max-attribute nhash) nil)))
+       (unset-attribute name ',max-attribute))
+;       (setf name ($sconcat name))
+;       (let ((nhash (get-or-make-subhash name *attributes-table*)))
+;         (setf (gethash ',max-attribute nhash) nil)))
      (defun ,(intern (concatenate 'string "IS-" attribute)) (name)
-       (setf name ($sconcat name))
-       (let ((nhash (get-or-make-subhash name *attributes-table*)))
-         (gethash ',max-attribute nhash)))))
+       (get-attribute name ',max-attribute))))
+;       (setf name ($sconcat name))
+;       (let ((nhash (get-or-make-subhash name *attributes-table*)))
+;         (gethash ',max-attribute nhash)))))
 
-(mk-attribute nowarn $nowarn)
-(mk-attribute match-form $match_form)
+;; why do we not do this for set-hold-all ?
+(mk-attribute nowarn maxima::$nowarn)
+(mk-attribute match-form maxima::$match_form)
 
 (defun are-some-args-held (name)
-  (setf name ($sconcat name))
-  (let ((nhash (get-or-make-subhash name *attributes-table*)))
-    (gethash '$hold_all nhash)))
+  (get-attribute name 'maxima::$hold_all))
+;  (setf name ($sconcat name))
+;  (let ((nhash (get-or-make-subhash name *attributes-table*)))
+;    (gethash 'maxima::$hold_all nhash)))
 
 (ddefvar *arg-type-list*
   '(:req :optional :aux :rest :opt)

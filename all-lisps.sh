@@ -13,12 +13,15 @@
 # lisp implementations. Allegro worked with an earlier version
 # of this software, as well.
 
-maximas="smaxima smaxima-30 gmaxima gmaxima-30 clmaxima emaxima cmumaxima ccmaxima ccmaxima-30"
-#maximas="smaxima-30"
+#maximas="smaxima smaxima-30 gmaxima gmaxima-30 clmaxima emaxima cmumaxima ccmaxima ccmaxima-30"
+maximas="smaxima-30"
 #maximas="smaxima"
 
-#build_package_script="build_essential.mac"
-build_package_script="buildall1.mac"
+build_package_script="build_essential.mac"
+#build_package_script="buildall1.mac"
+
+#test_package_script="testall1.mac"
+test_package_script="test_essential.mac"
 
 # Build just the mext_system
 # Note that if mext system has already been loade, eg in your startup
@@ -55,7 +58,7 @@ test_mext_packages () {
     for maxima in $maximas
     do
       echo Testing packages for $maxima
-      $maxima -b testall1.mac &> logfiles/$maxima.testlog
+      $maxima -b $test_package_script &> logfiles/$maxima.testlog
     done
 }
 

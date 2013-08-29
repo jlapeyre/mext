@@ -1,3 +1,6 @@
+first(attributes('table))$
+'hold_all;
+
 table(0,[3]);
 [0,0,0]$
 
