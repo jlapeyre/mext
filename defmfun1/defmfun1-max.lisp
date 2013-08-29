@@ -138,7 +138,8 @@
           (defmfun1::save-lambda-list-etc ',name ',arg-specs)
           (defmfun1::save-preprocess-specs ',name ',pp-specs)
 ;          (defmfun1:record-mext-package ',name defmfun1::*mext-package*) ; move to add-doc-entry
-          (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) ; Here is the function definition
+          ; Here is the function definition.
+          (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) 
             ,@doc-string
             ,@(when (eq defun-type 'defmspec) `((setf ,args (cdr ,args))))
             (let* ,(defmfun1-write-let-bindings name nargs all-args supplied-p-hash rest)
