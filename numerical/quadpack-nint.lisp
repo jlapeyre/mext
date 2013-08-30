@@ -6,7 +6,7 @@
 
 (defmfun1:set-file-and-package "quadpack-nint.lisp" "numerical")
 
-(defmfun1 ($mquad_qags :doc) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) &opt
+(defmfun1 ($mquad_qags :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) &opt
                                   (($epsrel epsrel) 1e-8 :to-float) 
                                   (($limit limit) 200 :non-neg-int) (($epsabs epsabs) 0.0 :to-float))
   :desc ("This is an interface to qags that is modified from " :emrefdot "quad_qags")
@@ -23,7 +23,7 @@
 			  limit lenw 0 iwork work)
 	  (declare (ignore junk z-a z-b z-epsabs z-epsrel z-limit z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-      (error () (defmfun1-error-final "Exception. Probably a floating-point exception")))))
+      (error () (defmfun1-error-final "Exception. Probably a floating-point exception" t)))))
 
 (defmfun1 ($mquad_qagi :doc) (fun (var :or-symbol-subvar) a b &opt
 		      (($epsrel epsrel) 1e-8 :to-float) (($limit limit) 200 :non-neg-int) 

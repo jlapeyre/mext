@@ -177,5 +177,15 @@ errcatch([dtest9('cat,match->false)])$
 dtest9(111,222,match->true)$
 'dtest9(111, 222, Rule(match, true));
 
+/* dtest10 takes one argument. But checking for number of args is disabled. */
+dtest10(1)$
+1;
+
+dtest10()$
+false;
+
+dtest10(3,4)$
+3;
+
 kill(extra);
 done$

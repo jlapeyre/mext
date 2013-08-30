@@ -65,7 +65,6 @@
 ;;; ATTRIBUTES ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Two levels of hash tables maybe not best implementation.
-;;; First step is to make an API to attributes.
 
 (ddefvar *attributes-table* (make-hash-table :test 'equal)
 "This hash-table stores 'attribute' definitons for functions defined via defmfun1.
@@ -154,9 +153,6 @@ the hash table *mext-functions-table*."
    We convert name from a symbol to a string. This will cause conflict problems eventually,
    but using symbols now is not practical."
   (set-attribute name 'maxima::$hold_all))
-;  (setf name ($sconcat name))
-;  (let ((nhash (get-or-make-subhash name *attributes-table*)))
-;    (setf (gethash 'maxima::$hold_all nhash) t)))
 
 (defmacro mk-attribute (attribute max-attribute)
  "Make accessor and query functions for an attribute. set- , unset- , is- ."
@@ -406,8 +402,6 @@ the hash table *mext-functions-table*."
 
 (defun signal-rest-arg-error (spec-name arg-list name call)
   (let* ((espec (gethash spec-name *arg-check-mssg-table*))
-;;         (arg-list1 (list (format nil "[~{~a~^,~}]" (mapcar #'$sconcat (car arg-list)))))
-;;         (arg-list1 (list (format nil "[~{~a~^,~}]" (format-args (car arglist)))))
          (arg-list1 (list (format-rest-args (car arg-list))))
          (specl-str (not-comma-separated-english (cadr espec))))
     (maxima::merror1 (format nil "~a One of ~? is ~a in ~a." (err-prefix name) (car espec)
@@ -476,7 +470,6 @@ the hash table *mext-functions-table*."
   This hash table is only used to provide information to the user
   via foptions()."
     (let ((sname ($sconcat name)))
-;      (format t "Setting default options for function ~s~%" sname)
       (unless (gethash sname *option-table*) ; put this here to avoid possible overwrite. but no difference
         (let ((optt (make-hash-table)))
           (fill-hash-from-list optt opts)
@@ -496,12 +489,21 @@ the hash table *mext-functions-table*."
       (setf (getf arglist argt) (nreverse (getf arglist argt))))
     arglist))
 
-(defun parse-args-err (errcode name mssg arg)
-  (let* ((s1 (format nil "defmfun1: Error expanding function definition for ~s. " name))
-         (s2 (format nil "Error in argument spec ~s.~%" arg))
-         (s3 (format nil " In source file ~a, package ~a." (doc-system:get-source-file-name) (doc-system:get-source-package)))
-         (emssg (concatenate 'string s1 s2 mssg s3)))
-  (maxima::merror1 errcode emssg)))
+(defun expansion-error-fname (fname)
+  (format nil "defmfun1: Error expanding function definition for ~a." 
+          (maxima::maybe-invert-string-case (format nil "~a" fname))))
+
+(defun file-package-string ()
+  (format nil "In source file ~a, package ~a." (doc-system:get-source-file-name) (doc-system:get-source-package)))
+
+(defun defmfun1-expand-error (errcode fname mssg)
+  (maxima::merror1 errcode (format nil "~a ~a~%~a"
+    (expansion-error-fname fname) mssg (file-package-string))))
+
+(defun parse-args-err (errcode fname mssg arg)
+  (defmfun1-expand-error errcode fname
+    (format nil "Error in argument spec ~s.~%~a"
+   (maxima::maybe-invert-string-case (format nil "~s" arg)) mssg)))
 
 (maxima::ddefun parse-args (name arglist)
  "At macro expansion time of defmfun1, this function is called and
@@ -519,6 +521,9 @@ the hash table *mext-functions-table*."
           (when (keyword-p (first arg))
             (parse-args-err 'maxima::$defmfun1_malformed_argspec name 
                             "First element is a keyword, variable name expected." arg))
+          (when (consp (first arg))
+            (parse-args-err 'maxima::$defmfun1_malformed_argspec name 
+                            "First element is a list, variable name expected." arg))
           (let
               ((nospecs (remove-if #'(lambda(x) (or (member x *arg-spec-keywords*) (member x *pp-spec-types*)
                                                     (and (listp x) (keyword-p (first x))

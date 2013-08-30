@@ -84,3 +84,7 @@
   (format t "match-opt ~a~%" match-opt)
   (format t "match-supplied ~a~%" match-supplied-p)
   (cons '(mlist) (list x match-opt match-supplied-p)))
+
+;; Disable checking for number of arguments passed.
+(defmfun1 ($dtest10 :no-nargs) (x)
+  x)

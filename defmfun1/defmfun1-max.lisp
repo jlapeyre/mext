@@ -109,12 +109,19 @@
 ;; Another option would be to move it outside the backquote, so that it is generated at
 ;; compile-time, and save it somehow to disk. But that seems much more complicated, and I
 ;; can't see a benefit now. Time required to load does not seem to be affected at all.
+;; TODO look for bad directives
 (defmacro defmfun1 (name args &body body &aux directives have-match)
-  (when (listp name) ; TODO look for bad directives
-    (setf directives (cdr name)) (setf name (car name))
-    (when (member :match directives)
-      (setf have-match t)
-      (setf args (append args `(&opt (($match match-opt) nil match-supplied-p) )))))
+  (when (listp name) 
+    (setf directives (cdr name)) (setf name (car name)))
+  (when (or (not (symbolp name)) (null name))
+    (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_name_not_symbol
+      name "The first argument, the function name, is not a non-null symbol."))
+  (when (not (and (consp args) (listp args)))
+    (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_missing_arg_list
+      name "No argument list found."))
+  (when (member :match directives)
+    (setf have-match t)
+    (setf args (append args `(&opt (($match match-opt) nil match-supplied-p) ))))
   (dbind (arg-list arg-specs pp-specs supplied-p-hash) (defmfun1::group-and-parse-args name args)
    (dbind (req optional aux rest opt) (defmfun1::rem-keys-arg-list arg-list)
     (let* ((args (gensym "args-"))
@@ -160,17 +167,17 @@
               (declare (fixnum ,nargs))
               ,@declare-form ; moved out of body, because it must occur after parameter list
               (,@(if opt `(dbind (,opt-args ,restarg) (defmfun1::collect-opt-args ,args ,nreq))
-                      `(let ((,restarg ,args))))
-;;              (dbind ,(if opt `(,opt-args ,restarg) `(,restarg))
-;;                ,(if opt `(defmfun1::collect-opt-args ,args ,nreq) `(list ,args)) ; filter options from other args
+                      `(let ((,restarg ,args)))) ; filter options from other args
                (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
-                   ; try moving opt assignments before normal args
                    ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
                    ,(defmfun1-write-assignments name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h have-match)
                    ,@(when rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
-                   (when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match))
-                   ,@(when (null rest) `((if ,restarg ,(defmfun1::narg-error-or-message 
-                                                       name args restarg nargs nreq nreqo rest have-match))))
+;                   (when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match))
+                   ,(when (not (member :no-nargs directives))
+                    `(when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match)))
+                   ,@(when (and (null rest) (not (member :no-nargs directives)))
+                       `((if ,restarg ,(defmfun1::narg-error-or-message 
+                                         name args restarg nargs nreq nreqo rest have-match))))
                    ,@(defmfun1-write-rest-assignments name args rest reqo-spec have-match)
 ;   We moved this above so that binding for match-opt are available for arg checks.
 ;                   ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
@@ -209,28 +216,36 @@
 ;; The $funcname is supplied for return-from, which needs a
 ;; lexically scoped name. This makes defmfun1-func-name superfluous, so we should
 ;; get rid of it.
-(ddefmacro echeck-arg (func-name spec-name arg)
- "Check arg <arg> with <spec-name> and signal error with pretty message if check fails.
-  For use within the body of a defmfun1 function."
+
+;; The following three macros take an argument have-match. It must
+;; only be true when they are called from within a defmfun1 function
+;; that had the directive :match. Otherwise the variables referenced
+;; will not be bound. If have-match is true then the match_form attribute
+;; may be overridden.
+
+(ddefmacro echeck-arg (func-name spec-name arg &optional have-match)
+ "check arg <arg> with <spec-name> and signal error with pretty message if check fails.
+  for use within the body of a defmfun1 function."
   `(unless (funcall ,(defmfun1::get-check-func spec-name) ,arg)
      (progn
-       (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args nil nil)
+       (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args
+         ,@(defmfun1:: write-force-match-code have-match))
        (return-from ,func-name defmfun1-func-call))))
 
-(defmacro defmfun1-error-final (mssg)
- "Used at an exit point of a defmfun1 body. Does not call return-from"
+(defmacro defmfun1-error-final (mssg &optional have-match)
+ "used at an exit point of a defmfun1 body. does not call return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
             (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
-                    ($sconcat defmfun1-func-call)) nil nil)
+              ($sconcat defmfun1-func-call)) ,@(defmfun1:: write-force-match-code have-match))
           defmfun1-func-call))
 
-(defmacro defmfun1-error-return (funcname mssg)
- "Used to return from defmfun1 body with error message and return-from"
+(defmacro defmfun1-error-return (funcname mssg &optional have-match)
+ "used to return from defmfun1 body with error message and return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
             (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
-                    ($sconcat defmfun1-func-call)) nil nil)
+                    ($sconcat defmfun1-func-call))
+            ,@(defmfun1:: write-force-match-code have-match))            
           (return-from ,funcname defmfun1-func-call)))
-
 
 (defun mk-defmfun1-form (name args body)
   "Helper function for defmfun1-opt."
