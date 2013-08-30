@@ -214,7 +214,7 @@ the hash table *mext-functions-table*."
 ;; error-or-message is called by
 ;;    signal-arg-error, signal-option-arg-error, narg-error-message (via narg-error-or-message),
 ;;    defmfun1-error-final, defmfun1-error-return
-(defun error-or-message (name mssg)
+(defun error-or-message (name mssg force-match match-val)
   "name is function name. mssg is error message. print message,
    but do not signal an error if match_form is set."
   (cond ((is-match-form name) 
@@ -427,7 +427,7 @@ the hash table *mext-functions-table*."
               (call-str (format-call name call)))
          (cond (call
                 (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
-                                               arg-list1 spstr  call-str))
+                                               arg-list1 spstr  call-str) nil nil)
                 nil)
                (t
                 (maxima::merror1 (format nil "~a ~? is ~a." pre-name (car espec)  arg-list1 spstr))))))))
@@ -653,4 +653,5 @@ the hash table *mext-functions-table*."
          (str-expected
           (format-nargs-expected nmin nmax restp t)))
 ;;         (err-code (compute-narg-error-code restarg nargs nmin nmax restp))) maybe restore this later
-    (error-or-message name (format nil "~a ~a ~a; ~a expected.~%" (err-prefix sname) sname str-narg str-expected))))
+    (error-or-message name (format nil "~a ~a ~a; ~a expected.~%" (err-prefix sname) sname str-narg str-expected) 
+                      nil nil)))

@@ -218,14 +218,14 @@
  "Used at an exit point of a defmfun1 body. Does not call return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
             (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
-                    ($sconcat defmfun1-func-call)))
+                    ($sconcat defmfun1-func-call)) nil nil)
           defmfun1-func-call))
 
 (defmacro defmfun1-error-return (funcname mssg)
  "Used to return from defmfun1 body with error message and return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
             (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
-                    ($sconcat defmfun1-func-call)))
+                    ($sconcat defmfun1-func-call)) nil nil)
           (return-from ,funcname defmfun1-func-call)))
 
 
