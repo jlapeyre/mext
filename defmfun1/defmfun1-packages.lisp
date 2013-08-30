@@ -34,6 +34,7 @@
     (:use :common-lisp :gjl.lisp-util)
     (:import-from :maxima :$sconcat :merror)
     (:export :rule :set-mext-package :set-file-and-package :get-mext-package-for-function
+             :get-filename-for-function
              :record-mext-package
              :set-hold-all)))
 

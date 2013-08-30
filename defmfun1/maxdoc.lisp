@@ -668,8 +668,9 @@ must be keyword,value pairs for the doc entry struct."
                      (format nil ": ~a~%" (entry-protocol e)))
                  (if (null (entry-section e)) ""
                    (format nil "    Section: ~a~%" (entry-section e)))
-                 (let ((pack (defmfun1:get-mext-package-for-function name)))
-                   (if pack (format nil "    mext package: ~a~%" pack) ""))
+                 (let ((pack (defmfun1:get-mext-package-for-function name))
+                       (fname (defmfun1:get-filename-for-function name)))
+                   (format nil "    mext package: ~a; filename: ~a~%" pack fname))
                  (format nil "~%")
                  (if (null (entry-default-value e))  ""
                    (format nil "~a.~%"

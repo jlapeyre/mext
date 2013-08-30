@@ -114,13 +114,17 @@ symbols) being attribute names; and values being the value of the attribute, typ
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(ddefvar *mext-package-table* (make-hash-table :test 'equal)
-  "This hash-table stores the name of the mext package in which a function
-   is defined.")
-
 (ddefvar *mext-functions-table* (make-hash-table :test 'equal)
   "This hash-table stores a list of the user functions defined 
 in a  mext package.")
+
+(ddefvar *mext-package-table* (make-hash-table :test 'equal)
+ "This hash-table stores the name of the mext package in which a function
+   is defined.")
+
+(ddefvar *mext-filename-table* (make-hash-table :test 'equal)
+ "This hash-table stores the name of the source file in which a function
+  is defined.")
 
 (defun record-mext-package (name package)
  "Record fact that string `name' is in mext packge `package'.
@@ -131,11 +135,18 @@ the hash table *mext-functions-table*."
  (when package
    (setf name (maxima::$sconcat name))
    (setf (gethash name *mext-package-table*) package)
+   (setf (gethash name *mext-filename-table*) (doc-system:get-source-file-name))
    (push name (gethash package *mext-functions-table*))))
 
 (defun get-mext-package-for-function (name)
   (setf name (maxima::$sconcat name))
-  (gethash name *mext-package-table*))
+  (let ((pack (gethash name *mext-package-table*)))
+    (if pack pack "none")))
+
+(defun get-filename-for-function (name)
+  (setf name (maxima::$sconcat name))
+  (let ((fname (gethash name *mext-filename-table*)))
+    (if fname fname "none")))
 
 (maxima::ddefun set-hold-all (name)
   "Set the $hold_all attribute for a defmfun1 function. The macro will expand to
