@@ -162,7 +162,7 @@ dtest9('cat)$
 'dtest9(cat);
 
 dtest9('girrafe,match->true)$
-'dtest9(girrafe, Rule(match, true))
+'dtest9(girrafe, Rule(match, true));
 
 errcatch([dtest9('cat,match->false)])$
 [];

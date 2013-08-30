@@ -240,6 +240,11 @@ the hash table *mext-functions-table*."
                (maxima::merror "defmfun1::get-check-func: No code registered for check type ~a~%" spec-name))))
         (t (maxima::merror (intl:gettext "defmfun1::get-check-func: spec-name ~a is not a list or keyword") spec-name))))
 
+
+(defun write-force-match-code (have-match)
+  (if have-match `(maxima::match-supplied-p maxima::match-opt)
+                             `(nil nil)))
+
 ;; This function generates a bit of code that is inserted into the
 ;; body of a defmfun1 function.  The code tests the value of an
 ;; argument at run-time. The test spec may also specifiy that the argument
@@ -248,8 +253,7 @@ the hash table *mext-functions-table*."
 ;; defmfun1-write-rest-assignments, 
 (defun check-and-error (test arg name args have-match)
   (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
-         (force-match-code (if have-match `(maxima::match-supplied-p maxima::match-opt)
-                             `(nil nil)))
+         (force-match-code (write-force-match-code have-match))
          (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',name ,args ,@force-match-code))
          (sa `(,sa1 (return-from ,name (cons (list ',name) ,args)))))
     (if (gethash test *arg-check-preprocess-table*)
@@ -268,9 +272,10 @@ the hash table *mext-functions-table*."
 ;; This needs to be fixed.
 ;; check-and-error-option is called by defmfun1-write-opt-assignments.
 (defun check-and-error-option (tst name opt-name opt-var args have-match)
-  (let ((fc `(funcall ,(defmfun1::get-check-func (car tst)) maxima::val))
+  (let* ((fc `(funcall ,(defmfun1::get-check-func (car tst)) maxima::val))
+        (force-match-code (write-force-match-code have-match))
         (sc `((defmfun1::signal-option-arg-error
-                ',(car tst) (list maxima::val ',opt-name) ',name ,args nil nil)
+                ',(car tst) (list maxima::val ',opt-name) ',name ,args ,@force-match-code)
               (return-from ,name (cons (list ',name) ,args)))))
   (if (gethash (car tst) *opt-check-preprocess-table*)
       `(let ((res ,fc))
@@ -281,9 +286,10 @@ the hash table *mext-functions-table*."
 
 ;; Write a code snippet to insert in body of defmfun1 function
 (defun narg-error-or-message (name args restarg nargs nreq nreqo rest have-match)
-  `(progn (defmfun1::narg-error-message  ',name ,restarg
-                                 ,nargs ,nreq ,nreqo ,(not (null rest)))
-          (return-from ,name (cons (list ',name) ,args))))
+  (let ((force-match-code (write-force-match-code have-match)))
+    `(progn (defmfun1::narg-error-message  ',name ,restarg
+              ,nargs ,nreq ,nreqo ,(not (null rest)) ,@force-match-code)
+            (return-from ,name (cons (list ',name) ,args)))))
 
 (maxima::ddefun format-protocol (sname req optional rest)
   "This formats the protocol (lambda list) of a defmfun1 form as a string for printing
@@ -648,7 +654,7 @@ the hash table *mext-functions-table*."
         ((> nargs nmax)
          'maxima::$args_too_many)))
 
-(defun narg-error-message (name restarg nargs nmin nmax restp)
+(defun narg-error-message (name restarg nargs nmin nmax restp force-match match-val)
   "Call merror1 with message about incorrect number of arguments."
   (declare (fixnum nargs nmin nmax))
   (setf nargs (the fixnum (+ nargs (length restarg))))
@@ -658,4 +664,4 @@ the hash table *mext-functions-table*."
           (format-nargs-expected nmin nmax restp t)))
 ;;         (err-code (compute-narg-error-code restarg nargs nmin nmax restp))) maybe restore this later
     (error-or-message name (format nil "~a ~a ~a; ~a expected.~%" (err-prefix sname) sname str-narg str-expected) 
-                      nil nil)))
+                      force-match match-val)))
