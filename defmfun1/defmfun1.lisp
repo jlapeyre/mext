@@ -575,6 +575,8 @@ the hash table *mext-functions-table*."
  "For passing rules from lisp code."
   `(list '(maxima::|$Rule| maxima::simp) ',rule ,val))
 
+;; removed nreverse before returning opts, because
+;; match-opt is the last opt, but we want it processed first.
 (maxima::ddefun collect-opt-args (rarg nmin)
   "At run time, filter parameters passed to a defmfun1 definition into option
   params and non-option params. Skipping searching through required arguments
@@ -585,7 +587,8 @@ the hash table *mext-functions-table*."
         (i 0 (1+ i))
         (opts)
         (nonopts))
-       ((null rarg1) (list (nreverse opts) (nreverse nonopts)))
+;       ((null rarg1) (list (nreverse opts) (nreverse nonopts)))
+       ((null rarg1) (list opts (nreverse nonopts)))
     (declare (fixnum i))
     (cond
       ((< i nmin) (push a nonopts)) ; for a bit of efficiency

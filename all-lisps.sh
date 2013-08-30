@@ -17,11 +17,11 @@
 maximas="smaxima"
 #maximas="smaxima-28"
 
-build_package_script="build_essential.mac"
-#build_package_script="buildall1.mac"
+#build_package_script="build_essential.mac"
+build_package_script="buildall1.mac"
 
-#test_package_script="testall1.mac"
-test_package_script="test_essential.mac"
+test_package_script="testall1.mac"
+#test_package_script="test_essential.mac"
 
 # Build just the mext_system
 # Note that if mext system has already been loade, eg in your startup

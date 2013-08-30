@@ -162,8 +162,7 @@
               (,@(if opt `(dbind (,opt-args ,restarg) (defmfun1::collect-opt-args ,args ,nreq))
                       `(let ((,restarg ,args))))
 ;;              (dbind ,(if opt `(,opt-args ,restarg) `(,restarg))
-;;                ,(if opt `(defmfun1::collect-opt-args ,args ,nreq) `(list ,args)) ; filter options from other args                
-                (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
+;;                ,(if opt `(defmfun1::collect-opt-args ,args ,nreq) `(list ,args)) ; filter options from other args                               (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
                    ; try moving opt assignments before normal args
                    ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
                    ,(defmfun1-write-assignments name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h have-match)
@@ -172,8 +171,9 @@
                    ,@(when (null rest) `((if ,restarg ,(defmfun1::narg-error-or-message 
                                                        name args restarg nargs nreq nreqo rest have-match))))
                    ,@(defmfun1-write-rest-assignments name args rest reqo-spec have-match)
+;   We moved this above so that binding for match-opt are available for arg checks.
 ;                   ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
-                   ,@body)))))))))
+                   ,@body))))))))
 
 ;; Not using this
 ;; (defmacro dcheck-arg (spec-name arg)
