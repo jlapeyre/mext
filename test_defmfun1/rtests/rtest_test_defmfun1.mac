@@ -135,5 +135,37 @@ dtest7(3)$
 dtest8('giraffe)$
 'giraffe;
 
+/* Test overriding set_match_form with option */
+
+(unset_match_form('dtest9), dtest9(3))$
+[3,false,false];
+
+errcatch([dtest9('cat)])$
+[];
+
+dtest9(3,match->true)$
+[3,true,true];
+
+dtest9('cat,match->true)$
+'dtest9(cat, Rule(match, true));
+
+errcatch([dtest9('cat,match->false)])$
+[];
+
+dtest9(37,match->false)$
+[37,false,true];
+
+(set_match_form('dtest9), dtest9(0))$
+[0,false,false];
+
+dtest9('cat)$
+'dtest9(cat);
+
+dtest9('girrafe,match->true)$
+'dtest9(girrafe, Rule(match, true))
+
+errcatch([dtest9('cat,match->false)])$
+[];
+
 kill(extra);
 done$

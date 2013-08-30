@@ -83,4 +83,4 @@
   :desc "This is the description of dtest9"
   (format t "match-opt ~a~%" match-opt)
   (format t "match-supplied ~a~%" match-supplied-p)
-  x)
+  (cons '(mlist) (list x match-opt match-supplied-p)))
