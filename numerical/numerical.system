@@ -11,6 +11,7 @@
   :source-extension "lisp"
   :components
    ((:file "nintegrate")
+    (:file "quadpack-nint")
     (:file "numerical-packages" :load-only t)))
 
 ;; neither compile nor load when building
