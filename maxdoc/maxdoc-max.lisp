@@ -11,8 +11,7 @@
 (use-package :examples)
 
 (max-doc:set-cur-sec 'max-doc::doc-fandv)
-(doc-system:set-source-file-name "maxdoc-max.lisp")
-(doc-system:set-source-package "maxdoc")
+(defmfun1:set-file-and-package "maxdoc-max.lisp" "maxdoc")
 
 (defmfun1 $add_doc_section ((s :string))
   (if (not (null (max-doc::get-doc-sec s)))

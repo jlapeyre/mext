@@ -13,9 +13,7 @@
 (use-package :max-doc)
 
 (max-doc:set-cur-sec 'max-doc::aex-fandv)
-(defmfun1:set-mext-package "aex")
-; why was this commented out ?
-(doc-system:set-source-file-name "aex-core.lisp")
+(defmfun1:set-file-and-package "aex-core.lisp" "aex")
 
 ; need to integrate this with mext somehow.
 ($put '$aex_package 0.1 '$version)

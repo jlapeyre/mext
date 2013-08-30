@@ -5,6 +5,8 @@
 ;;; the Free Software Foundation; either version 2 of the License, or
 ;;; (at your option) any later version.
 
+(defmfun1:set-file-and-package "simple-doc.lisp" "maxdoc")
+
 (in-package :simple-doc)
 (mext:mext-optimize)
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))

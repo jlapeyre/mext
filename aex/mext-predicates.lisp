@@ -2,7 +2,7 @@
 (mext:mext-optimize)
 
 (max-doc:set-cur-sec 'max-doc::predicates-fandv)
-(defmfun1:set-mext-package "aex")
+(defmfun1:set-file-and-package "mext-predicates.lisp" "aex")
 
 ;; used in rtests
 (defmfun1 ($aex_p :doc) (e)

@@ -14,6 +14,7 @@
 ;; These are probably obsolete
 
 (max-doc::set-cur-sec 'max-doc::misc-fandv)
+(defmfun1:set-file-and-package "aex-util.lisp" "aex")
 
 ;; Fix hard coded paths here!!
 ;; run testsuite

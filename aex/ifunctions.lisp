@@ -1,7 +1,7 @@
 (in-package :maxima)
 (mext:mext-optimize)
 (max-doc:set-cur-sec 'max-doc::aex-fandv)
-(defmfun1:set-mext-package "aex")
+(defmfun1:set-file-and-package "ifunctions.lisp" "aex")
 
 (defmfun-ae ($iapply :doc)  ( (fun :function)  (arg :non-atom :ensure-lex))
   :desc ( :mref "iapply" " is like maxima " :emref "apply" ", but it supports aex lists. "

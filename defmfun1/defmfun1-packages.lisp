@@ -33,7 +33,7 @@
   (defpackage :defmfun1
     (:use :common-lisp :gjl.lisp-util)
     (:import-from :maxima :$sconcat :merror)
-    (:export :rule :set-mext-package :get-mext-package-for-function
+    (:export :rule :set-mext-package :set-file-and-package :get-mext-package-for-function
              :record-mext-package
              :set-hold-all)))
 

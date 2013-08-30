@@ -1,13 +1,10 @@
-
 (in-package :maxima)
 
 ;;; Functions that are marked `redefined' were defined previously without defmfun1
 ;;; in mext-maxima-system.lisp.
 
-(doc-system:set-source-file-name "mext_defmfun1_code.lisp")
-(doc-system:set-source-package "mext_defmfun1")
 (max-doc:set-cur-sec 'max-doc::runtime-fandv)
-(defmfun1:set-mext-package "mext_defmfun1")
+(defmfun1:set-file-and-package "mext_defmfun1_code.lisp" "mext_defmfun1")
 
 (maxdoc:mdefmvar $homedir (namestring mext::*homedir-pathname*)
  "The user's home directory.")

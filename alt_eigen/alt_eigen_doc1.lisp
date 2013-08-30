@@ -1,3 +1,5 @@
+(defmfun1:set-file-and-package "alt_eigen_doc1.lisp" "alt_eigen")
+
 (examples:clear-add-example "alt_eigen" '(
   :code-text (
    :text ("The eigenvectors of " :codecomma "matrix([1,2],[4,5])" " are ")

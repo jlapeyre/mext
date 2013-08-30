@@ -1,7 +1,4 @@
-;;; Setting package and source file names is in a bit of disarray.
-(defmfun1:set-mext-package "test_defmfun1")
-(doc-system:set-source-package "test_defmfun1")
-(doc-system:set-source-file-name "test1.lisp")
+(defmfun1:set-file-and-package "test1.lisp" "test_defmfun1")
 
 (defmfun1 $dtest1 ()
   t)
@@ -25,6 +22,7 @@
       (error "Wrong error code from expanding dtest3a"))))
 |#
 
+; Invalid defmfun1 code.
 ;(defmfun1 $dtest3a ((:non-neg-int x ))
 ;  x)
 

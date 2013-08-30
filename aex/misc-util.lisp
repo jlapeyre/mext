@@ -14,7 +14,7 @@
 
 (in-package :maxima)
 (mext:mext-optimize)
-(defmfun1:set-mext-package "aex")
+(defmfun1:set-file-and-package "misc-util.lisp" "aex")
 
 (use-package :gjl.lisp-util)
 ;;(use-package :maxima-dev-doc)

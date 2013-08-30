@@ -5,8 +5,10 @@
 (in-package :maxima)
 (mext:mext-optimize)
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
-(doc-system::set-source-file-name "src/mset.lisp")
-(doc-system::set-source-package "maxima")
+
+(defmfun1:set-file-and-package "mset.lisp" "aex")
+;(doc-system::set-source-file-name "src/mset.lisp")
+;(doc-system::set-source-package "maxima")
 
 (maxima-dev-doc::add-item "mset"
                   "defun mset x y"

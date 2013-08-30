@@ -1,4 +1,5 @@
 (in-package :max-ql)
+(defmfun1:set-file-and-package "max-asdf.lisp" "quicklisp")
 
 (defvar *quicklisp-pathname*
    (mext:subdir-pathname (list "quicklisp")  mext::*homedir-pathname*))

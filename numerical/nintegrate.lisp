@@ -2,6 +2,8 @@
   (defpackage :nintegrate (:use common-lisp :gjl.lisp-util)
     (:nicknames :nint)))
 
+(defmfun1:set-file-and-package "nintegrate.lisp" "numerical")
+
 ;;; High-level interface to numerical integration routines.
 
 ;;; TODO

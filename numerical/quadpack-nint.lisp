@@ -4,6 +4,8 @@
 ;;; them a bit easier to work with.
 (in-package :maxima)
 
+(defmfun1:set-file-and-package "quadpack-nint.lisp" "numerical")
+
 (defmfun1 ($mquad_qags :doc) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) &opt
                                   ($epsrel 1e-8 :to-float) ($limit 200 :non-neg-int) ($epsabs 0.0 :to-float))
   :desc ("This is an interface to qags that is modified from " :emrefdot "quad_qags")

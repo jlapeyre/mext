@@ -2,7 +2,7 @@
 
 (mext:mext-optimize)
 (max-doc::set-cur-sec 'max-doc::strings-fandv)
-(defmfun1:set-mext-package "lists_aex")
+(defmfun1:set-file-and-package "strings.lisp" "lists_aex")
 
 (defmspec $with_output_to_string (arg)
   "Copied from $with_stdout."

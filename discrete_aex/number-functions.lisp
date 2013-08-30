@@ -8,8 +8,9 @@
 (in-package :maxima)
 (mext:mext-optimize)
 (max-doc:set-cur-sec 'max-doc::number-theory-fandv)
-(defmfun1:set-mext-package "discrete_aex")
-(doc-system:set-source-file-name "number-functions.lisp")
+
+(defmfun1:set-file-and-package "number-functions.lisp" "discrete_aex")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun from-digits2  ( digits &optional (base 10))

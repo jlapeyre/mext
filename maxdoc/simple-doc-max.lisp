@@ -7,12 +7,13 @@
 
 (in-package :maxima)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
-;;  The functions manage a hash table of documenation strings keyed by strings.
-;;  The data is not persistant.
-;;  The data is accesible via maxima describe(), and ? and ??
-
 (max-doc::set-cur-sec 'max-doc::doc-fandv)
+(defmfun1:set-file-and-package "simple-doc-max.lisp" "maxdoc")
+
+;;  These functions manage a hash table of documenation strings keyed by
+;;  strings. The data is not persistant.  The data is accesible via
+;;  maxima describe(), and ? and ??
+
 
 (defmfun1 ($simple_doc_init :doc) ()
   "Initialize the simple_doc documentation database."

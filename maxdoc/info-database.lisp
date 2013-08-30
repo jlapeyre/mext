@@ -1,10 +1,11 @@
 (in-package :info-database)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+(defmfun1:set-file-and-package "info-database.lisp" "maxdoc")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Note that these copies do not collide with original Maxima code, because
 ;; we are in a different package.
+
 
 (defun load-maxima-index ()
   (if (fboundp 'cl-info::autoload-maxima-index)

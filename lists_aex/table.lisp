@@ -84,7 +84,7 @@
 (in-package :maxima)
 (mext:mext-optimize)
 (max-doc:set-cur-sec 'max-doc::lists-fandv)
-(defmfun1:set-mext-package "lists_aex")
+(defmfun1:set-file-and-package "table.lisp" "lists_aex")
 
 ;; ITERATING FUNCTIONS for $table
 ;;

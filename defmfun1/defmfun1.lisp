@@ -14,8 +14,22 @@
 (import 'maxima::ddefvar)
 (import 'maxima::ddefparameter)
 
-(doc-system:set-source-file-name "defmfun1.lisp")
-(doc-system:set-source-package "defmfun1")
+(defvar *mext-package* nil)
+
+(defun set-mext-package (name)
+  (setf *mext-package* name))
+
+;; There are a couple of competing ways to set these.
+;; So, we will try to use this function only.
+(defun set-file-and-package (file-name package-name)
+  (doc-system:set-source-file-name file-name)
+  (doc-system:set-source-package package-name)
+  (set-mext-package package-name))
+
+(set-file-and-package "defmfun1.lisp" "defmfun1")
+
+;(doc-system:set-source-file-name "defmfun1.lisp")
+;(doc-system:set-source-package "defmfun1")
 
 (ddefvar *arg-check-func-table* (make-hash-table)
  "Table of argument checking functions for defmfun1. These are
@@ -100,8 +114,6 @@ symbols) being attribute names; and values being the value of the attribute, typ
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar *mext-package* nil)
-
 (ddefvar *mext-package-table* (make-hash-table :test 'equal)
   "This hash-table stores the name of the mext package in which a function
    is defined.")
@@ -109,9 +121,6 @@ symbols) being attribute names; and values being the value of the attribute, typ
 (ddefvar *mext-functions-table* (make-hash-table :test 'equal)
   "This hash-table stores a list of the user functions defined 
 in a  mext package.")
-
-(defun set-mext-package (name)
-  (setf *mext-package* name))
 
 (defun record-mext-package (name package)
  "Record fact that string `name' is in mext packge `package'.

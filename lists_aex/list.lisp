@@ -4,8 +4,7 @@
 (use-package :max-doc)
 
 (max-doc:set-cur-sec 'max-doc::lists-fandv)
-
-(defmfun1:set-mext-package "lists_aex")
+(defmfun1:set-file-and-package "list.lisp" "lists_aex")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

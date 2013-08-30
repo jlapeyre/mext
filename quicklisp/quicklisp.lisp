@@ -14,6 +14,8 @@
 ;;;;    Zach Beane <zach@quicklisp.org>
 ;;;;
 
+(defmfun1:set-file-and-package "quicklisp.lisp" "quicklisp")
+
 (cl:in-package #:cl-user)
 (cl:defpackage #:qlqs-user
   (:use #:cl))

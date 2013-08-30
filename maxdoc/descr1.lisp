@@ -9,11 +9,11 @@
 
 (in-package :descr1)
 (mext:mext-optimize)
+(maxdoc:set-cur-sec 'max-doc::doc-fandv)
+(defmfun1:set-file-and-package "descr1.lisp" "maxdoc")
 
 (defvar *prompt-prefix* "")
 (defvar *prompt-suffix* "")
-
-(maxdoc:set-cur-sec 'max-doc::doc-fandv)
 
 (maxdoc:mdefmvar maxima::$read_docs_with_pager nil
  ("If true, then documenation printed by " :emref "describe" " or ? or ?? is sent through the pager

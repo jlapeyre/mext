@@ -1,8 +1,7 @@
 (in-package :maxima)
 (mext:mext-optimize)
 (max-doc:set-cur-sec 'max-doc::doc-fandv)
-(doc-system:set-source-file-name "maxima-utils.lisp")
-(doc-system:set-source-package "maxdoc")
+(defmfun1:set-file-and-package "maxdoc-utils.lisp" "maxdoc")
 
 (maxima::ddefun keywordify (s)
   "Convert a Maxima symbol to a lisp keyword. E.g. `$a' -> `:a' ."

@@ -4,8 +4,8 @@
 
 (in-package :maxima)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
-;; Document this!!
+
+(defmfun1:set-file-and-package "system-essential.lisp" "aex")
 
 ;; [1,2] not alike <<1,2>>, but it probably should be
 (mext::no-warning

@@ -1,6 +1,6 @@
 (in-package :maxima)
 (max-doc:set-cur-sec 'max-doc::quicklisp-fandv)
-(defmfun1:set-mext-package "quicklisp")
+(defmfun1:set-file-and-package "max-ql.lisp" "quicklisp")
 
 (defmfun1 ($quicklisp_load :doc) ((package_name :string))
   :desc ("Load the asdf lisp package " :arg "package_name"

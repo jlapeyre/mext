@@ -3,8 +3,8 @@
 (use-package :gjl.lisp-util)
 
 (max-doc:set-cur-sec 'max-doc::combinatorics-fandv)
-(defmfun1:set-mext-package "discrete_aex")
-(doc-system:set-source-file-name "combinatorics.lisp")
+(defmfun1:set-file-and-package "combinatorics.lisp" "discrete_aex")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; The use of (aex-get ...) and (setf (aex-get ...)) etc is a

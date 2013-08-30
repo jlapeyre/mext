@@ -2,7 +2,7 @@
 (use-package :gjl.lisp-util)
 (use-package :max-doc)
 (set-cur-sec 'max-doc::io-fandv)
-(defmfun1:set-mext-package "store")
+(defmfun1:set-file-and-package "store-expression.lisp" "store")
 
 ;; Write and read maxima expressions to a file. This is done via a serialization library, cl-store.
 ;; TODO: cl-store has various settings that that can greatly affect efficiency. We should support these.

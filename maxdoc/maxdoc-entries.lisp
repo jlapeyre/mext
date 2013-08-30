@@ -10,6 +10,8 @@
 ;; which is not yet working when they are defined
 
 (use-package :max-doc)
+(max-doc::set-cur-sec 'max-doc::options)
+(defmfun1:set-file-and-package "maxdoc-entries.lisp" "maxdoc")
 
 ;; (add-doc-entry1  :section 'max-doc::doc-fandv 
 ;;                  :e '(
@@ -51,8 +53,6 @@
 |#
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(max-doc::set-cur-sec 'max-doc::options)
 
 (add-doc-entry '( :name "compile" :type "Option"
     :contents "If this option is true, then lambda functions passed as arguments to a function will

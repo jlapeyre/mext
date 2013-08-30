@@ -2,6 +2,7 @@
 (mext:mext-optimize)
 (max-doc:set-cur-sec 'max-doc::numerical-fandv)
 (defmfun1:set-mext-package "aex")
+(defmfun1:set-file-and-package "lisp-numeric.lisp" "aex")
 
 ;;; Checking number of arguments appears not to work. Reviewing
 ;;; this, I can't see what the advantage is of n_cos over ?cos,
