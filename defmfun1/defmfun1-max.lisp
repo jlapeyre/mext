@@ -61,7 +61,7 @@
             (push `(setf ,targ (pop ,restarg)) res)
             (when (gethash targ supplied-p-hash) (push `(setf ,(gethash targ supplied-p-hash) t) res))
             (dolist (tst (gethash targ reqo-spec))
-              (push (defmfun1::check-and-error tst targ name args) res))
+              (push (defmfun1::check-and-error tst targ name args have-match) res))
             (dolist (pp (gethash targ pp-spec-h))
                (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
    out))
@@ -87,7 +87,7 @@
                                               (res))
                                              ((null tst) (nreverse res))
                                              (push
-                                              (defmfun1::check-and-error-option tst name opt-name opt-var args)
+                                              (defmfun1::check-and-error-option tst name opt-name opt-var args have-match)
                                               res))) res1))
                              (t (merror1 (intl:gettext "~a ~a does not accept the option `~a'.~%")
                                          (defmfun1::err-prefix ',name) ($sconcat ',name) ($sconcat var) ))))))))
@@ -99,7 +99,7 @@
         (dolist (tst (gethash rest-name reqo-spec))
           (push `(mapc
                   #'(lambda (a)
-                      ,(defmfun1::check-and-error tst 'a name args))
+                      ,(defmfun1::check-and-error tst 'a name args have-match))
                   ,rest-name)  res))
         (nreverse res))
       nil))
@@ -211,7 +211,7 @@
   For use within the body of a defmfun1 function."
   `(unless (funcall ,(defmfun1::get-check-func spec-name) ,arg)
      (progn
-       (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args)
+       (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args nil nil)
        (return-from ,func-name defmfun1-func-call))))
 
 (defmacro defmfun1-error-final (mssg)

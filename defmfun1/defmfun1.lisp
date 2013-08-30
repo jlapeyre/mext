@@ -245,10 +245,12 @@ the hash table *mext-functions-table*."
 ;; is `preprocessed' in some way. So we check for this.
 ;; check-and-error is called by: defmfun1-write-assignments, 
 ;; defmfun1-write-rest-assignments, 
-(defun check-and-error (test arg name args)
-  (let ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
-        (sa `((defmfun1::signal-arg-error ',test (list ,arg) ',name ,args)
-              (return-from ,name (cons (list ',name) ,args)))))
+(defun check-and-error (test arg name args have-match)
+  (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
+         (force-match-code (if have-match `(match-supplied-p match-opt)
+                             `(nil nil)))
+         (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',name ,args ,@force-match-code))
+         (sa `(,sa1 (return-from ,name (cons (list ',name) ,args)))))
     (if (gethash test *arg-check-preprocess-table*)
         `(let ((res ,fc))
            (if (not (first res))
@@ -264,10 +266,10 @@ the hash table *mext-functions-table*."
 ;; normal arg with an option (very easy to do). All you get is a cryptic error at runtime.
 ;; This needs to be fixed.
 ;; check-and-error-option is called by defmfun1-write-opt-assignments.
-(defun check-and-error-option (tst name opt-name opt-var args)
+(defun check-and-error-option (tst name opt-name opt-var args have-match)
   (let ((fc `(funcall ,(defmfun1::get-check-func (car tst)) maxima::val))
         (sc `((defmfun1::signal-option-arg-error
-               ',(car tst) (list maxima::val ',opt-name) ',name ,args)
+                ',(car tst) (list maxima::val ',opt-name) ',name ,args nil nil)
               (return-from ,name (cons (list ',name) ,args)))))
   (if (gethash (car tst) *opt-check-preprocess-table*)
       `(let ((res ,fc))
@@ -413,7 +415,7 @@ the hash table *mext-functions-table*."
  in a defmfun1 expansion. If not, the list of call args is lost. But, I
  suppose we could preserve them in a lexical variable. Call this with
  call nil to get the second message."
-  `(defun ,name  (spec-name arg-list name call)
+  `(defun ,name (spec-name arg-list name call force-match match-val)
      (let ((spec-args (if (listp spec-name) (rest spec-name) nil)))
        (when (listp spec-name) (setf spec-name (car spec-name)))
        (let* ((espec (gethash spec-name ,hash))
