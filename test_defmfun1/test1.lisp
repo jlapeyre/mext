@@ -73,3 +73,7 @@
 (defmfun1 $dtest8 ( x &aux y )
   (setf y x)
   y)
+
+(defmfun1 ($dtest9 :doc :match ) (x)
+  :desc "This is the description of dtest9"
+  x)

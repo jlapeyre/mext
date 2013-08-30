@@ -36,7 +36,7 @@
 ;; For efficiency, these should perhaps only be optionally saved, if requested.
 ;; Or better make some kind of macro that only writes them if needed.
 ;; Also, we don't need all three of these. It could be rewritten.
-(defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest)
+(defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest have-match)
   `((,nargs 0) ; count args passed when calling
    (defmfun1-func-name ',name) ; save this name for echeck-arg macro below. Wasteful as most funcs never use it.
    (defmfun1-func-call (cons (list ',name) ,args))
@@ -49,7 +49,7 @@
    ,@(loop for n in (get-hash-keys supplied-p-hash) collect `,(gethash n supplied-p-hash))
    ,@(when rest (cdr rest)))) ; binding for &rest arg
 
-(defun defmfun1-write-assignments (name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h)
+(defun defmfun1-write-assignments (name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h have-match)
  "Write code to set required and &optional args to values supplied by call."
   `(tagbody
      ,@(do* ((reqo1 reqo (cdr reqo1))
@@ -66,7 +66,7 @@
                (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
    out))
 
-(defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec)
+(defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec have-match)
   "Write code to set option variables to supplied values."
   (when opt `((dolist (ospec ,opt-args) 
                 (dbind (var val) ospec
@@ -92,7 +92,7 @@
                              (t (merror1 (intl:gettext "~a ~a does not accept the option `~a'.~%")
                                          (defmfun1::err-prefix ',name) ($sconcat ',name) ($sconcat var) ))))))))
 
-(defun defmfun1-write-rest-assignments (name args rest reqo-spec)
+(defun defmfun1-write-rest-assignments (name args rest reqo-spec have-match)
   (if rest
       (let ((res)
             (rest-name (caadr rest)))
@@ -109,9 +109,12 @@
 ;; Another option would be to move it outside the backquote, so that it is generated at
 ;; compile-time, and save it somehow to disk. But that seems much more complicated, and I
 ;; can't see a benefit now. Time required to load does not seem to be affected at all.
-(defmacro defmfun1 (name args &body body &aux directives)
-  (when (listp name)
-    (setf directives (cdr name)) (setf name (car name)))
+(defmacro defmfun1 (name args &body body &aux directives have-match)
+  (when (listp name) ; TODO look for bad directives
+    (setf directives (cdr name)) (setf name (car name))
+    (when (member :match directives)
+      (setf have-match t)
+      (setf args (append args `(&opt (($match match-opt) nil match-supplied-p) )))))
   (dbind (arg-list arg-specs pp-specs supplied-p-hash) (defmfun1::group-and-parse-args name args)
    (dbind (req optional aux rest opt) (defmfun1::rem-keys-arg-list arg-list)
     (let* ((args (gensym "args-"))
@@ -152,7 +155,7 @@
           (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) 
             ,@doc-string
             ,@(when (eq defun-type 'defmspec) `((setf ,args (cdr ,args))))
-            (let* ,(defmfun1-write-let-bindings name nargs args all-args supplied-p-hash rest)
+            (let* ,(defmfun1-write-let-bindings name nargs args all-args supplied-p-hash rest have-match)
               (declare (ignorable defmfun1-func-name defmfun1-func-call defmfun1-func-call-args ))
               (declare (fixnum ,nargs))
               ,@declare-form ; moved out of body, because it must occur after parameter list
@@ -161,21 +164,20 @@
 ;;              (dbind ,(if opt `(,opt-args ,restarg) `(,restarg))
 ;;                ,(if opt `(defmfun1::collect-opt-args ,args ,nreq) `(list ,args)) ; filter options from other args                
                 (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
-                   ,(defmfun1-write-assignments name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h)
+                   ,(defmfun1-write-assignments name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h have-match)
                    ,@(when rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
                    (when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest))
                    ,@(when (null rest) `((if ,restarg ,(defmfun1::narg-error-or-message 
                                                        name args restarg nargs nreq nreqo rest))))
-                   ,@(defmfun1-write-rest-assignments name args rest reqo-spec)
-                   ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec)
+                   ,@(defmfun1-write-rest-assignments name args rest reqo-spec have-match)
+                   ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
                    ,@body)))))))))
 
-
-
-(defmacro dcheck-arg (spec-name arg)
-" Check arg <arg> with <spec-name>. For use within the body of a function. It need not be
- a function defined with defmfun1."
-  `(funcall ,(defmfun1::get-check-func spec-name) ,arg))
+;; Not using this
+;; (defmacro dcheck-arg (spec-name arg)
+;; " Check arg <arg> with <spec-name>. For use within the body of a function. It need not be
+;;  a function defined with defmfun1."
+;;   `(funcall ,(defmfun1::get-check-func spec-name) ,arg))
 
 ;; We need to write one of these has the function name supplied explicitly for
 ;; use outside of a defmfun1 function.
