@@ -79,6 +79,8 @@
   (setf y x)
   y)
 
-(defmfun1 ($dtest9 :doc :match ) (x)
+(defmfun1 ($dtest9 :doc :match ) ( (x :number) )
   :desc "This is the description of dtest9"
+  (format t "match-opt ~a~%" match-opt)
+  (format t "match-supplied ~a~%" match-supplied-p)
   x)

@@ -210,6 +210,7 @@ the hash table *mext-functions-table*."
                   (when (listp arg) (setf arg (car arg)))
                   (maxima::maybe-invert-string-case (format nil "<~a>" arg))))))
 
+;; Print a warning or signal an error.
 ;; is-match-form is only called here.
 ;; error-or-message is called by
 ;;    signal-arg-error, signal-option-arg-error, narg-error-message (via narg-error-or-message),
@@ -217,7 +218,7 @@ the hash table *mext-functions-table*."
 (defun error-or-message (name mssg force-match match-val)
   "name is function name. mssg is error message. print message,
    but do not signal an error if match_form is set."
-  (cond ((is-match-form name) 
+  (cond ((or (and force-match match-val) (and (not force-match) (is-match-form name)))
          (unless (is-nowarn name) (format t (concatenate 'string "Warning: " mssg)))
          t)  ; return true here so that the calling function knows not to exit. Umm not sure its used.
         (t
@@ -247,7 +248,7 @@ the hash table *mext-functions-table*."
 ;; defmfun1-write-rest-assignments, 
 (defun check-and-error (test arg name args have-match)
   (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
-         (force-match-code (if have-match `(match-supplied-p match-opt)
+         (force-match-code (if have-match `(maxima::match-supplied-p maxima::match-opt)
                              `(nil nil)))
          (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',name ,args ,@force-match-code))
          (sa `(,sa1 (return-from ,name (cons (list ',name) ,args)))))
@@ -427,7 +428,7 @@ the hash table *mext-functions-table*."
               (call-str (format-call name call)))
          (cond (call
                 (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
-                                               arg-list1 spstr  call-str) nil nil)
+                                               arg-list1 spstr  call-str) force-match match-val)
                 nil)
                (t
                 (maxima::merror1 (format nil "~a ~? is ~a." pre-name (car espec)  arg-list1 spstr))))))))
