@@ -1,0 +1,4 @@
+mext_require("mext_defmfun1");
+mext_provide("test_defmfun1",
+  [ "test1" ]);
+

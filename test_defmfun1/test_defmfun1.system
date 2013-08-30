@@ -1,0 +1,25 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing test_defmfun1
+
+(in-package :mext-maxima)
+
+(create-distribution "test_defmfun1"
+  :loader "load-test_defmfun1"
+  :install-only "test_defmfun1-rtests")
+
+(mk:defsystem test_defmfun1
+  :source-extension "lisp"
+  :components
+   ((:file "test1")))
+
+;; neither compile nor load when building
+(mk:defsystem load-test_defmfun1
+  :source-extension "mac"
+  :components
+  ((:file "test_defmfun1")))
+  
+(mk:defsystem test_defmfun1-rtests
+              :source-extension "mac"
+              :source-pathname "rtests"
+              :components
+              ((:file "rtest_test_defmfun1")))

@@ -16,12 +16,11 @@
 	(multiple-value-bind (junk z-a z-b z-epsabs z-epsrel result abserr neval ier
 				   z-limit z-lenw last)
 	    (slatec:dqags #'(lambda (x) (float (funcall f x)))
-			  a b $epsabs $epsrel
-			  0.0 0.0 0 0
+			  a b $epsabs $epsrel 0.0 0.0 0 0
 			  $limit lenw 0 iwork work)
 	  (declare (ignore junk z-a z-b z-epsabs z-epsrel z-limit z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-      (error () (defmfun1-error-final "Exception. Probably a floating-point error")))))
+      (error () (defmfun1-error-final "Exception. Probably a floating-point exception")))))
 
 
 (defmfun1 ($mquad_qagi :doc) (fun (var :or-symbol-subvar) a b &opt
@@ -75,7 +74,7 @@
 	      (declare (ignore junk z-bound z-inf z-epsabs z-epsrel
 			       z-limit z-lenw last))
 	      (list '(mlist) result abserr neval ier))
-	  (error () (defmfun1-error-final "Exception. Probably a floating-point error.")))))))
+	  (error () (defmfun1-error-final "Exception. Probably a floating-point exception.")))))))
 
 (defmfun1 ($mquad_qagp :doc) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) points
 		     &opt ($epsrel 1e-8 :to-float) ($limit 200 :non-neg-int) ($epsabs 0.0 :to-float))
@@ -101,4 +100,4 @@
 	  (declare (ignore junk z-a z-b z-npts z-points z-epsabs z-epsrel
 			   z-leniw z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-      (error () (defmfun1-error-final "Exception. Probably a floating-point error.")))))
+      (error () (defmfun1-error-final "Exception. Probably a floating-point exception.")))))

@@ -59,10 +59,12 @@ Keys are stringified function names; values are hash tables with: keys (maxima
 symbols) being attribute names; and values being the value of the attribute, typically
 `t' or `nil'.")
 
-(defun set-attribute (name att)
-  (setf name ($sconcat name))
-  (let ((nhash (get-or-make-subhash name *attributes-table*)))
-    (setf (gethash att nhash) t)))
+(defun set-attribute (names att)
+  (ensure-list names)
+  (dolist (name names)
+    (setf name ($sconcat name))
+    (let ((nhash (get-or-make-subhash name *attributes-table*)))
+    (setf (gethash att nhash) t))))
 
 (defun unset-attribute (name att)
   (setf name ($sconcat name))
@@ -240,9 +242,8 @@ the hash table *mext-functions-table*."
        (defmfun1::signal-arg-error ',test (list ,arg) ',name ,args)
        (return-from ,name (cons (list ',name) ,args)))))
 
-;; Extraordinarily hard to debug. It seems like a textual substititution, but
-;; in fact, we have to qualify val as maxima::val. Nothing I can do with macroexpand or format
-;; will show the qualification, so there is no way to get a clue about what is wrong.
+;; We have to qualify val as maxima::val. Nothing I can do with macroexpand or format
+;; will show the qualification.
 
 ;; get-check-func will signal an error at expansion time if the check code does not exist.
 ;; but the code for opts and regular args is shared. So signal-option-arg-error may not
@@ -396,6 +397,8 @@ the hash table *mext-functions-table*."
                             arg-list1 specl-str (format-call name call)))))
 
 ;; yes, we might as well preserve the call and not have two of these.
+;; The call is now preserved. So the second form with (eq call nil)
+;; is never used.
 
 (defmacro mk-signal-error (name hash)
   "Prints one of two error messages depending on whether it is called

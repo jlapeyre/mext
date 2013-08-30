@@ -189,6 +189,7 @@
 ;; done any of this. A workaround is to write the return-from by hand
 ;; in each function body.
 ;; Hmmm, maybe a macrolet would work, but that is a lot of trouble.
+#|
 (ddefmacro echeck-arg-old (spec-name arg)
  "Check arg <arg> with <spec-name> and signal error with pretty message if check fails.
   For use within the body of a defmfun1 function."
@@ -198,6 +199,7 @@
        (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args)
        t))) ; return true if no error was signaled.
 ;;     (return-from defmfun1-func-name defmfun1-func-call)))
+|#
 
 ;; Prefer this macro now, as it allows returning the noun form.
 ;; Use within a defmfun1 body like this:
@@ -210,7 +212,6 @@
  "Check arg <arg> with <spec-name> and signal error with pretty message if check fails.
   For use within the body of a defmfun1 function."
   `(unless (funcall ,(defmfun1::get-check-func spec-name) ,arg)
-;     (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name nil)
      (progn
        (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args)
        (return-from ,func-name defmfun1-func-call))))
