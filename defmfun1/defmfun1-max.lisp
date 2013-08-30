@@ -36,7 +36,7 @@
 ;; For efficiency, these should perhaps only be optionally saved, if requested.
 ;; Or better make some kind of macro that only writes them if needed.
 ;; Also, we don't need all three of these. It could be rewritten.
-(defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest have-match)
+(defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest)
   `((,nargs 0) ; count args passed when calling
    (defmfun1-func-name ',name) ; save this name for echeck-arg macro below. Wasteful as most funcs never use it.
    (defmfun1-func-call (cons (list ',name) ,args))
@@ -155,7 +155,7 @@
           (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) 
             ,@doc-string
             ,@(when (eq defun-type 'defmspec) `((setf ,args (cdr ,args))))
-            (let* ,(defmfun1-write-let-bindings name nargs args all-args supplied-p-hash rest have-match)
+            (let* ,(defmfun1-write-let-bindings name nargs args all-args supplied-p-hash rest)
               (declare (ignorable defmfun1-func-name defmfun1-func-call defmfun1-func-call-args ))
               (declare (fixnum ,nargs))
               ,@declare-form ; moved out of body, because it must occur after parameter list
@@ -166,9 +166,9 @@
                 (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
                    ,(defmfun1-write-assignments name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h have-match)
                    ,@(when rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
-                   (when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest))
+                   (when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match))
                    ,@(when (null rest) `((if ,restarg ,(defmfun1::narg-error-or-message 
-                                                       name args restarg nargs nreq nreqo rest))))
+                                                       name args restarg nargs nreq nreqo rest have-match))))
                    ,@(defmfun1-write-rest-assignments name args rest reqo-spec have-match)
                    ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
                    ,@body)))))))))

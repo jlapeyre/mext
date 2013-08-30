@@ -276,7 +276,8 @@ the hash table *mext-functions-table*."
            (setf ,opt-var (second res))))
     `(unless ,fc ,@sc))))
 
-(defun narg-error-or-message (name args restarg nargs nreq nreqo rest)
+;; Write a code snippet to insert in body of defmfun1 function
+(defun narg-error-or-message (name args restarg nargs nreq nreqo rest have-match)
   `(progn (defmfun1::narg-error-message  ',name ,restarg
                                  ,nargs ,nreq ,nreqo ,(not (null rest)))
           (return-from ,name (cons (list ',name) ,args))))
@@ -321,6 +322,7 @@ the hash table *mext-functions-table*."
       (if args (apply #'format (append (list nil txt) args))
           txt))))
 
+;; The 'arg, etc. should be :arg
 (defun mk-arg-check1 (arg-class spec-name err-mssg-spec body)
   (let* ((emsg (rest err-mssg-spec)))
     (setf (gethash spec-name *arg-check-func-table*)
@@ -632,7 +634,6 @@ the hash table *mext-functions-table*."
            (format nil "either ~d or ~d arguments~a" (err-itostr1 nmin) (err-itostr nmax) are-word))
           ( t
            (format nil "between ~d and ~d arguments~a" (err-itostr1 nmin) (err-itostr nmax) are-word)))))
-
 
 (defun compute-narg-error-code (restarg nargs nmin nmax restp)
   (declare (ignore restp restarg))
