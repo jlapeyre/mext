@@ -64,6 +64,12 @@ errcatch([dtest3(1.0)])$
 errcatch([dtest3('dog)])$
 [];
 
+/* match_form is set. So wrong argument should return input form
+   I put some garbage in check-and-error, and no other tests fail.
+*/
+dtest3b(-1)$
+'dtest3b(-1);
+
 /* dtest4 must take int in [-1,0,1] */
 
 dtest4(-1)$

@@ -246,19 +246,18 @@ the hash table *mext-functions-table*."
 ;; check-and-error is called by: defmfun1-write-assignments, 
 ;; defmfun1-write-rest-assignments, 
 (defun check-and-error (test arg name args)
-  (if (gethash test *arg-check-preprocess-table*)
-      `(let ((res (funcall ,(defmfun1::get-check-func test) ,arg)))
-         (if (not (first res))
-           (progn (defmfun1::signal-arg-error ',test (list ,arg) ',name ,args)
-           (return-from ,name (cons (list ',name) ,args)))
-         (setf ,arg (second res))))
-    `(unless (funcall ,(defmfun1::get-check-func test) ,arg)
-       (defmfun1::signal-arg-error ',test (list ,arg) ',name ,args)
-       (return-from ,name (cons (list ',name) ,args)))))
-
+  (let ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
+        (sa `((defmfun1::signal-arg-error ',test (list ,arg) ',name ,args)
+              (return-from ,name (cons (list ',name) ,args)))))
+    (if (gethash test *arg-check-preprocess-table*)
+        `(let ((res ,fc))
+           (if (not (first res))
+               (progn ,@sa)
+             (setf ,arg (second res))))
+      `(unless ,fc ,@sa))))
+  
 ;; We have to qualify val as maxima::val. Nothing I can do with macroexpand or format
 ;; will show the qualification.
-
 ;; get-check-func will signal an error at expansion time if the check code does not exist.
 ;; but the code for opts and regular args is shared. So signal-option-arg-error may not
 ;; find the error message if the author of the defmfun1 inadvertently used a test for a
@@ -266,18 +265,16 @@ the hash table *mext-functions-table*."
 ;; This needs to be fixed.
 ;; check-and-error-option is called by defmfun1-write-opt-assignments.
 (defun check-and-error-option (tst name opt-name opt-var args)
-  (if (gethash (car tst) *opt-check-preprocess-table*)
-      `(let ((res (funcall ,(defmfun1::get-check-func (car tst)) maxima::val)))
-         (if (not (first res))
-           (progn
-             (defmfun1::signal-option-arg-error
+  (let ((fc `(funcall ,(defmfun1::get-check-func (car tst)) maxima::val))
+        (sc `((defmfun1::signal-option-arg-error
                ',(car tst) (list maxima::val ',opt-name) ',name ,args)
-             (return-from ,name (cons (list ',name) ,args)))
+              (return-from ,name (cons (list ',name) ,args)))))
+  (if (gethash (car tst) *opt-check-preprocess-table*)
+      `(let ((res ,fc))
+         (if (not (first res))
+           (progn ,@sc)
            (setf ,opt-var (second res))))
-  `(unless (funcall ,(defmfun1::get-check-func (car tst)) maxima::val)
-     (defmfun1::signal-option-arg-error
-      ',(car tst) (list maxima::val ',opt-name) ',name ,args)
-     (return-from ,name (cons (list ',name) ,args)))))
+    `(unless ,fc ,@sc))))
 
 (defun narg-error-or-message (name args restarg nargs nreq nreqo rest)
   `(progn (defmfun1::narg-error-message  ',name ,restarg

@@ -23,6 +23,11 @@
 (defmfun1 $dtest3 ((x :non-neg-int))
   x)
 
+;; Find error in arg checking code
+(defmfun1 $dtest3b ((x :non-neg-int))
+  x)
+(defmfun1::set-match-form `$dtest3b)
+
 #|  
 
  These are syntactically incorrect. I want to find a way to test
