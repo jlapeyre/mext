@@ -19,6 +19,11 @@
 ;;; TODO add check during macro expansion for the error
 ;;; (:test var), when we should have (var :test)
 
+;;; The keyword :pp signifies a combined test and preprocessing.
+;;;   In this case, the code snippet must return a list of two elements. 
+;;;   The first is the result of the test, the second is the processed
+;;;   value, which will be assigned to the input variable.
+
 (defvar *arg-spec-definitions* `(
                      (:function "a function"
                                 (not (numberp e))) ; a bit fuzzy what this would mean
@@ -43,9 +48,8 @@
                      (:number-listof ("a list of numbers")
                                      (and (maxima::$listp e)
                                           (every #'(lambda (x) (numberp x)) (cdr e))))
-                     (:can-float "an expression that can be converted to a float"
-;                                (and (setf e (maxima::$float e)) (numberp e)))
-                                (numberp ($float e)))
+                     (:pp :to-float "an expression that can be converted to a float"
+                          (let ((v (maxima::$float e))) (list (numberp v) v)))
                      (:complex-number  "a complex number" (complex_number_p e)) ; from ellipt.lisp
                      (:non-neg-number "a non-negative number"
                       (and (numberp e) (>= e 0)))
@@ -115,12 +119,15 @@
                       (member e '(maxima::$ml maxima::$ar)))
                      (:bool  "a Boolean value. It must be true or false."
                       (member e '(t nil)))
-                     ( (:int-range 2) "an integer between ~a and ~a"
+                     ((:int-range 2) "an integer between ~a and ~a"
                       int-range-check)
                      (:non-neg-int "a non-negative integer."
                       (and (integerp e) (>= e 0)))
                      (:non-neg-number "a non-negative number"
-                      (and (numberp e) (>= e 0)))))
+                      (and (numberp e) (>= e 0)))
+                     (:pp :to-float "an expression that can be converted to a float"
+                          (let ((v (maxima::$float e))) (list (numberp v) v)))))
+
 
 
 ;;  LocalWords:  defmfun Lapeyre GPL defpackage gjl util str merror

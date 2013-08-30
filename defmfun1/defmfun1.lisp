@@ -29,6 +29,9 @@
   is used for printing error messages as well  as
   documentations.")
 
+(defvar *arg-check-preprocess-table* (make-hash-table))
+(defvar *opt-check-preprocess-table* (make-hash-table))
+
 (defvar *arg-spec-to-english-table* (make-hash-table :test 'equal))
 (defvar *option-arg-check-mssg-table* (make-hash-table))
 (defvar *option-arg-spec-to-english-table* (make-hash-table :test 'equal))
@@ -227,9 +230,15 @@ the hash table *mext-functions-table*."
         (t (maxima::merror (intl:gettext "defmfun1::get-check-func: spec-name ~a is not a list or keyword") spec-name))))
 
 (defun check-and-error (test arg name args)
-  `(unless (funcall ,(defmfun1::get-check-func test) ,arg)
-     (defmfun1::signal-arg-error ',test (list ,arg) ',name ,args)
-     (return-from ,name (cons (list ',name) ,args))))
+  (if (gethash test *arg-check-preprocess-table*)
+      `(let ((res (funcall ,(defmfun1::get-check-func test) ,arg)))
+         (if (not (first res))
+           (progn (defmfun1::signal-arg-error ',test (list ,arg) ',name ,args)
+           (return-from ,name (cons (list ',name) ,args)))
+         (setf ,arg (second res))))
+    `(unless (funcall ,(defmfun1::get-check-func test) ,arg)
+       (defmfun1::signal-arg-error ',test (list ,arg) ',name ,args)
+       (return-from ,name (cons (list ',name) ,args)))))
 
 ;; Extraordinarily hard to debug. It seems like a textual substititution, but
 ;; in fact, we have to qualify val as maxima::val. Nothing I can do with macroexpand or format
@@ -241,11 +250,19 @@ the hash table *mext-functions-table*."
 ;; normal arg with an option (very easy to do). All you get is a cryptic error at runtime.
 ;; This needs to be fixed.
 
-(defun check-and-error-option (tst name opt-name  args)
+(defun check-and-error-option (tst name opt-name opt-var args)
+  (if (gethash (car tst) *opt-check-preprocess-table*)
+      `(let ((res (funcall ,(defmfun1::get-check-func (car tst)) maxima::val)))
+         (if (not (first res))
+           (progn
+             (defmfun1::signal-option-arg-error
+               ',(car tst) (list maxima::val ',opt-name) ',name ,args)
+             (return-from ,name (cons (list ',name) ,args)))
+           (setf ,opt-var (second res))))
   `(unless (funcall ,(defmfun1::get-check-func (car tst)) maxima::val)
      (defmfun1::signal-option-arg-error
       ',(car tst) (list maxima::val ',opt-name) ',name ,args)
-     (return-from ,name (cons (list ',name) ,args))))
+     (return-from ,name (cons (list ',name) ,args)))))
 
 (defun narg-error-or-message (name args restarg nargs nreq nreqo rest)
   `(progn (defmfun1::narg-error-message  ',name ,restarg
@@ -273,10 +290,18 @@ the hash table *mext-functions-table*."
 ;; Specify the preprocessing directive here.
 (dolist (one-pp '(
                   (:ensure-lex "is converted to a lisp list expression before processing"
-                   (list t (maxima::$lex e)))
+                   (maxima::$lex e))
                   (:ensure-list "is ensured to be lisp list before processing"
-                   (list t (setf e (if  (listp e) (cdr e) (list e))))))
-  (apply #'mk-pre-proc one-pp)))
+                   (setf e (if (listp e) (cdr e) (list e))))))
+  (apply #'mk-pre-proc one-pp))
+
+;; (dolist (one-pp '(
+;;                   (:ensure-lex "is converted to a lisp list expression before processing"
+;;                    (list t (maxima::$lex e)))
+;;                   (:ensure-list "is ensured to be lisp list before processing"
+;;                    (list t (setf e (if  (listp e) (cdr e) (list e))))))
+;;   (apply #'mk-pre-proc one-pp)))
+
 
 (ddefparameter *pp-spec-types*
   (get-hash-keys *arg-preprocess-table*))
@@ -402,10 +427,17 @@ the hash table *mext-functions-table*."
   `(and (integerp e) (>= e ,n1) (<= e ,n2)))
 
 (dolist (one-check *arg-spec-definitions*)
+  (when (eq :pp (car one-check))
+            (setf one-check (cdr one-check))
+            (setf (gethash (car one-check) *arg-check-preprocess-table*) t))
   (apply #'mk-arg-check one-check))
 
 ;; Careful! code for test is overwritten if already defined above. this should be fixed somehow.
+;; What ?
 (dolist (one-check *opt-spec-definitions*)
+  (when (eq :pp (car one-check))
+            (setf one-check (cdr one-check))
+            (setf (gethash (car one-check) *opt-check-preprocess-table*) t))
   (apply #'mk-opt-check one-check))
 
 (ddefparameter *arg-spec-keywords*
@@ -464,11 +496,14 @@ the hash table *mext-functions-table*."
                                                                 (and (listp x) (keyword-p (first x))
                                                                      (member (first x) *arg-spec-keywords*)))))  arg)))
                (wppspecs (cons (car arg) (remove-if #'(lambda(x) (not (member x *pp-spec-types*))) arg))))
-            (when (some (lambda (e)
-                          (or (keyword-p e) (and (listp e) (keyword-p (car e)) ))) nospecs)
+            (when (some (lambda (e) (keyword-p e)) nospecs)
              (maxima::merror1 'maxima::$defmfun1_unknown_directive "defmfun1: Error expanding function definition for ~s"
-   (format nil "~s. Error in argument directive ~s.~% Probably an unknown type specification.~% In source file ~a, package ~a."
+   (format nil "~s. Error in argument directive ~s.~% Found keyword in unexpected position. Probably an unknown directive.~% In source file ~a, package ~a."
                  name nospecs (doc-system:get-source-file-name) (doc-system:get-source-package))))
+            (when (some (lambda (e)(and (listp e) (keyword-p (car e)))) nospecs)
+             (maxima::merror1 'maxima::$defmfun1_unknown_directive "defmfun1: Error expanding function definition for ~s"
+   (format nil "~s. Error in argument directive ~s.~% Found list beginning with keyword in unexpected position.~% In source file ~a, package ~a."
+     name nospecs (doc-system:get-source-file-name) (doc-system:get-source-package))))
 ;;                                        name nospecs  maxima::$load_pathname))) ; does not work for more than one reason
             (push (if (length1p nospecs) nospecs (list (first nospecs) `(quote ,(second nospecs))) ) argt1) ; quote default values
             (when (length-eq nospecs 3) (setf (gethash (first nospecs) supplied-p-hash) (third nospecs)))

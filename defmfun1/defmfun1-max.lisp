@@ -63,10 +63,12 @@
             (dolist (tst (gethash targ reqo-spec))
               (push (defmfun1::check-and-error tst targ name args) res))
             (dolist (pp (gethash targ pp-spec-h))
-              (push `(let ((tr (funcall ,(defmfun1::get-pp-func pp) ,targ)))
-                         (when (first tr) (setf ,targ (second tr)))) res)))
-;              (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
+               (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
    out))
+
+;              (push `(let ((tr (funcall ,(defmfun1::get-pp-func pp) ,targ)))
+;                         (when (first tr) (setf ,targ (second tr)))) res)))
+
 
 (defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec)
   "Write code to set option variables to supplied values."
@@ -89,7 +91,7 @@
                                               (res))
                                              ((null tst) (nreverse res))
                                              (push
-                                              (defmfun1::check-and-error-option tst name opt-name  args)
+                                              (defmfun1::check-and-error-option tst name opt-name opt-var args)
                                               res))) res1))
                              (t (merror1 (intl:gettext "~a ~a does not accept the option `~a'.~%")
                                          (defmfun1::err-prefix ',name) ($sconcat ',name) ($sconcat var) ))))))))
@@ -212,6 +214,21 @@
      (progn
        (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args)
        (return-from ,func-name defmfun1-func-call))))
+
+(defmacro defmfun1-error-final (mssg)
+ "Used at an exit point of a defmfun1 body."
+  `(progn (defmfun1::error-or-message defmfun1-func-name 
+            (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
+                    ($sconcat defmfun1-func-call)))
+          defmfun1-func-call))
+
+(defmacro defmfun1-error-return (funcname mssg)
+ "Used to return from defmfun1 body."
+  `(progn (defmfun1::error-or-message defmfun1-func-name 
+            (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
+                    ($sconcat defmfun1-func-call)))
+          (return-from ,funcname defmfun1-func-call)))
+
 
 (defun mk-defmfun1-form (name args body)
   "Helper function for defmfun1-opt."
