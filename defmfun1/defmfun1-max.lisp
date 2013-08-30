@@ -51,7 +51,7 @@
 
 (defun defmfun1-write-assignments (name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h)
  "Write code to set required and &optional args to values supplied by call."
-  `(tagbody 
+  `(tagbody
      ,@(do* ((reqo1 reqo (cdr reqo1))
              (targ (caar reqo) (caar reqo1))
              (res))
@@ -65,10 +65,6 @@
             (dolist (pp (gethash targ pp-spec-h))
                (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
    out))
-
-;              (push `(let ((tr (funcall ,(defmfun1::get-pp-func pp) ,targ)))
-;                         (when (first tr) (setf ,targ (second tr)))) res)))
-
 
 (defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec)
   "Write code to set option variables to supplied values."
@@ -115,7 +111,7 @@
 ;; can't see a benefit now. Time required to load does not seem to be affected at all.
 (defmacro defmfun1 (name args &body body &aux directives)
   (when (listp name)
-    (setf directives (cdr name))   (setf name (car name)))
+    (setf directives (cdr name)) (setf name (car name)))
   (dbind (arg-list arg-specs pp-specs supplied-p-hash) (defmfun1::group-and-parse-args name args)
    (dbind (req optional aux rest opt) (defmfun1::rem-keys-arg-list arg-list)
     (let* ((args (gensym "args-"))
@@ -217,14 +213,14 @@
        (return-from ,func-name defmfun1-func-call))))
 
 (defmacro defmfun1-error-final (mssg)
- "Used at an exit point of a defmfun1 body."
+ "Used at an exit point of a defmfun1 body. Does not call return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
             (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
                     ($sconcat defmfun1-func-call)))
           defmfun1-func-call))
 
 (defmacro defmfun1-error-return (funcname mssg)
- "Used to return from defmfun1 body."
+ "Used to return from defmfun1 body with error message and return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
             (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
                     ($sconcat defmfun1-func-call)))
@@ -236,6 +232,7 @@
   `(defmfun1 ,name ,args ,@body))
 
 ;; defmfun1-opt takes : name, list of opts, code to be inserted before body.
+;; For an example of how  to use, see the top of aex/aex-core.lisp
 (ddefmacro defmfun1-opt (name opts &rest code)
   "Define a macro based on defmfun1 that already has the options <opts> defined.
    <name> is the name of the macro. <opts> is a list of &opt specifications for defmfun1.

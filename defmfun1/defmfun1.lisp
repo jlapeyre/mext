@@ -210,21 +210,19 @@ the hash table *mext-functions-table*."
                   (when (listp arg) (setf arg (car arg)))
                   (maxima::maybe-invert-string-case (format nil "<~a>" arg))))))
 
+;; is-match-form is only called here.
+;; error-or-message is called by
+;;    signal-arg-error, signal-option-arg-error, narg-error-message (via narg-error-or-message),
+;;    defmfun1-error-final, defmfun1-error-return
 (defun error-or-message (name mssg)
   "name is function name. mssg is error message. print message,
    but do not signal an error if match_form is set."
   (cond ((is-match-form name) 
          (unless (is-nowarn name) (format t (concatenate 'string "Warning: " mssg)))
-         t)  ; return true here so that the calling function knows not to exit.
+         t)  ; return true here so that the calling function knows not to exit. Umm not sure its used.
         (t
          (maxima::merror1 mssg)
          nil)))
-
-;; (defun error-or-message (name mssg)
-;;   "name is function name. mssg is error message. print message,
-;;    but do not signal an error if match_form is set."
-;;   (if (is-match-form name) (unless (is-nowarn name) (format t (concatenate 'string "Warning: " mssg)))
-;;       (maxima::merror1 mssg)))
 
 (maxima::ddefun get-check-func (spec-name)
   "Return list defining a lambda function for argument check
@@ -241,6 +239,12 @@ the hash table *mext-functions-table*."
                (maxima::merror "defmfun1::get-check-func: No code registered for check type ~a~%" spec-name))))
         (t (maxima::merror (intl:gettext "defmfun1::get-check-func: spec-name ~a is not a list or keyword") spec-name))))
 
+;; This function generates a bit of code that is inserted into the
+;; body of a defmfun1 function.  The code tests the value of an
+;; argument at run-time. The test spec may also specifiy that the argument
+;; is `preprocessed' in some way. So we check for this.
+;; check-and-error is called by: defmfun1-write-assignments, 
+;; defmfun1-write-rest-assignments, 
 (defun check-and-error (test arg name args)
   (if (gethash test *arg-check-preprocess-table*)
       `(let ((res (funcall ,(defmfun1::get-check-func test) ,arg)))
@@ -260,7 +264,7 @@ the hash table *mext-functions-table*."
 ;; find the error message if the author of the defmfun1 inadvertently used a test for a
 ;; normal arg with an option (very easy to do). All you get is a cryptic error at runtime.
 ;; This needs to be fixed.
-
+;; check-and-error-option is called by defmfun1-write-opt-assignments.
 (defun check-and-error-option (tst name opt-name opt-var args)
   (if (gethash (car tst) *opt-check-preprocess-table*)
       `(let ((res (funcall ,(defmfun1::get-check-func (car tst)) maxima::val)))
@@ -401,34 +405,35 @@ the hash table *mext-functions-table*."
     (maxima::merror1 (format nil "~a One of ~? is ~a in ~a." (err-prefix name) (car espec)
                             arg-list1 specl-str (format-call name call)))))
 
-;; yes, we might as well preserve the call and not have two of these.
-;; The call is now preserved. So the second form with (eq call nil)
-;; is never used.
-
+;; Yes, we might as well preserve the call and not have two of these.
+;; NOTE: The call is now preserved. So the second form with (eq call nil)
+;; is never used. We can get rid of the second form.
+;; Generate two functions. These functions are called at runtime.
 (defmacro mk-signal-error (name hash)
   "Prints one of two error messages depending on whether it is called
  in a defmfun1 expansion. If not, the list of call args is lost. But, I
  suppose we could preserve them in a lexical variable. Call this with
  call nil to get the second message."
   `(defun ,name  (spec-name arg-list name call)
-   (let ((spec-args (if (listp spec-name) (rest spec-name) nil)))
-    (when (listp spec-name) (setf spec-name (car spec-name)))
-    (let* ((espec (gethash spec-name ,hash))
-           (arg-list1 (format-args arg-list))
-           (specl-str (not-comma-separated-english (cadr espec)))
-           (pre-name (err-prefix name))
-           (spstr (if spec-args (apply #'format (append (list nil specl-str) spec-args))
-                                          specl-str))
-           (call-str (format-call name call)))
-      (cond (call
-             (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
-                                       arg-list1 spstr  call-str))
-             nil)
-            (t
-             (maxima::merror1 (format nil "~a ~? is ~a." pre-name (car espec)  arg-list1 spstr))))))))
-          
+     (let ((spec-args (if (listp spec-name) (rest spec-name) nil)))
+       (when (listp spec-name) (setf spec-name (car spec-name)))
+       (let* ((espec (gethash spec-name ,hash))
+              (arg-list1 (format-args arg-list))
+              (specl-str (not-comma-separated-english (cadr espec)))
+              (pre-name (err-prefix name))
+              (spstr (if spec-args (apply #'format (append (list nil specl-str) spec-args))
+                       specl-str))
+              (call-str (format-call name call)))
+         (cond (call
+                (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
+                                               arg-list1 spstr  call-str))
+                nil)
+               (t
+                (maxima::merror1 (format nil "~a ~? is ~a." pre-name (car espec)  arg-list1 spstr))))))))
 
+;;; signal-arg-error called by echeck-arg and check-and-error
 (mk-signal-error signal-arg-error *arg-check-mssg-table*)
+;;; signal-option-arg-error called by check-and-error-option
 (mk-signal-error signal-option-arg-error *option-arg-check-mssg-table*)
 
 (defun int-range-check (n1 n2)
@@ -649,7 +654,3 @@ the hash table *mext-functions-table*."
           (format-nargs-expected nmin nmax restp t)))
 ;;         (err-code (compute-narg-error-code restarg nargs nmin nmax restp))) maybe restore this later
     (error-or-message name (format nil "~a ~a ~a; ~a expected.~%" (err-prefix sname) sname str-narg str-expected))))
-;;    (if (is-match-form name) (progn
-;;                               (format t "~a ~a ~a; ~a expected.~%" (err-prefix sname) sname str-narg str-expected)
-;;                               (cons `(,name) call))
-;;        (maxima::merror1 err-code  "~a ~a ~a; ~a expected." (err-prefix name) sname str-narg str-expected))))

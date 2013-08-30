@@ -110,5 +110,24 @@ block([optlist : [extra->3,opt2->"dog"]],
   append([extra], dtest6(1,optlist)))$
 [13,1,3,true,"dog",true];
 
+/* Use options with lisp symbol name for option not the same as option name */
+dtest7()$
+[true,false];
+
+dtest7(myopt->false)$
+[false,true];
+
+/* Not a boolean value */
+dtest7(myopt->3)$
+'dtest7(Rule(myopt,3));
+
+/* takes no normal args */
+dtest7(3)$
+'dtest7(3);
+
+/* Test &aux in lambda list */
+dtest8('giraffe)$
+'giraffe;
+
 kill(extra);
 done$
