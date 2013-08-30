@@ -9,7 +9,7 @@
 (mext:mext-optimize)
 (max-doc:set-cur-sec 'max-doc::number-theory-fandv)
 (defmfun1:set-mext-package "discrete_aex")
-
+(doc-system:set-source-file-name "number-functions.lisp")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun from-digits2  ( digits &optional (base 10))
@@ -306,7 +306,7 @@
  '( :pretext "Aspiring numbers are those which are not perfect, but terminate with a repeating perfect number."
     :code "imap(lambda([x],aliquot_sequence(x,100)),[25, 95, 119, 143, 417, 445, 565, 608, 650, 652, 675, 685])"))
 
-($set_match_form '((mlist) $aliquot_sum $divisor_function $divisor_summatory ))
+(defmfun1::set-match-form '( $aliquot_sum $divisor_function $divisor_summatory ))
 
 (max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" "divisor_summatory" "perfect_p" "abundant_p"))
 

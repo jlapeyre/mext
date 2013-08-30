@@ -145,29 +145,19 @@ the hash table *mext-functions-table*."
   `(progn 
      (defun ,(intern (concatenate 'string "SET-" attribute)) (name)
        (set-attribute name ',max-attribute))
-;       (setf name ($sconcat name))
-;       (let ((nhash (get-or-make-subhash name *attributes-table*)))
-;         (setf (gethash ',max-attribute nhash) t)))
      (defun ,(intern (concatenate 'string "UNSET-" attribute)) (name)
        (unset-attribute name ',max-attribute))
-;       (setf name ($sconcat name))
-;       (let ((nhash (get-or-make-subhash name *attributes-table*)))
-;         (setf (gethash ',max-attribute nhash) nil)))
      (defun ,(intern (concatenate 'string "IS-" attribute)) (name)
        (get-attribute name ',max-attribute))))
-;       (setf name ($sconcat name))
-;       (let ((nhash (get-or-make-subhash name *attributes-table*)))
-;         (gethash ',max-attribute nhash)))))
 
-;; why do we not do this for set-hold-all ?
+;; Why do we not do this for set-hold-all ?
+;; I think because that must be set before defmfun1 expansion.
+;; Changing it later will have no effect.
 (mk-attribute nowarn maxima::$nowarn)
 (mk-attribute match-form maxima::$match_form)
 
 (defun are-some-args-held (name)
   (get-attribute name 'maxima::$hold_all))
-;  (setf name ($sconcat name))
-;  (let ((nhash (get-or-make-subhash name *attributes-table*)))
-;    (gethash 'maxima::$hold_all nhash)))
 
 (ddefvar *arg-type-list*
   '(:req :optional :aux :rest :opt)
@@ -288,21 +278,16 @@ the hash table *mext-functions-table*."
                            :func `(lambda (e) ,body))))
     (setf (gethash spec-name *arg-preprocess-table*) pp)))
 
-;; Specify the preprocessing directive here.
+;; Specify the preprocessing directives here.
+;; Note that preprocessing can be done together with checking
+;; with the argument checking directives, eg in tables *arg-check... .
+;; This may make the preprocessing directives here obsolete ?
 (dolist (one-pp '(
                   (:ensure-lex "is converted to a lisp list expression before processing"
                    (maxima::$lex e))
                   (:ensure-list "is ensured to be lisp list before processing"
                    (setf e (if (listp e) (cdr e) (list e))))))
   (apply #'mk-pre-proc one-pp))
-
-;; (dolist (one-pp '(
-;;                   (:ensure-lex "is converted to a lisp list expression before processing"
-;;                    (list t (maxima::$lex e)))
-;;                   (:ensure-list "is ensured to be lisp list before processing"
-;;                    (list t (setf e (if  (listp e) (cdr e) (list e))))))
-;;   (apply #'mk-pre-proc one-pp)))
-
 
 (ddefparameter *pp-spec-types*
   (get-hash-keys *arg-preprocess-table*))
@@ -478,6 +463,13 @@ the hash table *mext-functions-table*."
       (setf (getf arglist argt) (nreverse (getf arglist argt))))
     arglist))
 
+(defun parse-args-err (errcode name mssg arg)
+  (let* ((s1 (format nil "defmfun1: Error expanding function definition for ~s. " name))
+         (s2 (format nil "Error in argument spec ~s.~%" arg))
+         (s3 (format nil " In source file ~a, package ~a." (doc-system:get-source-file-name) (doc-system:get-source-package)))
+         (emssg (concatenate 'string s1 s2 mssg s3)))
+  (maxima::merror1 errcode emssg)))
+
 (maxima::ddefun parse-args (name arglist)
  "At macro expansion time of defmfun1, this function is called and
   returns four lists constructed from arglist.  The first list will be
@@ -491,6 +483,9 @@ the hash table *mext-functions-table*."
     (dolist (argt *arg-type-list*)
       (let ((argt1) (argt-spec) (pp-spec) )
         (dolist (arg (getf arglist argt)) ; arg is complete specification of a single argument
+          (when (keyword-p (first arg))
+            (parse-args-err 'maxima::$defmfun1_malformed_argspec name 
+                            "First element is a keyword, variable name expected." arg))
           (let
               ((nospecs (remove-if #'(lambda(x) (or (member x *arg-spec-keywords*) (member x *pp-spec-types*)
                                                     (and (listp x) (keyword-p (first x))
@@ -500,14 +495,11 @@ the hash table *mext-functions-table*."
                                                                      (member (first x) *arg-spec-keywords*)))))  arg)))
                (wppspecs (cons (car arg) (remove-if #'(lambda(x) (not (member x *pp-spec-types*))) arg))))
             (when (some (lambda (e) (keyword-p e)) nospecs)
-             (maxima::merror1 'maxima::$defmfun1_unknown_directive "defmfun1: Error expanding function definition for ~s"
-   (format nil "~s. Error in argument directive ~s.~% Found keyword in unexpected position. Probably an unknown directive.~% In source file ~a, package ~a."
-                 name nospecs (doc-system:get-source-file-name) (doc-system:get-source-package))))
+              (parse-args-err 'maxima::$defmfun1_unknown_directive name 
+                              "Found keyword in unexpected position. Probably an unknown directive." nospecs))
             (when (some (lambda (e)(and (listp e) (keyword-p (car e)))) nospecs)
-             (maxima::merror1 'maxima::$defmfun1_unknown_directive "defmfun1: Error expanding function definition for ~s"
-   (format nil "~s. Error in argument directive ~s.~% Found list beginning with keyword in unexpected position.~% In source file ~a, package ~a."
-     name nospecs (doc-system:get-source-file-name) (doc-system:get-source-package))))
-;;                                        name nospecs  maxima::$load_pathname))) ; does not work for more than one reason
+              (parse-args-err 'maxima::$defmfun1_unknown_directive name 
+                              "Found list beginning with keyword in unexpected position. Probably an unknown directive." nospecs))
             (push (if (length1p nospecs) nospecs (list (first nospecs) `(quote ,(second nospecs))) ) argt1) ; quote default values
             (when (length-eq nospecs 3) (setf (gethash (first nospecs) supplied-p-hash) (third nospecs)))
             (push wspecs argt-spec)

@@ -1,3 +1,114 @@
+/* dtest1 must take no arguments */
+
+/* Define this to see if it collides with option `extra' */
+(kill(extra), extra:13)$
+13;
+
+dtest1()$
+true;
+
+/* Requires exactly zero arguments */
 errcatch([dtest1(0)])$
 [];
 
+/* Return unevaluated form instead of an error */
+(set_match_form('dtest1), dtest1(0))$
+'dtest1(0);
+
+unset_match_form('dtest1)$
+done;
+
+/* Different definition syntax */
+dtest1a()$
+true;
+
+errcatch([dtest1a(0)])$
+[];
+
+/* dtest2 must take one argument */
+dtest2('dog)$
+'dog;
+
+errcatch([dtest2()])$
+[];
+
+errcatch([dtest2(1,3)])$
+[];
+
+/* dtest3 must take non-neg int argument */
+
+dtest3(0)$
+0;
+
+dtest3(1)$
+1;
+
+dtest3(101)$
+101;
+
+dtest3(10^5)$
+10^5;
+
+errcatch([dtest3()])$
+[];
+
+errcatch([dtest3(1,2)])$
+[];
+
+errcatch([dtest3(-1)])$
+[];
+
+errcatch([dtest3(1.0)])$
+[];
+
+errcatch([dtest3('dog)])$
+[];
+
+/* dtest4 must take int in [-1,0,1] */
+
+dtest4(-1)$
+-1;
+
+dtest4(0)$
+0;
+
+dtest4(1)$
+1;
+
+errcatch([dtest4(-2)])$
+[];
+
+errcatch([dtest4(101)])$
+[];
+
+errcatch([dtest4(0.0)])$
+[];
+
+/* dtest5 takes an option */
+
+dtest5(1)$
+[1,false,false];
+
+dtest5(1,extra->'dog)$
+[1,'dog,true];
+
+  /* We cannot quote the option name */
+errcatch([dtest5(1,'extra->3)])$
+[];
+
+ /* dtest6 takes 2 opts. We can pass options in a list */
+dtest6(1,[extra->3,opt2->4])$
+[1,3,true,4,true];
+
+block([optlist : [extra->3,opt2->"dog"]],
+  dtest6(1,optlist))$
+[1,3,true,"dog",true];
+
+/* There is a global variable `extra'. But
+ this `->'  means `Rule' which quotes the LHS.*/
+block([optlist : [extra->3,opt2->"dog"]],
+  append([extra], dtest6(1,optlist)))$
+[13,1,3,true,"dog",true];
+
+kill(extra);
+done$
