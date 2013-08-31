@@ -68,11 +68,3 @@
              :mfuncall   :$eval_string)
             (:export :add-example :clear-example :clear-add-example 
                      :format-examples :format-examples-latex :wrap-text)))
-
-;; ??? why this ?
-;(defpackage :examples (:use :common-lisp :gjl.lisp-util ) (:import-from :maxima :$sconcat :merror
-;                                                       :mfuncall   :$eval_string))
-
-
-
-

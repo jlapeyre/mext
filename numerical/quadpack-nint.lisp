@@ -9,9 +9,35 @@
 (defparameter mquad-error-string
   "Inegration failed. Probably a floating-point error")
 
-(defmfun1 ($mquad_qags :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) &opt
-                                  (($epsrel epsrel) 1e-8 :to-float) 
-                                  (($limit limit) 200 :non-neg-int) (($epsabs epsabs) 0.0 :to-float))
+(defmfun1-opt defmfun-quad ( (($limit limit) 200 :non-neg-int)
+                  (($epsabs epsabs) 0.0 :to-float) (($epsrel epsrel) 1e-8 :to-float)))
+
+
+(defmfun-quad ($quad-qag :doc) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) 
+                     (key (:int-range 1 6) (points :list)))
+  :desc
+  (quad_argument_check fun var a b) 
+  (let* ((lenw (* 4 limit))
+	 (work (make-array lenw :element-type 'flonum))
+	 (iwork (make-array limit :element-type 'f2cl-lib:integer4))
+	 (f (get-integrand fun var)))
+    (handler-case
+	(multiple-value-bind (junk z-a z-b z-epsabs z-epsrel z-key result abserr neval ier
+				   z-limit z-lenw last)
+	    (slatec:dqag #'(lambda (x)
+			     (float (funcall f x)))
+                         a b epsabs epsrel 
+			 key  0.0 0.0 0 0
+			 limit lenw 0 iwork work)
+	  (declare (ignore junk z-a z-b z-epsabs z-epsrel z-key z-limit z-lenw last))
+	  (list '(mlist) result abserr neval ier))
+      (error ()
+	`(($quad_qag) ,fun ,var ,a ,b ,key
+	  ((mequal) $epsrel ,epsrel)
+	  ((mequal) $epsabs ,epsabs)
+	  ((mequal) $limit ,limit))))))
+
+(defmfun-quad ($mquad_qags :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float))
   :desc ("This is an interface to qags that is modified from " :emrefdot "quad_qags")
   (quad_argument_check fun var a b) 
   (let* ((lenw (* 4 limit))
@@ -28,9 +54,7 @@
 	  (list '(mlist) result abserr neval ier))
         (error () (defmfun1-error-final mquad-error-string :match)))))
 
-(defmfun1 ($mquad_qagi :doc :match) (fun (var :or-symbol-subvar) a b &opt
-		      (($epsrel epsrel) 1e-8 :to-float) (($limit limit) 200 :non-neg-int) 
-                      (($epsabs epsabs) 0.0 :to-float))
+(defmfun-quad ($mquad_qagi :doc :match) (fun (var :or-symbol-subvar) a b)
   :desc ("This is an interface to qagi that is modified from " :emrefdot "quad_qagi")
   (quad_argument_check fun var a b)
   ;; Massage the limits a and b into what Quadpack QAGI wants.
@@ -82,9 +106,7 @@
 	      (list '(mlist) result abserr neval ier))
             (error () (defmfun1-error-final mquad-error-string :match)))))))
 
-(defmfun1 ($mquad_qagp :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) (points :list)
-		     &opt (($epsrel epsrel) 1e-8 :to-float) (($limit limit) 200 :non-neg-int) 
-                     (($epsabs epsabs) 0.0 :to-float))
+(defmfun-quad ($mquad_qagp :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) (points :list))
   :desc ("This is an interface to qagp that is modified from " :emrefdot "quad_qagp")
   (quad_argument_check fun var a b)
   (let* ((npts2 (+ 2 (length (cdr points))))

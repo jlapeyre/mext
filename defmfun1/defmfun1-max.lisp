@@ -112,6 +112,12 @@
 ;; TODO: Don't need incf nargs thing if :no-nargs directive is given.
 ;; Same with restargs, etc.
 (defmacro defmfun1 (name args &body body &aux directives have-match)
+  (let ((d1 (car body))) ; these check
+    (when (and (keyword-p d1) (not (eq :desc d1)))
+      (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_unknown_body_directive
+      name (format nil (sconcat "The first form in the body ~a is a keyword, but is not `:desc'.~%"
+            "This check can be removed if it is legal/useful for the body to begin with a keyword.")
+                   (keyword-etc-to-string d1)))))
   (when (listp name) 
     (setf directives (cdr name)) (setf name (car name)))
   (when (or (not (symbolp name)) (null name))

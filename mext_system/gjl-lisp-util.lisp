@@ -5,25 +5,50 @@
 ;;; the Free Software Foundation; either version 2 of the License, or
 ;;; (at your option) any later version.
 
-;; This file contains code that is not specific to maxima. Some is taken or modified from other
-;; libraries. It would be better to learn an organized way to use those libraries
-(in-package "COMMON-LISP-USER")
+;;; Utility macros.
+;;; This file contains code that is not specific to maxima. Some is taken or modified from other
+;;; libraries. Using other libraries would be nice, but we want this to work with many
+;;; lisp implementations, which may not support a packaging system.
 
+(in-package "COMMON-LISP-USER")
 (in-package :gjl.lisp-util)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Anaphoric
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro gaif (test-form then-form &optional else-form)
   "Paul Graham macro"
   `(let ((anit ,test-form))
      (if anit ,then-form ,else-form)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Short cuts
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro dbind (&body body)
+  `(destructuring-bind ,@body))
+
+(defmacro sconcat (&body body)
+  `(concatenate 'string ,@body))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Predicates and comparisons
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defmacro length1p (e)
   "Return true if length of list is 1. Traverses at most 1
-element of e."
+   element of e."
   `(null (cdr ,e)))
 
+;; where did I find this ?
+(defun keyword-p (sym)
+  (and (symbolp sym)
+       (eq #\: (elt  (format nil "~s" sym) 0))))
+
 (defun cmp-length (e n)
-"Return the smaller of n and the length of e.
-Traverses at most n elements of e."
+  "Return the smaller of n and the length of e.
+   Traverses at most n elements of e."
   (declare (fixnum n))
   (if (arrayp e)
       (let ((len (length e)))
@@ -36,22 +61,13 @@ Traverses at most n elements of e."
 
 (defun length-eq (e n)
   "Return true if length of list or array e is n. Traverses at most n
-elements of e."
+   elements of e."
   (declare (fixnum n))
   (= (cmp-length e  (1+ n)) n))
 
-;; no gensym.
-(defmacro ensure-list (e)
-  "Singleton to list maybe. Return e if e is a
-   list and (list e) otherwise."
-  `(if (listp ,e) t (setf ,e (list ,e))))
-
-;;  (let ((e1 (gensym)))
-;;    `(let ((,e1 e))
-;;       (setf (if (listp ,e1) ,e1 (list ,e1)))))
-
-(defmacro dbind (&body body)
-  `(destructuring-bind ,@body))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Hashes
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun fill-hash-from-list ( hash-table element-list) 
   "Set several hash elements at once from a list of pairs"
@@ -82,28 +98,10 @@ elements of e."
   (let ((sub-hash (gethash key top-hash)))
     (if sub-hash sub-hash (setf (gethash key top-hash) (make-hash-table :test test-type)))))
 
-(defun string-ends-with-pos (string substr)
- "Takes two arguments string and substr. If string ends with substr,
-return the position in string at which the final ocurrence of substr begins.
-Otherwise return nil."
-  (let ((pos (search substr string :from-end t)))
-        (if (null pos) nil
-          (let ((len (length string)))
-            (if (not (= (- len (length substr)) pos)) nil
-              pos)))))
 
-(defun remove-terminal-substring (string substr)
- "Takes two arguments string and substr. If string ends with
-substr, return string with substr stripped from the end. Otherwise
-return nil."  
-  (let ((pos (string-ends-with-pos string substr)))
-    (if pos (subseq string 0 pos)
-      nil)))
-
-;; where did I find this ?
-(defun keyword-p (sym)
-  (and (symbolp sym)
-       (eq #\: (elt  (format nil "~s" sym) 0))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Arrays
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; copied from alexandria (in-package :alexandria)
 (defun copy-array (array &key
@@ -111,9 +109,9 @@ return nil."
                    (fill-pointer (and (array-has-fill-pointer-p array)
                                       (fill-pointer array)))
                    (adjustable (adjustable-array-p array)))
-  "Returns an undisplaced copy of ARRAY, with same fill-pointer
-and adjustability (if any) as the original, unless overridden by
-the keyword arguments."
+ "Returns an undisplaced copy of ARRAY, with same fill-pointer
+  and adjustability (if any) as the original, unless overridden by
+  the keyword arguments."
   (let ((dims (array-dimensions array)))
     ;; Dictionary entry for ADJUST-ARRAY requires adjusting a
     ;; displaced array to a non-displaced one to make a copy.
@@ -137,6 +135,37 @@ but the contents are not copied."
                  :element-type element-type :fill-pointer fill-pointer
                  :adjustable adjustable )))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Lists
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Note: gensym here.
+(defmacro ensure-list (e)
+  "Singleton to list maybe. Return e if e is a
+   list and (list e) otherwise."
+  `(if (listp ,e) t (setf ,e (list ,e))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Strings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun string-ends-with-pos (string substr)
+ "Takes two arguments string and substr. If string ends with substr,
+  return the position in string at which the final ocurrence of substr begins.
+  Otherwise return nil."
+  (let ((pos (search substr string :from-end t)))
+        (if (null pos) nil
+          (let ((len (length string)))
+            (if (not (= (- len (length substr)) pos)) nil
+              pos)))))
+
+(defun remove-terminal-substring (string substr)
+ "Takes two arguments string and substr. If string ends with
+substr, return string with substr stripped from the end. Otherwise
+return nil."  
+  (let ((pos (string-ends-with-pos string substr)))
+    (if pos (subseq string 0 pos)
+      nil)))
 
 ;; Adapted from Gene Michael Stover. One change is that he had ~(~a~) in the default case,
 ;; which lowercases the text.

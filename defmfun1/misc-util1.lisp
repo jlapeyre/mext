@@ -5,11 +5,10 @@
 ;;; the Free Software Foundation; either version 2 of the License, or
 ;;; (at your option) any later version.
 
-
 ;;; Some of the functions in here are documented in  max-doc-entries.lisp.
+
 (in-package :maxima)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 (use-package :gjl.lisp-util)
 
 (defvar *merror1-last-message* nil)
