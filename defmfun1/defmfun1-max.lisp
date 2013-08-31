@@ -117,7 +117,7 @@
       (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_unknown_body_directive
       name (format nil (sconcat "The first form in the body ~a is a keyword, but is not `:desc'.~%"
             "This check can be removed if it is legal/useful for the body to begin with a keyword.")
-                   (keyword-etc-to-string d1)))))
+                   (defmfun1::keyword-etc-to-string d1)))))
   (when (listp name) 
     (setf directives (cdr name)) (setf name (car name)))
   (when (or (not (symbolp name)) (null name))

@@ -32,6 +32,11 @@
    :string-ends-with-pos 
    :wrap-text )))
 
+(if (find-package :gjl.maxima-util ) t  (defpackage :gjl.maxima-util (:use common-lisp :gjl.lisp-util)
+  (:nicknames :gjl-max)
+  (:export
+  )))
+
 (if (find-package :mext-maxima ) t  
   (defpackage :mext-maxima (:use common-lisp :gjl.lisp-util)
     (:nicknames :mext)
