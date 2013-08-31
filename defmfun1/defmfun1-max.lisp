@@ -119,6 +119,7 @@
   (when (not (listp args))
     (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_missing_arg_list
       name "No argument list found."))
+  (defmfun1::check-directives name directives)
   (when (member :match directives)
     (setf have-match t)
     (setf args (append args `(&opt (($match match-opt) nil match-supplied-p) ))))

@@ -489,6 +489,9 @@ the hash table *mext-functions-table*."
       (setf (getf arglist argt) (nreverse (getf arglist argt))))
     arglist))
 
+(defun keyword-etc-to-string (kw)
+  (maxima::maybe-invert-string-case (format nil "~s" kw)))
+
 (defun expansion-error-fname (fname)
   (format nil "defmfun1: Error expanding function definition for ~a." 
           (maxima::maybe-invert-string-case (format nil "~a" fname))))
@@ -503,7 +506,13 @@ the hash table *mext-functions-table*."
 (defun parse-args-err (errcode fname mssg arg)
   (defmfun1-expand-error errcode fname
     (format nil "Error in argument spec ~s.~%~a"
-   (maxima::maybe-invert-string-case (format nil "~s" arg)) mssg)))
+            (keyword-etc-to-string arg) mssg)))
+
+(defun check-directives (name directives)
+  (dolist (d directives)
+    (when (not (member d '( :doc :no-nargs :fast-opt :match )))
+      (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_unknown_directive
+        name (format nil "Unknown directive ~a." (keyword-etc-to-string d))))))
 
 (maxima::ddefun parse-args (name arglist)
  "At macro expansion time of defmfun1, this function is called and
