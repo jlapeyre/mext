@@ -50,17 +50,17 @@
                           (setf  (aref a i) (,inner-map (aref ea i) ,@(loop for arg in level-args collect `(cdr ,arg)))))
                      ne))
 
-(defmacro mk-mk-level-func (mk-name body-func)
-  `(defmacro ,mk-name (name-outer inner inner-map nargs)
-     (let ((level-args (loop for i below nargs collect (gensym)))
-           (body-func ',body-func))
-       `(defun ,name-outer (e ,@level-args) 
-          (,inner (if (gjl.lisp-util:length1p ,(first level-args)) e
-                      ,(funcall body-func inner-map level-args))
-                  ,@(loop for arg in level-args collect `(car ,arg)))))))
-
-(mk-mk-level-func mk-level-func-array mk-level-array-inner)
-(mk-mk-level-func mk-level-func-list  mk-level-list-inner)
+(macrolet 
+    ((mk-mk-level-func (mk-name body-func)
+                       `(defmacro ,mk-name (name-outer inner inner-map nargs)
+                          (let ((level-args (loop for i below nargs collect (gensym)))
+                                (body-func ',body-func))
+                            `(defun ,name-outer (e ,@level-args) 
+                               (,inner (if (gjl.lisp-util:length1p ,(first level-args)) e
+                                         ,(funcall body-func inner-map level-args))
+                                       ,@(loop for arg in level-args collect `(car ,arg))))))))
+  (mk-mk-level-func mk-level-func-array mk-level-array-inner)
+  (mk-mk-level-func mk-level-func-list  mk-level-list-inner))
 
 ;; multiple evaluation!
 (defmacro s-or-mlist-to-list (e)
