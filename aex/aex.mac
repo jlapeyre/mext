@@ -4,13 +4,15 @@ mext_require("maxdoc");
 mext_provide("aex",
   [
   "aex-packages",
-  "misc-util",
   "aex-core",
   "mext-predicates",
   "ifunctions",
   "system-essential",
   "mset",
   "lisp-numeric"]);
+
+/*  "misc-util",  try moving this */
+
 
 /*
 mext_provide("aex",

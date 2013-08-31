@@ -244,7 +244,7 @@
 (defmacro defmfun1-error-final (mssg &optional have-match)
  "used at an exit point of a defmfun1 body. does not call return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
-            (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
+            (format nil "~a: ~a; in ~a" ($sconcat defmfun1-func-name) ,mssg
               ($sconcat defmfun1-func-call)) ,@(defmfun1::write-force-match-code have-match))
           defmfun1-func-call))
 

@@ -21,6 +21,7 @@
     (:file "maxdoc-sections")
     (:file "defmfun1-max")
     (:file "examples")
+    (:file "misc-util")
     (:file "infix-rule" :load-only t)))
 
 ;; neither compile nor load when building

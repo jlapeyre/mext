@@ -19,10 +19,10 @@
   :source-extension "mac"
   :components
   ((:file "numerical")))
-
   
 (mk:defsystem numerical-rtests
               :source-extension "mac"
               :source-pathname "rtests"
               :components
-              ((:file "rtest_numerical")))
+              ((:file "rtest_numerical")
+               (:file "rtest_mquad")))

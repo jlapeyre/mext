@@ -11,4 +11,5 @@ mext_provide(
   "maxdoc-sections",
   "defmfun1-max",
   "examples",
+  "misc-util1",
   "infix-rule"]);

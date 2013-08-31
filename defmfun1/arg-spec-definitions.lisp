@@ -52,6 +52,9 @@
                                           (every #'(lambda (x) (numberp x)) (cdr e))))
                      (:pp :to-float "an expression that can be converted to a float"
                           (let ((v (maxima::$float e))) (list (numberp v) v)))
+                     (:pp :to-or-float-inf "inf, minf, or an expression that can be converted to a float"
+                          (let ((v (maxima::$float e))) 
+                            (list (or (numberp v) (member v '(maxima::$inf maxima::$minf))) v)))
                      (:complex-number  "a complex number" (complex_number_p e)) ; from ellipt.lisp
                      (:non-neg-number "a non-negative number"
                       (and (numberp e) (>= e 0)))
@@ -64,6 +67,7 @@
                                              (and (maxima::$listp e)
                                                   (every #'(lambda (x) (and (integerp x) (> x 0)))
                                                          (cdr e)))))
+;; Need to check at defmfun1 expansion time that a check like following is formed correctly.
                      ((:int-range 2) "an integer between ~a and ~a"
                        int-range-check)
                      ((:int-gt 1) "an integer greater than ~a"
