@@ -12,6 +12,7 @@
 ;(defmfun1 $etest1 ((:non-neg-int x )) x)
 
 ;; list of stuff before variable name
+;; NO test for this now. Hard to distinguish from legit cases
 ;(defmfun1 $etest1a (((:non-neg-int) x )) x)
 
 ;; no argument list
@@ -26,6 +27,6 @@
 ;(defmfun1 7 $etest3a ((yy (:giraffe))))
 
 ; null function name
-(defmfun1 () (zz))
+;(defmfun1 () (zz))
 
 

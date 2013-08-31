@@ -116,7 +116,7 @@
   (when (or (not (symbolp name)) (null name))
     (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_name_not_symbol
       name "The first argument, the function name, is not a non-null symbol."))
-  (when (not (and (consp args) (listp args)))
+  (when (not (listp args))
     (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_missing_arg_list
       name "No argument list found."))
   (when (member :match directives)
@@ -166,8 +166,13 @@
               (declare (ignorable defmfun1-func-name defmfun1-func-call defmfun1-func-call-args ))
               (declare (fixnum ,nargs))
               ,@declare-form ; moved out of body, because it must occur after parameter list
-              (,@(if opt `(dbind (,opt-args ,restarg) (defmfun1::collect-opt-args ,args ,nreq))
+              (,@(if opt `(dbind (,opt-args ,restarg) 
+                                 ,(if (member :fast-opt directives)
+                                      `(defmfun1::collect-opt-args-fast ,args ,nreq)
+                                      `(defmfun1::collect-opt-args-slow ,args)))
                       `(let ((,restarg ,args)))) ; filter options from other args
+;              (,@(if opt `(dbind (,opt-args ,restarg) (defmfun1::collect-opt-args ,args ,nreq))
+;                      `(let ((,restarg ,args)))) ; filter options from other args
                (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
                    ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
                    ,(defmfun1-write-assignments name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h have-match)

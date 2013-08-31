@@ -26,7 +26,7 @@
  This can be set to all avaliable systems with the function " :mrefdot "set_all_doc_systems"
  " If this variable is false, then all documentation is enabled."))
 
-(maxima::defmfun1 (maxima::$set_all_doc_systems :doc)  ()
+(maxima::defmfun1 (maxima::$set_all_doc_systems :doc) ()
   "Enable all documentation databases for describe, ? and ??.
    This sets doc_system_list to a list of all doc systems."
   (setf maxima::$doc_system_list (maxima::$doc_system_list)))

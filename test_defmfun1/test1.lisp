@@ -88,3 +88,5 @@
 ;; Disable checking for number of arguments passed.
 (defmfun1 ($dtest10 :no-nargs) (x)
   x)
+
+(defmfun1 $dtest11 (x &opt $opt1) x)

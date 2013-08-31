@@ -521,9 +521,9 @@ the hash table *mext-functions-table*."
           (when (keyword-p (first arg))
             (parse-args-err 'maxima::$defmfun1_malformed_argspec name 
                             "First element is a keyword, variable name expected." arg))
-          (when (consp (first arg))
-            (parse-args-err 'maxima::$defmfun1_malformed_argspec name 
-                            "First element is a list, variable name expected." arg))
+;          (when (consp (first arg)) ; can't do this. gives false negatives.
+;            (parse-args-err 'maxima::$defmfun1_malformed_argspec name 
+;                            "First element is a list, variable name expected." arg))
           (let
               ((nospecs (remove-if #'(lambda(x) (or (member x *arg-spec-keywords*) (member x *pp-spec-types*)
                                                     (and (listp x) (keyword-p (first x))
@@ -586,26 +586,66 @@ the hash table *mext-functions-table*."
  "For passing rules from lisp code."
   `(list '(maxima::|$Rule| maxima::simp) ',rule ,val))
 
+;; At run time, filter parameters passed to a defmfun1 definition into option
+;;  params and non-option params. Skipping searching through required arguments
+;;  is done with the fast version. But this will cause an error if the user
+;;  makes the error of omitting required arguments. 
+(macrolet ((mk-coll (fname fast-flag)
+                    (let ((arg-list (if fast-flag '(rarg nmin) '(rarg))))
+                      `(defun ,fname ,arg-list
+                         ,@(when fast-flag '((declare (fixnum nmin))))
+                         (do* ((rarg1 rarg (cdr rarg1))
+                               (a (car rarg) (car rarg1))
+                               ,@(when fast-flag '((i 0 (1+ i))))
+                               (opts)
+                               (nonopts))
+                             ((null rarg1) (list opts (nreverse nonopts)))
+                           ,@(when fast-flag '((declare (fixnum i))))
+                           (cond
+                            ,@(when fast-flag `(((< i nmin) (push a nonopts))))
+                            ((rule-expr-p a) (push (cdr a) opts))
+                            ((listof-rule-expr-p a) (setf opts (collect-opt-args-lev-1 (cdr a) opts)))
+                            (t (push a nonopts))))))))
+  (mk-coll collect-opt-args-fast t)
+  (mk-coll collect-opt-args-slow nil))
+
 ;; removed nreverse before returning opts, because
 ;; match-opt is the last opt, but we want it processed first.
-(maxima::ddefun collect-opt-args (rarg nmin)
-  "At run time, filter parameters passed to a defmfun1 definition into option
-  params and non-option params. Skipping searching through required arguments
-  is done here, but it is probably not most efficient."
-  (declare (fixnum nmin))
-  (do* ((rarg1 rarg (cdr rarg1))
-        (a (car rarg) (car rarg1))
-        (i 0 (1+ i))
-        (opts)
-        (nonopts))
-;       ((null rarg1) (list (nreverse opts) (nreverse nonopts)))
-       ((null rarg1) (list opts (nreverse nonopts)))
-    (declare (fixnum i))
-    (cond
-      ((< i nmin) (push a nonopts)) ; for a bit of efficiency
-      ((rule-expr-p a) (push (cdr a) opts))
-      ((listof-rule-expr-p a) (setf opts (collect-opt-args-lev-1 (cdr a) opts)))
-      (t (push a nonopts)))))
+;; (maxima::ddefun collect-opt-args-fast (rarg nmin)
+;;   "At run time, filter parameters passed to a defmfun1 definition into option
+;;   params and non-option params. Skipping searching through required arguments
+;;   is done here, but it is probably not most efficient."
+;;   (declare (fixnum nmin))
+;;   (do* ((rarg1 rarg (cdr rarg1))
+;;         (a (car rarg) (car rarg1))
+;;         (i 0 (1+ i))
+;;         (opts)
+;;         (nonopts))
+;;       ((null rarg1) (list opts (nreverse nonopts)))
+;;     (declare (fixnum i))
+;;     (cond
+;;      ((< i nmin) (push a nonopts)) ; for a bit of efficiency
+;;      ((rule-expr-p a) (push (cdr a) opts))
+;;      ((listof-rule-expr-p a) (setf opts (collect-opt-args-lev-1 (cdr a) opts)))
+;;      (t (push a nonopts)))))
+
+;; (defun collect-opt-args-slow (rarg)
+;;   "Same as collect-opt-args, but search all args for Rule.
+;;  This may be slower, but catches errors when calling the
+;;  defmfun1-defined function."
+;;   (do* ((rarg1 rarg (cdr rarg1))
+;;         (a (car rarg) (car rarg1))
+;;         (i 0 (1+ i))
+;;         (opts)
+;;         (nonopts))
+;;       ((null rarg1) (list opts (nreverse nonopts)))
+;;     (declare (fixnum i))
+;;     (cond
+;; ;     ((< i nmin) (push a nonopts)) ; for a bit of efficiency
+;;      ((rule-expr-p a) (push (cdr a) opts))
+;;      ((listof-rule-expr-p a) (setf opts (collect-opt-args-lev-1 (cdr a) opts)))
+;;      (t (push a nonopts)))))
+
 
 (defun collect-opt-args-lev-1 (rarg opts)
   "Collect options that were supplied in an mlist."

@@ -6,6 +6,9 @@
 
 (defmfun1:set-file-and-package "quadpack-nint.lisp" "numerical")
 
+(defparameter mquad-error-string
+  "Inegration failed. Probably a floating-point error")
+
 (defmfun1 ($mquad_qags :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) &opt
                                   (($epsrel epsrel) 1e-8 :to-float) 
                                   (($limit limit) 200 :non-neg-int) (($epsabs epsabs) 0.0 :to-float))
@@ -23,9 +26,9 @@
 			  limit lenw 0 iwork work)
 	  (declare (ignore junk z-a z-b z-epsabs z-epsrel z-limit z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-      (error () (defmfun1-error-final "Exception. Probably a floating-point exception" t)))))
+        (error () (defmfun1-error-final mquad-error-string :match)))))
 
-(defmfun1 ($mquad_qagi :doc) (fun (var :or-symbol-subvar) a b &opt
+(defmfun1 ($mquad_qagi :doc :match) (fun (var :or-symbol-subvar) a b &opt
 		      (($epsrel epsrel) 1e-8 :to-float) (($limit limit) 200 :non-neg-int) 
                       (($epsabs epsabs) 0.0 :to-float))
   :desc ("This is an interface to qagi that is modified from " :emrefdot "quad_qagi")
@@ -77,9 +80,9 @@
 	      (declare (ignore junk z-bound z-inf z-epsabs z-epsrel
 			       z-limit z-lenw last))
 	      (list '(mlist) result abserr neval ier))
-	  (error () (defmfun1-error-final "Exception. Probably a floating-point exception.")))))))
+            (error () (defmfun1-error-final mquad-error-string :match)))))))
 
-(defmfun1 ($mquad_qagp :doc) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) points
+(defmfun1 ($mquad_qagp :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) (points :list)
 		     &opt (($epsrel epsrel) 1e-8 :to-float) (($limit limit) 200 :non-neg-int) 
                      (($epsabs epsabs) 0.0 :to-float))
   :desc ("This is an interface to qagp that is modified from " :emrefdot "quad_qagp")
@@ -104,4 +107,4 @@
 	  (declare (ignore junk z-a z-b z-npts z-points z-epsabs z-epsrel
 			   z-leniw z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-      (error () (defmfun1-error-final "Exception. Probably a floating-point exception.")))))
+        (error () (defmfun1-error-final mquad-error-string :match)))))
