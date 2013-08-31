@@ -111,17 +111,17 @@
 ;; compile-time, and save it somehow to disk. But that seems much more complicated, and I
 ;; can't see a benefit now. Time required to load does not seem to be affected at all.
 (defmacro defmfun1 (name args &body body &aux directives have-match count-args)
-  (let ((d1 (car body))) ; these checks are getting long. should move to function.
-    (when (and (keyword-p d1) (not (eq :desc d1)))
-      (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_unknown_body_directive
-      name (format nil (sconcat "The first form in the body ~a is a keyword, but is not `:desc'.~%"
-            "This check can be removed if it is legal/useful for the body to begin with a keyword.")
-                   (defmfun1::keyword-etc-to-string d1)))))
   (when (listp name) 
     (setf directives (cdr name)) (setf name (car name)))
   (when (or (not (symbolp name)) (null name))
     (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_name_not_symbol
       name "The first argument, the function name, is not a non-null symbol."))
+  (let ((d1 (car body))) ; these checks are getting long. should move to function.
+    (when (and (keyword-p d1) (not (eq :desc d1)))
+      (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_unknown_body_directive
+      name (format nil (sconcat "The first form in the body ~a is a keyword, but is not `:desc'.~%"
+            "This check can be removed if it is legal/useful for the body to begin with a keyword.")
+                   (sym-to-string d1)))))
   (when (not (listp args))
     (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_missing_arg_list
       name "No argument list found."))
@@ -179,22 +179,17 @@
                                       `(defmfun1::collect-opt-args-fast ,args ,nreq)
                                       `(defmfun1::collect-opt-args-slow ,args)))
                       `(let ((,restarg ,args)))) ; filter options from other args
-;              (,@(if opt `(dbind (,opt-args ,restarg) (defmfun1::collect-opt-args ,args ,nreq))
-;                      `(let ((,restarg ,args)))) ; filter options from other args
                (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
                    ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
                    ,(defmfun1-write-assignments name args reqo restarg nargs 
                       supplied-p-hash reqo-spec pp-spec-h have-match count-args)
                    ,@(when rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
-;                   (when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match))
                    ,(when count-args
                     `(when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match)))
                    ,@(when (and (null rest) count-args)
                        `((if ,restarg ,(defmfun1::narg-error-or-message 
                                          name args restarg nargs nreq nreqo rest have-match))))
                    ,@(defmfun1-write-rest-assignments name args rest reqo-spec have-match)
-;   We moved this above so that binding for match-opt are available for arg checks.
-;                   ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
                    ,@body)))))))))
 
 ;; Not using this

@@ -328,7 +328,7 @@ the hash table *mext-functions-table*."
 ;          (format nil "No argument message for test ~a." (keyword-etc-to-string spec-name))))
         (maxima::merror1 '$defmfun1_no_spec_mssg 
           "defmfun1: Error printing argument test description for test `~a'. No test description found." 
-          (keyword-etc-to-string spec-name)))
+          (maxima::sym-to-string spec-name)))
       (if args (apply #'format (append (list nil txt) args))
           txt))))
 
@@ -347,6 +347,7 @@ the hash table *mext-functions-table*."
             (setf (gethash spec-name *arg-check-mssg-table*) (list (car err-mssg-spec) (rest err-mssg-spec))))
           (t (merror "defmfun1::mk-arg-check: Unrecognized arg-class ~M" arg-class)))))
 
+;; For tests that take additional argumens. eg (:int-range 2)
 (defun mk-arg-check2 (arg-class spec-name-and-args err-mssg-spec body)
   (let* ((emsg (rest err-mssg-spec)))
     (let  ((spec-name (first spec-name-and-args))) ;; throw away the args, but we should use then for checking
@@ -412,23 +413,38 @@ the hash table *mext-functions-table*."
     (maxima::merror1 (format nil "~a One of ~? is ~a in ~a." (err-prefix name) (car espec)
                             arg-list1 specl-str (format-call name call)))))
 
+;; These are parameters, eg (1 3)  in (:int-range 1 3)
+;; Ugh, this is all about removing quotes. And maybe it is not even a good
+;; idea, because ($COS %COS) becomes (cos cos)
+(defun format-arg-spec-params (fmt p)
+  (apply #'format (append (list nil fmt)
+                          (mapcar 
+                           #'(lambda (x)
+                               (if (and (listp x) (eq 'quote (car x)))
+                                   (maxima::$sconcat (second x))
+                                 (maxima::$sconcat x)))
+                                          p))))
+
 ;; Yes, we might as well preserve the call and not have two of these.
 ;; NOTE: The call is now preserved. So the second form with (eq call nil)
 ;; is never used. We can get rid of the second form.
 ;; Generate two functions. These functions are called at runtime.
 (defmacro mk-signal-error (name hash)
   "Prints one of two error messages depending on whether it is called
- in a defmfun1 expansion. If not, the list of call args is lost. But, I
- suppose we could preserve them in a lexical variable. Call this with
- call nil to get the second message."
+   in a defmfun1 expansion. If not, the list of call args is lost. But, I
+   suppose we could preserve them in a lexical variable. Call this with
+   call nil to get the second message."
   `(defun ,name (spec-name arg-list name call force-match match-val)
-     (let ((spec-args (if (listp spec-name) (rest spec-name) nil)))
+     (let ((spec-args (if (listp spec-name) (rest spec-name) nil))) ; s.a. (:int-range 1 3)
        (when (listp spec-name) (setf spec-name (car spec-name)))
        (let* ((espec (gethash spec-name ,hash))
               (arg-list1 (format-args arg-list))
               (specl-str (not-comma-separated-english (cadr espec)))
               (pre-name (err-prefix name))
-              (spstr (if spec-args (apply #'format (append (list nil specl-str) spec-args))
+              (spstr (if spec-args
+                         (progn 
+                           (format t "~a~%" spec-args)
+                           (format-arg-spec-params specl-str spec-args))
                        specl-str))
               (call-str (format-call name call)))
          (cond (call
@@ -445,6 +461,15 @@ the hash table *mext-functions-table*."
 
 (defun int-range-check (n1 n2)
   `(and (integerp e) (>= e ,n1) (<= e ,n2)))
+
+(defun int-gt-check (n)
+  `(and (integerp e) (> e ,n)))
+
+(defun int-gte-check (n)
+  `(and (integerp e) (>= e ,n)))
+
+(defun arg-member-check (list)
+  `(member e ,list :test #'equal))
 
 (dolist (one-check *arg-spec-definitions*)
   (when (eq :pp (car one-check))
@@ -494,12 +519,10 @@ the hash table *mext-functions-table*."
       (setf (getf arglist argt) (nreverse (getf arglist argt))))
     arglist))
 
-(defun keyword-etc-to-string (kw)
-  (maxima::maybe-invert-string-case (format nil "~s" kw)))
-
 (defun expansion-error-fname (fname)
-  (format nil "defmfun1: Error expanding function definition for ~a." 
-          (maxima::maybe-invert-string-case (format nil "~a" fname))))
+  (format nil "defmfun1: Error expanding function definition for ~a."
+          (maxima::sym-to-string fname)))
+;          (maxima::maybe-invert-string-case (format nil "~a" fname))))
 
 (defun file-package-string ()
   (format nil "In source file ~a, package ~a." (doc-system:get-source-file-name) (doc-system:get-source-package)))
@@ -511,13 +534,13 @@ the hash table *mext-functions-table*."
 (defun parse-args-err (errcode fname mssg arg)
   (defmfun1-expand-error errcode fname
     (format nil "Error in argument spec ~s.~%~a"
-            (keyword-etc-to-string arg) mssg)))
+            (maxima::sym-to-string arg) mssg)))
 
 (defun check-directives (name directives)
   (dolist (d directives)
     (when (not (member d '( :doc :no-nargs :fast-opt :match )))
       (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_unknown_directive
-        name (format nil "Unknown directive ~a." (keyword-etc-to-string d))))))
+        name (format nil "Unknown directive ~a." (maxima::sym-to-string d))))))
 
 (maxima::ddefun parse-args (name arglist)
  "At macro expansion time of defmfun1, this function is called and

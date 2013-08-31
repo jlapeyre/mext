@@ -2,6 +2,10 @@
 ;(mext:mext-optimize)
 (use-package :gjl.lisp-util)
 
+;; maybe allow string to fall through.
+(defun sym-to-string (s)
+  (maybe-invert-string-case (format nil "~s" s)))
+
 ;; multiple evaluation!
 ;; Looks like alters the input to be a lisp list (or makes a new object)
 ;; If input is an atom, then (atom),
@@ -15,5 +19,3 @@
          ((listp ,e))
          (t
           (setf ,e (list ,e)))))
-
-

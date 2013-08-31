@@ -35,6 +35,8 @@
                      (:or-pathname-string ("a string" "a lisp pathname")
                                           (or (stringp e) (pathnamep e)))
                      (:list    "a list"   (maxima::$listp e))
+                     ((:member 1)  "one of ~a"
+                      arg-member-check)
                      (:ae-list "a list (lex or aex)"
                       (maxima::$ae_listp e))
                      (:or-ae-list-string ("a list (lex or aex)" "a string")
@@ -64,6 +66,10 @@
                                                          (cdr e)))))
                      ((:int-range 2) "an integer between ~a and ~a"
                        int-range-check)
+                     ((:int-gt 1) "an integer greater than ~a"
+                       int-gt-check)
+                     ((:int-gte 1) "an integer greater than or equal to ~a"
+                       int-gte-check)
                      (:uint-64 ,(format nil (concatenate 'string 
                          "equivalent to an unsigned 64 bit integer~%"
                       " (that is, an integer between 0 and 2 to the power 64)~%"
@@ -126,6 +132,8 @@
                       int-range-check)
                      (:non-neg-int "a non-negative integer."
                       (and (integerp e) (>= e 0)))
+                     ((:int-gte 1) "an integer greater than or equal to ~a"
+                       int-gte-check)
                      (:non-neg-number "a non-negative number"
                       (and (numberp e) (>= e 0)))
                      (:pp :to-float "an expression that can be converted to a float"

@@ -12,10 +12,9 @@
 (defmfun1-opt defmfun-quad ( (($limit limit) 200 :non-neg-int)
                   (($epsabs epsabs) 0.0 :to-float) (($epsrel epsrel) 1e-8 :to-float)))
 
-
-(defmfun-quad ($quad-qag :doc) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) 
-                     (key (:int-range 1 6) (points :list)))
-  :desc
+(defmfun-quad ($mquad_qag :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) 
+                     (key (:int-range 1 6)))
+  :desc ("This is an interface to qag that is modified from " :emrefdot "quad_qag")
   (quad_argument_check fun var a b) 
   (let* ((lenw (* 4 limit))
 	 (work (make-array lenw :element-type 'flonum))
@@ -31,11 +30,7 @@
 			 limit lenw 0 iwork work)
 	  (declare (ignore junk z-a z-b z-epsabs z-epsrel z-key z-limit z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-      (error ()
-	`(($quad_qag) ,fun ,var ,a ,b ,key
-	  ((mequal) $epsrel ,epsrel)
-	  ((mequal) $epsabs ,epsabs)
-	  ((mequal) $limit ,limit))))))
+        (error () (defmfun1-error-final mquad-error-string :match)))))
 
 (defmfun-quad ($mquad_qags :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float))
   :desc ("This is an interface to qags that is modified from " :emrefdot "quad_qags")
@@ -128,5 +123,54 @@
 			  leniw lenw 0 iwork work)
 	  (declare (ignore junk z-a z-b z-npts z-points z-epsabs z-epsrel
 			   z-leniw z-lenw last))
+	  (list '(mlist) result abserr neval ier))
+        (error () (defmfun1-error-final mquad-error-string :match)))))
+
+(defmfun-quad ($mquad_qawc :doc :match) (fun (var :or-symbol-subvar) (c :to-float) (a :to-float) (b :to-float))
+  :desc ("This is an interface to qawc that is modified from " :emrefdot "quad_qawc")
+  (quad_argument_check fun var a b) 
+  (let* ((lenw (* 4 limit))
+	 (work (make-array lenw :element-type 'flonum))
+	 (iwork (make-array limit :element-type 'f2cl-lib:integer4))
+	 (f (get-integrand fun var)))
+    (handler-case
+	(multiple-value-bind (junk z-a z-b z-c z-epsabs z-epsrel result abserr neval ier
+				   z-limit z-lenw last)
+	    (slatec:dqawc #'(lambda (x)
+			      (float (funcall f x)))
+			  a b c epsabs epsrel 0.0 0.0 0 0                 
+			  limit lenw 0 iwork work)
+	  (declare (ignore junk z-a z-b z-c z-epsabs z-epsrel z-limit z-lenw last))
+	  (list '(mlist) result abserr neval ier))
+        (error () (defmfun1-error-final mquad-error-string :match)))))
+
+(defmfun1 ($mquad_qawf :doc :match) (fun (var :or-symbol-subvar) (a :to-float) 
+                          (omega :to-float) (trig (:member '($cos 1 %cos $sin %sin 2)))
+                                   &opt  (($limit limit) 200 :non-neg-int)
+                  (($epsabs epsabs) 1e-10 :to-float) 
+		  (($maxp1 maxp1) 100 :non-neg-int) (($limlst limlst) (:int-gte 3) 10))
+  (let* ((leniw limit)
+	 (lenw (+ (* 2 leniw) (* 25 maxp1)))
+	 (work (make-array lenw :element-type 'flonum))
+	 (iwork (make-array leniw :element-type 'f2cl-lib:integer4))
+	 (f (get-integrand fun var))
+	 (integr (ecase trig
+		   ((1 %cos $cos) 1)
+		   ((2 %sin $sin) 2))))
+    (handler-case
+	(multiple-value-bind (junk z-a z-omega z-integr
+				   epsabs result abserr neval ier
+				   z-limlst z-lst
+				   z-leniw z-maxp1 z-lenw)
+	    (slatec:dqawf #'(lambda (x)
+			      (float (funcall f x)))
+			  (float-or-lose a)
+			  (float-or-lose omega)
+			  integr
+			  (float-or-lose epsabs)
+			  0.0 0.0 0 0
+			  limlst 0 leniw maxp1 lenw iwork work)
+	  (declare (ignore junk z-a z-omega z-integr epsabs z-limlst z-lst
+			   z-leniw z-maxp1 z-lenw))
 	  (list '(mlist) result abserr neval ier))
         (error () (defmfun1-error-final mquad-error-string :match)))))
