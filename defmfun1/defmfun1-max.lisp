@@ -235,14 +235,14 @@
   `(unless (funcall ,(defmfun1::get-check-func spec-name) ,arg)
      (progn
        (defmfun1::signal-arg-error ',spec-name (list ,arg) defmfun1-func-name defmfun1-func-call-args
-         ,@(defmfun1:: write-force-match-code have-match))
+         ,@(defmfun1::write-force-match-code have-match))
        (return-from ,func-name defmfun1-func-call))))
 
 (defmacro defmfun1-error-final (mssg &optional have-match)
  "used at an exit point of a defmfun1 body. does not call return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
             (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
-              ($sconcat defmfun1-func-call)) ,@(defmfun1:: write-force-match-code have-match))
+              ($sconcat defmfun1-func-call)) ,@(defmfun1::write-force-match-code have-match))
           defmfun1-func-call))
 
 (defmacro defmfun1-error-return (funcname mssg &optional have-match)
@@ -250,7 +250,7 @@
   `(progn (defmfun1::error-or-message defmfun1-func-name 
             (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
                     ($sconcat defmfun1-func-call))
-            ,@(defmfun1:: write-force-match-code have-match))            
+            ,@(defmfun1::write-force-match-code have-match))            
           (return-from ,funcname defmfun1-func-call)))
 
 (defun mk-defmfun1-form (name args body)
