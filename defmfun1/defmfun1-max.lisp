@@ -34,7 +34,7 @@
 ;; defmfun1-func-call is the noun form of the function call
 ;; defmfun1-func-call-args is the same, but just args
 ;; For efficiency, these should perhaps only be optionally saved, if requested.
-;; Or better make some kind of macro that only writes them if needed.
+;; Or better make a macro that only writes them if needed.
 ;; Also, we don't need all three of these. It could be rewritten.
 (defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest)
   `((,nargs 0) ; count args passed when calling
@@ -109,7 +109,6 @@
 ;; Another option would be to move it outside the backquote, so that it is generated at
 ;; compile-time, and save it somehow to disk. But that seems much more complicated, and I
 ;; can't see a benefit now. Time required to load does not seem to be affected at all.
-;; TODO look for bad directives
 (defmacro defmfun1 (name args &body body &aux directives have-match)
   (when (listp name) 
     (setf directives (cdr name)) (setf name (car name)))
