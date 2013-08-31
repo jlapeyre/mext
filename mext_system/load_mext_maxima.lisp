@@ -1,7 +1,15 @@
-;;; For installing mext-maxima
-;;; Start maxima and load this file.
+;;; This file is loaded when building and installing mext-maxima It
+;;; should be called via 00-mext-ibuild.lisp.  This file is similar to
+;;; load_mext_maxima1.lisp, but that file is installed in the mext
+;;; subdirectory of the user's maxima directory. It loads the rest of
+;;; the mext system.
 ;;;
-;;; That is: Start maxima cd into this directory and type
+;;; load_mext_maxima.lisp -- only used during building and installation
+;;; load_mext_maxima1.lisp -- only used when user loads the mext system.
+
+;;;
+;;; I think the instructions below are obsolete.
+;;; Start maxima cd into this directory and type
 ;;; load("./load_mext_maxima.lisp");
 ;;;  Or, if you can't cd into the distribution directory, type
 ;;; load("/path/tofile/load_mext_maxima.lisp");
@@ -17,7 +25,7 @@
 
 (let ((dir *load-mext-maxima-load-pathname*))
   (loop for file in (list  
-      #+openmcl "defsystem" "operate-on-system2" "mext-maxima-packages" "gjl-lisp-util" 
+      #+openmcl "defsystem" "operate-on-system2" "mext-maxima-packages" "gjl-lisp-util" "gjl-maxima-util"
        "pathname-library" "mext-maxima-system" "dontkill" "compile" "mext-component-operations")
         do
         (let ((file-path (make-pathname :directory dir :name file :type "lisp")))

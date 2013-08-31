@@ -1,8 +1,9 @@
-;; These are copied from maxima source.
-;; The maxima functions do not allow the intermediate
-;; filenames to be specified. So, if the source is in
-;; a dir for which user has no write permission, translation
-;; and compilation will fail
+;; Redefine some translation and compiling function for our needs.
+
+;; These are copied from maxima source.  The maxima functions do not
+;; allow the intermediate filenames to be specified. So, if the source
+;; is in a dir for which user has no write permission, translation and
+;; compilation will fail
 
 (in-package :maxima)
 

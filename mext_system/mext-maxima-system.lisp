@@ -1,5 +1,8 @@
 ;;; -*- Mode: LISP; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 
+;;; This file contains the bulk of the code for the mext package,
+;;; which manages third party Maxima packages.
+
 (in-package :mext-maxima)
 
 ;(defmacro mext-optimize ()
@@ -731,4 +734,3 @@ This was copied from maxima source init-cl.lisp.")
   (mext::mext-clear))
 
 ($mext_provided "mext_system")
-

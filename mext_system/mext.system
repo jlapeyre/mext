@@ -47,6 +47,7 @@
     #+openmcl (:file "defsystem")
     (:file "operate-on-system2")
     (:file "gjl-lisp-util")
+    (:file "gjl-maxima-util")
     (:file "pathname-library")
     (:file "compile")
     (:file "mext-component-operations")

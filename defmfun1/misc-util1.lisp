@@ -37,10 +37,11 @@
 ;;     (inner e a1 a2 ... ) where e is the same as e passed to name-outer and
 ;;  a1 a2 ... are single elements in from each of the arglists.
 
+;; This stuff should be moved to aex, because some of it relies on aex
+
 (defun mk-level-list-inner (inner-map level-args)
   `(cons (car e) (mapcar (lambda (x) (,inner-map x ,@(loop for arg in level-args collect `(cdr ,arg))))
                          (cdr e))))
-
 
 (defun mk-level-array-inner (inner-map level-args)
   `(let* ((ne (maxima::aex-copy-new-n e))
@@ -49,28 +50,31 @@
                      (loop for i from 0 to (1- (length a)) do
                           (setf  (aref a i) (,inner-map (aref ea i) ,@(loop for arg in level-args collect `(cdr ,arg)))))
                      ne))
-
 (macrolet 
     ((mk-mk-level-func (mk-name body-func)
-                       `(defmacro ,mk-name (name-outer inner inner-map nargs)
-                          (let ((level-args (loop for i below nargs collect (gensym)))
-                                (body-func ',body-func))
-                            `(defun ,name-outer (e ,@level-args) 
-                               (,inner (if (gjl.lisp-util:length1p ,(first level-args)) e
-                                         ,(funcall body-func inner-map level-args))
-                                       ,@(loop for arg in level-args collect `(car ,arg))))))))
+         `(defmacro ,mk-name (name-outer inner inner-map nargs)
+            (let ((level-args (loop for i below nargs collect (gensym)))
+                  (body-func ',body-func))
+              `(defun ,name-outer (e ,@level-args) 
+                 (,inner (if (gjl.lisp-util:length1p ,(first level-args)) e
+                           ,(funcall body-func inner-map level-args))
+                         ,@(loop for arg in level-args collect `(car ,arg))))))))
   (mk-mk-level-func mk-level-func-array mk-level-array-inner)
   (mk-mk-level-func mk-level-func-list  mk-level-list-inner))
 
 ;; multiple evaluation!
-(defmacro s-or-mlist-to-list (e)
-  "Convert single element of mlist to a lisp list.
-   ie, make singleton out of element."
-  `(cond ((maxima::$listp ,e)
-          (pop ,e))
-         ((listp ,e))
-         (t
-          (setf ,e (list ,e)))))
+;; Looks like alters the input to be a lisp list (or makes a new object)
+;; If input is an atom, then (atom),
+;;  if a lisp list, falls through,
+;;  maxima list, then remove '(mlist)
+;; (defmacro s-or-mlist-to-list (e)
+;;   "Convert single element of mlist to a lisp list.
+;;    ie, make singleton out of element."
+;;   `(cond ((maxima::$listp ,e)
+;;           (pop ,e))
+;;          ((listp ,e))
+;;          (t
+;;           (setf ,e (list ,e)))))
 
 ;; uh this one is probably leaky, but it should not
 ;; be called with complicated expressions, i hope.n
