@@ -36,8 +36,8 @@
 ;; For efficiency, these should perhaps only be optionally saved, if requested.
 ;; Or better make a macro that only writes them if needed.
 ;; Also, we don't need all three of these. It could be rewritten.
-(defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest)
-  `((,nargs 0) ; count args passed when calling
+(defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest count-args)
+  `(,@(when count-args `((,nargs 0))) ; count args passed when calling
    (defmfun1-func-name ',name) ; save this name for echeck-arg macro below. Wasteful as most funcs never use it.
    (defmfun1-func-call (cons (list ',name) ,args))
    (defmfun1-func-call-args ,args)
@@ -49,7 +49,8 @@
    ,@(loop for n in (get-hash-keys supplied-p-hash) collect `,(gethash n supplied-p-hash))
    ,@(when rest (cdr rest)))) ; binding for &rest arg
 
-(defun defmfun1-write-assignments (name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h have-match)
+(defun defmfun1-write-assignments (name args reqo restarg nargs 
+                                        supplied-p-hash reqo-spec pp-spec-h have-match count-args)
  "Write code to set required and &optional args to values supplied by call."
   `(tagbody
      ,@(do* ((reqo1 reqo (cdr reqo1))
@@ -57,7 +58,7 @@
              (res))
             ((null reqo1)  (nreverse res))
             (push `(if (endp ,restarg) (go out)) res)
-            (push `(incf ,nargs) res)
+            (when count-args (push `(incf ,nargs) res))
             (push `(setf ,targ (pop ,restarg)) res)
             (when (gethash targ supplied-p-hash) (push `(setf ,(gethash targ supplied-p-hash) t) res))
             (dolist (tst (gethash targ reqo-spec))
@@ -109,10 +110,8 @@
 ;; Another option would be to move it outside the backquote, so that it is generated at
 ;; compile-time, and save it somehow to disk. But that seems much more complicated, and I
 ;; can't see a benefit now. Time required to load does not seem to be affected at all.
-;; TODO: Don't need incf nargs thing if :no-nargs directive is given.
-;; Same with restargs, etc.
-(defmacro defmfun1 (name args &body body &aux directives have-match)
-  (let ((d1 (car body))) ; these check
+(defmacro defmfun1 (name args &body body &aux directives have-match count-args)
+  (let ((d1 (car body))) ; these checks are getting long. should move to function.
     (when (and (keyword-p d1) (not (eq :desc d1)))
       (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_unknown_body_directive
       name (format nil (sconcat "The first form in the body ~a is a keyword, but is not `:desc'.~%"
@@ -130,6 +129,7 @@
   (when (member :match directives)
     (setf have-match t)
     (setf args (append args `(&opt (($match match-opt) nil match-supplied-p) ))))
+  (when (not (member :no-nargs directives)) (setf count-args t))
   (dbind (arg-list arg-specs pp-specs supplied-p-hash) (defmfun1::group-and-parse-args name args)
    (dbind (req optional aux rest opt) (defmfun1::rem-keys-arg-list arg-list)
     (let* ((args (gensym "args-"))
@@ -170,9 +170,9 @@
           (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) 
             ,@doc-string
             ,@(when (eq defun-type 'defmspec) `((setf ,args (cdr ,args))))
-            (let* ,(defmfun1-write-let-bindings name nargs args all-args supplied-p-hash rest)
+            (let* ,(defmfun1-write-let-bindings name nargs args all-args supplied-p-hash rest count-args)
               (declare (ignorable defmfun1-func-name defmfun1-func-call defmfun1-func-call-args ))
-              (declare (fixnum ,nargs))
+              ,@(when count-args `((declare (fixnum ,nargs))))
               ,@declare-form ; moved out of body, because it must occur after parameter list
               (,@(if opt `(dbind (,opt-args ,restarg) 
                                  ,(if (member :fast-opt directives)
@@ -183,12 +183,13 @@
 ;                      `(let ((,restarg ,args)))) ; filter options from other args
                (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
                    ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
-                   ,(defmfun1-write-assignments name args reqo restarg nargs supplied-p-hash reqo-spec pp-spec-h have-match)
+                   ,(defmfun1-write-assignments name args reqo restarg nargs 
+                      supplied-p-hash reqo-spec pp-spec-h have-match count-args)
                    ,@(when rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
 ;                   (when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match))
-                   ,(when (not (member :no-nargs directives))
+                   ,(when count-args
                     `(when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match)))
-                   ,@(when (and (null rest) (not (member :no-nargs directives)))
+                   ,@(when (and (null rest) count-args)
                        `((if ,restarg ,(defmfun1::narg-error-or-message 
                                          name args restarg nargs nreq nreqo rest have-match))))
                    ,@(defmfun1-write-rest-assignments name args rest reqo-spec have-match)
