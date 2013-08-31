@@ -90,3 +90,5 @@
   x)
 
 (defmfun1 $dtest11 (x &opt $opt1) x)
+
+(defmfun1 ($dtest11a :fast-opt) (x &opt $opt1) x)

@@ -187,5 +187,15 @@ false;
 dtest10(3,4)$
 3;
 
+/* Collect opt arguments either fast or slow */
+/* One required argument; and it is missing. */
+
+errcatch(dtest11(opt1->7))$
+[];
+
+/* Defined with ( :fast-opt ); so the opt is mistaken for an argument */
+dtest11a(opt1->7)$
+'Rule(opt1, 7);
+
 kill(extra);
 done$
