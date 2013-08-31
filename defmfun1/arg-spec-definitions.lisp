@@ -77,6 +77,7 @@
                              (and (integerp e) (> e 1) (< e 37)))
                      (:or-radix-string ("a valid radix (an integer between 2 and 36)" "a string")
                              (or (stringp e) (and (integerp e) (> e 1) (< e 37))))
+;                     (:symbol "a symbol" (symbolp e))
                      (:or-string-symbol  ("a string" "a symbol")
                       (or (symbolp e) (stringp e)))
                      (:or-string-symbol-or-listof ("a string" "a symbol" "a list of strings or symbols")

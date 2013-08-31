@@ -323,7 +323,12 @@ the hash table *mext-functions-table*."
   (let (args)
     (when (listp spec-name) (setf args (cdr spec-name)) (setf spec-name (car spec-name)))
     (let ((txt (gethash spec-name *arg-spec-to-english-table*)))
-      (unless txt (maxima::merror1 '$defmfun1_no_spec_mssg "No argument message for ~a." spec-name))
+      (unless txt 
+;        (defmfun1-expand-error '$defmfun1_no_spec_mssg "unknown function"
+;          (format nil "No argument message for test ~a." (keyword-etc-to-string spec-name))))
+        (maxima::merror1 '$defmfun1_no_spec_mssg 
+          "defmfun1: Error printing argument test description for test `~a'. No test description found." 
+          (keyword-etc-to-string spec-name)))
       (if args (apply #'format (append (list nil txt) args))
           txt))))
 

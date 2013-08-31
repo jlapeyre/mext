@@ -109,6 +109,8 @@
 ;; Another option would be to move it outside the backquote, so that it is generated at
 ;; compile-time, and save it somehow to disk. But that seems much more complicated, and I
 ;; can't see a benefit now. Time required to load does not seem to be affected at all.
+;; TODO: Don't need incf nargs thing if :no-nargs directive is given.
+;; Same with restargs, etc.
 (defmacro defmfun1 (name args &body body &aux directives have-match)
   (when (listp name) 
     (setf directives (cdr name)) (setf name (car name)))
