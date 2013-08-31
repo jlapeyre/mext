@@ -1,3 +1,16 @@
+;;; This file is copied to the user's maxima directory and is renamed
+;;; mext_load.lisp. It is not loaded directly.  There is a file
+;;; `mext.lisp' that is also copied to the user's maxima directory. It
+;;; is loaded with `load(mext)'.  It then loads this file, unless it has
+;;; already been loaded.
+;;; The user may instead do `load(mext_core)', which loads this file and
+;;; then some mext packages.
+
+;;; This file just tries to find the mext installation directory and
+;;; the file `load_mext_maxima1' within it. It then loads
+;;; `load_mext_maxima1', which loads the rest of the mext system.
+;;; mext packages themselves are then loaded with `require(packname)'.
+
 (if (find-package :mext-maxima-load ) t  
   (defpackage :mext-maxima-load (:use common-lisp )))
 
