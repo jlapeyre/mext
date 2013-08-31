@@ -161,7 +161,7 @@
                 '( :name ,sname :protocol ,(defmfun1::format-protocol sname req optional rest)
                          :protocol-list ,(list sname req optional rest)
                          :contents ,(if doc-content doc-content
-                                      (if doc-string (concatenate 'string "   " (first doc-string)) "")))))
+                                      (if doc-string (sconcat "   " (first doc-string)) "")))))
           (defmfun1::set-default-options ',name ',opt) ; only for user, not used in macro or function body
           (defmfun1::save-lambda-list-etc ',name ',arg-specs)
           (defmfun1::save-preprocess-specs ',name ',pp-specs)
@@ -326,17 +326,17 @@
         (list (format nil "Unset the `~a' attribute for function(s) " (string-downcase max-attribute))
               :arg "names" ". " doc-string)))
    `(progn 
-      (defmfun1 (,(intern (concatenate 'string "$SET_" max-attribute)) :doc) ((names :or-string-symbol-or-listof :ensure-list))
+      (defmfun1 (,(intern (sconcat "$SET_" max-attribute)) :doc) ((names :or-string-symbol-or-listof :ensure-list))
         :desc ,set-doc-str
         (loop for name in names do
               (maxima-symbol-to-string name)
-              (,(find-symbol (concatenate 'string "SET-" attribute) 'defmfun1) name))
+              (,(find-symbol (sconcat "SET-" attribute) 'defmfun1) name))
         '$done)
-      (defmfun1 (,(intern (concatenate 'string "$UNSET_" max-attribute)) :doc) ((names :or-string-symbol-or-listof :ensure-list))
+      (defmfun1 (,(intern (sconcat "$UNSET_" max-attribute)) :doc) ((names :or-string-symbol-or-listof :ensure-list))
         :desc ,unset-doc-str
         (loop for name in names do
               (maxima-symbol-to-string name)
-              (,(find-symbol (concatenate 'string "UNSET-" attribute) 'defmfun1) name))
+              (,(find-symbol (sconcat "UNSET-" attribute) 'defmfun1) name))
         '$done))))
       
 (mk-maxima-attribute match_form match-form "If the argument checks for a function call fail,

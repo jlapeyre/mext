@@ -62,22 +62,10 @@
   (mk-mk-level-func mk-level-func-array mk-level-array-inner)
   (mk-mk-level-func mk-level-func-list  mk-level-list-inner))
 
-;; multiple evaluation!
-;; Looks like alters the input to be a lisp list (or makes a new object)
-;; If input is an atom, then (atom),
-;;  if a lisp list, falls through,
-;;  maxima list, then remove '(mlist)
-;; (defmacro s-or-mlist-to-list (e)
-;;   "Convert single element of mlist to a lisp list.
-;;    ie, make singleton out of element."
-;;   `(cond ((maxima::$listp ,e)
-;;           (pop ,e))
-;;          ((listp ,e))
-;;          (t
-;;           (setf ,e (list ,e)))))
 
+;; Why is this a macro?,.. i guess to avoid let or setf
 ;; uh this one is probably leaky, but it should not
-;; be called with complicated expressions, i hope.n
+;; be called with complicated expressions, i hope.
 (defmacro maxima-symbol-to-string (or-sym-str)
   "Convert symbol to string. String falls through."
   (let ((s (gensym)))
@@ -87,7 +75,6 @@
 (defun read-file-with-pager (filename &optional (pager-command nil) )
   (unless pager-command (setf pager-command $pager_command))
   ($system (concatenate 'string pager-command " " filename)))
-  
 
 (defmacro read-output-with-pager (&body body)
   "Execute forms in body, capturing any output in a file.
