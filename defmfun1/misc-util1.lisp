@@ -7,6 +7,9 @@
 
 ;;; Some of the functions in here are documented in  max-doc-entries.lisp.
 
+;;; Some of this stuff should be moved to aex, because some of it relies on aex
+;;; The rest does not rely on defmfun1 and should be moved to mext.
+
 (in-package :maxima)
 (mext:mext-optimize)
 (use-package :gjl.lisp-util)
@@ -36,8 +39,6 @@
 ;;  The function inner should be written to be called like
 ;;     (inner e a1 a2 ... ) where e is the same as e passed to name-outer and
 ;;  a1 a2 ... are single elements in from each of the arglists.
-
-;; This stuff should be moved to aex, because some of it relies on aex
 
 (defun mk-level-list-inner (inner-map level-args)
   `(cons (car e) (mapcar (lambda (x) (,inner-map x ,@(loop for arg in level-args collect `(cdr ,arg))))
@@ -93,7 +94,7 @@
   (unless (stringp sstring)
     (setf code sstring)
     (setf sstring (pop l)))
-  (setf $error_code code)
+  (when code (setf $error_code code)) ; if a symbol was passed first
   (setq $error `((mlist) ,sstring ,@ l))
   (and $errormsg ($errormsg))
   (cond (*mdebug*

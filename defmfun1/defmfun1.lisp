@@ -43,6 +43,11 @@
   is used for printing error messages as well  as
   documentations.")
 
+(ddefvar *arg-check-err-code-table* (make-hash-table)
+ "This table holds the symbol (in maxima package) representing the
+  error code associated with an argument check.")
+
+
 (defvar *arg-check-preprocess-table* (make-hash-table))
 (defvar *opt-check-preprocess-table* (make-hash-table))
 
@@ -247,11 +252,11 @@ the hash table *mext-functions-table*."
 ;; is `preprocessed' in some way. So we check for this.
 ;; check-and-error is called by: defmfun1-write-assignments, 
 ;; defmfun1-write-rest-assignments, 
-(defun check-and-error (test arg name args have-match)
+(defun check-and-error (test arg fname args have-match)
   (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
          (force-match-code (write-force-match-code have-match))
-         (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',name ,args ,@force-match-code))
-         (sa `(,sa1 (return-from ,name (cons (list ',name) ,args)))))
+         (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',fname ,args ,@force-match-code))
+         (sa `(,sa1 (return-from ,fname (cons (list ',fname) ,args)))))
     (if (gethash test *arg-check-preprocess-table*)
         `(let ((res ,fc))
            (if (not (first res))
@@ -267,12 +272,12 @@ the hash table *mext-functions-table*."
 ;; normal arg with an option (very easy to do). All you get is a cryptic error at runtime.
 ;; This needs to be fixed.
 ;; check-and-error-option is called by defmfun1-write-opt-assignments.
-(defun check-and-error-option (tst name opt-name opt-var args have-match)
+(defun check-and-error-option (tst fname opt-name opt-var args have-match)
   (let* ((fc `(funcall ,(defmfun1::get-check-func (car tst)) maxima::val))
         (force-match-code (write-force-match-code have-match))
         (sc `((defmfun1::signal-option-arg-error
-                ',(car tst) (list maxima::val ',opt-name) ',name ,args ,@force-match-code)
-              (return-from ,name (cons (list ',name) ,args)))))
+                ',(car tst) (list maxima::val ',opt-name) ',fname ,args ,@force-match-code)
+              (return-from ,fname (cons (list ',fname) ,args)))))
   (if (gethash (car tst) *opt-check-preprocess-table*)
       `(let ((res ,fc))
          (if (not (first res))
@@ -281,11 +286,11 @@ the hash table *mext-functions-table*."
     `(unless ,fc ,@sc))))
 
 ;; Write a code snippet to insert in body of defmfun1 function
-(defun narg-error-or-message (name args restarg nargs nreq nreqo rest have-match)
+(defun narg-error-or-message (fname args restarg nargs nreq nreqo rest have-match)
   (let ((force-match-code (write-force-match-code have-match)))
-    `(progn (defmfun1::narg-error-message  ',name ,restarg
+    `(progn (defmfun1::narg-error-message  ',fname ,restarg
               ,nargs ,nreq ,nreqo ,(not (null rest)) ,@force-match-code)
-            (return-from ,name (cons (list ',name) ,args)))))
+            (return-from ,fname (cons (list ',fname) ,args)))))
 
 (maxima::ddefun format-protocol (sname req optional rest)
   "This formats the protocol (lambda list) of a defmfun1 form as a string for printing
@@ -363,14 +368,23 @@ the hash table *mext-functions-table*."
                    (setf (gethash spec-name *arg-check-mssg-table*) (list (car err-mssg-spec) (rest err-mssg-spec))))
                  (t (maxima::merror "defmfun1::mk-arg-check: Unrecognized arg-class ~M" arg-class))))))
 
-;; arg spec names that are lists are actually (name number-of-parameters-passed-to-check-func)
+;; arg spec-name that is list is actually (name number-of-parameters-passed-to-check-func)
 ;; eg. see :int-range
 (defun mk-arg-check (spec-name err-mssg-spec body)
   (unless (listp err-mssg-spec) (setf err-mssg-spec (list err-mssg-spec)))
-  (let ((err-mssg-spec-1 (cons "Argument '~a'" err-mssg-spec)))
-    (if (listp spec-name)
+  (let* 
+      ((rspec-name (if (consp spec-name) (car spec-name) spec-name))
+       (err-mssg-spec-1 (cons "Argument '~a'" err-mssg-spec))
+       (code (intern (sconcat "$CHK_" 
+           (coerce (loop for char across (symbol-name rspec-name)
+                        collect (if (eq char #\-) #\_ char)) 'string)) "MAXIMA")))
+    (setf (gethash rspec-name *arg-check-err-code-table*) code)
+    (if (consp spec-name)
         (mk-arg-check2 'arg spec-name err-mssg-spec-1 body)
       (mk-arg-check1 'arg spec-name err-mssg-spec-1 body))))
+
+; took this out of the symbol making form above.
+; (maxima::maybe-invert-string-case  ; looks downcase in maxima, upcase in lisp
 
 (defun mk-opt-check (spec-name err-mssg-spec body)
   (unless (listp err-mssg-spec) (setf err-mssg-spec (list err-mssg-spec)))
@@ -446,7 +460,9 @@ the hash table *mext-functions-table*."
                            (format t "~a~%" spec-args)
                            (format-arg-spec-params specl-str spec-args))
                        specl-str))
-              (call-str (format-call name call)))
+              (call-str (format-call name call))
+              (err-code (gethash spec-name *arg-check-err-code-table*)))
+         (setf maxima::$error_code err-code) ; ought to pass to merror1, but this is ok maybe.
          (cond (call
                 (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
                                                arg-list1 spstr  call-str) force-match match-val)
@@ -471,6 +487,7 @@ the hash table *mext-functions-table*."
 (defun arg-member-check (list)
   `(member e ,list :test #'equal))
 
+;; two cases here: just a test, or test and conversion (preprocessing) of input data.
 (dolist (one-check *arg-spec-definitions*)
   (when (eq :pp (car one-check))
             (setf one-check (cdr one-check))

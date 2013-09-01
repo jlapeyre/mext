@@ -10,29 +10,3 @@ mext_provide("aex",
   "system-essential",
   "mset",
   "lisp-numeric"]);
-
-/*  "misc-util",  try moving this */
-
-
-/*
-mext_provide("aex",
-  [
-  "aex-packages",
-  "misc-util",
-  "aex-core",
-  "mext-predicates",
-  "ifunctions",
-  "system-essential",
-  "mset",
-  "combinatorics",
-  "table",
-  "partition-list",
-  "take",
-  "list",
-  "strings",
-  "number-functions",
-  "lisp-numeric",
-  "aex-util"] );
-*/
-
-

@@ -46,7 +46,7 @@
                                          (or (integerp e)
                                              (and (maxima::$listp e)
                                                   (every #'integerp (cdr e)))))
-                     (:number  "a number" (numberp e))
+                     (:number "a number" (numberp e))
                      (:number-listof ("a list of numbers")
                                      (and (maxima::$listp e)
                                           (every #'(lambda (x) (numberp x)) (cdr e))))
