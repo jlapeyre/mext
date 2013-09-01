@@ -19,3 +19,11 @@
          ((listp ,e))
          (t
           (setf ,e (list ,e)))))
+
+(defun ensure-lisp-list (e)
+  "Input is a maxima list, or a lisp list (not a maxima expression)
+   or anything else. Convert maxima list to lisp list.
+   Lisp list falls through. Everything else is put into a lisp list."
+  (cond (($listp e) (cdr e))
+        ((consp e) e)
+        (t (list e))))

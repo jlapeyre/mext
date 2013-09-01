@@ -77,10 +77,11 @@
 
 ;; redefined
 (mext::no-warning
-(defmfun1 ($require :doc) ((distname :or-string-symbol) &optional force)
+(defmfun1 ($require :doc) ((distname :or-string-symbol-or-listof) &optional force)
   :desc ( "Load the mext pacakge " :arg "distname" " and register that it has been loaded."
- " " :code "require('all)" " will load all installed mext packages. If " :arg "force" " is true,
- then " :arg "distname" " is loaded even if it has been loaded previously.")
+          " " :code "require('all)" " will load all installed mext packages. If " :arg "force" " is true, "
+          "then " :arg "distname" " is loaded even if it has been loaded previously. "
+          :arg "distname" " may also be a list of package names to be loaded.")
   (mext:mext-require distname force)))
 
 ;; redefined

@@ -478,19 +478,22 @@ This was copied from maxima source init-cl.lisp.")
  "Clear list of loaded mext distributions."
  (clrhash *loaded-dist-table*))
 
-(defun mext-require (name &optional force)
-  (setf name (maxima::$sconcat name))
-  (if (string= "all" name)
-      (progn (loop for dist in (cdr (mext-list)) do
-                   (mext-require dist))
-             'maxima::$done)
-    (if (string= "mext_system" name) t
-      (let ((registered (gethash name *loaded-dist-table*)))
-        (if (or (not registered) force)
-            (let ((file (mext-file-search name)))
-              (if file (progn (format t "require loading ~a~%" file) (maxima::$load file) 'maxima::$done)
-                (maxima::merror (intl:gettext "mext require: Unable to find '~a'.")  name)))
-          t)))))
+
+(defun mext-require (pack-name-list &optional force)
+  (dolist (pack-name (maxima::ensure-lisp-list pack-name-list))
+    (setf pack-name (maxima::$sconcat pack-name))
+    (if (string= "all" pack-name)
+        (progn (loop for dist in (cdr (mext-list)) do
+                     (mext-require dist))
+               'maxima::$done)
+      (if (string= "mext_system" pack-name) t
+        (let ((registered (gethash pack-name *loaded-dist-table*)))
+          (if (or (not registered) force)
+              (let ((file (mext-file-search pack-name)))
+                (if file (progn (format t "require loading ~a~%" file) (maxima::$load file) 'maxima::$done)
+                  (maxima::merror (intl:gettext "mext require: Unable to find '~a'.")  pack-name)))
+            t)))))
+  'maxima::$done)
 
 
 (defun add-to-dont-kill (&rest items )
