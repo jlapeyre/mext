@@ -9,9 +9,6 @@
 (defun mquad-error (c)
   (format nil "Integration failed with error: ~a" c))
 
-(defparameter mquad-error-string
-  "Inegration failed. Probably a floating-point error")
-
 (defmfun1-opt defmfun-quad ((($limit limit) 200 :non-neg-int)
                             (($epsabs epsabs) 0.0 :to-float) 
                             (($epsrel epsrel) 1e-8 :to-float)))
