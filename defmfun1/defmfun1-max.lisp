@@ -43,7 +43,7 @@
    (defmfun1-func-call-args ,args)
    ,@(loop for n in all-args collect ; write default bindings for req and &optional
            (if (null (car n))
-               (merror1 (intl:gettext "defmfun1: null argument name in definition of ~a.
+               (merror1 '$defmfun1_null_arg_name (intl:gettext "defmfun1: null argument name in definition of ~a.
  Did you omit a pair of parens?~%") name)
           (if (listp (car n)) `,(cons (cadar n) (cdr n)) (if (length1p n) `,(car n) `,n))))
    ,@(loop for n in (get-hash-keys supplied-p-hash) collect `,(gethash n supplied-p-hash))
@@ -90,7 +90,7 @@
                                              (push
                                               (defmfun1::check-and-error-option tst name opt-name opt-var args have-match)
                                               res))) res1))
-                             (t (merror1 (intl:gettext "~a ~a does not accept the option `~a'.~%")
+                             (t (merror1 '$defmfun1_invalid_opt_name (intl:gettext "~a ~a does not accept the option `~a'.~%")
                                          (defmfun1::err-prefix ',name) ($sconcat ',name) ($sconcat var) ))))))))
 
 (defun defmfun1-write-rest-assignments (name args rest reqo-spec have-match)
@@ -241,19 +241,20 @@
          ,@(defmfun1::write-force-match-code have-match))
        (return-from ,func-name defmfun1-func-call))))
 
-(defmacro defmfun1-error-final (mssg &optional have-match)
+(defmacro defmfun1-error-final (err-code mssg &optional have-match)
  "used at an exit point of a defmfun1 body. does not call return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
             (format nil "~a: ~a; in ~a" ($sconcat defmfun1-func-name) ,mssg
-              ($sconcat defmfun1-func-call)) ,@(defmfun1::write-force-match-code have-match))
+              ($sconcat defmfun1-func-call)) ,@(defmfun1::write-force-match-code have-match)
+              ,err-code)
           defmfun1-func-call))
 
-(defmacro defmfun1-error-return (funcname mssg &optional have-match)
+(defmacro defmfun1-error-return (err-code funcname mssg &optional have-match)
  "used to return from defmfun1 body with error message and return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
             (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
                     ($sconcat defmfun1-func-call))
-            ,@(defmfun1::write-force-match-code have-match))            
+            ,@(defmfun1::write-force-match-code have-match) ,err-code)
           (return-from ,funcname defmfun1-func-call)))
 
 (defun mk-defmfun1-form (name args body)

@@ -33,7 +33,7 @@
 			 limit lenw 0 iwork work)
 	  (declare (ignore junk z-a z-b z-epsabs z-epsrel z-key z-limit z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-        (error (c) (defmfun1-error-final (mquad-error c) :match)))))
+        (error (c) (defmfun1-error-final '$qag (mquad-error c) :match)))))
 
 (defmfun-quad ($mquad_qags :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float))
   :desc ("This is an interface to qags that is modified from " :emrefdot "quad_qags")
@@ -49,7 +49,7 @@
 			  limit lenw 0 iwork work)
 	  (declare (ignore junk z-a z-b z-epsabs z-epsrel z-limit z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-        (error (c) (defmfun1-error-final (mquad-error c) :match)))))
+        (error (c) (defmfun1-error-final '$qags (mquad-error c) :match)))))
 
 (defmfun-quad ($mquad_qagi :doc :match) (fun (var :or-symbol-subvar) (a :to-or-float-inf) (b :to-or-float-inf))
   :desc ("This is an interface to qagi that is modified from " :emrefdot "quad_qagi")
@@ -68,7 +68,8 @@
 		   ((eq high '$inf)
 		    (setq bnd ($float low))
 		    (setq inf high))
-		   (t (defmfun1-error-return $mquad_qagi "Neither of the limits are `minf' or `inf'")))
+		   (t (defmfun1-error-return '$qagi_minf_inf 
+                        $mquad_qagi "Neither of the limits are `minf' or `inf'")))
 	     (values bnd inf))))
 
     (multiple-value-bind (bound inf-type)
@@ -100,7 +101,7 @@
 	      (declare (ignore junk z-bound z-inf z-epsabs z-epsrel
 			       z-limit z-lenw last))
 	      (list '(mlist) result abserr neval ier))
-            (error (c) (defmfun1-error-final (mquad-error c) :match)))))))
+            (error (c) (defmfun1-error-final '$qagi (mquad-error c) :match)))))))
 
 (defmfun-quad ($mquad_qagp :doc :match) (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) (points :list))
   :desc ("This is an interface to qagp that is modified from " :emrefdot "quad_qagp")
@@ -124,7 +125,7 @@
 	  (declare (ignore junk z-a z-b z-npts z-points z-epsabs z-epsrel
 			   z-leniw z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-        (error (c) (defmfun1-error-final (mquad-error c) :match)))))
+        (error (c) (defmfun1-error-final '$qagp (mquad-error c) :match)))))
 
 
 (defmfun-quad ($mquad_qawc :doc :match) (fun (var :or-symbol-subvar) (c :to-float) (a :to-float) (b :to-float))
@@ -142,7 +143,7 @@
 			  limit lenw 0 iwork work)
 	  (declare (ignore junk z-a z-b z-c z-epsabs z-epsrel z-limit z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-        (error (c) (defmfun1-error-final (mquad-error c) :match)))))
+        (error (c) (defmfun1-error-final '$qawc (mquad-error c) :match)))))
 
 (defmfun1 ($mquad_qawf :doc :match) (fun (var :or-symbol-subvar) (a :to-float) 
                           (omega :to-float) (trig (:member '($cos 1 %cos $sin %sin 2)))
@@ -174,7 +175,7 @@
 	  (declare (ignore junk z-a z-omega z-integr epsabs z-limlst z-lst
 			   z-leniw z-maxp1 z-lenw))
 	  (list '(mlist) result abserr neval ier))
-        (error (c) (defmfun1-error-final (mquad-error c) :match)))))
+        (error (c) (defmfun1-error-final '$qawf (mquad-error c) :match)))))
 
 
 (defmfun-quad ($mquad_qawo :doc :match)  (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) 
@@ -201,7 +202,7 @@
 	  (declare (ignore junk z-a z-b z-omega z-integr z-epsabs z-epsrel
 			   z-lst z-leniw z-maxp1 z-lenw))
 	  (list '(mlist) result abserr neval ier))
-        (error (c) (defmfun1-error-final (mquad-error c) :match)))))
+        (error (c) (defmfun1-error-final '$qawo (mquad-error c) :match)))))
 
 
 (defmfun-quad ($mquad_qaws :doc :match)  (fun (var :or-symbol-subvar) (a :to-float) (b :to-float) 
@@ -223,4 +224,4 @@
 	  (declare (ignore junk z-a z-b z-alfa z-beta z-int z-epsabs z-epsrel
 			   z-limit z-lenw last))
 	  (list '(mlist) result abserr neval ier))
-        (error (c) (defmfun1-error-final (mquad-error c) :match)))))
+        (error (c) (defmfun1-error-final '$qaws (mquad-error c) :match)))))

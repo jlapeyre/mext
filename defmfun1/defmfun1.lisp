@@ -216,9 +216,10 @@ the hash table *mext-functions-table*."
 ;; error-or-message is called by
 ;;    signal-arg-error, signal-option-arg-error, narg-error-message (via narg-error-or-message),
 ;;    defmfun1-error-final, defmfun1-error-return
-(defun error-or-message (name mssg force-match match-val)
+(defun error-or-message (name mssg force-match match-val &optional err-code)
   "name is function name. mssg is error message. print message,
    but do not signal an error if match_form is set."
+  (when err-code (setf maxima::$error_code err-code)); dont pass to merror1
   (cond ((or (and force-match match-val) (and (not force-match) (is-match-form name)))
          (unless (is-nowarn name) (format t (concatenate 'string "Warning: " mssg)))
          t)  ; return true here so that the calling function knows not to exit. Umm not sure its used.
@@ -331,7 +332,7 @@ the hash table *mext-functions-table*."
       (unless txt 
 ;        (defmfun1-expand-error '$defmfun1_no_spec_mssg "unknown function"
 ;          (format nil "No argument message for test ~a." (keyword-etc-to-string spec-name))))
-        (maxima::merror1 '$defmfun1_no_spec_mssg 
+        (maxima::merror1 'maxima::$defmfun1_no_spec_mssg 
           "defmfun1: Error printing argument test description for test `~a'. No test description found." 
           (maxima::sym-to-string spec-name)))
       (if args (apply #'format (append (list nil txt) args))
@@ -420,6 +421,7 @@ the hash table *mext-functions-table*."
 (defun format-args (args)
   (mapcar #'format-one-arg  args))
 
+;; This is never called ?!
 (defun signal-rest-arg-error (spec-name arg-list name call)
   (let* ((espec (gethash spec-name *arg-check-mssg-table*))
          (arg-list1 (list (format-rest-args (car arg-list))))
@@ -462,7 +464,7 @@ the hash table *mext-functions-table*."
                        specl-str))
               (call-str (format-call name call))
               (err-code (gethash spec-name *arg-check-err-code-table*)))
-         (setf maxima::$error_code err-code) ; ought to pass to merror1, but this is ok maybe.
+         (setf maxima::$error_code err-code) ; ought to pass to merror1, but same as putting it in two calls below
          (cond (call
                 (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
                                                arg-list1 spstr  call-str) force-match match-val)
@@ -760,7 +762,7 @@ the hash table *mext-functions-table*."
   (let* ((sname ($sconcat name))
          (str-narg (format nil "called with ~d argument~p" (err-itostr nargs) nargs))
          (str-expected
-          (format-nargs-expected nmin nmax restp t)))
-;;         (err-code (compute-narg-error-code restarg nargs nmin nmax restp))) maybe restore this later
+          (format-nargs-expected nmin nmax restp t))
+         (err-code (compute-narg-error-code restarg nargs nmin nmax restp))); maybe restore this later; done!
     (error-or-message name (format nil "~a ~a ~a; ~a expected.~%" (err-prefix sname) sname str-narg str-expected) 
-                      force-match match-val)))
+                      force-match match-val err-code)))
