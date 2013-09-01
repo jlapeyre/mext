@@ -513,8 +513,8 @@ must be keyword,value pairs for the doc entry struct."
 (mdefmvar maxima::$print_implementation t
  "If true, then print implementation information with maxdoc documentation.")
 
-;; Should not be in documentation section
-;; should not $error_code  and $pager_command be in package maxima ?
+;; Should not be in documentation section.
+;; Should not $error_code  and $pager_command be in package maxima ?
 ;; Yes. changed it.
 (maxdoc:mdefmvar maxima::$error_code nil
  ( "This is an error code set by " :codedot "merror1"))
