@@ -1,0 +1,24 @@
+/*
+ This file is not part of the original to_poly_sovle package;
+ It is only for the to_poly_solve  mext package. -- GJL
+*/
+
+/*
+These are handled by mext
+if get('to_poly,'version) = false then load("to_poly");
+if get('to_poly,'version) < 2 then error("You need to update 'to_poly' to version 2 or greater");
+if not(?functionp('poly_reduced_grobner)) then load("grobner");
+*/
+
+/* Not yet handled by mext. */
+
+block([inflag : true], if not(member('fullratsubst, map('op, functions))) then load("lrats"));
+block([inflag : true], if not(member('lratsubst, map('op, functions))) then load("lrats"));
+if not(?functionp('opsubst)) then load("opsubst");
+block([inflag : true], if not(member('push, map('op, macros))) then load("basic"));
+if not(?functionp('simpfuncall)) then load("simplifying");
+
+/*
+Handled by mext
+load("to_poly_solve_extra");
+*/

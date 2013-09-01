@@ -1,0 +1,17 @@
+/*
+to_poly_solve.mac -- load to_poly_solve with the mext system. 
+The upstream file to_poly_solve.mac was rename to_poly_solve_code.mac 
+ -- GJL
+*/
+
+require("mext_defmfun1");
+require("grobner");
+
+/* Order of loading is important */
+mext_provide( "mto_poly_solve",
+  [
+  "to_poly",
+  "to_poly_solve_setup",
+  "to_poly_solve_code",
+  "to_poly_solve_extra"
+  ]);
