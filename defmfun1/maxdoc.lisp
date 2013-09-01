@@ -367,7 +367,7 @@
                                :contents ,doc))
              (maxima::defmvar ,var ,@pass-arg)))
       (maxima::merror1 (intl:gettext 
-                        "max-doc:mdefmvar : ~m arguments given in definition of `~m'; three are expected.~%")
+        "max-doc:mdefmvar : ~m arguments given in definition of `~m'; three are expected.~%")
                        (+ 1 length-val-and-doc) max-varname))))
 
 (defun implementation (name implemention-string)
@@ -515,10 +515,11 @@ must be keyword,value pairs for the doc entry struct."
 
 ;; Should not be in documentation section
 ;; should not $error_code  and $pager_command be in package maxima ?
-(maxdoc:mdefmvar $error_code nil
+;; Yes. changed it.
+(maxdoc:mdefmvar maxima::$error_code nil
  ( "This is an error code set by " :codedot "merror1"))
 
-(maxdoc:mdefmvar $pager_command "/usr/bin/less"
+(maxdoc:mdefmvar maxima::$pager_command "/usr/bin/less"
  "The pathname to the system command used for paged output, for
  instance, for reading documentation.")
 
