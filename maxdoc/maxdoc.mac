@@ -1,4 +1,4 @@
-mext_require("defmfun1");
+require("defmfun1");
 
 mext_provide( "maxdoc",
   [ "maxdoc-packages",

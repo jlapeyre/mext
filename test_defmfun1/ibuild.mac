@@ -1,5 +1,5 @@
 load(mext);
-mext_require("maxdoc");
+require("maxdoc");
 load_in_subdir(["test_defmfun1","system"]);
 mext_dist_clean();
 mext_dist_build();

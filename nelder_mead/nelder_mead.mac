@@ -1,4 +1,4 @@
-mext_require("maxdoc");
+require("maxdoc");
 
 mext_provide( "nelder_mead",
   [ "nelder-mead-packages",

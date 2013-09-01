@@ -1,4 +1,4 @@
-mext_require("aex");
+require("aex");
 mext_provide("lists_aex",
   [ "lists_aex-packages",
      "table",

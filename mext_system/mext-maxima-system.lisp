@@ -487,8 +487,8 @@ This was copied from maxima source init-cl.lisp.")
                  (mext-require dist))
            'maxima::$done)
      (if (string= "mext_system" pack-name) t
-      (let ((registered (gethash pack-name *loaded-dist-table*)))
-       (if (or (not registered) force)
+      (let ((is-loaded (gethash pack-name *loaded-dist-table*)))
+       (if (or (not is-loaded) force)
         (let ((file (mext-file-search pack-name)))
          (if file (progn (format t "require loading ~a~%" file) (maxima::$load file) 'maxima::$done)
            (progn
@@ -671,15 +671,19 @@ This was copied from maxima source init-cl.lisp.")
 ;; 
 ;; I tried using the maxima file_search routine, but it matched directories
 ;; even with a path list supplied, while we only want to match files.
+
+;; Need to change all calls to this to `require'.
+#|
 (defmfun $mext_require (name &optional force)
   (setf name ($sconcat name))
-  (let ((registered (gethash name mext-maxima::*loaded-dist-table*)))
-    (if (or (not registered) force)
+  (let ((is-loaded (gethash name mext-maxima::*loaded-dist-table*)))
+    (if (or (not is-loaded) force)
         (let ((file (mext-maxima::mext-file-search name)))
           (if file (progn (format t "loading ~a~%" file) ($load file))
             (merror "mext require: Unable to find '~a'." name)))
       t)))
 
+|#
 ;; identical. I want to switch to this name
 (defmfun $require (name &optional force)
   (mext:mext-require name force))

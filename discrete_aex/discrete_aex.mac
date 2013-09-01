@@ -1,4 +1,4 @@
-mext_require("lists_aex");
+require("lists_aex");
 mext_provide("discrete_aex",
   [ "combinatorics",
     "number-functions"]);

@@ -3,7 +3,7 @@ load(mext);
 if  member(lispname, ["gcl", "cmucl"]) then
   print("The maxima package quicklisp does not work under ", lispname,".")
   else (
-    mext_require("maxdoc"),
+    require("maxdoc"),
     load_in_subdir(["quicklisp","system"]),
     mext_dist_clean(),
     mext_dist_build(),
