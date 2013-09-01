@@ -481,18 +481,21 @@ This was copied from maxima source init-cl.lisp.")
 
 (defun mext-require (pack-name-list &optional force)
   (dolist (pack-name (maxima::ensure-lisp-list pack-name-list))
-    (setf pack-name (maxima::$sconcat pack-name))
-    (if (string= "all" pack-name)
-        (progn (loop for dist in (cdr (mext-list)) do
-                     (mext-require dist))
-               'maxima::$done)
-      (if (string= "mext_system" pack-name) t
-        (let ((registered (gethash pack-name *loaded-dist-table*)))
-          (if (or (not registered) force)
-              (let ((file (mext-file-search pack-name)))
-                (if file (progn (format t "require loading ~a~%" file) (maxima::$load file) 'maxima::$done)
-                  (maxima::merror (intl:gettext "mext require: Unable to find '~a'.")  pack-name)))
-            t)))))
+   (setf pack-name (maxima::$sconcat pack-name))
+   (if (string= "all" pack-name)
+    (progn (loop for dist in (cdr (mext-list)) do
+                 (mext-require dist))
+           'maxima::$done)
+     (if (string= "mext_system" pack-name) t
+      (let ((registered (gethash pack-name *loaded-dist-table*)))
+       (if (or (not registered) force)
+        (let ((file (mext-file-search pack-name)))
+         (if file (progn (format t "require loading ~a~%" file) (maxima::$load file) 'maxima::$done)
+           (progn
+             (setf maxima::$error_code 'maxima::$mext_package_loader_not_found) ; not defined yet
+             (maxima::merror
+              (intl:gettext "mext require: Unable to find file to load package '~a'.")  pack-name))))
+          t)))))
   'maxima::$done)
 
 

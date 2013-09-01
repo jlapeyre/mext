@@ -40,7 +40,7 @@ build_several(["nelder_mead", "pw", "discrete",
 /* Examples from contrib and share */
 
 
-build_several(["bernstein", "grobner"]);
+build_several(["bernstein", "grobner_mext"]);
 
 
 kill(buildall_mext,build_several);

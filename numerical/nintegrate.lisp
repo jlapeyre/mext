@@ -92,12 +92,10 @@
          (call-form (cons (list (car call-list) 'maxima::simp) (cdr call-list))))
     (append (apply 'maxima::mfuncall call-list) (list (list '(maxima::mlist maxima::simp) call-form)))))
 
-
-;; Bug: numbers outside of range lo,hi should be excluded, but are not.
 (maxima::ddefun list-fp-singularities (expr lo hi)
    "Try to return a Maxima list of floating point numbers representing the singularities between
-`lo' and `hi' (excluding these endpoints) in `expr'. This, of course, can't be done in general.
-This routine just calls `solve' and has some bugs. If no satisfying numbers are found, return `nil'."
+   `lo' and `hi' (excluding these endpoints) in `expr'. This, of course, can't be done in general.
+   This routine just calls `solve' and has some bugs. If no satisfying numbers are found, return `nil'."
     (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1))))
           (nroots))
 ;      (format t "lo ~a,  hi ~a, ~a~%" lo hi (maxima::$sconcat roots))

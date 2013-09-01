@@ -1,6 +1,5 @@
-No. changed back to 'grobner'. This
-is a problem.
-
 This directory is called 'mext_grobner'
 rather than grobner because otherwise
-load(grobner) fails.
+load(grobner) fails if called from parent
+directory. This is a Maxima bug.
+

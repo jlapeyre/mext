@@ -24,7 +24,7 @@ build_several( [
 /* Note: bernstein is not available in Maxima 5.25 */
 build_several( [
             "nelder_mead", "alt_eigen", "pw",
-            "coma", "circuits", "implicit", "bernstein", "grobner" ]);
+            "coma", "circuits", "implicit", "bernstein", "grobner_mext" ]);
 
 /*
  Both packages `discrete' and `lists_aex' have a function named
