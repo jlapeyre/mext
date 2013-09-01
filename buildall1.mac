@@ -31,8 +31,7 @@ popdir();
 /* Third party packages adapted to mext */
 /* "finance" loads rather slowly */
 
-
-build_several(["alt_eigen"]);
+build_several(["alt_eigen", "mto_poly_solve" ]);
 
 build_several(["nelder_mead", "pw", "discrete",
           "coma", "circuits", "implicit"]);

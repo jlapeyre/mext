@@ -1,0 +1,6 @@
+This is a mext package of to_poly_solve,
+written by Barton Willis. See mto_poly_solve.mxt.
+
+The strange name of the package and files has
+to do with quirks of Maxima and the mext system.
+
