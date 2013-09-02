@@ -101,6 +101,16 @@
   (apply #'mext::add-to-dont-kill item)
   '$done)
 
+
+(defmfun1:set-hold-all '$allow_kill)
+(defmfun1 ($allow_kill :doc) (&rest items)
+  :desc ("Remove " :arg "item" "s from the list of symbols that are not killed
+          by " :codedot "kill(all)" " This facility is part of the maxima core,
+          but is apparantly unused. Maybe putting a property in the symbol's
+          property list would be better.")
+  (apply #'mext::remove-from-dont-kill items)
+  '$done)
+
 (defmfun1 ($get_dont_kill :doc) ()
   :desc ("Returns the list of symbols that are not killed
           by " :codedot "kill(all)" " Items are added to this list
@@ -115,6 +125,17 @@
  " `lrats' are in the database.")
   (let ((name (maxima::$sconcat package)))
     (mext:do-dont-kill-share name))
+  '$done)
+
+(defmfun1 ($allow_kill_share :doc) ((package :or-string-symbol))
+  :desc (
+ "Allow symbols in maxima share package " :arg "package"
+ " from being killed by " :emrefdot "kill"
+ " This undoes the effect of " :mrefdot "dont_kill_share"
+ " Currently (if this document is up-to-date) only `basic' and"
+ " `lrats' are in the database.")
+  (let ((name (maxima::$sconcat package)))
+    (mext:do-allow-kill-share name))
   '$done)
 
 (defmfun1 ($dir_exists :doc) ((dir :string))
@@ -187,5 +208,5 @@ This is from wxmaxima
 
 (max-doc:see-also-group '("chdir" "pwd" "popdir" "updir" "dirstack" "list_directory"))
 
-(max-doc:see-also-group '("dont_kill" "dont_kill_share" "get_dont_kill"))
+(max-doc:see-also-group '("dont_kill" "dont_kill_share" "get_dont_kill" "allow_kill"))
 

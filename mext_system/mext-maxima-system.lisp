@@ -511,10 +511,13 @@ This was copied from maxima source init-cl.lisp.")
           t)))))
   'maxima::$done)
 
-
-(defun add-to-dont-kill (&rest items )
+(defun add-to-dont-kill (&rest items )                         
   (loop for item in items do
         (when (not (member item maxima::allbutl)) (push item maxima::allbutl))))
+
+(defun remove-from-dont-kill (&rest items )
+  (setf maxima::allbutl 
+        (remove-if #'(lambda (e) (member e items)) maxima::allbutl)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

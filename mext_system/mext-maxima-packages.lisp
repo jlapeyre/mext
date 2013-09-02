@@ -48,6 +48,7 @@
      :compact-pathname
      :directory-exists-p
      :directory-pathname-p
+     :do-allow-kill-share
      :do-dont-kill-share
      :fenough-namestring
      :fensure-directories-exist
@@ -61,6 +62,7 @@
      :mext-optimize
      :mext-require
      :pathname-as-directory
+     :remove-from-dont-kill
      :subdir-of-contrib
      :subdir-of-shared
      :subdir-pathname )))

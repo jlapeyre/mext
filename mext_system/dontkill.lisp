@@ -20,6 +20,13 @@
         (apply #'add-to-dont-kill (gethash package *dont-kill-share-table*))
       (format t "No dont-kill symbols found for package '~a'~%" package))))
 
+(defun do-allow-kill-share (package)
+  "Remove the symbols for share package 'package' from the don't kill list."
+  (let ((symbols (gethash package *dont-kill-share-table*)))
+    (if symbols
+        (apply #'remove-from-dont-kill (gethash package *dont-kill-share-table*))
+      (format t "No dont-kill symbols found for package '~a'~%" package))))
+
 (in-package :maxima)
 
 (mext::set-dont-kill-share "basic"
@@ -30,4 +37,5 @@
    '($messlrats2 $fullratsubstflag $lratsubst $lratsubst1 $fullratsubst1 $fullratsubst
        $lrats))
 
+; why was this not done ?
 ;(mext-maxima::do-dont-kill-share "basic")
