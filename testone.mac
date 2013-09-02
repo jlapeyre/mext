@@ -1,0 +1,12 @@
+load(mext);
+
+/* test surviving kill
+kill(all);
+*/
+
+our_test_list : ['alt_eigen];
+
+mext_test(our_test_list);
+
+kill(our_test_list);
+
