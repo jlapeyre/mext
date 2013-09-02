@@ -10,7 +10,7 @@
 (defvar *mext-translated-ext* "LISP")
 (defvar *mext-warn-file-ext* "UNLISP")
 
-(defun mext-translate-file (in-file-name out-file-name
+(defun mext::mext-translate-file (in-file-name out-file-name
                                          &optional (ttymsgsp $tr_file_tty_messagesp)
 		       &aux warn-file translated-file *translation-msgs-files*
 		       *untranslated-functions-called* *declared-translated-functions*)
@@ -65,7 +65,7 @@
 ;; The original 5.28.0 function allows translation-output-file to be specified,
 ;; but this is not in the documentation.
 
-(defun $mext_compile_file (input-file &optional bin-file translation-output-file  &aux result)
+(defun mext::mext-compile-file (input-file &optional bin-file translation-output-file  &aux result)
   (format t "mext_compile_file in ~s out ~s~%" input-file bin-file)
   (setq input-file (maxima-string input-file))
   (and bin-file (setq  bin-file (maxima-string bin-file)))
@@ -75,7 +75,7 @@
         (setq translation-output-file (alter-pathname bin-file :type *mext-translated-ext*))))
   (cond ((string-equal (pathname-type input-file) *mext-translated-ext*)
 	 (setq result (list '(mlist) input-file)))
-	(t (setq result (mext-translate-file input-file translation-output-file)) ; gjl change
+	(t (setq result (mext::mext-translate-file input-file translation-output-file)) ; gjl change
 	   (setq input-file (third result))))
   #+(or cmu scl sbcl clisp allegro openmcl lispworks ecl)
   (multiple-value-bind (output-truename warnings-p failure-p)

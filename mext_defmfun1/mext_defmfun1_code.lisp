@@ -218,6 +218,20 @@ This is from wxmaxima
         (cons '(mlist simp) res)
       (car res))))
 
+(defmfun1 ($mtranslate_file :doc) ((input-file :string)
+        &optional (ttymsgsp $tr_file_tty_messagesp) 
+                                 &opt ($output_file :string))
+  :desc( "Like " :emrefcomma "translate_file" " except that the "
+         " output filename may be specified as an option.")
+  (mext::mext-translate-file input-file $output_file ttymsgsp))
+
+(defmfun1 ($mcompile_file :doc) ((input-file :string) &optional
+       (bin_file :string) &opt ($tr_file :string))
+  :desc( "Like " :emrefcomma "compile_file" " except that the "
+         " intermediate, translated filename may be specified as an option.")
+  (mext::mext-compile-file input-file $bin_file $tr_file))
+  
+
 (max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear" 
                           "mext_list_package" "mext_find_package"))
 

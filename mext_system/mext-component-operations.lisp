@@ -104,8 +104,8 @@
          (args (cdr args))
          (output-file (getf args :OUTPUT-FILE)))
     (format t "Got output file ~s~%" output-file)
-    (if output-file (maxima::$mext_compile_file source-file output-file)
-      (maxima::$mext_compile_file source-file))))
+    (if output-file (mext::mext-compile-file source-file output-file)
+      (mext::mext-compile-file source-file))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (in-package :cl-user)
