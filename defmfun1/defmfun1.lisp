@@ -135,16 +135,18 @@ in a  mext package.")
 ;; Need a maxima interface to this, for eg alt_eigen.
 ;; Is there a maxima interface for setting the source file ?
 ;; Maybe should allow optionally passing source filename
-(defun record-mext-package (name package)
- "Record fact that string `name' is in mext packge `package'.
+(defun record-mext-package (name package &optional source-filename)
+ "Record fact that string `name' is in mext packge `package',
+  and is defined in source-filename.
   This may be called with the current package *mext-package*,
   which may not be set, in which case, we do nothing. At the
-same time, push `name' onto a list keyed by `package' in
-the hash table *mext-functions-table*."
+  same time, push `name' onto a list keyed by `package' in
+  the hash table *mext-functions-table*."
  (when package
    (setf name (maxima::$sconcat name))
    (setf (gethash name *mext-package-table*) package)
-   (setf (gethash name *mext-filename-table*) (doc-system:get-source-file-name))
+   (setf (gethash name *mext-filename-table*) 
+         (if source-filename source-filename (doc-system:get-source-file-name)))
    (push name (gethash package *mext-functions-table*))))
 
 (defun get-mext-package-for-function (name)

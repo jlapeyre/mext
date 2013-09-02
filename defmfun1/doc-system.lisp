@@ -8,6 +8,7 @@
 (mext:mext-optimize)
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
+;; a hash table storing doc systems
 (defvar *doc-systems* nil)
 
 (defvar *source-package* "doc-system")
@@ -98,7 +99,7 @@
     (setf (get-ds-1 name *doc-systems*)  ds)))
 
 (defun ds-list ()
-  "Get a like of the tags of all the registered documentation systems."
+  "Return a list of the tags of all the registered documentation systems."
   (get-hash-keys *doc-systems*))
 
 (maxima::defmfun maxima::$doc_system_list ()

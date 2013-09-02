@@ -204,7 +204,23 @@ This is from wxmaxima
     (cons '(mlist simp) ; hmm need copy below
           (sort (copy-list (gethash name defmfun1::*mext-functions-table*)) #'string-lessp))))
 
-(max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear" "mext_list_package"))
+
+(defmfun1 ($mext_find_package :doc) ((item :or-string-symbol))
+  :desc ("Find mext packages in which the function or variable "
+  :arg "item" " is defined. This only works if the package has been"
+  " loaded, and its symbols registered. A string or list of strings is returned.")
+  (let ((iname (maxima::$sconcat item))
+        (h defmfun1::*mext-functions-table*)
+        (res '()))
+    (dolist (pack (get-hash-keys h))
+      (when (member iname (gethash pack h) :test #'string-equal)
+        (push pack res)))
+    (if (cdr res)
+        (cons '(mlist simp) res)
+      (car res))))
+
+(max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear" 
+                          "mext_list_package" "mext_find_package"))
 
 (max-doc:see-also-group '("chdir" "pwd" "popdir" "updir" "dirstack" "list_directory"))
 

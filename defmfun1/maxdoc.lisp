@@ -450,7 +450,8 @@
    (maxima::merror1 "max-doc:get-doc-sec-shortname argument ~a not a string." shortname)))
 
 ; add-doc-entry is more convenient
-(defun add-doc-entry1 (&key e  (section *current-section*) (distribution *current-distribution*))
+(defun add-doc-entry1 (&key e  (section *current-section*) (distribution *current-distribution*)
+                            (source-filename defmfun1::*mext-package*))
   "add an entry, eg for a function. if *ignore-silently* is true
    then do nothing but return true if the entry already exists. this
    to accomodate loading code several times."
@@ -466,8 +467,8 @@
             (maxima::merror1 "max-doc::add-doc-entry1: can't find section for tag ~a." section))))
     (setf (entry-section entry) (section-name section))
     (when *current-distribution* (setf (entry-distribution entry) *current-distribution*))
-    (when defmfun1::*mext-package*
-      (defmfun1::record-mext-package name defmfun1::*mext-package*))
+    (when source-filename
+      (defmfun1::record-mext-package name source-filename))
     (setf (gethash name (section-hash section)) entry)
     (setf (gethash name max-doc::*max-doc-deffn-defvr-hashtable*) entry)))
 
