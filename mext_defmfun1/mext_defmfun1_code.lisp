@@ -204,7 +204,6 @@ This is from wxmaxima
     (cons '(mlist simp) ; hmm need copy below
           (sort (copy-list (gethash name defmfun1::*mext-functions-table*)) #'string-lessp))))
 
-
 (defmfun1 ($mext_find_package :doc) ((item :or-string-symbol))
   :desc ("Find mext packages in which the function or variable "
   :arg "item" " is defined. This only works if the package has been"

@@ -34,7 +34,8 @@
   (protocol nil)
   (protocol-list nil)
   (section nil)
-  (distribution nil)
+  (distribution nil) ; ??
+  (mext-package nil)
   (implementation nil)
   (call-desc-list '() :type list)
   (author nil)
@@ -42,6 +43,7 @@
   (examples '() :type list)
   (credits nil)
   (oeis nil) ; online encyclopedia of integer sequences
+  (source-filename nil) ; ugh, stored in two places
   (contents nil))
 
 (defstruct (call-desc)
@@ -450,8 +452,7 @@
    (maxima::merror1 "max-doc:get-doc-sec-shortname argument ~a not a string." shortname)))
 
 ; add-doc-entry is more convenient
-(defun add-doc-entry1 (&key e  (section *current-section*) (distribution *current-distribution*)
-                            (source-filename defmfun1::*mext-package*))
+(defun add-doc-entry1 (&key e  (section *current-section*) (distribution *current-distribution*))
   "add an entry, eg for a function. if *ignore-silently* is true
    then do nothing but return true if the entry already exists. this
    to accomodate loading code several times."
@@ -460,15 +461,22 @@
     (when (get-doc-entry :es name)
         (if *ignore-silently* (return-from add-doc-entry1 t)
           (format t "add-doc-entry: ** warning replacing entry '~a'~%" name)))
-    (when (not (section-p section))
+    (when (not (section-p section))p
         (let ((nsec (get-doc-sec section)))
           (if nsec
               (setf section nsec)
             (maxima::merror1 "max-doc::add-doc-entry1: can't find section for tag ~a." section))))
     (setf (entry-section entry) (section-name section))
-    (when *current-distribution* (setf (entry-distribution entry) *current-distribution*))
-    (when source-filename
-      (defmfun1::record-mext-package name source-filename))
+;; ?? why this
+;;    (when *current-distribution* (setf (entry-distribution entry) *current-distribution*))
+    (when (and distribution (not (entry-distribution entry)))
+      (setf (entry-distribution entry) distribution))
+    (let ((mpack (or (entry-mext-package entry) defmfun1::*mext-package*)))
+      (when mpack
+        (defmfun1::record-mext-package name mpack
+          (entry-source-filename entry)))) ; last param may be nil.
+   ;; we only added the source-filename slot to pull it out and put it in the hash table.
+   ;; bad redundancy.
     (setf (gethash name (section-hash section)) entry)
     (setf (gethash name max-doc::*max-doc-deffn-defvr-hashtable*) entry)))
 

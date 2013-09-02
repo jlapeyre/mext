@@ -93,11 +93,14 @@
         (t (merror (format nil "do-maxdoc: bad argument ~a " x)))))
 
 (defmfun1:set-hold-all '$maxdoc)
-(defmfun1 ($maxdoc :doc) ((name :string) docs)
+(defmfun1 ($maxdoc :doc) ((name :string) docs &opt ($source_filename nil :string)
+                          ($package nil :string))
   :desc ("Add maxdoc documentation entry for item " :arg "name"
     " specified by " :argdot "docs")
-    (max-doc:add-doc-entry (list :name name :contents (do-maxdoc docs)))
-    '$done)
+    (max-doc:add-doc-entry (list :name name :contents (do-maxdoc docs)
+                                 :source-filename $source_filename
+                                 :mext-package $package)
+    '$done))
 
 ;; Note that this works for some, but not all examples. The
 ;; code-text slot in an example uses a different syntax that
@@ -151,7 +154,8 @@
  (defmfun1:set-mext-package packagename)
  '$done)
 
-(defmfun1 ($mext_package_record :doc) ((docitem :or-string-symbol) (packagename :string))
+(defmfun1 ($mext_package_record :doc) ((docitem :or-string-symbol) (packagename :string)
+                                       &optional (source-filename nil :string))
  :desc 
  ("Set the mext packagename for the function or variable "
   :arg "docitem" " to " :argdot "packagename"
@@ -159,7 +163,7 @@
   "The function " :mref "maxdoc_set_mext_package" " is useful for setting
   the package name of a group of functions, but there is currently no maxima
   hook for doing this.")
- (defmfun1:record-mext-package docitem packagename)
+ (defmfun1:record-mext-package docitem packagename source-filename)
  '$done)
 
 ;; (defmfun1 ($oeis :doc) ( (n :string) )
