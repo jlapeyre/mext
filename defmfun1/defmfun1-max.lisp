@@ -252,7 +252,7 @@
 (defmacro defmfun1-error-return (err-code funcname mssg &optional have-match)
  "used to return from defmfun1 body with error message and return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
-            (format nil "~a: ~a, in ~a" ($sconcat defmfun1-func-name) ,mssg
+            (format nil "~a: ~a; in ~a" ($sconcat defmfun1-func-name) ,mssg
                     ($sconcat defmfun1-func-call))
             ,@(defmfun1::write-force-match-code have-match) ,err-code)
           (return-from ,funcname defmfun1-func-call)))

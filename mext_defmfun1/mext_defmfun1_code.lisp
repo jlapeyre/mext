@@ -202,12 +202,15 @@ This is from wxmaxima
  if the package is not loaded. This function incorrectly returns an empty list
  for some packages, and may miss some functions.")
   (let ((name (maxima::$sconcat package)))
+    (unless (member name (mext::mext-list) :test #'string-equal)
+      (defmfun1-error-return '$no_such_package $mext_list_package
+        (format nil "Package `~a' does not exist" name)))
     (multiple-value-bind (symbol-list present) (gethash name defmfun1::*mext-functions-table*)
       (if present
           (mk-mlist ; hmm need copy below
                 (sort (copy-list symbol-list) #'string-lessp))
-        (defmfun1-error-final '$no_such_package 
-          (format nil "Package `~a' does not exist" name))))))
+        (defmfun1-error-final '$package_not_loaded
+          (format nil "Package `~a' is not loaded" name))))))
                                                         
 
 (defmfun1 ($mext_find_package :doc) ((item :or-string-symbol))
