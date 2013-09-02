@@ -25,11 +25,11 @@
                    '( (maxima::mlist) ))
                   (t
                    (cond ( (>= imax imin)
-                          (cons '(maxima::mlist maxima::simp) 
+                          (maxima::mk-mlist
                                 (loop for i ,@loop-decl  from imin to imax by incr collect i)))
                          (t
                           (setf incr (- incr))
-                          (cons '(maxima::mlist maxima::simp) 
+                          (maxima::mk-mlist
                                 (loop for i ,@loop-decl from imin downto imax by incr collect i)))))))))
 
 (def-num-range-type num-range-int fixnum)
@@ -145,7 +145,7 @@
                           (progn (do ( (i 0 (1+ i))) ((> i d) )
                                    (declare (fixnum i d))
                                    (setf lst (cons (simplify `( (mplus) ,imin  ((mtimes) ,i ,incr))) lst)))
-                                 (cons '(mlist simp) (nreverse lst)))))))))
+                                 (mk-mlist (nreverse lst)))))))))
 
 (examples::clear-examples "lrange")
 (examples::add-example "lrange"
@@ -184,12 +184,12 @@
         (setf res '())
         (dotimes (k n)
           (push (aref (aref earr k) (aref a k)) res))
-        (push (defmfun-final-to-ae (cons '(mlist simp) res)) bres)
+        (push (defmfun-final-to-ae (mk-mlist res)) bres)
         (dotimes (j n)
           (if  (= (the fixnum (aref b j)) (the fixnum (incf (aref a j))))
                (setf (aref a j) 0)
                (return))))
-      (defmfun-final-to-ae (cons '(mlist simp) bres)))))
+      (defmfun-final-to-ae (mk-mlist bres)))))
 
 (defmfun-ae ($tuples :doc) ( (list-or-lists :non-atom-list ) &optional (n 0 n-supplied-p :non-neg-int)  )
   (declare (fixnum n))
@@ -210,7 +210,7 @@
             (if  (= b  (incf  (aref a j)))
                  (setf (aref a j) 0)
                  (return))))
-        (defmfun-final-to-ae (cons '(mlist simp) bres)))
+        (defmfun-final-to-ae (mk-mlist bres)))
       (progn (pop list-or-lists)
              (max-list::tuples-lists o-type-p o-type (reverse list-or-lists)))))
 
@@ -284,7 +284,7 @@
   `(let ( (res (list (,call-type f  x))))
     (dotimes (i (1- n))
       (push (,call-type f  (car res)) res))
-    (defmfun-final-to-ae (cons '(mlist simp) (nreverse res)))))
+    (defmfun-final-to-ae (mk-mlist (nreverse res)))))
 
 (defmfun-ae ($nest_list :doc)  (f x (n :non-neg-int) &opt ($compile t :bool))
   (option-compile-lambda f)
@@ -484,7 +484,7 @@
   `(let ((res (,call-type f x (car v))))
     (do ((v1 (cdr v) (cdr v1))
          (res-all (list res)))
-        ((null v1) (defmfun-final-to-ae (cons '(mlist simp) (nreverse res-all))))
+        ((null v1) (defmfun-final-to-ae (mk-mlist (nreverse res-all))))
       (push (setf res (defmfun-final-to-ae (,call-type f res (car v1)))) res-all))))
 
 (defmfun-ae $fold_list (f x (v :non-atom)  &opt ($compile t :bool))

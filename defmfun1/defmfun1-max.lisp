@@ -291,7 +291,7 @@
  by an unused, undocumented function.")
  (maxima-symbol-to-string name)
  (let ((oh (gethash name defmfun1::*option-table*)))
-   (cons '(mlist simp)
+   (mk-mlist
          (when oh (let (ol)  ; (cadr v) to get rid of quote
                   (maphash (lambda (k v)
                              (push ($sconcat `((|$Rule| simp) ,(if (listp k) (car k) k) ,(cadr v))) ol)) oh)
@@ -301,7 +301,7 @@
 
 (defmfun1 ($attributes :doc) ((name :or-string-symbol) )
   :desc ("Returns a list of the `attributes' of function " :argdot "name")
-  (cons '(mlist simp) (defmfun1::get-attributes name)))
+  (mk-mlist (defmfun1::get-attributes name)))
 
 (defmfun1 ($attributes_find :doc) ( &optional (attribute :or-string-symbol))
   :desc (
@@ -309,7 +309,7 @@
  :arg "attribute" " is set."
  " Some attributes are " :varcomma "match_form" :varcomma "hold_all"
  " and " :vardot "nowarn" )
-  (cons '(mlist simp) (sort (defmfun1::get-funcs-with-attribute attribute) #'string-lessp)))
+  (mk-mlist (sort (defmfun1::get-funcs-with-attribute attribute) #'string-lessp)))
 
 (defmacro mk-maxima-attribute (max-attribute attribute doc-string)
  (when (symbolp attribute) (setf attribute (symbol-name attribute)))

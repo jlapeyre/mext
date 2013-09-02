@@ -104,7 +104,7 @@
 
 (maxima::defmfun maxima::$doc_system_list ()
   "Get a list of the tags of all the registered documentation systems."
-  (cons (list 'maxima::mlist 'maxima::simp) (get-hash-keys *doc-systems*)))
+  (maxima::mk-mlist (get-hash-keys *doc-systems*)))
 
 (defun ds-find-regex-matches (regex-string ds)
   "Find matches in the hash of a single doc system.  This is

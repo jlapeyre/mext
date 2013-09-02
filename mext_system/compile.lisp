@@ -71,7 +71,7 @@
   (and bin-file (setq  bin-file (maxima-string bin-file)))
   (if translation-output-file
        (setq translation-output-file (maxima-string translation-output-file))
-    (if bin-file
+    (when bin-file
         (setq translation-output-file (alter-pathname bin-file :type *mext-translated-ext*))))
   (cond ((string-equal (pathname-type input-file) *mext-translated-ext*)
 	 (setq result (list '(mlist) input-file)))

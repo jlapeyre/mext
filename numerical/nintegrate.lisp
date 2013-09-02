@@ -65,7 +65,7 @@
  "Add the results of integrating over two intervals. Make an attempt
   to write reasonable information fields. Really Should do sqrt of sqs of errors."
 ; (format t "~a~%" ($sconcat r1))
- (list '(maxima::mlist maxima::simp) (+ (second r1) (second r2))
+ (maxima::make-mlist-simp (+ (second r1) (second r2))
        (+ (third r1) (third r2)) (+ (fourth r1) (fourth r2))
        (if (> (fifth r1) (fifth r2)) (fifth r1) (fifth r2))
        (append (sixth r1) (rest (sixth r2)))))
@@ -74,7 +74,7 @@
 ; (format t "~a~%" (maxima::$sconcat r1))
 ; (format t "~a~%" r1)
   (cond ((and (consp r1) (consp r2))
-         (list '(maxima::mlist maxima::simp) (maxima::simplify `((maxima::mplus) ,(second r1) ,(second r2)))
+         (maxima::make-mlist-simp (maxima::simplify `((maxima::mplus) ,(second r1) ,(second r2)))
                (+ (third r1) (third r2)) (+ (fourth r1) (fourth r2))
                (if (> (fifth r1) (fifth r2)) (fifth r1) (fifth r2))
                (append (sixth r1) (rest (sixth r2)))))
@@ -90,7 +90,7 @@
               (append `(,fn ,expr ,var ,lo ,hi ,slist) q-ops)
             (append `(,fn ,expr ,var ,lo ,hi) q-ops)))
          (call-form (cons (list (car call-list) 'maxima::simp) (cdr call-list))))
-    (append (apply 'maxima::mfuncall call-list) (list (list '(maxima::mlist maxima::simp) call-form)))))
+    (append (apply 'maxima::mfuncall call-list) (list (maxima::make-mlist-simp call-form)))))
 
 (maxima::ddefun list-fp-singularities (expr lo hi)
    "Try to return a Maxima list of floating point numbers representing the singularities between
@@ -109,7 +109,7 @@
                 (push (maxima::$float n) nroots))))))
 ;      (format t "nroots ~a~%" nroots)
       (if (consp nroots)
-          (cons '(maxima::mlist maxima::simp) (sort nroots  #'<))
+          (maxima::mk-mlist (sort nroots  #'<))
         nil)))
 
 ;; To reiterate: this could use refactoring!
@@ -123,7 +123,7 @@
                        (int1
                         (quad-call :qagi expr var 'maxima::$minf nlo quad-ops))
                        (int2
-                        (quad-call :qagp expr var nlo hi quad-ops (cons '(maxima::mlist simp) (cdr nsinglist)))))
+                        (quad-call :qagp expr var nlo hi quad-ops (maxima::mk-mlist (cdr nsinglist)))))
                   (nint::combine-quad-results int1 int2)))
                ((and (not (eq 'maxima::$minf lo)) (eq 'maxima::$inf hi))
                 (let* ((nsinglist (cdr singlist))
@@ -132,7 +132,7 @@
                        (n1singlist (reverse (cdr rsinglist)))
                        (int1 (quad-call :qagi expr var nhi 'maxima::$inf quad-ops))
                        (int2
-                        (quad-call :qagp expr var lo nhi quad-ops (cons '(maxima::mlist simp) n1singlist))))
+                        (quad-call :qagp expr var lo nhi quad-ops (maxima::mk-mlist n1singlist))))
                   (nint::combine-quad-results int1 int2)))
                ((and (eq 'maxima::$minf lo) (eq 'maxima::$inf hi))
                 (let* ((nsinglist (cdr singlist))
@@ -146,7 +146,7 @@
                        (int2
                         (quad-call :quagi expr var nhi hi quad-ops))
                        (int3 (if (not (= nlo nhi))
-                                 (quad-call :qagp expr var nlo nhi quad-ops (cons '(maxima::mlist simp) n1singlist))
+                                 (quad-call :qagp expr var nlo nhi quad-ops (maxima::mk-mlist n1singlist))
                                nil)))
                   (if (consp int3)
                       (nint::combine-quad-results (nint::combine-quad-results int1 int2) int3)

@@ -37,7 +37,7 @@
 (defmfun1 ($dirstack :doc) ()
   :desc ("Return a list of the directories on the directory stack. This list is
  manipulated with " :mref "chdir" ", " :mrefcomma "updir" " and " :mrefdot "popdir")
-  (cons '(mlist simp) mext::*pwd-directory-stack*)))
+  (mk-mlist mext::*pwd-directory-stack*)))
 
 ;; redefined
 (mext::no-warning
@@ -58,7 +58,7 @@
 (mext::no-warning
 (defmfun1 ($mext_list :doc) ()
   "Returns a list of all installed mext distributions. These are installed, but not neccessarily loaded."
-    (mext::mext-list)))
+    (mk-mlist (mext::mext-list))))
 
 ;; redefined
 (mext::no-warning
@@ -115,7 +115,7 @@
   :desc ("Returns the list of symbols that are not killed
           by " :codedot "kill(all)" " Items are added to this list
           with " :mrefdot "dont_kill")
-  (cons '(mlist simp) allbutl))
+  (mk-mlist allbutl))
 
 (defmfun1 ($dont_kill_share :doc) ((package :or-string-symbol))
   :desc (
@@ -205,7 +205,7 @@ This is from wxmaxima
   (let ((name (maxima::$sconcat package)))
     (multiple-value-bind (symbol-list present) (gethash name defmfun1::*mext-functions-table*)
       (if present
-          (cons '(mlist simp) ; hmm need copy below
+          (mk-mlist ; hmm need copy below
                 (sort (copy-list symbol-list) #'string-lessp))
         (defmfun1-error-final '$no_such_package 
           (format nil "Package `~a' does not exist" name))))))
@@ -222,7 +222,7 @@ This is from wxmaxima
       (when (member iname (gethash pack h) :test #'string-equal)
         (push pack res)))
     (if (cdr res)
-        (cons '(mlist simp) res)
+        (mk-mlist res)
       (car res))))
 
 (defmfun1 ($mtranslate_file :doc) ((input-file :string)

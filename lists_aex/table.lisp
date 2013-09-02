@@ -188,13 +188,13 @@
                  (if (null iterators)
                      (do ((i var-start (+ i var-step))
                           (ans))
-                         (,test-code (cons '(mlist simp) (nreverse ans)))
+                         (,test-code (mk-mlist (nreverse ans)))
                        (declare (,type i))
                        (set var i)
                        (push (meval expr) ans))
                      (do ((i var-start (+ i var-step)) ; there are more iterators, call table-general-iterator
                           (ans))
-                         (,test-code (cons '(mlist simp) (nreverse ans)))
+                         (,test-code (mk-mlist (nreverse ans)))
                        (declare (,type i))
                        (set  var i)
                        (push (table-general-iterator expr iterators) ans)))))))
@@ -227,13 +227,13 @@
           ;; no more iterators, just evaluate expr num-times
           (do ((i var-start (+ i var-step))
                (ans))
-            ((funcall end-test i var-end) (cons '(mlist simp) (nreverse ans)))
+            ((funcall end-test i var-end) (mk-mlist (nreverse ans)))
             (setf (symbol-value var) i)
             (push (meval expr) ans))
           ;; there are more iterators, call table-general-iterator
           (do ((i var-start (+ i var-step))
                (ans))
-            ((funcall end-test i var-end) (cons '(mlist simp) (nreverse ans)))
+            ((funcall end-test i var-end) (mk-mlist (nreverse ans)))
             (setf (symbol-value var) i)
             (push (table-general-iterator expr iterators) ans))))))
 
@@ -257,13 +257,13 @@
         ;; no more iterators, just evaluate expr num-times
         (do ((i var-start (add* i var-step))
              (ans))
-          ((funcall end-test i var-end) (cons '(mlist simp) (nreverse ans))) ; when i > num, return maxima list
+          ((funcall end-test i var-end) (mk-mlist (nreverse ans))) ; when i > num, return maxima list
           (setf (symbol-value var) i)
           (push (meval expr) ans))
         ;; there are more iterators, call table-general-iterator
         (do ((i var-start (add* i var-step))
              (ans))
-          ((funcall end-test i var-end) (cons '(mlist simp) (nreverse ans))) ; when i > num, return maxima list
+          ((funcall end-test i var-end) (mk-mlist (nreverse ans))) ; when i > num, return maxima list
           (setf (symbol-value var) i)
           (push (table-general-iterator expr iterators) ans))))))
 

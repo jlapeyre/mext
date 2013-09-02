@@ -79,15 +79,15 @@
     (dotimes (k n)
       (declare (fixnum k)) ; probably automatic because n is fixnum
       (when (= 0 (bit visited k))
-        (when one-cycle (push (defmfun-final-to-ae (cons '(mlist simp) one-cycle)) all-cycles)
+        (when one-cycle (push (defmfun-final-to-ae (mk-mlist one-cycle)) all-cycles)
               (setf one-cycle nil))
         (setf knext k)
         (loop while (= 0 (bit visited knext)) do
              (push (the fixnum (1+ knext)) one-cycle)
              (setf (bit visited knext)  1)
              (setf knext (the fixnum (1- (the fixnum (aref arr knext))))))))
-    (when one-cycle (push (defmfun-final-to-ae (cons '(mlist simp) one-cycle)) all-cycles))
-    (defmfun-final-to-ae (cons '(mlist simp) all-cycles))))
+    (when one-cycle (push (defmfun-final-to-ae (mk-mlist one-cycle)) all-cycles))
+    (defmfun-final-to-ae (mk-mlist all-cycles))))
 
 (examples::clear-examples "perm_to_cycles")
 (examples::add-example "perm_to_cycles" '( :code "perm_to_cycles([5,4,3,2,1,10,6,7,8,9])"))
@@ -122,20 +122,20 @@
          is applied at both levels.")
   (let ((cycles ($perm_to_cycles ain (defmfun1:rule $ot '$ml))))
     (defmfun-final-to-ae
-      (cons '(mlist simp)
+      (mk-mlist
             (if (eq o-type 'maxima::$ml)
                 (loop for cyc in cycles append
                       (if (< (ilength cyc) 2) nil
                         (if (< (ilength cyc) 3)
                           (list cyc)
                           (loop for e in (cddr cyc) collect
-                                (list '(mlist simp) (cadr cyc) e)))))
+                                (make-mlist-simp (cadr cyc) e)))))
               (loop for cyc in cycles append
                     (if (< (ilength cyc) 2) nil
                       (if (< (ilength cyc) 3)
                           (list (aex-to cyc))
                         (loop for e in (cddr cyc) collect
-                              (aex-to (list '(mlist simp) (cadr cyc) e)))))))))))
+                              (aex-to (make-mlist-simp (cadr cyc) e)))))))))))
 
 ;; Need to implement routine for aex input      
 (defmfun-ae ($transpositions_to_perm :doc) ((ain :ae-list ))
@@ -255,7 +255,7 @@
                (j 0))
            (declare(fixnum j))
            (setf (aref a 0) 1)
-           (cons '(mlist simp) (progn ,(rand-perm-sym-loop cycle-p)
+           (mk-mlist (progn ,(rand-perm-sym-loop cycle-p)
                                       (coerce  a 'list ))))
          (let* ((oa (aex-make-n-head n :adjustable adj-type))
                 (a (aex-arr oa))

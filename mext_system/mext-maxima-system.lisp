@@ -221,7 +221,7 @@ This was copied from maxima source init-cl.lisp.")
 (defmacro add-dir-to-file-search (to-add dir-list)
   `(unless (maxima::$member ,to-add ,dir-list)
     (setf ,dir-list
-          (cons '(maxima::mlist) (cons ,to-add (cdr ,dir-list))))))
+          (maxima::mk-mlist (cons ,to-add (cdr ,dir-list))))))
 
 (add-dir-to-file-search *search-path-maxima-mext-user* maxima::$file_search_maxima)
 (add-dir-to-file-search *search-path-lisp-mext-user* maxima::$file_search_lisp)
@@ -421,7 +421,7 @@ This was copied from maxima source init-cl.lisp.")
  then look in the current directory for rtests."
  (when (not (consp dists))
    (cond ((string= "all" (maxima::$sconcat dists))
-          (setf dists (mext-list)))
+          (setf dists (maxima::mk-mlist (mext-list))))
          ((string= "loaded" (maxima::$sconcat dists))
           (setf dists (maxima-list-loaded-distributions)))
          (t nil)))
@@ -444,7 +444,7 @@ This was copied from maxima source init-cl.lisp.")
                     (let ((posn (search "rtest" (pathname-name file))))
                       (when (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
                           (setf testdir-list (cons (namestring file) testdir-list)))))))
-      (setf maxima::$testsuite_files (cons '(maxima::mlist maxima::simp) testdir-list)))
+      (setf maxima::$testsuite_files (maxima::mk-mlist testdir-list)))
     (maxima::$run_testsuite)))
 
 #|
@@ -470,7 +470,7 @@ This was copied from maxima source init-cl.lisp.")
 
 (defun maxima-list-directory ( &optional dirname)
  "A directory list function that is meant to be called from maxima."
-  (cons '(maxima::mlist maxima::simp) 
+  (maxima::mk-mlist
         (list-directory (if dirname dirname *default-pathname-defaults*))))
 
 (defun mext-info (distname)
@@ -483,10 +483,10 @@ This was copied from maxima source init-cl.lisp.")
 (defun mext-list ()
   "List installed distributions."
   (scan-installed-distributions)
-  (cons '(maxima::mlist maxima::simp) (list-installed-distributions)))
+  (list-installed-distributions))
 
 (defun maxima-list-loaded-distributions ()
-  (maxima::$sort (cons '(maxima::mlist maxima::simp) (list-loaded-distributions))))
+  (maxima::$sort (maxima::mk-mlist (list-loaded-distributions))))
 
 (defun mext-clear ()
  "Clear list of loaded mext distributions."
@@ -497,7 +497,7 @@ This was copied from maxima source init-cl.lisp.")
   (dolist (pack-name (maxima::ensure-lisp-list pack-name-list))
    (setf pack-name (maxima::$sconcat pack-name))
    (if (string= "all" pack-name)
-    (progn (loop for dist in (cdr (mext-list)) do
+    (progn (loop for dist in (mext-list) do
                  (mext-require dist))
            'maxima::$done)
      (if (string= "mext_system" pack-name) t
@@ -675,7 +675,7 @@ This was copied from maxima source init-cl.lisp.")
 ;; satisfy a mext_require call
 ;; We could use verbose or debugging option
 (defmfun $mext_provide (name files &optional dir)
-  (let ((dir (if dir dir (cons '(mlist simp) (list ($sconcat name))))))
+  (let ((dir (if dir dir (mk-mlist (list ($sconcat name))))))
     ($load_files_in_subdir (list '(mlist simp) (list '(mlist simp) name "mxt")) dir)
     ($load_files_in_subdir files dir)
     ($mext_provided name)))
@@ -722,7 +722,7 @@ This was copied from maxima source init-cl.lisp.")
   (mext::popdir n))
 
 (defmfun $dirstack ()
-  (cons '(mlist simp) mext::*pwd-directory-stack*))
+  (mk-mlist mext::*pwd-directory-stack*))
 
 ;; chdir up n parent dirs.
 ;; This is probably not too portable. But it is better to use this than to
@@ -755,7 +755,7 @@ This was copied from maxima source init-cl.lisp.")
 
 ;; list installed distributions
 (defmfun $mext_list ()
-  (mext::mext-list))
+  (mk-mlist (mext::mext-list)))
 
 (defmfun $mext_clear ()
   (mext::mext-clear))

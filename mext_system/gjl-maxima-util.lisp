@@ -27,3 +27,7 @@
   (cond (($listp e) (cdr e))
         ((consp e) e)
         (t (list e))))
+
+;; Very similar to macros in src/strmac.lisp
+;; But this one is not there, and I want a short name.
+(defmacro mk-mlist (e) `(cons '(mlist simp) ,e))

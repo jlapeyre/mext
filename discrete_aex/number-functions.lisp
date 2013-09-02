@@ -53,9 +53,9 @@
          (digits (loop for c across str collect (digit-char-p c base)))
          (n (length str)))
     (defmfun-final-to-ae
-        (cons '(mlist simp)
-              (if (and len (> len n)) (append (make-list (- len n) :initial-element 0) digits)
-                  digits)))))
+      (mk-mlist
+       (if (and len (> len n)) (append (make-list (- len n) :initial-element 0) digits)
+         digits)))))
 
 (add-call-desc '( "integer_digits" ("n")
                   ("returns a list of the base 10 digits of " :arg "n" "."))
@@ -160,7 +160,7 @@
       (setf maximum n1))
   (let ((sieve (make-array (1+ maximum) :element-type 'bit
                            :initial-element 0)))
-    (defmfun-final-to-ae (cons '(mlist simp)
+    (defmfun-final-to-ae (mk-mlist
           (loop for candidate from 2 to maximum
              when (zerop (bit sieve candidate))
              if (>= candidate minimum) collect candidate end
@@ -296,7 +296,7 @@
           (setf cur (- (divisor-function-1 cur) cur))
           (setf seq (cons cur seq)))
     (when (= cur last) (setf seq (cdr seq)))
-    (cons '(mlist simp) (nreverse seq))))
+    (mk-mlist (nreverse seq))))
 
 (examples:clear-add-example "aliquot_sequence"
  '( :pretext "Perfect numbers give a repeating sequence of period 1."
