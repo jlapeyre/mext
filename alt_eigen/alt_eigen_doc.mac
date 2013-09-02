@@ -7,7 +7,14 @@ maxdoc_set_cur_sec("fvequations");
   mext_package_record("alt_eigen","alt_eigen","alt_eigen_code.mac");
 
   We must specify the package in the call to maxdoc.
-*/  
+
+  If we don't use maxdoc, then record should work.
+  
+*/
+
+mext_package_record(["alt_eigen","simp_assuming",
+            "float_free_p","maybe_solve","alt_eigen_h"],
+  "alt_eigen","alt_eigen_code.mac");
 
 maxdoc("alt_eigen", source_filename->"alt_eigen_code.mac", package->"alt_eigen",
   [

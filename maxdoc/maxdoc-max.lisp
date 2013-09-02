@@ -154,16 +154,16 @@
  (defmfun1:set-mext-package packagename)
  '$done)
 
-(defmfun1 ($mext_package_record :doc) ((docitem :or-string-symbol) (packagename :string)
+(defmfun1 ($mext_package_record :doc) ((docitems :or-string-symbol-or-listof) (packagename :string)
                                        &optional (source-filename nil :string))
  :desc 
- ("Set the mext packagename for the function or variable "
-  :arg "docitem" " to " :argdot "packagename"
+ ("Set the mext packagename for the function or variable (or list of them) "
+  :arg "docitems" " to " :argdot "packagename"
   "This name will be used when displaying documentation."
   "The function " :mref "maxdoc_set_mext_package" " is useful for setting
   the package name of a group of functions, but there is currently no maxima
   hook for doing this.")
- (defmfun1:record-mext-package docitem packagename source-filename)
+ (defmfun1:record-mext-package docitems packagename source-filename)
  '$done)
 
 ;; (defmfun1 ($oeis :doc) ( (n :string) )
