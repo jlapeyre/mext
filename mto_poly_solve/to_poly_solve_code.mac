@@ -216,6 +216,9 @@ non_symbol_subst (e, v) := block([vars, listconstvars : false],
   e : fullratsubst(vars, e),
   [e, map('reverse, vars)]);
 
+/* GJL test removing
+  These fail to compile.
+*/
 (one_to_one_reduce[a,b] := false,
   one_to_one_reduce['sin,'sin] : lambda([a,b], 
       (a - b - 2 * %pi * new_variable('integer)) * (a + b - 2 * %pi * new_variable('integer) + %pi)),
@@ -233,7 +236,7 @@ non_symbol_subst (e, v) := block([vars, listconstvars : false],
 
   one_to_one_reduce['%exp,'%exp] : lambda([a,b],
       a - b - 2 * %pi * %i * new_variable('integer)));
-  
+
 one_to_one_crunch(e) := block([inflag : true, f, nv : set(), %exp, q, opl, opr],
   e : subst("^" = lambda([a,b], if a = %e then funmake('%exp, [b]) else a^b),e),
   e : if opequal_p(e,"+") then first(e) = -rest(e) else e,
@@ -252,6 +255,10 @@ one_to_one_crunch(e) := block([inflag : true, f, nv : set(), %exp, q, opl, opr],
   e : subst(%exp = lambda([a], %e^a),e),
   [e, nv]);
 
+
+/*  GJL -- test removing
+      These fail to compile
+*/
 
 (function_inverse[otherwise]:= false,
   function_inverse['acos] : lambda([s], cos(s)),
@@ -279,7 +286,7 @@ one_to_one_crunch(e) := block([inflag : true, f, nv : set(), %exp, q, opl, opr],
   function_zeros['acoth] : lambda([],[]),
   function_zeros['acot] : lambda([],[]));
 
-(function_domain[otherwise] := lambda([s],set()),
+ (function_domain[otherwise] := lambda([s],set()),
   function_domain['log] : lambda([s], set(s # 0)));
 
 top_level_ops(e) := block([inflag : false], 
