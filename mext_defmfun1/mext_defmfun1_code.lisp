@@ -91,6 +91,7 @@
    "higher than the current working directory.")
   (mext::updir n)))
 
+
 (defmfun1:set-hold-all '$dont_kill)
 (defmfun1 ($dont_kill :doc) (&rest item)
   :desc ("Add the " :arg "item" "s to the list of symbols that are not killed
@@ -107,8 +108,11 @@
   (cons '(mlist simp) allbutl))
 
 (defmfun1 ($dont_kill_share :doc) ((package :or-string-symbol))
-  :desc ("Prevent symbols in maxima share package " :arg "package"
-         " from being killed by " :emrefdot "kill")
+  :desc (
+ "Prevent symbols in maxima share package " :arg "package"
+ " from being killed by " :emrefdot "kill"
+ " Currently (if this document is up-to-date) only `basic' and"
+ " `lrats' are in the database.")
   (let ((name (maxima::$sconcat package)))
     (mext:do-dont-kill-share name))
   '$done)
