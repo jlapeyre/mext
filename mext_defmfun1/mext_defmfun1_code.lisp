@@ -195,14 +195,21 @@ This is from wxmaxima
 ;; Note: this feature is new. Some functions and variables
 ;; are not properly registered.
 ;; 
+;; !!! Still not right. Not that it does not exist. it's that
+;; it is not loaded!
 (defmfun1 ($mext_list_package :doc) ((package :or-string-symbol))
   :desc ("List functions and variables defined in the mext pacakge "
  :argdot "package" " A mis-feature is that an empty list is returned
  if the package is not loaded. This function incorrectly returns an empty list
  for some packages, and may miss some functions.")
   (let ((name (maxima::$sconcat package)))
-    (cons '(mlist simp) ; hmm need copy below
-          (sort (copy-list (gethash name defmfun1::*mext-functions-table*)) #'string-lessp))))
+    (multiple-value-bind (symbol-list present) (gethash name defmfun1::*mext-functions-table*)
+      (if present
+          (cons '(mlist simp) ; hmm need copy below
+                (sort (copy-list symbol-list) #'string-lessp))
+        (defmfun1-error-final '$no_such_package 
+          (format nil "Package `~a' does not exist" name))))))
+                                                        
 
 (defmfun1 ($mext_find_package :doc) ((item :or-string-symbol))
   :desc ("Find mext packages in which the function or variable "
@@ -231,7 +238,7 @@ This is from wxmaxima
          " intermediate, translated filename may be specified as an option. "
          "If the intermediate filename, " :optcomma " is not given, then "
          "it will be written in the same directory as the ouput (binary) file.")
-  (mext::mext-compile-file input-file $bin_file $tr_file))
+  (mext::mext-compile-file input-file bin_file $tr_file))
   
 
 (max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear" 
