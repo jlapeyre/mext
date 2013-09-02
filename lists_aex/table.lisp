@@ -291,7 +291,13 @@
       `((mlist simp) ,@(nreverse ans)))))
 
 ;; Maxima function $table
-;; Defined by `defmspec' to prevent expression evaluation
+
+;; Defined by `defmspec' to prevent expression evaluation This is
+;; acheived via set-hold-all.
+
+;; We could gain a bit of efficiency by constructing aex
+;; representation directly, but conversion from ml to ar should be
+;; O(number of elements)
 
 (defmfun1:set-hold-all '$table)
 (max-doc:add-doc-entry '( :name "table" :type "Function"))

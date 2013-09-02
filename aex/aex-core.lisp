@@ -5,8 +5,19 @@
 ;;; the Free Software Foundation; either version 2 of the License, or
 ;;; (at your option) any later version.
 
+;; TODO: Move some of this to a separate package !!
 (in-package :maxima)
-;; why did I not put some of this in a separate package ?
+
+
+;; BUG: clisp gives error: raex(lrange(3)) 
+;;   SUBTYPEP: invalid type specification ANY
+;; calls: $raex -> raex1 -> aex-to
+;; and aex-to sets element-type to 'any
+;; Need to wrap mk-array in a macro that does
+;; omits element-type if 'any for clisp
+
+;;(defmacro aex-make-array (
+
 
 (mext:mext-optimize)
 (use-package :gjl.lisp-util)

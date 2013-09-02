@@ -1,2 +1,5 @@
-Check ocurrences of merror1 and see if they can
-be replaced by macros that check for match_form.
+Mon Sep  2 15:22:21 CEST 2013
+ Recently only clisp fails some rtests under linux
+ (out of six lisps).
+ Fixes are known and easy, but not done. See 
+ logfiles/clmaxima.testlog for how to fix them.

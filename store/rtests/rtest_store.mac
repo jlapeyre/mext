@@ -1,4 +1,4 @@
-( kill(a,c), store_restore(item) := block( store("tst.cls",item),
+( kill(a,c,x), store_restore(item) := block( store("tst.cls",item),
   restore("tst.cls")),0);
 0;
 
@@ -12,13 +12,26 @@ store_restore(1);
      c : petersen_graph(), 0);
 0$
 
+
+/*
+
+ clisp cannot store graphs.
+ Maxima encountered a Lisp error:
+ Cannot store objects of type GRAPH with backend cl-store.
+
+*/
+
 /*
   We should worry about where this file is written. This may
   be somewhere where the user does not have write permission.
-*/  
-(store("graph.cls",c),
-      factor(graph_charpoly( restore("graph.cls"), x)));
-(x-3)*(x-1)^5*(x+2)^4$
+*/
 
-(kill(a,c),0);
+block([bi:build_info()],
+   if is(bi@lisp_name # "CLISP") then 
+    (store("graph.cls",c),
+      factor(graph_charpoly(restore("graph.cls"), x)))
+    else factor(graph_charpoly(c, x)))$
+(x-3)*(x-1)^5*(x+2)^4;
+
+(kill(a,c,x),0);
 0;
