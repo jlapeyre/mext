@@ -8,17 +8,6 @@
 ;; TODO: Move some of this to a separate package !!
 (in-package :maxima)
 
-
-;; BUG: clisp gives error: raex(lrange(3)) 
-;;   SUBTYPEP: invalid type specification ANY
-;; calls: $raex -> raex1 -> aex-to
-;; and aex-to sets element-type to 'any
-;; Need to wrap mk-array in a macro that does
-;; omits element-type if 'any for clisp
-
-;;(defmacro aex-make-array (
-
-
 (mext:mext-optimize)
 (use-package :gjl.lisp-util)
 (use-package :max-doc)
@@ -398,7 +387,7 @@ refers to the head."
 
 ;; is used
 ;; non-maxima version of above
-(defun aex-to  (x &key (adjustable t) (element-type 'any))
+(defun aex-to  (x &key (adjustable t) (element-type t))
 ;;  (format t "elements ~a~%"  element-type)
   (cond 
     ((and (listp x) (not ($lspecrepp x)))
@@ -654,7 +643,7 @@ refers to the head."
 ;; create aex expression by copying or converting. if head, adjustability , are specified
 ;;  then change these, otherwise copy them
 ;; is used
-(defun aex-cp (e &key (adjustable t adj-type-p) (head nil) (element-type 'any))
+(defun aex-cp (e &key (adjustable t adj-type-p) (head nil) (element-type t))
   (cond ( (aex-p e)
          (make-aex :head (if head head (aex-head e)) :arr (gjl::copy-array (aex-arr e))
                    :adjustable (if adj-type-p adjustable (aex-adjustable e)) ))

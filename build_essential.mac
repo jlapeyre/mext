@@ -22,7 +22,7 @@ build_several (package_list) :=
 /* build_several([  "maxdoc" ]); */
 
 build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "test_defmfun1", "aex",
-                "lists_aex", "discrete_aex", "numerical" ]);
+                "lists_aex", "discrete_aex", "numerical", "alt_eigen" ]);
 
 /* build_several([ "quicklisp", "store" ]); */
 
