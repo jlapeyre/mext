@@ -99,8 +99,8 @@
     " specified by " :argdot "docs")
     (max-doc:add-doc-entry (list :name name :contents (do-maxdoc docs)
                                  :source-filename $source_filename
-                                 :mext-package $package)
-    '$done))
+                                 :mext-package $package))
+    '$done)
 
 ;; Note that this works for some, but not all examples. The
 ;; code-text slot in an example uses a different syntax that
