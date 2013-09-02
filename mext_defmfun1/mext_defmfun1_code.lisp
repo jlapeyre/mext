@@ -187,3 +187,5 @@ This is from wxmaxima
 
 (max-doc:see-also-group '("chdir" "pwd" "popdir" "updir" "dirstack" "list_directory"))
 
+(max-doc:see-also-group '("dont_kill" "dont_kill_share" "get_dont_kill"))
+
