@@ -448,6 +448,10 @@ This was copied from maxima source init-cl.lisp.")
     (maxima::$run_testsuite)))
 
 #|
+ Under construction: in rtests/ directory we want  rtests.cfg with code like:
+ mext_rtest_config( "packname", [ "rtest_file1", 34, 76 ], ... );
+ This will be searched for by mext-test above.
+
 (defun set-rtests ( specs )
   (dolist (spec (maxima::ensure-lisp-list specs))
     (let ((dist (car spec))

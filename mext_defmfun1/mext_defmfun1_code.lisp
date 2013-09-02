@@ -169,11 +169,12 @@ This is from wxmaxima
 
 ;; Note: this feature is new. Some functions and variables
 ;; are not properly registered.
+;; 
 (defmfun1 ($mext_list_package :doc) ((package :or-string-symbol))
   :desc ("List functions and variables defined in the mext pacakge "
  :argdot "package" " A mis-feature is that an empty list is returned
-if the package is not loaded. This function incorrectly returns an empty list
-for some packages, and may miss some functions.")
+ if the package is not loaded. This function incorrectly returns an empty list
+ for some packages, and may miss some functions.")
   (let ((name (maxima::$sconcat package)))
     (cons '(mlist simp) ; hmm need copy below
           (sort (copy-list (gethash name defmfun1::*mext-functions-table*)) #'string-lessp))))

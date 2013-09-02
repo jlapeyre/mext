@@ -118,6 +118,8 @@ symbols) being attribute names; and values being the value of the attribute, typ
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Some of this should be separated and moved to mext package.
+
 (ddefvar *mext-functions-table* (make-hash-table :test 'equal)
   "This hash-table stores a list of the user functions defined 
 in a  mext package.")
@@ -130,6 +132,9 @@ in a  mext package.")
  "This hash-table stores the name of the source file in which a function
   is defined.")
 
+;; Need a maxima interface to this, for eg alt_eigen.
+;; Is there a maxima interface for setting the source file ?
+;; Maybe should allow optionally passing source filename
 (defun record-mext-package (name package)
  "Record fact that string `name' is in mext packge `package'.
   This may be called with the current package *mext-package*,
@@ -151,6 +156,8 @@ the hash table *mext-functions-table*."
   (setf name (maxima::$sconcat name))
   (let ((fname (gethash name *mext-filename-table*)))
     (if fname fname "none")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (maxima::ddefun set-hold-all (name)
   "Set the $hold_all attribute for a defmfun1 function. The macro will expand to

@@ -7,7 +7,14 @@ require(discrete_aex);
 kill(all);
 */
 
-our_test_list : [mext_system,mext_defmfun1,test_defmfun1,aex,lists_aex,discrete_aex,alt_eigen,mto_poly_solve];
+our_test_list : [mext_system,mext_defmfun1,test_defmfun1,aex,lists_aex,discrete_aex,alt_eigen];
+
+/*
+mto_poly_solve:
+
+Not really ready yet because we need to exclude some tests and mext::set-rtests is not
+written yet.
+*/
 
 /* our_test_list : [mext_system,aex,lists_aex,discrete_aex]; */
 
