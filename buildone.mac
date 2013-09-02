@@ -7,5 +7,5 @@ buildall_mext (package) := (
   load_in_dsubdir(["ibuild","mac"]),
   chdir());
 
-for package in [ "lists_aex" ] do
+for package in [ "alt_eigen" ] do
   buildall_mext(package);

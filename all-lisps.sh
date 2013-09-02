@@ -17,11 +17,13 @@ maximas="smaxima smaxima-28 gmaxima gmaxima-30 clmaxima emaxima cmumaxima ccmaxi
 #maximas="smaxima"
 #maximas="smaxima-28"
 
-build_package_script="buildall1.mac"
+#build_package_script="buildall1.mac"
 #build_package_script="build_essential.mac"
+build_package_script="buildone.mac"
 
-test_package_script="testall1.mac"
+#test_package_script="testall1.mac"
 #test_package_script="test_essential.mac"
+test_package_script="testone.mac"
 
 # Build just the mext_system
 # Note that if mext system has already been loaded, eg in your startup
@@ -87,7 +89,7 @@ print_max_doc () {
 }
 
 mkdir "./logfiles"
-build_mext
+#build_mext
 build_mext_packages
 
 # don't need this

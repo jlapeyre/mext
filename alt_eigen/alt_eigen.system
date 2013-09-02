@@ -17,8 +17,9 @@
    ((:file "alt_eigen_code" :load-only t)
     (:file "alt_eigen_doc" :load-only t)
     (:file "alt_eigen_doc1" :source-extension "lisp" :load-only nil)
-    (:file "alt_eigen_compile" :load-only t)))
+    (:file "alt_eigen_compile" :load-only nil)))
 
+;; compiling alt_eigen_compile fails with ecl
 #+ecl (mk:defsystem alt_eigen
   :source-extension "mac"
   :language :mext-maxima
@@ -37,4 +38,4 @@
   :source-extension "mac"
   :source-pathname "rtests"
   :components
-    ( (:file "rtest_alt_eigen")))
+    ((:file "rtest_alt_eigen")))

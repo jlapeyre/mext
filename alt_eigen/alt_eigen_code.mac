@@ -11,8 +11,14 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. */
 
-(load('basic), load('lrats),load('simplifying));
+/* This code must not be compiled -- GJL */
 
+/* copied from to_poly_solve -- GJL */
+block([inflag : true], if not(member('fullratsubst, map('op, functions))) then load("lrats"));
+
+(load('basic),load('simplifying));
+
+/* Add don't kill for mext -- GJL */
 dont_kill_share("basic");
 dont_kill_share("lrats");
 dont_kill( simp_assuming, float_free_p, mygramschmidt, maybe_solve,

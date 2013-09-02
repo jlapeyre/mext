@@ -417,7 +417,8 @@ This was copied from maxima source init-cl.lisp.")
 
 (defun mext-test  ( &optional dists )
  "Run regression tests in the sub-directories of the installed distributions.
- Dists is name or list of names of distributions."
+ dists is name or list of names of distributions. If no argument is given,
+ then look in the current directory for rtests."
  (when (not (consp dists))
    (cond ((string= "all" (maxima::$sconcat dists))
           (setf dists (mext-list)))
@@ -445,6 +446,14 @@ This was copied from maxima source init-cl.lisp.")
                           (setf testdir-list (cons (namestring file) testdir-list)))))))
       (setf maxima::$testsuite_files (cons '(maxima::mlist maxima::simp) testdir-list)))
     (maxima::$run_testsuite)))
+
+#|
+(defun set-rtests ( specs )
+  (dolist (spec (maxima::ensure-lisp-list specs))
+    (let ((dist (car spec))
+          (t-specs (cdr spec)))
+      (dolist (t-spec (maxima::ensure-lisp-list t-specs))
+|#      
 
 (defun updir (&optional (n 1))
   (if (and (numberp n) (> n 0))
@@ -656,6 +665,7 @@ This was copied from maxima source init-cl.lisp.")
                    (merror "File specification ~a is neither a string nor a list of one or two strings.~%")))))))
 
 ;; satisfy a mext_require call
+;; We could use verbose or debugging option
 (defmfun $mext_provide (name files &optional dir)
   (let ((dir (if dir dir (cons '(mlist simp) (list ($sconcat name))))))
     ($load_files_in_subdir (list '(mlist simp) (list '(mlist simp) name "mxt")) dir)
@@ -672,7 +682,6 @@ This was copied from maxima source init-cl.lisp.")
 ;; I tried using the maxima file_search routine, but it matched directories
 ;; even with a path list supplied, while we only want to match files.
 
-;; Need to change all calls to this to `require'.
 #|
 (defmfun $mext_require (name &optional force)
   (setf name ($sconcat name))
@@ -684,7 +693,7 @@ This was copied from maxima source init-cl.lisp.")
       t)))
 
 |#
-;; identical. I want to switch to this name
+
 (defmfun $require (name &optional force)
   (mext:mext-require name force))
 

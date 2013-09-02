@@ -10,7 +10,10 @@
 
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>. */
-    
+
+/* This code may be compiled on most platforms
+   see alt_eigen.system -- GJL */
+
 float_free_p(e) := if mapatom(e) then not (floatnump(e) or bfloatp(e)) else every(lambda([s], float_free_p(s)), args(e));
 
 maybe_solve(p,z,deg) := block([n, lt, inflag : true, sol,  programmode : true, globalsolve : false, 

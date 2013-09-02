@@ -15,3 +15,9 @@ mext_provide( "mto_poly_solve",
   "to_poly_solve_code",
   "to_poly_solve_extra"
   ]);
+
+/*
+mext_set_rtests( "mto_poly_solve",
+  ["rtest_to_poly_solve", 64, 74, 80, 185],
+  ["rtest_to_poly", 17, 18, 19]);
+*/

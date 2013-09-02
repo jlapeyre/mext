@@ -1,4 +1,5 @@
-(mext_require("alt_eigen"),
+/* modified this first bit for mext -- GJL */
+(
  reset(matrix_element_mult, matrix_element_add),
  check_eigen(m, z, es) := block([p,e, ok : true, algebraic : true, doallmxops : true],
    if op(es) = 'assuming then es : second(es), 
