@@ -119,7 +119,7 @@
 (defmfun1 ($maxdoc_split_text :doc) ((text :string))
   :desc ("Split the string " :arg "text" " into a list of strings, using a sequence
  of one or more spaces as the delimeter. Single newlines are removed.")
-  (cons '(mlist simp) (gjl:split-by-space-and-newline text)))
+  (mk-mlist (gjl:split-by-space-and-newline text)))
 
 (defmfun1 ($maxdoc_author :doc) ((name :string) (author :string-or-listof))
   :desc ("Set the author(s) for the documentation item " :argdot "name")

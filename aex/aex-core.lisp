@@ -596,7 +596,7 @@ refers to the head."
 (defmfun $<< (&rest e)
   (if (length-eq e 1)
       ($aex (first e))
-    ($aex (cons '(mlist simp) e))))
+    ($aex (mk-mlist e))))
 
 ;; prevent these operators from being clobbered by kill(all)
 (push "<<" *mopl*)
@@ -754,7 +754,7 @@ refers to the head."
   (defmfun-final-to-ae
       (if-aex e (aex-mk-head-args '(mlist simp) (aex-cp-args e))
               (progn (atomchk (setq e (format1 e)) '$args nil)
-                     (cons '(mlist) (margs e))))))
+                     (mk-mlist (margs e))))))
 
 ;; in progress. add list of lists which can be of mixed representation.
 ;; Avoid using the simplifer with aex expressions.

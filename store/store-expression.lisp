@@ -12,7 +12,7 @@
  " in binary format. Many types of lisp expressions and subexpressions
  are supported: numbers,strings,list,arrays,hashtables,structures,....")
   (let ((cl-store::*check-for-circs* t))
-    (cl-store::store (if (length1p exprs) (car exprs) (cons '(mlist simp) exprs)) file))
+    (cl-store::store (if (length1p exprs) (car exprs) (mk-mlist exprs)) file))
   '$done);
 
 (defmfun1 ($store_fast :doc) ( (file :string) &rest exprs )
@@ -20,7 +20,7 @@
  " in binary format. This is like "
   :mref "store" ", except that no checks for circular references are done.")
   (let ((cl-store::*check-for-circs* nil))
-    (cl-store::store (if (length1p exprs) (car exprs) (cons '(mlist simp) exprs)) file))
+    (cl-store::store (if (length1p exprs) (car exprs) (mk-mlist exprs)) file))
   '$done);
 
 (defmfun1 ($restore :doc) ((file :string) )

@@ -59,19 +59,19 @@
 (defmfun1 $dtest5 (x &opt ($extra nil e-supplied-p) )
   (format t "x is ~a, extra is ~a~%" x $extra)
   (format t "Was `extra' passed as an argument ? : ~a~%" e-supplied-p)
-  (cons '(mlist) (list x $extra e-supplied-p )))
+  (make-mlist-simp x $extra e-supplied-p ))
 
 ;; Takes two options.
 (defmfun1 $dtest6 (x &opt ($extra nil e-supplied-p) ($opt2 1 opt2-supplied-p))
   (format t "x is ~a, extra is ~a, opt2 is ~a~%" x $extra $opt2)
   (format t "Was `extra' passed as an argument ? : ~a~%" e-supplied-p)
   (format t "Was `opt2' passed as an argument ? : ~a~%" opt2-supplied-p)
-  (cons '(mlist) (list x $extra e-supplied-p $opt2 opt2-supplied-p )))
+  (make-mlist-simp x $extra e-supplied-p $opt2 opt2-supplied-p ))
 
 ;; Use a lisp symbol for option that differs from option name
 ;; Option must be boolean.
 (defmfun1 $dtest7 ( &opt (($myopt my-opt) t my-opt-p :bool))
-  (cons '(mlist) (list my-opt my-opt-p)))
+  (make-mlist-simp my-opt my-opt-p))
 (defmfun1::set-match-form `$dtest7)
 
 ;; Can use &aux as with defun

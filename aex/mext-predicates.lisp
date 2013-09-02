@@ -73,7 +73,7 @@
  :desc ("Return something like the `type' of a maxima expression. This
  is a bit ill defined currently. " :mref "type_of" " uses the lisp function " :codedot "type-of")
   (cond ( (aex-p e)
-          (if verbose (list '(mlist simp) ($op e) 'aex)
+          (if verbose (make-mlist-simp ($op e) 'aex)
             ($aeop e)))
 #+(or sbcl ecl)       ( (stringp e) 'string)
         ( (atom e)
@@ -84,14 +84,14 @@
                (t
                 (let (( res ($op e)))
                   (if (and verbose (not (eq (caar e) res)))
-                      (list '(mlist simp) res (caar e))
+                      (make-mlist-simp res (caar e))
                     ($op e))))))
         ( ($ratp e)
                 '$cre)
         (t
          (let (( res ($op e)))
            (if (and verbose (not (eq (caar e) res)))
-               (list '(mlist simp) res (caar e))
+               (make-mlist-simp res (caar e))
              ($op e))))))
 
 (examples::clear-examples "type_of")

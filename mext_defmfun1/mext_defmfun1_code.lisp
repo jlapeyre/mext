@@ -151,7 +151,6 @@
 (defmfun1 ($mext_list_loaded :doc) ()
   :desc ("Returns a list of mext packages currently loaded.")
   (mext::maxima-list-loaded-distributions))
-;  ($sort (cons '(mlist simp) (get-hash-keys mext-maxima::*loaded-dist-table*))))
 
 (maxdoc:mdefmvar $lisp_bin_ext mext-maxima::*binary-ext*
 "The extension of compiled lisp binaries for the lisp
