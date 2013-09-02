@@ -228,7 +228,9 @@ This is from wxmaxima
 (defmfun1 ($mcompile_file :doc) ((input-file :string) &optional
        (bin_file :string) &opt ($tr_file :string))
   :desc( "Like " :emrefcomma "compile_file" " except that the "
-         " intermediate, translated filename may be specified as an option.")
+         " intermediate, translated filename may be specified as an option. "
+         "If the intermediate filename, " :optcomma " is not given, then "
+         "it will be written in the same directory as the ouput (binary) file.")
   (mext::mext-compile-file input-file $bin_file $tr_file))
   
 
