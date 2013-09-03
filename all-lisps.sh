@@ -14,10 +14,9 @@
 # of this software, as well.
 
 #############################
-maximas="smaxima smaxima-28 smaxima-31 gmaxima gmaxima-30 clmaxima emaxima cmumaxima ccmaxima ccmaxima-30"
+#maximas="smaxima smaxima-28 smaxima-31 gmaxima gmaxima-30 clmaxima emaxima cmumaxima ccmaxima ccmaxima-30"
 #maximas="smaxima"
-#maximas="smaxima-31"
-#maximas="smaxima-28"
+maximas="gmaxima-5.31-2.6.8"
 
 build_package_script="buildall1.mac"
 #build_package_script="build_essential.mac"
@@ -91,12 +90,13 @@ print_max_doc () {
  done
 }
 
-mkdir "./logfiles"
-build_mext
-build_mext_packages
-
 # don't need this
 #build_one_mext_package
+
+mkdir "./logfiles"
+
+build_mext
+build_mext_packages
 
 parse_build_logs
 test_mext_packages

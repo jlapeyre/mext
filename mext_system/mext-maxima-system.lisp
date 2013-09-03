@@ -413,7 +413,7 @@ This was copied from maxima source init-cl.lisp.")
 
 (defun popdir (&optional (n 1))
   (chdir :dir 
-         (loop for i from 1 to n do (pop *pwd-directory-stack*)) :push nil))
+         (loop :for i :from 1 :to n :do (pop *pwd-directory-stack*)) :push nil))
 
 (defun mext-test  ( &optional dists )
  "Run regression tests in the sub-directories of the installed distributions.
@@ -430,17 +430,17 @@ This was copied from maxima source init-cl.lisp.")
                 (setf dists 
                       (if (maxima::$listp dists) (cdr dists)
                         (list (maxima::$sconcat dists))))
-		(loop for dist in dists do
+		(loop :for dist :in dists :do
 		      (maxima::$require dist))
-                (loop for dist in dists collect
+                (loop :for dist :in dists :collect
                             (fmake-pathname :directory
                                             (append *mext-user-dir-as-list*
                                                     (list (maxima::$sconcat dist) "rtests")))))
                (t  (list "rtests")))))
     (let ((testdir-list))
-      (loop for testdir in testdirs do 
+      (loop :for testdir :in testdirs :do 
             (let ((inlist (list-directory testdir)))
-              (loop for file in inlist do
+              (loop :for file :in inlist :do
                     (let ((posn (search "rtest" (pathname-name file))))
                       (when (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
                           (setf testdir-list (cons (namestring file) testdir-list)))))))
@@ -497,7 +497,7 @@ This was copied from maxima source init-cl.lisp.")
   (dolist (pack-name (maxima::ensure-lisp-list pack-name-list))
    (setf pack-name (maxima::$sconcat pack-name))
    (if (string= "all" pack-name)
-    (progn (loop for dist in (mext-list) do
+    (progn (loop :for dist :in (mext-list) :do
                  (mext-require dist))
            'maxima::$done)
      (if (string= "mext_system" pack-name) t
@@ -513,7 +513,7 @@ This was copied from maxima source init-cl.lisp.")
   'maxima::$done)
 
 (defun add-to-dont-kill (&rest items )                         
-  (loop for item in items do
+  (loop :for item :in items :do
         (when (not (member item maxima::allbutl)) (push item maxima::allbutl))))
 
 (defun remove-from-dont-kill (&rest items )
@@ -535,7 +535,7 @@ This was copied from maxima source init-cl.lisp.")
 
 (defmacro mk-mext-all-operation (name default-system &rest body)
   `(mk-mext-operation ,name ,default-system
-     (loop for distname in distnames do
+     (loop :for distname :in distnames :do
            (let ((mext-maxima::*system-name* distname))
              ,@body))))
 
@@ -573,10 +573,10 @@ This was copied from maxima source init-cl.lisp.")
 
 (defmfun $mext_dist_user_install_additional ()
   (format t "installing additional files.~%")
-  (loop for copy-spec in mext-maxima::*user-install-explicit* do
+  (loop :for copy-spec :in mext-maxima::*user-install-explicit* :do
         (apply 'mext-maxima::copy-file-all-components copy-spec))
   (format t "executing post install hooks.~%")
-  (loop for func in mext-maxima::*post-user-install-hooks* do
+  (loop :for func :in mext-maxima::*post-user-install-hooks* :do
         (funcall func))
   t)
 
@@ -664,7 +664,7 @@ This was copied from maxima source init-cl.lisp.")
                          (if $load_pathname $load_pathname *default-pathname-defaults*)))
          (new-dir (if dir (append abs-dir dir) abs-dir)))
     (setf files (cdr files))
-    (loop for file in files do
+    (loop :for file :in files :do
           (when ($listp file) (setf file (cdr file)))
           (mext-maxima::ensure-list file)
           (when (and file (find #\. (car file)))
