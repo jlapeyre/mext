@@ -19,6 +19,12 @@ build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "test_defmfun1", "aex",
 
 build_several([ "quicklisp", "store" ]);
 
+build_several(["alt_eigen", "tpsolve" ]);
+
+/* Examples from contrib and share */
+
+build_several(["bernstein", "grobner_mext"]);
+
 /* Uncomment this if you have prime_pi package in a subdir of the parent dir */
 
 updir();
@@ -31,15 +37,7 @@ popdir();
 /* Third party packages adapted to mext */
 /* "finance" loads rather slowly */
 
-build_several(["alt_eigen", "mto_poly_solve" ]);
-
 build_several(["nelder_mead", "pw", "discrete",
           "coma", "circuits", "implicit"]);
-
-/* Examples from contrib and share */
-
-
-build_several(["bernstein", "grobner_mext"]);
-
 
 kill(buildall_mext,build_several);
