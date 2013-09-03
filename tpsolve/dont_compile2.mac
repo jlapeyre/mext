@@ -1,11 +1,17 @@
-eval_when(translate,declare_translated(to_poly_solve,to_poly_solve_h, safer_subst,
-    merge_solutions, solution_subst,lambertify, catch_easy_cases, expunge_nonrelevant_cnds));
-
 /*
-  GJL 
-  The following 
+  GJL --
+  This code is taken from the file to_poly_solve.mac.
+  It is installed and loaded as source.
+  The reason is that the the compiled versions try to call
+  to_poly_solve. But to_poly_solve is aliased to %solve.
+  After this,  to_poly_solve in a certain sense disappears.
+  At any rate, the function cannot be found.
 
 */
+
+
+eval_when(translate,declare_translated(to_poly_solve,to_poly_solve_h, safer_subst,
+    merge_solutions, solution_subst,lambertify, catch_easy_cases, expunge_nonrelevant_cnds));
 
 singular_solutions(eq, v, p, f, maxdepth) := block([cnd, free_vars, sol, vs, ps, acc : %union()],
   cnd : last(last(triangularize(jacobian(eq,v)))),

@@ -16,6 +16,9 @@
 ;; Can't do this from maxima because of weird %solve alias problems
 (mext::add-to-dont-kill '$to_poly_solve)
 
+;; GJL -- Added the code defining and using *to-poly-temp-list*.
+;; Some temporary symbols still stay on props; need to track that down
+
 ($put '$to_poly 2 '$version)
 ($load '$polynomialp)
 

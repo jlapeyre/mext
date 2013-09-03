@@ -676,16 +676,16 @@ refers to the head."
   :desc ( 
     "Note: it appears that the core maxima function " :emref "copy" " acheives the same "
     "result as " :mrefcomma "deep_copy" " so that the latter is redundant. It will probably be removed. "
-     :mref  "deep_copy 
+    :mref  "deep_copy 
     " returns a copy of expression " :arg "expr" " which may be of mixed lex/aex representation. "
-   "An exact copy is made; that is, the representation is preserved at all levels. "
-   :mref "deep_copy" " is similar to " :emrefcomma "copylist" " except that it can copy "
-   " some expressions that " :emref "copylist" " cannot. For instance, if "
-   :arg "expr" " is of aex representation at the top level.")
-  (cond ( (aex-p e)
-          (let* ((ar (aex-arr e))
+    "An exact copy is made; that is, the representation is preserved at all levels. "
+    :mref "deep_copy" " is similar to " :emrefcomma "copylist" " except that it can copy "
+    " some expressions that " :emref "copylist" " cannot. For instance, if "
+    :arg "expr" " is of aex representation at the top level.")
+  (cond ( (aex-p expr)
+          (let* ((ar (aex-arr expr))
                  (n (length ar))
-                 (e1 (copy-aex-type e))
+                 (e1 (copy-aex-type expr))
                  (ar1 (aex-arr e1))
                  (x))
             (dotimes (i n)
@@ -693,13 +693,13 @@ refers to the head."
                 (setf (elt ar1 i)
                       (if (or (listp x) (aex-p x)) ($deep_copy x) x )))
             e1))
-        ( (listp e)
-          (do* ( (e1 e (cdr e1))
+        ( (listp expr)
+          (do* ( (e1 expr (cdr e1))
                 (res)
-                (x (car e) (car e1)))
+                (x (car expr) (car e1)))
               ( (null e1) (nreverse res))
             (setf res (cons (if (or (listp x) (aex-p x)) ($deep_copy  x) x  ) res))))
-        (t e)))
+        (t expr)))
   
 ;; not used
 (defmfun $aeargs (x)

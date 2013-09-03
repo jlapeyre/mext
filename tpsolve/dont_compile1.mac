@@ -1,3 +1,8 @@
+/*
+  GJL -- This code fails to compile, so it installed and loaded as source
+  It is taken from the file to_poly_solve.mac.
+*/
+
 (one_to_one_reduce[a,b] := false,
   one_to_one_reduce['sin,'sin] : lambda([a,b], 
       (a - b - 2 * %pi * new_variable('integer)) * (a + b - 2 * %pi * new_variable('integer) + %pi)),

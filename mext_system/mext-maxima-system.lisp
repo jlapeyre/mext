@@ -631,25 +631,30 @@ This was copied from maxima source init-cl.lisp.")
               (intl:gettext "File specification ~a is neither a string nor a list of one or two strings.~%")))))))
 
 ;; Maxima 5.30 has a bug that prevents $load_pathname from being set with 'maxima -b',
-;; so tests fail in this case.
-;;
+;; so tests fail in this case. No! it's the reverse. It is set in 5.30, but not in 5.28
+;; Still need to sort this out.
 ;; Use load_pathname if defined, else *default-pathname-defaults*
 (defmfun $load_in_subdir (file &optional dir)
   (when (and dir ($listp dir)) (setf dir (cdr dir)))
+;  (format t "load_in_subdir : load_pathname : `~a'~%" $load_pathname)
   (let* ((abs-dir (mext:fpathname-directory
                    (if $load_pathname $load_pathname *default-pathname-defaults*)))
          (new-dir (if dir (append abs-dir dir) abs-dir)))
+;    (format t "abs-dir `~s', new-dir `~s'~%" abs-dir new-dir)
+;    (format t "def-pn-def `~s'~%" *default-pathname-defaults*)
     (when ($listp file) (setf file (cdr file)))
     (mext-maxima::ensure-list file)
     (when (and file (find #\. (car file)))
-        (format t "load_in_subdir: warning: dot in filename that should have no extension.~%"))
+      (format t "load_in_subdir: warning: dot in filename that should have no extension.~%"))
     (let ((nfile (length file)))
       (cond ((= 1 nfile)
              ($load (namestring (mext:fmake-pathname :name (first file) :directory new-dir))))
             ((= 2 nfile)
-             ($load (namestring (mext:fmake-pathname :name (first file) :type (second file) :directory new-dir))))
+             ($load (namestring (mext:fmake-pathname :name (first file) 
+                                                     :type (second file) :directory new-dir))))
             (t
-             (merror (intl:gettext "File specification ~a is neither a string nor a list of one or two strings.~%")))))))
+             (merror (intl:gettext 
+                      "File specification ~a is neither a string nor a list of one or two strings.~%")))))))
 
 (defmfun $load_files_in_subdir (files &optional dir)
   (unless ($listp files)

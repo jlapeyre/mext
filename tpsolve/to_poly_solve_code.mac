@@ -14,6 +14,9 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>. */
 
 /*
+  GJL -- This file is not loaded or compiled. It was split into pieces
+  which are loaded separately.
+  
   This file was originally named to_poly_solve.mac. The name was changed
   to work with the mext system.
 */

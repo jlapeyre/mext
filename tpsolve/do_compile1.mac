@@ -1,3 +1,8 @@
+/*
+  GJL -- All rtests pass if the compiled version only of this code is loaded.
+  So, only the compiled version is installed.
+  This code is taken from the file to_poly_solve.mac.
+*/
 
 eval_when(translate,declare_translated(to_poly_solve,to_poly_solve_h, safer_subst,
     merge_solutions, solution_subst,lambertify, catch_easy_cases, expunge_nonrelevant_cnds));

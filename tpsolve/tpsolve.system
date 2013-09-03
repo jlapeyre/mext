@@ -1,5 +1,6 @@
 ;;-*- Mode: Lisp -*-
-;; System definition file for building and installing to_poly_solve
+;; System definition file for building and installing mext
+;; packge of to_poly_solve
 ;; to_poly_solve depends on mext-system and defmfun1
 
 (in-package :mext-maxima)
@@ -19,9 +20,7 @@
     (:file "to_poly_solve_setup" :load-only t)
     (:file "dontkill" :load-only t)
     (:file "to_poly_solve_extra" :source-extension "lisp" :load-only nil)
-;    (:file "to_poly_solve_no_compile" :load-only t) ; does not yet work
     (:file "dont_compile1" :load-only t)
-;    (:file "to_poly_solve_code" :load-only t)
     (:file "do_compile1" :load-only nil)
     (:file "dont_compile2" :load-only t)
     (:file "to_poly_clean" :source-extension "lisp" :load-only nil)

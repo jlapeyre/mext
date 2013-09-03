@@ -14,8 +14,8 @@
 # of this software, as well.
 
 #############################
-#maximas="smaxima smaxima-28 gmaxima gmaxima-30 clmaxima emaxima cmumaxima ccmaxima ccmaxima-30"
-maximas="smaxima"
+maximas="smaxima smaxima-28 smaxima-31 gmaxima gmaxima-30 clmaxima emaxima cmumaxima ccmaxima ccmaxima-30"
+#maximas="smaxima"
 #maximas="smaxima-31"
 #maximas="smaxima-28"
 
