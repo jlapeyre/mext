@@ -670,9 +670,18 @@ refers to the head."
 ;; used in rtest
 ;; This would probably be more efficient if the recursively called function
 ;; were just a defun, so that argument checking is not done.
-(defmfun1 ($deep_copy :doc) (e)
-  :desc ( "Deep copy expression " :arg "e" " which may be of mixed lex/aex representation. "
-   "An exact copy is made; that is, the representation is preserved at all levels.")
+;; !!! It seems that CL builtin copy-tree already handles all data types,
+;; struct's, arrays, etc. No need for all this.
+(defmfun1 ($deep_copy :doc) (expr)
+  :desc ( 
+    "Note: it appears that the core maxima function " :emref "copy" " acheives the same "
+    "result as " :erefcomma "deep_copy" " so that the latter is redundant. "
+     :eref  "deep_copy 
+    " returns a copy of expression " :arg "expr" " which may be of mixed lex/aex representation. "
+   "An exact copy is made; that is, the representation is preserved at all levels. "
+   :mref "deep_copy" " is similar to " :emrefcomma "copylist" " except that it can copy "
+   " some expressions that " :emref "copylist" " cannot. For instance, if "
+   :arg "expr" " is of aex representation at the top level.")
   (cond ( (aex-p e)
           (let* ((ar (aex-arr e))
                  (n (length ar))
