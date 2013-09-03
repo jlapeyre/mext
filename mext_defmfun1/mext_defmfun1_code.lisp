@@ -47,12 +47,12 @@
 
 ;; redefined
 (mext::no-warning
-(defmfun1 ($mext_test :doc) ( &optional (dists :or-string-symbol-or-listof))
+ (defmfun1 ($mext_test :doc) ( &rest (dists :or-string-symbol-list))
   :desc ("Run the test suites for a mext distribution or list of distributions. If "
  " the argument " :code "all" " is given, then all tests are run for all installed mext distributions. "
  "If the argument " :code "loaded" " is given, then all tests are run for all loaded mext distributions. "
  "If no argument is given, a subfolder named " :code "rtests" " is searched for in the current directory.")
-  (mext::mext-test dists)))
+  (apply #'mext::mext-test dists)))
 
 ;; redefined
 (mext::no-warning

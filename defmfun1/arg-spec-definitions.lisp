@@ -99,6 +99,8 @@
                      (:symbol-listof ("a list of symbols")
                                      (and (maxima::$listp e)
                                           (every #'(lambda (x) (symbolp x)) (cdr e))))
+                     (:or-string-symbol-list ("a string" "a symbol" "a list")
+                                             (or (stringp e) (symbolp e) (maxima::$listp e)))
                      (:or-string-non-atom  ("a string" "non-atomic")
                       (or (stringp e) (not (maxima::$mapatom e))))
                      (:or-symbol-subvar ("a symbol" "a subscripted variable")

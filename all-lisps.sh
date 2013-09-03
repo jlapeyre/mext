@@ -15,15 +15,15 @@
 
 #############################
 #maximas="smaxima smaxima-28 smaxima-31 gmaxima gmaxima-30 clmaxima emaxima cmumaxima ccmaxima ccmaxima-30"
-#maximas="smaxima"
-maximas="gmaxima-5.31-2.6.8"
+maximas="smaxima"
+#maximas="gmaxima-5.31-2.6.8"
 
-build_package_script="buildall1.mac"
-#build_package_script="build_essential.mac"
+#build_package_script="buildall1.mac"
+build_package_script="build_essential.mac"
 #build_package_script="buildone.mac"
 
-test_package_script="testall1.mac"
-#test_package_script="test_essential.mac"
+#test_package_script="testall1.mac"
+test_package_script="test_essential.mac"
 #test_package_script="testone.mac"
 #############################
 

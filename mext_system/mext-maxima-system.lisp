@@ -415,21 +415,22 @@ This was copied from maxima source init-cl.lisp.")
   (chdir :dir 
          (loop :for i :from 1 :to n :do (pop *pwd-directory-stack*)) :push nil))
 
-(defun mext-test  ( &optional dists )
+(defun mext-test  ( &rest dists )
  "Run regression tests in the sub-directories of the installed distributions.
  dists is name or list of names of distributions. If no argument is given,
  then look in the current directory for rtests."
- (when (not (consp dists))
-   (cond ((string= "all" (maxima::$sconcat dists))
-          (setf dists (maxima::mk-mlist (mext-list))))
-         ((string= "loaded" (maxima::$sconcat dists))
-          (setf dists (maxima-list-loaded-distributions)))
-         (t nil)))
+ (when (length1p dists)
+   (let ((d (car dists)))
+     (cond ((string= "all" (maxima::$sconcat d))
+            (setf dists (mext-list)))
+           ((string= "loaded" (maxima::$sconcat d))
+            (setf dists (list-loaded-distributions)))
+           (t nil))))
   (let ((testdirs
          (cond (dists
-                (setf dists 
-                      (if (maxima::$listp dists) (cdr dists)
-                        (list (maxima::$sconcat dists))))
+;                (setf dists 
+;                      (if (maxima::$listp dists) (cdr dists)
+;                        (list (maxima::$sconcat dists))))
 		(loop :for dist :in dists :do
 		      (maxima::$require dist))
                 (loop :for dist :in dists :collect
@@ -741,8 +742,8 @@ This was copied from maxima source init-cl.lisp.")
 ;; or a list of these. We search for a folder 'rtests' in the
 ;; installation directory of each dist, then for files rtest*.mac
 ;; in this folder. We set testsuite_files and run run_testsuite.
-(defmfun $mext_test  ( &optional dists )
-  (mext::mext-test dists))
+(defmfun $mext_test  ( &rest dists )
+  (apply #'mext::mext-test dists))
 
 (defmfun $truename (filespec)
   (namestring (truename filespec)))
