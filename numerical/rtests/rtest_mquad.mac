@@ -1,0 +1,9 @@
+/* close enough tests */
+(kill(ce), ce(x,y,eps) := is(abs(first(x)-y)<eps),
+kill(cec), cec(x,y,eps) := is(abs(realpart(first(x))-realpart(y))
+      + abs(imagpart(first(x))-imagpart(y)) < eps), true)$
+true;
+
+ce(mquad_qag(x^(1/2)*log(1/x), x, 0, 1, 3, epsrel->5d-8), 4/9, 1e-8)$
+true;
+

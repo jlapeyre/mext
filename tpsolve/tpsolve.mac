@@ -1,0 +1,30 @@
+/*
+to_poly_solve.mac -- load to_poly_solve with the mext system. 
+The upstream file to_poly_solve.mac was rename to_poly_solve_code.mac 
+ -- GJL
+*/
+
+require("mext_defmfun1");
+require("grobner");
+
+/* Order of loading is important */
+mext_provide( "tpsolve",
+  [
+  "to_poly",
+  "to_poly_solve_setup",
+  "to_poly_solve_code",
+  "to_poly_solve_extra"
+  ]);
+
+/*
+  Does not yet work.
+  "to_poly_solve_no_compile",
+
+*/
+
+/*
+This will be put into rtests/rtests.cfg, but the code is not yet written.
+mext_set_rtests( "mto_poly_solve",
+  ["rtest_to_poly_solve", 64, 74, 80, 185],
+  ["rtest_to_poly", 17, 18, 19]);
+*/
