@@ -1,22 +1,3 @@
-/*  Author Barton Willis
-    University of Nebraska at Kearney
-    Copyright (C) 2008, 2009, 2010 Barton Willis
-
-    This program is free software: you can redistribute it or modify
-    it under the terms of the GNU General Public License version two.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU General Public License for details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program. If not, see <http://www.gnu.org/licenses/>. */
-
-/*
-  This file was originally named to_poly_solve.mac. The name was changed
-  to work with the mext system.
-*/
 
 eval_when(translate,declare_translated(to_poly_solve,to_poly_solve_h, safer_subst,
     merge_solutions, solution_subst,lambertify, catch_easy_cases, expunge_nonrelevant_cnds));
@@ -82,6 +63,7 @@ set_of_variables(e) := block([inflag : true],
   else if mapatom(e) then set()
   else xreduce('union, (map('set_of_variables, args(e))), set()));
 
+/*
 singular_solutions(eq, v, p, f, maxdepth) := block([cnd, free_vars, sol, vs, ps, acc : %union()],
   cnd : last(last(triangularize(jacobian(eq,v)))),
   cnd : first(elim_allbut(cons(cnd,eq),p)),
@@ -97,7 +79,7 @@ singular_solutions(eq, v, p, f, maxdepth) := block([cnd, free_vars, sol, vs, ps,
     vs : map("=", v, subst(sk, v)),
     acc : %union(%if(cnd, vs, %union()), acc)),
   acc);
-
+*/
 /* Return true if the operator of e is "="; otherwise return false. */
 equation_p(e) := block([inflag : true], not(mapatom(e)) and is(op(e) = "=")); 
 
@@ -161,6 +143,7 @@ expunge_nonrelevant_solutions(e,v) :=
      
   The input vc is unused. */     
 
+/*
 conjugate_solver(esave,v,vc,funs,maxdepth) := block([e, ee, sub, nv, rv, sol, cnd, acc, sx1, sx2, cnd1, cnd2],
   e : setify(append(esave,conjugate(esave))),
   vc : list_conjugate_vars(e),
@@ -190,7 +173,7 @@ conjugate_solver(esave,v,vc,funs,maxdepth) := block([e, ee, sub, nv, rv, sol, cn
         acc : %union(acc, (%if(cnd, expunge_nonrelevant_solutions(sx,v),%union()))))),
     acc)
   else simpfunmake('%solve,[esave,v, 'maxdepth = maxdepth, 'simpfuncs = funs]));
-
+*/
 
 /* Convert log(constant) --> rectform(log(constant)). */
 rectform_log_if_constant(e) :=
@@ -411,216 +394,3 @@ lambertify(e,vars) := block([ee, eee, expargs : set(), cexpargs, nexpargs,
     
   [e, subs]);
 
-alias(%solve, to_poly_solve);
-
-simp_%solve(e,v,[extraargs]) := block([vc, all_vars, sol, solvedomain, parameter_list,
-                alias_solver : false, use_grobner, maxdepth, cntx : false, simpfuncs, ratprint : false],
- 
-  simpfuncs : assoc('simpfuncs, extraargs, []),
-  if not(member('rectform_log_if_constant, simpfuncs)) then
-    simpfuncs : append(simpfuncs,['real_imagpart_to_conjugate,'rectform_log_if_constant]),
-  solvedomain : assoc('field, extraargs, 'complex),
-  use_grobner : assoc('use_grobner, extraargs, false),
-  parameter_list : assoc('parameters, extraargs, false),
-  maxdepth : assoc('maxdepth, extraargs, 5),
-  if is(maxdepth < 0) then (
-    error("Unable to solve"))
-  else maxdepth : maxdepth - 1,
- 
-  /* Convert e and v into sets */
-  [e,v] : map(lambda([s], if listp(s) then setify(s) else if setp(s) then s else set(s)), [e,v]),
- 
-  /* Check that each member of v is a variable. */
-  alias_solver : not every('variable_p, v),
-
-  /* Decide if we need to dispatch the conjugate_solver. Convert real/imag part to conjugate.*/
-
-  e : real_imagpart_to_conjugate(e),
-  vc : subset(set_of_variables(e), lambda([s], opequal_p(s,'conjugate))),
-  v : setdifference(v,vc),
-
-  /* Listify e, v, and vc.*/
-  [e,v,vc] : map('listify,[e,v, vc]),
-  
-  /* Special case dispatcher.*/
-
-  if some(lambda([s], if_p(s)), e) then (
-    error("Not yet implemented!"))
-
-  else if some(lambda([s], not(mapatom(s)) and opequal_p(s, "<","<=", "#", ">", ">=")), e) then (
-    sol : fourier_elim(e, v),
-    if opequal_p(sol, "or") then subst("or" = '%union, sol)
-    else if sol = 'emptyset then %union()
-    else if sol = 'universalset then (
-      %union(xreduce('append, makelist([s = new_variable('real)], s, v))))
-    else %union(sol)) 
-  
-  else if alias_solver then (
-    block([ee, nonvar_sub, sol],
-      ee : non_symbol_subst(e,v),
-      [ee, nonvar_sub] : ee,
-      sol : apply('%solve, append([ee,  map('lhs, nonvar_sub)], extraargs)),
-      if opequal_p(sol,'%solve) then sol else 
-      safer_subst(reverse(nonvar_sub), %solve(ee, map('lhs, nonvar_sub), 'maxdepth = maxdepth))))
-  
-  else if every(lambda([s], polynomialp(rhs(s)-lhs(s), v, lambda([w], lfreeof(v,w)))),e) then (
-    block([freevars : setify(%rnum_list), simpfuncs_lambda : compose_functions(simpfuncs)],
-      if use_grobner then (
-        e : map(lambda([s], rhs(s)-lhs(s)), e),
-        e : poly_reduced_grobner(e,listofvars(e))),      
-      if listp(parameter_list) then (
-        singular_solutions(e,v,parameter_list, simpfuncs, maxdepth))
-      else (
-        sol : errcatch(algsys(e, v)),
-        if emptyp(sol) then (
-          simpfunmake('%solve, cons(e,cons(v,extraargs))))
-        else (
-          sol : first(sol),
-          freevars : setdifference(setify(%rnum_list), freevars),
-          for vk in freevars do (
-            sol : subst(vk = new_variable(solvedomain), sol)),
-          sol : map(lambda([s], map("=", map('lhs, s), map(simpfuncs_lambda, map('rhs, s)))), sol),
-          xreduce('%union, sol, %union())))))
-  
-  else if not(emptyp(vc)) then (
-    conjugate_solver(e,v,vc,simpfuncs, maxdepth))
-  
-  else (
-    sol : errcatch(to_poly_solve_h(e,v, simpfuncs, maxdepth, use_grobner)),
-    if emptyp(sol) then simpfunmake('%solve, cons(e,(cons(v,extraargs)))) else first(sol)));
-    
-simplifying('%solve, 'simp_%solve);
- 
-/* Try to solve the equation(s) e for the the variable(s) v. Both 'e' and 'v' can be
-   a single Maxima expression, a list, or a set. Members of 'e' that aren't equations
-   are (not of the form a = b) assumed to vanish. Each solution gets simplified by
-   the functions in 'simpfuncs.' If simpfuncs contains non-identity transformations,
-   well, it's not my fault.
-
-   Users should call to_poly_solve, not to_poly_solve_h.
-*/
-
-to_poly_solve_h(e,v, simpfuncs, maxdepth, grob) := block([eqs : set(), nonalg : set(), listconstvars : false,
-  %gvars, evars, sol, vars, freevars, eqs_vars, non_free, true_sol, %ivar, esave, %sol_vars, %cnds, 
-  xsol, nsol, inflag : true, cnds : set(), nonfree, eq, lambert_subs, var_exception, simpfuncs_lambda,
-  nsol_vars],
-
-  /* save a list of the variables in e */
-  evars : set_of_variables(e),
-
-  /* Convert e and v into sets */
-  
-  e : if listp(e) then setify(e) else if setp(e) then e else set(e),
-  v : if listp(v) then setify(v) else if setp(v) then v else set(v),
-  v : listify(v),
- 
-  /* Convert each member of e to polynomial form. The function to_poly extracts numerators and demands
-  that the denominators be nonvanishing.*/
-  
-  block([acc : []],
-    for ek in e do (
-      [ek, var_exception] : one_to_one_crunch(ek),
-      ek : standardize_inverse_trig(ek),
-      ek : catch_easy_cases(lhs(ek) - rhs(ek),v),
-      var_exception : union(third(ek), var_exception),
-      cnds : union(cnds, second(ek)),
-      ek : first(ek),
-      ek : lhs(ek) - rhs(ek),
-      ek :  trigexpand(logcontract(rationalize(ek))), 
-      ek :  subst(lambda([a,b], if numberp(a) and not(numberp(b)) then exp(log(a)*b) else a^b), "^", ek),
-      [ek, lambert_subs] : lambertify(ek, v), 
-      nonalg : union(nonalg, lambert_subs),
-      ek : errcatch(to_poly(ek,v)),
-      if emptyp(ek) then error("unable to solve") else ek : first(ek),
-      push(ek, acc)),
-    e : acc),
-
-  /* Gather equations, conditions, and non-algebraic equations into lists eqs, cnds, and nonalg,
-  respectively.*/
- 
-  for ek in e do (
-    eqs : union(eqs, setify(first(ek))),
-    cnds : union(cnds, setify(second(ek))),
-    nonalg : union(nonalg, setify(third(ek)))),
-   
-   /* convert cnds into a boolean expression */
-   cnds : simp_and(cnds),
-  
-   /* nonfree is the union of v (the set of variables to solve for) and the
-      set of variables introduced by to_poly. The set nonfree is the new set
-      of variables that we need to solve for.
-   */
-  
-   nonfree : union(setify(v), setdifference(set_of_variables(eqs), evars)),
-   nonfree : setdifference(nonfree, var_exception),
-   nonfree : subset(nonfree, lambda([s], not featurep(s,'integer))),
-   esave : union(set_of_variables(eqs), nonfree),
-   sol : to_poly_solve(eqs, nonfree, 'simpfuncs = simpfuncs, 'maxdepth = maxdepth-1, 'use_grobner = grob),
-   if opequal_p(sol, '%solve) then error("Unable to solve"),
-
-   /* The solve process introduces new variables. Let %sol_vars be the set 
-   of variables introduced by to_poly_solve */
-   
-   %sol_vars : setdifference(set_of_variables(sol), union(esave, var_exception)),
-
-   /* Update the set of variables we need to solve for */
-   nonfree : union(setify(v), %sol_vars),
-     
-   /* Each member of nonalg looks like %g = exp(blob), %g = log(blob), %g = variable^blob, or
-      inverse_lambert_w(blob) = atom. Convert
-        %g = exp(blob) --> log(%g) + 2 * %i * %pi * %ivar = blob,
-        %g = x^blob --> x = %g^(1/blob),
-        %g = log(blob) --> exp(%g) = blob.
-      where %ivar eventually is replaced by an integer gentemp. */
-
-     nonalg : map(lambda([s],
-         if opequal_p(rhs(s),"^")  and first(rhs(s)) = '%e then (
-           log(lhs(s)) + 2 * %i * %pi * '%ivar - second(rhs(s)))
-        else if opequal_p(rhs(s),"^") and lfreeof(v, second(rhs(s))) then (
-           first(rhs(s)) = lhs(s)^(1/second(rhs(s))) * exp(2 * '%pi * '%i * '%ivar / second(rhs(s))))
-         else if opequal_p(rhs(s),'log) then (
-           exp(lhs(s)) - first(args(rhs(s))))
-         else s),
-       nonalg),
-
-   simpfuncs_lambda : compose_functions(simpfuncs),
-   
-   /* Paste each solution into nonalg. The substitution can yield log(0), so use errcatch. */
-   true_sol : set(),
-   for sk in sol do (
-     sk : real_imagpart_to_conjugate(sk),
-     /* bug when sk isn't a list! */
-
-      if emptyp(nonalg) then (
-        eq : set())
-      else (
-        eq : errcatch(subst(sk, subst('%ivar = new_variable('integer),nonalg))),
-        eq : if emptyp(eq) then [1=0] else first(eq)),
-
-      xsol : to_poly_solve(eq, intersection(nonfree, set_of_variables(eq)),
-        'simpfuncs = simpfuncs, 'maxdepth = maxdepth-1, 'use_grobner = grob),
-      
-      if opequal_p(xsol, '%solve) then error("Unable to solve"),
-      for xk in xsol do (
-        xk : real_imagpart_to_conjugate(xk),
-        xk : merge_solutions(sk,xk),
-        nsol : map(lambda([s], solution_subst(xk, s, simpfuncs_lambda)), v),
-        if listp(nsol) and if_p(first(nsol)) then nsol : first(nsol),
-        if if_p(nsol) and not(listp(second(nsol))) then nsol : %if(first(nsol),
-          [second(nsol)], third(nsol)),
-        nsol_vars : set_of_variables(nsol),
-        %cnds : safer_subst(xk, cnds),
-        %cnds : expunge_nonrelevant_cnds(%cnds, nsol),
-        nsol : %if(%cnds, nsol, %union()),
-        true_sol : adjoin(nsol, true_sol))),
-    xreduce('%union, true_sol, %union()));
-
-/* Maybe all this should be fixed higher up; for now ...*/
-
-expunge_nonrelevant_cnds (cnds, sol) := block([listconstvars : false, sol_vars : listofvars(sol)],
-  if cnds = true or cnds = false then cnds
-  else if disjunction_p(cnds) or conjunction_p(cnds) then (
-    map(lambda([s], expunge_nonrelevant_cnds(s, sol)), cnds))
-  else if lfreeof(sol_vars, cnds) and not constantp(cnds) then true
-  else cnds);
-  

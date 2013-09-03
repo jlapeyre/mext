@@ -91,22 +91,3 @@ expand(to_poly((x-1)*(x-sqrt(2))*(x-sqrt(3)),[x]));
 
 first(first(elim_allbut(first(to_poly((x-1)*(x-sqrt(2))*(x-sqrt(3)),[x,1])),[x])));
 (x^2-3)*(x^3-x^2-2*x+2)$
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

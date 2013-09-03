@@ -13,7 +13,10 @@ mext_provide( "tpsolve",
   "to_poly",
   "to_poly_solve_setup",
   "dontkill",
-  "to_poly_solve_code",
+  "dont_compile1",
+/*  "to_poly_solve_code", */
+  "do_compile1",
+  "dont_compile2",
   "to_poly_solve_extra"
   ]);
 

@@ -20,7 +20,11 @@
     (:file "dontkill" :load-only t)
     (:file "to_poly_solve_extra" :source-extension "lisp" :load-only nil)
 ;    (:file "to_poly_solve_no_compile" :load-only t) ; does not yet work
-    (:file "to_poly_solve_code" :load-only t)))
+    (:file "dont_compile1" :load-only t)
+;    (:file "to_poly_solve_code" :load-only t)
+    (:file "do_compile1" :load-only nil)
+    (:file "dont_compile2" :load-only t)
+))
 
 ;; This file must have the same name as the package name
 ;; Order of loading is important, at least at load time.

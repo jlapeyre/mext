@@ -1,0 +1,23 @@
+In order to protect nary property from kill(all)
+(or kill(props)), we put something like this in dontkill.mac.
+
+dont_kill("%and","%or");
+
+To see properties of these ops, we must to
+properties("%and"), rather than properties(%and).
+
+-------------------------------
+There are a number of dependencies:
+
+file                                          loaded by
+---------------------
+share/fourier_elim/fourier_elim.lisp          to_poly_solve_extra.lisp
+
+/share/linearalgebra/polynomialp.lisp         to_poly_solve.lisp
+                                              fourier_elim.lisp
+                                              to_poly.lisp
+
+
+Some things are still loaded multiple times, as in the
+stock version, but they are usually fairly fast.
+

@@ -1,0 +1,46 @@
+(one_to_one_reduce[a,b] := false,
+  one_to_one_reduce['sin,'sin] : lambda([a,b], 
+      (a - b - 2 * %pi * new_variable('integer)) * (a + b - 2 * %pi * new_variable('integer) + %pi)),
+
+  one_to_one_reduce['cos,'cos] : lambda([a,b], 
+      (a - b - 2 * %pi * new_variable('integer)) * (a + b - 2 * %pi * new_variable('integer))),
+  
+  one_to_one_reduce['sin,'cos] : lambda([a,b], 
+    (a/2 - b/2 - %pi/4 - %pi * new_variable('integer))*(a/2 + b/2 - %pi/4 - %pi * new_variable('integer))), 
+
+  one_to_one_reduce['cos,'sin] :  lambda([a,b], 
+    (b/2 - a/2 - %pi * new_variable('integer) - %pi/4)*(b/2 + a/2 - %pi * new_variable('integer) - %pi/4)), 
+
+  one_to_one_reduce['tan,'tan] : lambda([a,b], (a-b - %pi*new_variable('integer))/(cos(a)*cos(b))),
+
+  one_to_one_reduce['%exp,'%exp] : lambda([a,b],
+      a - b - 2 * %pi * %i * new_variable('integer)));
+
+(function_inverse[otherwise]:= false,
+  function_inverse['acos] : lambda([s], cos(s)),
+  function_inverse['acosh] : lambda([s], cosh(s)),
+  function_inverse['asin] : lambda([s], sin(s)),
+  function_inverse['asinh] : lambda([s], sinh(s)),
+  function_inverse['atan] : lambda([s], tan(s)),
+  function_inverse['atanh] : lambda([s], tanh(s)),
+  function_inverse['log] : lambda([s], exp(s)));
+
+(function_zeros[otherwise] := lambda([], false),
+  function_zeros['abs] : lambda([],0),
+  function_zeros['conjugate] : lambda([],0),
+  function_zeros['sin] : lambda([], %pi*new_variable('integer)),
+  function_zeros['cos] : lambda([], %pi*(2*new_variable('integer)+1)/2),
+  function_zeros['log] : lambda([],1),
+  function_zeros['acos] : lambda([],1),
+  function_zeros['acosh] : lambda([],1),
+  function_zeros['asin] : lambda([],0),
+  function_zeros['asinh] : lambda([],0),
+  function_zeros['atan] : lambda([], 0),
+  function_zeros['atanh] : lambda([],0),
+  function_zeros['acsc] : lambda([], []),
+  function_zeros['acsch] : lambda([], []),
+  function_zeros['acoth] : lambda([],[]),
+  function_zeros['acot] : lambda([],[]));
+
+ (function_domain[otherwise] := lambda([s],set()),
+  function_domain['log] : lambda([s], set(s # 0)));
