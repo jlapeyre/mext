@@ -41,6 +41,9 @@ to_poly_solve([x[1]=%pi],[x[1]]);
 to_poly_solve(set(x=1),x);
 %union([x=1])$
 
+(to_poly_clean(),0);
+0$
+
 to_poly_solve(set(x=1,y-2),set(x,y));
 %union([x=1, y=2])$
 
@@ -99,6 +102,9 @@ sol : to_poly_solve(max(x,1) = a,x);
 subst(a=1/2, sol);
 %union()$
 
+(to_poly_clean(),0);
+0$
+
 subst(a=2, sol);
 %union([x=2])$
 
@@ -126,6 +132,9 @@ block([algexact : false], to_poly_solve(max(2 - x^2, x) = x^3/9, x));
 to_poly_solve(max(x,x^2)=1, x);
 %union([x=-1] , [x=1])$
 
+(to_poly_clean(),0);
+0$
+
 to_poly_solve(min(x,x^2)=1, x);
 %union([x=1])$
 
@@ -148,6 +157,9 @@ to_poly_solve(sqrt(x) = a,x);
 
 to_poly_solve(x^(1/3)=-1,x);
 %union()$
+
+(to_poly_clean(),0);
+0$
 
 to_poly_solve(x^(1/3)=1 + %i,x);
 %union([x=2*%i-2])$
@@ -174,6 +186,8 @@ sol : to_poly_solve(sqrt(x) - sqrt(1-x) = a,x,simpfuncs = ['expand]);
 [%union(),%union([x=0]),%union([x=1/2]),%union([x=1]),%union()]$
 
 /* basic trig facts */
+(to_poly_clean(),0);
+0$
 
 nicedummies(to_poly_solve(cos(x)=0,x));
 %union([x=(2*%pi*%z0+%pi)/2])$
@@ -206,6 +220,9 @@ nicedummies(to_poly_solve(tan(x) = -1, x, simpfuncs = ['expand]));
 %union([x = %pi*%z0 - %pi/4])$
 
 (eq : [x +   y +   z =  6,  2*x +   y + 2*z = 10, x + 3*y +   z = 10], sol : to_poly_solve(eq,[x,y,z]),0);
+0$
+
+(to_poly_clean(),0);
 0$
 
 expand(subst(first(sol),eq));
@@ -283,6 +300,9 @@ to_poly_solve(x^3=8,x);
 (to_poly_solve(x*(x-1)=0,x), ev(%%));
 %union([x=0] , [x=1])$
 
+(to_poly_clean(),0);
+0$
+
 /* See SF bug [ 2032110 ] spurious solution of trig equation, missed actual solution */
 
 nicedummies(to_poly_solve((sin(x)-8*cos(x)*sin(x))*(sin(x)^2+cos(x))-(2*cos(x)*sin(x)-sin(x))
@@ -337,7 +357,8 @@ to_poly_solve(log(sqrt(1-x^2)+%i*x)=(%i*%pi)/6,x);
 to_poly_solve(asin(x) = %pi/6,x);
 %union([x=1/2])$
 
-
+(to_poly_clean(),0);
+0$
 /* linear equations and frational linear */
 
 to_poly_solve(4*x + 5 = 2* x + 13,x);
@@ -394,6 +415,10 @@ nicedummies(to_poly_solve(42*cos(x)+sin(x)=42*cos(%pi/4)+sin(%pi/4),x, simpfuncs
 nicedummies(to_poly_solve(sin(x)*cos(x) = 1/2, x,simpfuncs = ['expand]));
 %union([x=%pi*%z0+%pi/4])$
 
+
+(to_poly_clean(),0);
+0$
+
 nicedummies(to_poly_solve(cos(3*x)-2*cos(2*x)+cos(x)=1/2,x, simpfuncs=['expand]));
 /* Because of rev. 1.8 of psolve.lisp the ordering of the results has changed.
  * The solutions 3 and 4 are better simplified.
@@ -447,7 +472,8 @@ to_poly_solve(2*sqrt(x) + 3*x^(1/4) - 2 = 0, x);
 to_poly_solve(sqrt(log(x)) = log(sqrt(x)), x);
 %union([x=1] , [x=%e^4])$
 
-
+(to_poly_clean(),0);
+0$
 /* pargs isn't strong enough to simplify this, I think. For now, let me leave 
 to_poly_solve(log(acos(asin(x^(2/3) - b) - 1)) + 2 = 0, x);
 %union([x = -(b + sin(1 + cos(1/e^2)))^(3/2)] , [x = (b + sin(1 + cos(1/e^2)))^(3/2)])$
@@ -521,6 +547,8 @@ to_poly_solve(a+x-sqrt(x),x, simpfuncs = ['expand]);
 (parg(sqrt(1-4*a)/2+1/2)<=%pi/2),[x=-a+sqrt(1-4*a)/2+1/2],%union()))$
 
 
+(to_poly_clean(),0);
+0$
 
 /* Thu, 24 Apr 2003 15:50:25 +0300 */
 to_poly_solve(x - 2 * sqrt (x) = 10,x);
@@ -576,6 +604,9 @@ to_poly_solve([x=2, y=x+3, y=1], [x,y]);
 
 to_poly_solve([x=2, y=3, y=1], [x,y]);
 %union()$
+
+(to_poly_clean(),0);
+0$
 
 /* Thu, 24 Apr 2003 15:50:25 +0300 */
 
@@ -645,6 +676,9 @@ to_poly_solve([x^2+y^2=2^2,(x-1)^2+(y-1)^2=2^2],[x,y], 'use_grobner = true, 'sim
 block([algexact : false], to_poly_solve([(2*x+1)^3=13.5*(x^5+1)],[x],'simpfuncs=['rationalize]));
 %union([x=-2287278158804185/2251799813685248],[x=7473047756518961/9007199254740992],[x=1],[x=-(135947138237407*%i)/140737488355328-3665567315448253/9007199254740992],[x=(135947138237407*%i)/140737488355328-3665567315448253/9007199254740992])$
 
+(to_poly_clean(),0);
+0$
+
 nicedummies(to_poly_solve(sin(x)=sin(x),x));
 %union([x=%c0])$
 
@@ -708,6 +742,9 @@ to_poly_solve(x^4 + a^4, [x,a],simpfuncs = ['nicedummies]);
 to_poly_solve((x-1)/(x+1) = 1, [x]);
 %union()$
 
+(to_poly_clean(),0);
+0$
+
 nicedummies(to_poly_solve(sin(x+a)=sin(x),a, simpfuncs = ['trigrat]));
 %union([a = 2*%pi*%z0],[a = -2*x+2*%pi*%z1-%pi])$
 
@@ -739,6 +776,9 @@ to_poly_solve([x + x*y = a, x*y = 8 + z, x-z+78],[x,x*y,z]);
 
 to_poly_solve([abs(x*y-1) = a, a^2 - x*y],[x*y,a]);
 %union([x*y=-((sqrt(5)-3)/2),a=(sqrt(5)-1)/2],[x*y=(sqrt(5)+3)/2,a=(sqrt(5)+1)/2])$
+
+(to_poly_clean(),0);
+0$
 
 /* parameter solve */
 to_poly_solve([m*x = b],[x], 'parameters = [m,b], 'simpfuncs = ['nicedummies]);
@@ -815,6 +855,9 @@ to_poly_solve([a=b,b=3],[a], 'parameters = [b]);
 to_poly_solve([x=1,x=2],x);
 %union()$
 
+(to_poly_clean(),0);
+0$
+
 /* [ 1452341 ] solve(x^(5/2)+1,x) produces incorrect roots */
 block([algexact:true],to_poly_solve(1+x^(5/2),x, 'simpfuncs = ['expand]));
 %union([x = -sqrt(5-sqrt(5))*sqrt(5)*%i/2^(5/2)
@@ -879,6 +922,9 @@ to_poly_solve(x^x = z,x);
 
 to_poly_solve(x * log(x) = a,x);
 %union([x = a / lambert_w(a)])$ 
+
+(to_poly_clean(),0);
+0$
 
 /* one-to-one cruncher & related */
 
@@ -951,6 +997,9 @@ to_poly_solve ('[x = 1], '[x, x]);
 to_poly_solve ('[u = v], '[u, u, u, u]);
 %union([u = v])$
 
+(to_poly_clean(),0);
+0$
+
 /* The use_grobner is a workaround for an algsys bug, I think.*/
 nicedummies(to_poly_solve(asin(cos(x)),x, 'use_grobner = true));
 %union([x=(2*%pi*%z0+%pi)/2])$
@@ -1009,6 +1058,9 @@ nicedummies(to_poly_solve(a, x, 'parameters = [a,b]));
 
 to_poly_solve(abs(x) = 0,x);
 %union([x=0])$
+
+(to_poly_clean(),0);
+0$
 
 (declare(z,complex),0);
 0$
@@ -1130,6 +1182,9 @@ to_poly_solve(acot(x)=0,x);
 to_poly_solve(x * log(x) * (x-1),x);
 %union([x = 1])$
 
+(to_poly_clean(),0);
+0$
+
 /* Sage Ticket 2617; see also Sage mailing list 18 March 2008 */
 
 nicedummies(to_poly_solve(sin(x^2)/x,x));
@@ -1247,6 +1302,9 @@ nicedummies(%solve(tan(x)=tan(%pi/5),x));
 /* clean up */
 (print("time = ", absolute_real_time() - %start), is(absolute_real_time() - %start < 200));
 true$
+
+(to_poly_clean(),0);
+0$
 
 /* GJL Sep-3-2013 -- Edited slightly to reset more things. */
 (reset(algexact), forget(z,complex), forget(facts(a)),forget(facts(b)),

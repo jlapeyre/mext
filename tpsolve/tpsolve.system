@@ -24,6 +24,7 @@
 ;    (:file "to_poly_solve_code" :load-only t)
     (:file "do_compile1" :load-only nil)
     (:file "dont_compile2" :load-only t)
+    (:file "to_poly_clean" :source-extension "lisp" :load-only nil)
 ))
 
 ;; This file must have the same name as the package name

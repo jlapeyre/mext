@@ -22,6 +22,27 @@
 (defmacro opapply (op args)
   `(simplify (cons (list ,op) ,args)))
 
+;; push vars creates by new-gentemp here
+(defvar *to-poly-temp-list* '() )
+
+(defun record-gentemp (var type)
+  (push `(,var ,type) *to-poly-temp-list*))
+
+;; this would be faster with fewer lists
+(defun delete-gentemps ()
+  (let ((count 0))
+    (dolist (temp *to-poly-temp-list*)
+      (incf count)
+      (let ((v (car temp)) (k (cadr temp)))
+        (cond ((member k  `($complex $integer))
+               (mfuncall '$remove v k))
+              ((eq k '$natural_number)
+               (mfuncall '$remove v k)) ; need to do forget
+              (t nil))
+        (unintern v)))
+    (setf *to-poly-temp-list* nil)
+    count))
+
 ;; The next three functions convert max and min to abs functions.
 
 (defun max-to-abs (e)
@@ -602,26 +623,31 @@ to eliminate.
      ((eq type '$integer) 
       (setq g (gentemp *integer-gentemp-prefix*))
       (setf (get g 'integer-gentemp) t)
-      (mfuncall '$declare g '$integer))
+      (mfuncall '$declare g '$integer)
+      (record-gentemp g '$integer))
      
      ((eq type '$natural_number)
       (setq g (gentemp *natural-gentemp-prefix*))
       (setf (get g 'natural-gentemp) t)
       (mfuncall '$declare g '$integer)
-      (mfuncall '$assume (take '(mgeqp) g 0)))
+      (mfuncall '$assume (take '(mgeqp) g 0))
+      (record-gentemp g '$natural_number))
 	  
      ((eq type '$real) 
       (setq g (gentemp *real-gentemp-prefix*))
-      (setf (get g 'real-gentemp) t))
+      (setf (get g 'real-gentemp) t)
+      (record-gentemp g '$real))
      
      ((eq type '$complex)
       (setq g (gentemp *complex-gentemp-prefix*))
       (setf (get g 'complex-gentemp) t)
-      (mfuncall '$declare g '$complex))
+      (mfuncall '$declare g '$complex)
+      (record-gentemp g '$complex))
 
      (t 
       (setq g (gentemp *general-gentemp-prefix*))
-      (setf (get g 'general-gentemp) t)))
+      (setf (get g 'general-gentemp) t)
+      (record-gentemp g t)))
     
     g))
 
