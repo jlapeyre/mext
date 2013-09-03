@@ -1,0 +1,9 @@
+/* Run test suite from stock distribution */
+
+block
+  ([file_search_tests : file_search_maxima,
+    testsuite_files :
+    [
+    rtest_to_poly,
+    [rtest_to_poly_solve, 64, 74, 80]]],
+  run_testsuite ());
