@@ -675,7 +675,7 @@ refers to the head."
 (defmfun1 ($deep_copy :doc) (expr)
   :desc ( 
     "Note: it appears that the core maxima function " :emref "copy" " acheives the same "
-    "result as " :erefcomma "deep_copy" " so that the latter is redundant. "
+    "result as " :erefcomma "deep_copy" " so that the latter is redundant. It will probably be removed. "
      :eref  "deep_copy 
     " returns a copy of expression " :arg "expr" " which may be of mixed lex/aex representation. "
    "An exact copy is made; that is, the representation is preserved at all levels. "
