@@ -69,6 +69,9 @@
 (defvar *indent2* 4)
 (defvar *indent3* 6)
 
+;; Set in format-doc-entry, format-doc-entry-latex
+(defvar *doc-entry-being-processed* nil)
+
 (defvar *format-codes-text*
   (make-hash-table :test 'equal))
 
@@ -106,7 +109,8 @@
 
 (defun add-call-desc (&rest args)
   (unless (every #'listp args)
-    (maxima::merror1 (intl:gettext "max-doc::add-call-desc: Arguments are not all lists. In file (no not really in this file) ~a")
+    (maxima::merror1 'maxima::$args_not_all_lists 
+      (intl:gettext "max-doc::add-call-desc: Arguments are not all lists. In file (no not really in this file) ~a")
      maxima::$load_pathname))
   "Enter a list of descriptions of how to call the function. Each description
    is a list of three elements: name, protocol, contents."
@@ -192,6 +196,19 @@
       :var :varcomma :vardot :opt :optcomma :optdot
       :math :dmath :dots))
 
+(defun in-entry-error-str (e)
+  (if e
+      (format nil "~&Processing doc entry for `~a'" (entry-name e))
+    ""))
+;; Following is wrong. Info only correct at compile time,
+;; in-entry-error-str is called at run time.
+;   (defmfun1::file-package-string))) 
+
+(defmacro no-such-format-code-err (in-func)
+  `(maxima::merror1 'maxima::$no_such_format_code
+    (format nil "~a: Unrecognized format code: `~a'.~%~a." ,in-func (to-string-lc item)
+            (in-entry-error-str *doc-entry-being-processed*))))
+
 (defun format-doc-text (text-descr &optional (code-table *format-codes-default*))
  "Return a string of formatted text from a text description list and table that
   takes format codes to strings."
@@ -211,7 +228,9 @@
                   (push (format nil fmt
                                 (if (listp txt2) (format-doc-text txt2 code-table) txt2))
                         res))
-              (maxima::merror1 "max-doc: Unrecognized format code: ~a." item)))
+              (no-such-format-code-err "format-doc-text")))
+;              (maxima::merror1 'maxima::$no_such_format_code 
+;                               "format-doc-text: Unrecognized format code: ~a." item)))
         (push item res)))))
 
 ;; we should try to refactor the text and latex code at some point.
@@ -255,7 +274,8 @@
                                  (if (listp s) (format-doc-text-latex s code-table)
                                    (if (member item '(:math :tmath :dmath :dcode)) s (latex-esc s))))
                             res)
-                     (maxima::merror1 "max-doc: Unrecognized format code: ~a." item)))))
+                     (no-such-format-code-err "format-doc-text-latex")))))
+;                     (maxima::merror1 "max-doc: Unrecognized format code: ~a." item)))))
         (push (latex-esc item) res)))))
 
 (defun format-call-desc (cd)
@@ -461,7 +481,7 @@
     (when (get-doc-entry :es name)
         (if *ignore-silently* (return-from add-doc-entry1 t)
           (format t "add-doc-entry: ** warning replacing entry '~a'~%" name)))
-    (when (not (section-p section))p
+    (when (not (section-p section))
         (let ((nsec (get-doc-sec section)))
           (if nsec
               (setf section nsec)
@@ -670,7 +690,9 @@ must be keyword,value pairs for the doc entry struct."
 
 (defun format-doc-entry (e)
   "called by system documentation routines."
-  (let ((name (entry-name e)))
+  (setf *doc-entry-being-processed* e)
+  (let* ((name (entry-name e))
+         (outstring
     (concatenate 'string
                  (format nil "------------------------------------------------~% -- ~a: ~a" (entry-type e) name)
                  (if (null (entry-protocol e))
@@ -714,12 +736,16 @@ must be keyword,value pairs for the doc entry struct."
                  (form-ent-cond entry-copyright maxima::$print_copyrights
                      "~%  Copyright (C) ~{~a ~}.~%" x)
                  (format nil "~%"))))
+         (setf *doc-entry-being-processed* nil)
+         outstring))
 
 (defun format-doc-entry-latex (e)
   "called by system documentation routines."
+  (setf *doc-entry-being-processed* e)
   (let* ((name (entry-name e))
          (fname (latex-esc name))
-         (*format-codes-default* *format-codes-latex*))
+         (*format-codes-default* *format-codes-latex*)
+         (outstring
     (flet ((skip () (format nil "~%\\vspace{5 pt}~%"))
            (sect (sec) (format nil "\\noindent{\\bf ~a}\\hspace{5pt}" sec)))
       (concatenate 'string
@@ -788,6 +814,9 @@ must be keyword,value pairs for the doc entry struct."
                                          (t e)))
                              (skip))
                  (format nil "~%")))))
+    (setf *doc-entry-being-processed* nil)
+    outstring))
+
   
 (defun search-key (key item)
   "we only search on the 'name' of the entry."

@@ -37,5 +37,3 @@
    '($messlrats2 $fullratsubstflag $lratsubst $lratsubst1 $fullratsubst1 $fullratsubst
        $lrats))
 
-; why was this not done ?
-;(mext-maxima::do-dont-kill-share "basic")

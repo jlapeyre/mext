@@ -30,6 +30,7 @@
    :split-by-one-space
    :split-by-space-and-newline
    :string-ends-with-pos 
+   :to-string-lc
    :wrap-text )))
 
 ; Easiest to just intern these in :maxima

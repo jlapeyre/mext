@@ -259,3 +259,10 @@ return nil."
                              :end (or pos (length string)))
             when pos do (write-string replacement out)
             while pos)))
+
+;; For keywords
+;; eg :key -> ":key"
+(defun to-string-lc (kw)
+  "Convert symbol kw to string, including package qualifications, and
+  convert to lower case"
+  (format nil "~(~s~)" kw))

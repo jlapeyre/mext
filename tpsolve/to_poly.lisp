@@ -11,7 +11,10 @@
 ;;  but WITHOUT ANY WARRANTY; without even the implied warranty of		 
 ;;  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the		 
 ;;  GNU General Public License for more details.				 
- 		       								 
+
+;; GJL--
+;; Can't do this from maxima because of weird %solve alias problems
+(mext::add-to-dont-kill '$to_poly_solve)
 
 ($put '$to_poly 2 '$version)
 ($load '$polynomialp)

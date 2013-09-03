@@ -554,7 +554,15 @@ in a  mext package.")
 ;          (maxima::maybe-invert-string-case (format nil "~a" fname))))
 
 (defun file-package-string ()
-  (format nil "In source file ~a, package ~a." (doc-system:get-source-file-name) (doc-system:get-source-package)))
+  (let ((sf (doc-system:get-source-file-name))
+        (pk (doc-system:get-source-package)))
+    (if sf
+        (if pk
+            (format nil "In source file ~a, package ~a" sf pk)
+          (format nil "In source file ~a" sf))
+      (if pk
+          (format nil "In package ~a" pk)
+        ""))))
 
 (defun defmfun1-expand-error (errcode fname mssg)
   (maxima::merror1 errcode (format nil "~a ~a~%~a"
