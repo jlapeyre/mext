@@ -1,6 +1,15 @@
 This is the 'discrete' pacakge packaged for
 the mext system.
 
+NOTE!!!
+
+The function `count' has been changed to `lcount', because the name
+conflicts with a function by the same name in the package
+lists_aex. The latter function does the same as the former,
+but is more capable.
+
+The same was done with inverse_permutation -> linverse_permutation.
+
 load("./ibuild.mac"); builds and installs compiled
 code
 

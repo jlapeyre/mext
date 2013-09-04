@@ -20,6 +20,12 @@
  ***                                                               ***
  *********************************************************************/
 
+/*
+  GJL 2012
+  changed function count to lcount.
+  and inverse_permuation to linverse_permutation
+*/
+
 /* gjl 2012
 if get('graphs, 'version)=false then load(graphs)$
 if get('Species, 'version)=false then load(Species)$
@@ -347,13 +353,13 @@ permutation_product(p, [args]) :=
       makelist(q[p[i]],i,1,length(p)))
   else permutation_product(p, apply('permutation_product, args))$
 
-inverse_permutation(p) := block(
+linverse_permutation(p) := block(
   [ip:makelist(i, i, 1, length(p))],
   for i:1 thru length(p) do ip[p[i]] : i,
   ip)$
 
 permutation_power(p, n) :=
-  if n<0 then permutation_power(inverse_permutation(p),-n)
+  if n<0 then permutation_power(linverse_permutation(p),-n)
   else if n=0 then makelist(i, i, 1, length(p))
   else if n=1 then p
   else if evenp(n) then block(
@@ -442,7 +448,7 @@ multiplication_table(grp) := block(
  * permutation_group_p: check if group * group^-1 subset group.
  ******************/
 permutation_group_p(group) := block(
-  [mlt: create_list(permutation_product(p1, inverse_permutation(p2)),
+  [mlt: create_list(permutation_product(p1, linverse_permutation(p2)),
 	p1, listify(group), p2, listify(group))],
   is (setdifference(setify(mlt), group)={}))$
 
@@ -485,7 +491,7 @@ group_stabilizer(elt, group, [options]) :=
     for g in group do (
       for r in transversal_data do block(
         [rg: permutation_product(r, g), rg1],
-        rg1: inverse_permutation(get_hash(rg[elt], transversal)),
+        rg1: linverse_permutation(get_hash(rg[elt], transversal)),
         st_gens: cons(permutation_product(rg, rg1), st_gens))),
     setify(st_gens))
   else
@@ -523,7 +529,7 @@ group_memberp(perm, grp) :=
           found: true,
           memb: false)
         else (
-          perm: permutation_product(perm, inverse_permutation(p)),
+          perm: permutation_product(perm, linverse_permutation(p)),
           if perm=i_n then found:true,
           if length(grp)=1 and first(grp)=i_n then (
             found: true,
@@ -593,7 +599,7 @@ reduce_generator_set(lst) := block(
       [pi: p[i]],
       if pi#i then (
         if get_hash(string([i,pi]), arr, false)#false then (
-          p: permutation_product(p, inverse_permutation(get_hash(string([i,pi]), arr))))
+          p: permutation_product(p, linverse_permutation(get_hash(string([i,pi]), arr))))
         else (
           set_hash(string([i,pi]), arr, p),
           newlst: cons(p, newlst),
@@ -681,7 +687,7 @@ cayley_graph(grp, [s]) := (
     s: grp,
     grp: group_from_generators(s)),
   make_graph(grp,
-    lambda([a,b], member(permutation_product(inverse_permutation(a), b), s)),
+    lambda([a,b], member(permutation_product(linverse_permutation(a), b), s)),
     'directed=true))$
 
 cayley_graph_symmetric(grp, [s]) := (
@@ -692,9 +698,9 @@ cayley_graph_symmetric(grp, [s]) := (
   else (
     s: grp,
     grp: group_from_generators(s)),
-  s: union(s, map(inverse_permutation, s)),
+  s: union(s, map(linverse_permutation, s)),
   make_graph(grp,
-    lambda([a,b], member(permutation_product(inverse_permutation(a), b), s))))$
+    lambda([a,b], member(permutation_product(linverse_permutation(a), b), s))))$
 
 /***************************
  *
@@ -708,7 +714,7 @@ _strip_generator(g, B, S, deltas) := block(
     [p: get_hash(string([b, g[b]]), deltas, false)],
     if p=false then cont:false
     else (
-      g: permutation_product(g, inverse_permutation(p)),
+      g: permutation_product(g, linverse_permutation(p)),
       T: sublist(T, lambda([p_], is(p_[b]=b))))),
   g)$
 
@@ -766,7 +772,7 @@ _random_schreier_sims(X, [maxC]) := block(
     while t=s do t: random(nrg)+1,
     gs: random_generators[s],
     gt: random_generators[t],
-    if random(2)=0 then gt: inverse_permutation(gt),
+    if random(2)=0 then gt: linverse_permutation(gt),
     if random(2)=0 then [gt,gs]: [gs,gt],
     random_generators[s]: permutation_product(gs,gt)),
   deltas: _compute_deltas(B,S),
@@ -776,7 +782,7 @@ _random_schreier_sims(X, [maxC]) := block(
     while t=s do t:random(nrg)+1,
     gs: random_generators[s],
     gt: random_generators[t],
-    if random(2)=0 then gt: inverse_permutation(gt),
+    if random(2)=0 then gt: linverse_permutation(gt),
     if random(2)=0 then [gt,gs]: [gs,gt],
     g: random_generators[s]: permutation_product(gs, gt),
     g: _strip_generator(g, B, S, deltas),
@@ -970,10 +976,10 @@ random_choice_n(lst, n) :=
   else block([elt: random_choice(lst)],
     cons(elt, random_choice_n(delete(elt, lst), n-1)))$
 
-count(el, lst) :=
+lcount(el, lst) :=
   if length(lst)=0 then 0
-  else if first(lst)=el then 1+count(el, rest(lst))
-  else count(el, rest(lst))$
+  else if first(lst)=el then 1+lcount(el, rest(lst))
+  else lcount(el, rest(lst))$
 
 int_range(a, [opts]) := block([l,h,s],
   if length(opts)=0 then [l,h,s]:[1,a,1]
@@ -1057,7 +1063,7 @@ _vectors(lst, len) :=
 list_graphs(n, [m]) := block(
   [edg_v, all_edges: 1+edges(complete_graph(n)), graphs:[], vec],
   vec: _vectors([0,1], n*(n-1)/2),
-  if length(m)=1 then vec: sublist(vec, lambda([v], is(count(1, v)=first(m)))),
+  if length(m)=1 then vec: sublist(vec, lambda([v], is(lcount(1, v)=first(m)))),
   edg_v: group_orbit_representatives(
     group_action(symmetric_group(n, 'generators=true), map(setify, all_edges)),
     'set=vec,
@@ -1255,7 +1261,7 @@ _linsolve_mod(eqs, vars, mod) :=
 */   
 compile(
   permutation_product,
-  inverse_permutation,
+  linverse_permutation,
   permutation_power,
   permutation_to_cycles,
   permutation_from_cycles,
@@ -1266,7 +1272,7 @@ compile(
   group_orbit,
   group_from_generators,
   rook_polynomial,
-  count,
+  lcount,
   random_choice_n,
   cycle_index_permutation,
   nth_subset,
