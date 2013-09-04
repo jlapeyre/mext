@@ -415,10 +415,14 @@ This was copied from maxima source init-cl.lisp.")
   (chdir :dir 
          (loop :for i :from 1 :to n :do (pop *pwd-directory-stack*)) :push nil))
 
+;; TODO need function to list rtests for a mext package
+
 (defun mext-test  ( &rest dists )
  "Run regression tests in the sub-directories of the installed distributions.
- dists is name or list of names of distributions. If no argument is given,
- then look in the current directory for rtests."
+ dists is a list of names of distributions. If no argument is given,
+ then look in the current directory for rtests. A single sym or string
+ `all' or `loaded' have special meanings.
+ rtest files must have form rtest*.mac"
  (when (length1p dists)
    (let ((d (car dists)))
      (cond ((string= "all" (maxima::$sconcat d))
@@ -426,24 +430,38 @@ This was copied from maxima source init-cl.lisp.")
            ((string= "loaded" (maxima::$sconcat d))
             (setf dists (list-loaded-distributions)))
            (t nil))))
-  (let ((testdirs
+  (let ((testdirs-dists ; locate the requested rtest subdirs of the mext installation dir.
          (cond (dists
-;                (setf dists 
-;                      (if (maxima::$listp dists) (cdr dists)
-;                        (list (maxima::$sconcat dists))))
-		(loop :for dist :in dists :do
-		      (maxima::$require dist))
                 (loop :for dist :in dists :collect
-                            (fmake-pathname :directory
-                                            (append *mext-user-dir-as-list*
-                                                    (list (maxima::$sconcat dist) "rtests")))))
+                      (let* ((have-list (maxima::$listp dist))
+                             (d (if have-list (cadr dist) dist))
+                             (testdir 
+                              (fmake-pathname :directory
+                                              (append *mext-user-dir-as-list*
+                                                      (list (maxima::$sconcat d) "rtests"))))
+                             (test-spec (if have-list (cddr dist) nil)))
+                        (maxima::$require d)
+                        (list d testdir test-spec))))
+;                          (list dist (fmake-pathname :directory
+;                                            (append *mext-user-dir-as-list*
+;                                                    (list (maxima::$sconcat dist) "rtests"))))))
                (t  (list "rtests")))))
+;    (format t "Testdirs-dists ~s~%" testdirs-dists)
     (let ((testdir-list))
-      (loop :for testdir :in testdirs :do 
-            (let ((inlist (list-directory testdir)))
+      (loop :for testdir-dist :in testdirs-dists :do
+            (let* ((dist (first testdir-dist))
+                   (testdir (second testdir-dist))
+                   (test-spec (third testdir-dist))
+                   (inlist (list-directory testdir)))
+;              (format t "dist: ~s~% testdir: ~s~% test-spec: ~s~% inist: ~s~%" dist testdir test-spec inlist)
               (loop :for file :in inlist :do
-                    (let ((posn (search "rtest" (pathname-name file))))
-                      (when (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn))
+                    (let* ((pnfile (pathname-name file)) ; eg "rest_pack"
+                           (posn (search "rtest" pnfile)))
+;                      (format t "**pnfile: ~s~%" pnfile)
+;                      (format t "**test-spec: ~s~%" test-spec)
+                     ; inefficient list construction
+                      (when (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn)
+                                 (or (not test-spec) (member pnfile test-spec :test #'string-equal)))
                           (setf testdir-list (cons (namestring file) testdir-list)))))))
       (setf maxima::$testsuite_files (maxima::mk-mlist testdir-list)))
     (maxima::$run_testsuite)))
