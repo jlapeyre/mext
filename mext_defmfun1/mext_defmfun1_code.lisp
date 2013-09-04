@@ -47,12 +47,26 @@
 
 ;; redefined
 (mext::no-warning
- (defmfun1 ($mext_test :doc) ( &rest (dists :or-string-symbol-or-listof))
-  :desc ("Run the test suites for a mext distribution or list of distributions. If "
- " the argument " :code "all" " is given, then all tests are run for all installed mext distributions. "
- "If the argument " :code "loaded" " is given, then all tests are run for all loaded mext distributions. "
- "If no argument is given, a subfolder named " :code "rtests" " is searched for in the current directory.")
+ (defmfun1 ($mext_test :doc) ( &rest (dists :or-string-symbol-or-listof) )
+  :desc 
+  ("Run the test suites for a mext distribution or list of distributions. If "
+   " the argument " :code "all" " is given, then all tests are run for all installed mext distributions. "
+   "If the argument " :code "loaded" " is given, then all tests are run for all loaded mext distributions. "
+   "If no argument is given, a subfolder named " :code "rtests" " is searched for in the current directory."
+   " An item may be a list, in which case, the first element is the package name and the remaining "
+   " elements are strings specifying the name of the rtests to run. The strings must not include "
+   " directory or file extension parts.")
   (apply #'mext::mext-test dists)))
+
+
+(examples:clear-add-example 
+ "mext_test"
+ '(:code-text
+ (
+  :text ("Run regression tests for the packages " :mrefcomma "aex" " and " :mrefdot "lists_aex")
+  :ex ("mext_test(aex,lists_aex)" "done")
+  :text ("Run only some of the regression tests.")
+  :ex ("mext_test([aex, \"rtest_aex\"],[lists_aex, \"rtest_table\"])" "done"))))
 
 ;; redefined
 (mext::no-warning
