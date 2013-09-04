@@ -58,6 +58,7 @@ f(2,1)$
 lex(e);
 f(1,2)$
 
+/* Moved nreverse
 ( nreverse( e ), aex_p(e) );
 true$
 
@@ -72,17 +73,20 @@ f$
 
 lex ( iargs( e ) );
 [2,1]$
+*/
 
 /* nreverse also works on lex */
+/*
 (kill(a), a:[1,2,3], a : nreverse(a) );
 [3,2,1]$
+*/
 
 /* contructor syntax */
 (kill(a), aex_p(  << [2,1] >> ));
 true$
 
 /* test for equality */
-is ( iargs( e ) =  << [2,1] >> );
+is ( iargs( e ) =  << [1,2] >> );
 true$
 
 /* with multiple args to contructor, make mlist */

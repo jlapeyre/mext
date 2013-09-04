@@ -132,5 +132,28 @@ take_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)));
 select([1,2,3,4,5,6,7], lambda([x], is(x<3)));
 [1,2]$
 
-(kill(x,a),0);
+/* create aex with op (head) and args */
+( e : aex( f(1,2) ) , aex_p(e) );
+true$
+
+( nreverse( e ), aex_p(e) );
+true$
+
+lex(e);
+f(2,1)$
+
+iop( e );
+f$
+
+iop(lex(e));
+f$
+
+lex ( iargs( e ) );
+[2,1]$
+
+/* nreverse also works on lex */
+(kill(a), a:[1,2,3], a : nreverse(a) );
+[3,2,1]$
+
+(kill(x,a,e),0);
 0$
