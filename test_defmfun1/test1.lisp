@@ -96,8 +96,8 @@
 (defmfun1 ($dtest12 :doc ) (&rest (args :string))
   "There is no doc."
   (mk-mlist args));
-;  (format t "The args are ~s~%" args))
 
+;; No test for this yet.
 (defmfun1 ($dtest13) (&rest (args :string) &opt ($anopt nil))
   (mk-mlist (list $anopt args)))
 
