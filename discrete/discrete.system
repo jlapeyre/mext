@@ -23,7 +23,8 @@
     (:file "logic" :load-only t) ; ecl fails to compile this
     (:file "discrete_code" :load-only t)  ; ecl fails to compile this
     (:file "group" :source-extension "lisp"
-           :language :lisp)))
+           :language :lisp)
+    (:file "discrete_setup")))
 
 ;; neither compile nor load when building
 (mk:defsystem load-discrete

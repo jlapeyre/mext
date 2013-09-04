@@ -8,5 +8,6 @@ mext_provide("discrete",
    "boolmin",
    "logic",
    "discrete_code",
-   "group"]);
+   "group",
+   "discrete_setup"]);
  
