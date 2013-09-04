@@ -2,59 +2,76 @@
    with contents stored as vector.
 */
 
+/* Test 1 */
 kill(q,e,e1,er,f,g,a,b,c,z);
 done$
 
 
+/* Test 2 */
 aex_p( aex() );
 true$
 
+
+/* Test 3 */
 /* length, op, and other maxima system functions can be modified.
    But for now we use new functions prefixed with i. Mabye i for in, because
    no reformatting is done.*/
 ilength( aex() );
 0$
 
+/* Test 4 */
 iop( aex() );
 "["$
 
+/* Test 5 */
 /* number and other atoms fall through */
 aex_p(aex(1));
 false$
 
+/* Test 6 */
 aex_p(aex(0b0));
 false$
 
+/* Test 7 */
 integerp(aex(1));
 true$
 
+/* Test 8 */
 bfloatp(aex(0b0));
 true$
 
+/* Test 9 */
 aex_p(aex(f));
 false$
 
+/* Test 10 */
 symbolp(aex(f));
 true$
 
+/* Test 11 */
 /* create aex with op (head) and args */
 ( e : aex( f(1,2) ) , aex_p(e) );
 true$
 
+/* Test 12 */
 /* convert to lisp list (lex ?)  expression */
 lex(e);
 f(1,2)$
 
+/* Test 13 */
 ilength( e );
 2$
 
+/* Test 14 */
 /* could redefine reverse, or use ireverse */
 ( er : ireverse( e , ot ->ar ), aex_p( er ));
 true$
 
+/* Test 15 */
 lex( er );
 f(2,1)$
 
+/* Test 16 */
 lex(e);
 f(1,2)$
 
@@ -81,30 +98,38 @@ lex ( iargs( e ) );
 [3,2,1]$
 */
 
+/* Test 17 */
 /* contructor syntax */
 (kill(a), aex_p(  << [2,1] >> ));
 true$
 
+/* Test 18 */
 /* test for equality */
 is ( iargs( e ) =  << [1,2] >> );
 true$
 
+/* Test 19 */
 /* with multiple args to contructor, make mlist */
 is ( << 1,2 >> = << [1,2] >> );
 true$
 
+/* Test 20 */
 is( << f(1) >> = << f(1) >>);
 true$
 
+/* Test 21 */
 is( << f(1) >> = << g(1) >>);
 false$
 
+/* Test 22 */
 is( << f(1) >> = << f(1,2) >>);
 false$
 
+/* Test 23 */
 is( << f(a+b) >> = << f(a+b) >>);
 true$
 
+/* Test 24 */
 /* not clear what should happen here. They are the same
   expression */
 is( <<1,2>> = [1,2]);
@@ -150,14 +175,17 @@ true$
 
 */
 
+/* Test 25 */
 /* this works with many fuctions */
 is ( ireverse([1,2,3]) = [3,2,1] );
 true$
 
 
+/* Test 26 */
 is ( ireverse([1,2,3], ot->ar) = <<3,2,1>> );
 true$
 
+/* Test 27 */
 is ( ireverse(<<1,2,3>>) = <<3,2,1>> );
 true$
 
@@ -169,46 +197,61 @@ is ( reverse(<<1,2,3>> , 'oml) = [3,2,1] );
 true$
 */
 
+/* Test 28 */
 kill(e1,e,er,f,g,a);
 done$
 
+/* Test 29 */
 ( e : << 1,2,3 >>, aexg(e,2));
 2$
 
+/* Test 30 */
 (kill(e),  e : << 1,2,3,4 >>, aexs(e,2,'cat));
 cat$
 
+/* Test 31 */
 is( e =  << 1,'cat,3,4 >>);
 true$
 
+/* Test 32 */
 aex_shift(e);
 4$
 
+/* Test 33 */
 is( e =  << 1,'cat,3 >>);
 true$
 
+/* Test 34 */
 aex_unshift('zebra,e);
 3$
 
+/* Test 35 */
 is( e =  << 1,'cat,3,'zebra>>);
 true$
 
+/* Test 36 */
 kill(e);
 done$
 
+/* Test 37 */
 iapply("+", << 1,2,3 >>);
 6$
 
+/* Test 38 */
 /* don't know what it should return by default */
 is( iapply(f, << 1,2,3 >>) = <<f(1,2,3)>>);
 false$
 
+/* Test 39 */
 iapply(f, << 1,2,3 >>, ot->ml);
 f(1,2,3)$
 
+/* Test 40 */
 is( iapply(f, [ 1,2,3 ], ot->ar) = <<f(1,2,3)>>);
 true$
 
+
+/* Test 41 */
 /*
   ipart(e,n1,n2,...) is like inpart somewhat.
   it descends a tree of mixed ml an ar expressions.
@@ -217,106 +260,133 @@ true$
 aex_p( ipart( aex( [1,[2,3]]), 2));
 false$
 
+/* Test 42 */
 ipart([1,2,3,4,5],-1);
 5;
 
+/* Test 43 */
 ipart([1,2,3,4,[5,6]],-1,1);
 5;
 
+/* Test 44 */
 ipart([1,2,3,4,[5,6]],-1,-1);
 6;
 
+/* Test 45 */
 /*  faex converts at all levels */
 aex_p( ipart( faex( [1,[2,3]]), 2));
 true$
 
+/* Test 46 */
 /* flex also converts to ml at all levels */
 aex_p( ipart( flex(faex( [1,[2,3]])), 2));
 false$
 
+/* Test 47 */
 /* recursively copy tree of mixed expressions */
 (kill(e,e1), e : << 1,2, [3,<<4,f(a,b)>>] >>, e1 : deep_copy(e), is(e=e1));
 true$
 
+/* Test 48 */
 /* destructive set */
 ipart_set(e,q,3,2,2,1);
 q$
 
+/* Test 49 */
 /* part is changed */
 is(e =  << 1,2, [3,<<4,f(q,b)>>] >>);
 true$
 
+/* Test 50 */
 /* copy is not changed */
 ipart(e1,3,2,2,1);
 a$
 
+/* Test 51 */
 /* push to end of aex is as efficient as pushing to lisp adjustable array */
 ( e : << f(a,b,c) >>, aex_unshift(z,e), is( e = <<f(a,b,c,z)>>) );
 true$
 
+/* Test 52 */
 aex_shift(e);
 z$
 
+/* Test 53 */
 is( e = <<f(a,b,c)>>);
 true$
 
-
+/* Test 54 */
 is(ipart([1,2],0)="[");
 true$
 
+/* Test 55 */
 is(ipart(<<[1,2]>>,0)="[");
 true$
 
+/* Test 56 */
 is ( ipart(a<b,0) = "<");
 true$
 
+/* Test 57 */
 is ( ipart( << a<b >> ,0) = "<");
 true$
 
+/* Test 58 */
 (e : [[[[c,c],[c,c]],[[c,c],[c,c]]],[[[c,c],[c,c]],[[c,c],[c,c]]]],0);
 0$
 
+/* Test 59 */
 /* convert just top level */
 is( raex(e) = << [[[[c,c],[c,c]],[[c,c],[c,c]]],[[[c,c],[c,c]],[[c,c],[c,c]]]] >>);
 true$
 
+/* Test 60 */
 is( raex(e,1) = raex(e) );
 true$
 
+/* Test 61 */
 is( raex(e,'inf) = faex(e) );
 true$
 
+/* Test 62 */
 /* only convert level 2 */
 (e1 : raex(e,[2]), aex_p(e1));
 false$
 
+/* Test 63 */
 aex_p( ipart(e1,1) );
 true$
 
+/* Test 64 */
 aex_p( ipart(e1,1,1) );
 false$
 
+/* Test 65 */
 aex_p( ipart(e1,1,1,1) );
 false$
 
+/* Test 66 */
 /*
    similar function exists for conversion to ml.
    begin by converting to aex at all levels.
 */
-
 ( e1 : faex(e), e2 : rlex(e1,[2]), aex_p(e2));
 true$
 
+/* Test 67 */
 aex_p( ipart(e2,1) );
 false$
 
+/* Test 68 */
 aex_p( ipart(e2,1,1) );
 true$
 
+/* Test 69 */
 /* fix error thrown. replace by better test later */
 (a : aex([1,2,[3,4]]),faex(a),0);
 0;
 
+/* Test 70 */
 kill(e,e1,a);
 done$
 
