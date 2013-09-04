@@ -758,8 +758,10 @@ refers to the head."
 
 ;; is used in rtests
 (defmfun-ae ($iargs :doc) ((e :or-non-atom-subvar))
-  :desc ("returns a list of the arguments of " :arg "e"
-     ", which may be either a lex or aex expression. This works like `args', but is more general.")
+  :desc 
+  ("returns a list of the arguments of " :argcomma "e"
+   " which may be either a lex or aex expression. This works "
+   " like " :emrefcomma "args" " but is more general.")
   (defmfun-final-to-ae
       (if-aex e (aex-mk-head-args '(mlist simp) (aex-cp-args e))
               (progn (atomchk (setq e (format1 e)) '$args nil)
