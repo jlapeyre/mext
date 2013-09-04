@@ -138,6 +138,8 @@
                       int-range-check)
                      (:non-neg-int "a non-negative integer."
                       (and (integerp e) (>= e 0)))
+                     ((:member 1)  "one of ~a"
+                      arg-member-check)
                      ((:int-gte 1) "an integer greater than or equal to ~a"
                        int-gte-check)
                      (:non-neg-number "a non-negative number"

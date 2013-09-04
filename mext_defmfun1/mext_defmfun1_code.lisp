@@ -47,7 +47,8 @@
 
 ;; redefined
 (mext::no-warning
- (defmfun1 ($mext_test :doc) ( &rest (dists :or-string-symbol-or-listof) )
+ (defmfun1 ($mext_test :doc) ( &rest (dists :or-string-symbol-or-listof)
+                                     &opt ($list (:member '(nil t $long))))
   :desc 
   ("Run the test suites for a mext distribution or list of distributions. If "
    " the argument " :code "all" " is given, then all tests are run for all installed mext distributions. "
@@ -55,8 +56,12 @@
    "If no argument is given, a subfolder named " :code "rtests" " is searched for in the current directory."
    " An item may be a list, in which case, the first element is the package name and the remaining "
    " elements are strings specifying the name of the rtests to run. The strings must not include "
-   " directory or file extension parts.")
-  (apply #'mext::mext-test dists)))
+   " directory or file extension parts. If the option " :opt "list" " is " :emrefcomma "true"
+   " then the tests are not performed, but a list of the rtest files is returned. If "
+   :opt "list" " is " :varcomma "long" " then the full pathnames of the rtest files are listed. "
+   " Note: if the package " :mref "mext_defmfun1" " is not loaded, then only a rudimentary "
+   " version of " :mrefcomma "mext_test" " which does not accept options, is available.")
+  (apply #'mext::mext-test (cons $list dists))))
 
 
 (examples:clear-add-example 
@@ -66,7 +71,9 @@
   :text ("Run regression tests for the packages " :mrefcomma "aex" " and " :mrefdot "lists_aex")
   :ex ("mext_test(aex,lists_aex)" "done")
   :text ("Run only some of the regression tests.")
-  :ex ("mext_test([aex, \"rtest_aex\"],[lists_aex, \"rtest_table\"])" "done"))))
+  :ex ("mext_test([aex, \"rtest_aex\"],[lists_aex, \"rtest_table\"])" "done")
+  :text "Only list the test files; do not run them."
+  :ex ("mext_test(tpsolve, list->true)" "[rtest_to_poly_solve, rtest_to_poly]"))))
 
 ;; redefined
 (mext::no-warning
@@ -227,19 +234,37 @@ This is from wxmaxima
           (format nil "Package `~a' is not loaded" name))))))
                                                         
 
-(defmfun1 ($mext_find_package :doc) ((item :or-string-symbol))
-  :desc ("Find mext packages in which the function or variable "
-  :arg "item" " is defined. This only works if the package has been"
-  " loaded, and its symbols registered. A string or list of strings is returned.")
-  (let ((iname (maxima::$sconcat item))
-        (h defmfun1::*mext-functions-table*)
-        (res '()))
-    (dolist (pack (get-hash-keys h))
-      (when (member iname (gethash pack h) :test #'string-equal)
-        (push pack res)))
-    (if (cdr res)
-        (mk-mlist res)
-      (car res))))
+(defmfun1 ($mext_find_package :doc) ( &rest (items :or-string-symbol) &opt ($file nil :bool))
+  :desc 
+  ("Find mext packages in which the function or variable "
+   :arg "items" " are defined. This only works if the package has been "
+   "loaded, and its symbols registered. If more than one package is found, then all are listed. "
+   "If the option " :opt "file" " is true, then the filename in which the item is "
+   "defined is also returned.")
+  (let ((allres
+         (loop :for item :in items :collect
+               (let ((iname (maxima::$sconcat item))
+                     (h defmfun1::*mext-functions-table*)
+                     (res '()))
+                 (dolist (pack (get-hash-keys h))
+                   (when (member iname (gethash pack h) :test #'string-equal)
+                     (let ((fn (defmfun1:get-filename-for-function item)))
+                       (push (if (and $file fn)
+                                 (make-mlist-simp pack fn) pack)
+                             res))))
+                 (mk-mlist res)))))
+    (if (cdr allres)
+        (mk-mlist allres)
+      (car allres))))
+;    (mk-mlist allres)))
+;; Maybe this is too complicated for the user
+;                 (if (cdr res)
+;                     (mk-mlist res)
+;                   (car res))))))
+;    (if (cdr allres)
+;        (mk-mlist allres)
+;      (car allres))))
+
 
 (defmfun1 ($mtranslate_file :doc) ((input-file :string)
         &optional (ttymsgsp $tr_file_tty_messagesp) 

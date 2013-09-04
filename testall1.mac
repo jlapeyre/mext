@@ -27,6 +27,6 @@ if member("store", our_mext_list) then our_test_list :
 if member("prime_pi", our_mext_list) then our_test_list :
         cons("prime_pi",our_test_list);
 
-mext_test(our_test_list);
+apply('mext_test, our_test_list);
 
 kill(our_mext_list, our_test_list, out_extra_test_list);

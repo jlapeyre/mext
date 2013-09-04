@@ -417,7 +417,7 @@ This was copied from maxima source init-cl.lisp.")
 
 ;; TODO need function to list rtests for a mext package
 
-(defun mext-test  ( &rest dists )
+(defun mext-test  ( list-only &rest dists )
  "Run regression tests in the sub-directories of the installed distributions.
  dists is a list of names of distributions. If no argument is given,
  then look in the current directory for rtests. A single sym or string
@@ -440,7 +440,7 @@ This was copied from maxima source init-cl.lisp.")
                                               (append *mext-user-dir-as-list*
                                                       (list (maxima::$sconcat d) "rtests"))))
                              (test-spec (if have-list (cddr dist) nil)))
-                        (maxima::$require d)
+                        (unless list-only (maxima::$require d))
                         (list d testdir test-spec))))
 ;                          (list dist (fmake-pathname :directory
 ;                                            (append *mext-user-dir-as-list*
@@ -462,9 +462,13 @@ This was copied from maxima source init-cl.lisp.")
                      ; inefficient list construction
                       (when (and (equal "mac" (pathname-type file)) (numberp posn) (= 0 posn)
                                  (or (not test-spec) (member pnfile test-spec :test #'string-equal)))
-                          (setf testdir-list (cons (namestring file) testdir-list)))))))
-      (setf maxima::$testsuite_files (maxima::mk-mlist testdir-list)))
-    (maxima::$run_testsuite)))
+                          (setf testdir-list (cons 
+                                              (if (eq list-only t)
+                                                  pnfile (namestring file)) testdir-list)))))))
+      (if list-only (maxima::mk-mlist testdir-list)
+        (progn
+          (setf maxima::$testsuite_files (maxima::mk-mlist testdir-list))
+          (maxima::$run_testsuite))))))
 
 #|
  Under construction: in rtests/ directory we want  rtests.cfg with code like:
@@ -761,7 +765,7 @@ This was copied from maxima source init-cl.lisp.")
 ;; installation directory of each dist, then for files rtest*.mac
 ;; in this folder. We set testsuite_files and run run_testsuite.
 (defmfun $mext_test  ( &rest dists )
-  (apply #'mext::mext-test dists))
+  (apply #'mext::mext-test (cons nil dists)))
 
 (defmfun $truename (filespec)
   (namestring (truename filespec)))

@@ -98,4 +98,6 @@
   (mk-mlist args));
 ;  (format t "The args are ~s~%" args))
 
+(defmfun1 ($dtest13) (&rest (args :string) &opt ($anopt nil))
+  (mk-mlist (list $anopt args)))
 
