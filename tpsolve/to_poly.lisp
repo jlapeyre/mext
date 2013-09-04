@@ -40,7 +40,7 @@
         (cond ((member k  `($complex $integer))
                (mfuncall '$remove v k))
               ((eq k '$natural_number)
-               (mfuncall '$remove v k)) ; need to do forget
+               (mfuncall '$remove v k)) ; need to do forget, but I have not seen these yet.
               (t nil))
         (unintern v)))
     (setf *to-poly-temp-list* nil)

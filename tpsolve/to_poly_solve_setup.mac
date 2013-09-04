@@ -20,6 +20,66 @@ if not(?functionp('opsubst)) then load("opsubst");
 block([inflag : true], if not(member('push, map('op, macros))) then load("basic"));
 if not(?functionp('simpfuncall)) then load("simplifying");
 
+/* In the *.mac file
+   Still moving this around, perhaps, so we say it is in one file.
+*/
+mext_package_record([
+  "compose_functions",
+  "dfloat",
+  "variable_p",
+  "simp_and",
+  "opequal_p",
+  "set_of_variables",
+  "equation_p",
+  "if_p",
+  "%union_p",
+  "solution_subst",
+  "safer_subst",
+  "list_conjugate_vars",
+  "expunge_nonrelevant_solutions",
+  "rectform_log_if_constant",
+  "real_imagpart_to_conjugate",
+  "merge_solutions",
+  "non_symbol_subst",
+  "one_to_one_crunch",
+  "top_level_ops",
+  "catch_easy_cases",
+  "standardize_inverse_trig",
+  "lambertify",
+  "one_to_one_reduce",
+  "function_inverse",
+  "function_zeros",
+  "function_domain",
+  "singular_solutions",
+  "conjugate_solver",
+  "simp_%solve",
+  "to_poly_solve_h",
+  "%solve",
+  "expunge_nonrelevant_cnds"],
+  "tpsolve", "to_poly_solve_code.mac");
+
+
+/* to_poly.lisp */
+mext_package_record([
+  "to_poly",
+  "eliminate_using",
+  "elim",
+  "elim_allbut",
+  "linearly_dependent_p",
+  "new_variable",
+  "nicedummies",
+  "complex_number_p"],
+  "tpsolve", "to_poly.lisp");
+
+
+/* to_poly_solve_extra.lisp */
+mext_package_record([
+ "simp_inequality",
+ "disjunction_p",
+ "conjunction_p",
+ "subst_parallel"],
+ "tpsolve", "to_poly_solve_extra.lisp");
+
 /*
 Handled by mext
 load("to_poly_solve_extra");
