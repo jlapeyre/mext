@@ -11,7 +11,10 @@
 ;; e.g. load(mext_core);
 ;; The minimum mext system is loaded with load(mext).
 
-($load  "mext_load.lisp")
-(loop for mext-package in '( "mext_defmfun1" "lists_aex" "discrete_aex" "numerical" "alt_eigen" ) do
+($load "mext_load.lisp")
+(loop for mext-package in '( "mext_defmfun1" "lists_aex" 
+                             "discrete_aex" "numerical" 
+                             "alt_eigen" "tpsolve" ) do
       ($require mext-package))
+
 

@@ -19,7 +19,10 @@
 
   There must be nothing else on these lines.
   There may any number of spaces between/around elements and any number of digits,
-  or none. The numbers don't have to be in any order, or some may be missing.
+  or none. 
+  The numbers don't have to be in any order, or some may be missing.
+  You may disable one of the /* Test ... lines by putting any other characters
+  on the line.
 
   This script rewrites the file, replacing each occurrence of /* Test ... above
   with the correct numbers inserted.

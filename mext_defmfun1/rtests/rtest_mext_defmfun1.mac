@@ -1,2 +1,77 @@
+/* Test 1 */
 listp(list_directory());
 true$
+
+/* Test 2 */
+stringp(pwd());
+true$
+
+/* Test 3 */
+(errcatch(pwd(0)),error_code);
+'args_too_many;
+
+/* Test 4 */
+listp(dirstack());
+true$
+
+/* Test 5 */
+mext_test(mext_defmfun1,list->true);
+["rtest_mext_defmfun1"]$
+
+/* Test 6 */
+is(length(mext_list())>0);
+true$
+
+/* Test 7 */
+mext_info('mext_system);
+done$
+
+/* Test 8 */
+require(mext_defmfun1);
+done$
+
+/* Test 9 */
+dont_kill(%%aa);
+done$
+
+/* Test 10 */
+member('%%aa , get_dont_kill());
+true$
+
+/* Test 11 */
+allow_kill(%%aa);
+done$
+
+/* Test 12 */
+member('%%aa , get_dont_kill());
+false$
+
+/* Test 13 */
+listp(list_directory());
+true$
+
+/* Test 14 */
+listp(mext_list_loaded());
+true$
+
+/* Test 15 */
+mext_list_package(defmfun1);
+["attributes","attributes_find","comp_load","compile_file1",
+        "compile_lambda_verbose","error_code","error_str","examples",
+        "examples_add","foptions","pager_command","pager_string",
+        "print_authors","print_copyrights","print_implementation",
+        "set_match_form","set_nowarn","unset_match_form","unset_nowarn"]$
+
+/* Test 16 */
+mext_find_package('mext_test);
+["mext_defmfun1"]$
+
+/* Test 17 */
+mext_find_package('mext_test,file->true);
+[["mext_defmfun1","mext_defmfun1_code.lisp"]]$
+
+/* Test 18 */
+mext_find_package('mext_test, 'attributes, file->true);
+[[["mext_defmfun1","mext_defmfun1_code.lisp"]],
+        [["defmfun1","defmfun1-max.lisp"]]]$
+
