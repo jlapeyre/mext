@@ -5,113 +5,113 @@
 */
 /* test loading tests. */
 
-/* Problem 1 */
+/* Test 1 */
 (kill(a,our_curdir,alen),true)$
 true$
 
-/* Problem 2 */
+/* Test 2 */
 /* set a, then load a file that sets a to another value */
 a:2;
 2;
 
-/* Problem 3 */
+/* Test 3 */
 (our_curdir : pwd(), 0);
 0;
 
-/* Problem 4 */
+/* Test 4 */
 (chdir(mext_userdir),0);
 0;
 
-/* Problem 5 */
+/* Test 5 */
 (chdir("mext_system"),0);
 0;
 
-/* Problem 6 */
+/* Test 6  disable */
 
 /*
 (load_in_subdir("t1",["rtests"]),0);
 0;
 */
 
-/* Problem 7 */
+/* Test 7  disable */ 
 /*
 a;
 1$
 */
 
-/* Problem 8 */
+/* Test 6 */
 /* Do the same but change to different working directory */
 a:2;
 2;
 
-/* Problem 9 */
+/* Test 7 */
 (chdir("rtests"),1);
 1;
 
-/* Problem 10 */
+/* Test 10  disable */
 
 /*
 (load_in_subdir("t1"),1);
 1;
 */
 
-/* Problem 11 */
+/* Test 11  disable */
 /*
 a;
 1$
 */
 
-/* Problem 12 */
+/* Test 8 */
 /* Return to previous directory */
 (updir(),true);
 true;
 
-/* Problem 13 */
+/* Test 9 */
 a:2;
 2;
 
-/* Problem 14 */
+/* Test 14 disable */
 /*
 (load_in_subdir("t1",["rtests"]),true);
 true;
 */
 
-/* Problem 15 */
+/* Test 15 disable */
 /*
 a;
 1$
 */
 
-/* Problem 16 */
+/* Test 10 */
 popdir(4);
 ''our_curdir;
 
-/* Problem 17 */
+/* Test 11 */
 listp(mext_list());
 true$
 
-/* Problem 18 */
+/* Test 12 */
 (alen:length(mext_list()), is(alen > 0));  
 true$
 
-/* Problem 19 */
+/* Test 13 */
 stringp(first(mext_list()));
 true$
 
-/* Problem 20 */
+/* Test 14 */
 stringp(pwd());
 true$
 
-/* Problem 21 */
+/* Test 15 */
 listp(dirstack());
 true$
 
-/* Problem 22 */
+/* Test 16 */
 mext_info(mext_system);
 done$
 
 /**********************************/
-/* Problem 23 */
+/* Test 17 */
 (kill(a,our_curdir,alen),true)$
 true$
 

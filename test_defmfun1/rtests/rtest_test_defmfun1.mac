@@ -1,209 +1,262 @@
 /* dtest1 must take no arguments */
 
+/* Test 1 */
 /* Define this to see if it collides with option `extra' */
 (kill(extra), extra:13)$
 13;
 
+/* Test 2 */
 dtest1()$
 true;
 
+/* Test 3 */
 /* Requires exactly zero arguments */
 (errcatch(dtest1(0)), error_code)$
 args_too_many;
 
+/* Test 4 */
 /* Return unevaluated form instead of an error */
 (set_match_form('dtest1), dtest1(0))$
 'dtest1(0);
 
+/* Test 5 */
 unset_match_form('dtest1)$
 done;
 
+/* Test 6 */
 /* Different definition syntax */
 dtest1a()$
 true;
 
+/* Test 7 */
 (errcatch(dtest1a(0)),error_code)$
 args_too_many;
 
+/* Test 8 */
 /* dtest2 must take one argument */
 dtest2('dog)$
 'dog;
 
+/* Test 9 */
 (errcatch(dtest2()),error_code)$
 args_too_few;
 
+/* Test 10 */
 (errcatch([dtest2(1,3)]), error_code)$
 args_too_many;
 
+/* Test 11 */
 /* dtest3 must take non-neg int argument */
-
 dtest3(0)$
 0;
 
+/* Test 12 */
 dtest3(1)$
 1;
 
+/* Test 13 */
 dtest3(101)$
 101;
 
+/* Test 14 */
 dtest3(10^5)$
 10^5;
 
+/* Test 15 */
 (errcatch(dtest3()),error_code)$
 args_too_few;
 
+/* Test 16 */
 (errcatch([dtest3(1,2)]), error_code)$
 args_too_many;
 
+/* Test 17 */
 (errcatch(dtest3(-1)), error_code)$
 chk_non_neg_int;
 
+/* Test 18 */
 (errcatch(dtest3(1.0)), error_code)$
 chk_non_neg_int;
 
+/* Test 19 */
 (errcatch(dtest3('dog)), error_code)$
 chk_non_neg_int;
 
+/* Test 20 */
 /* match_form is set. So wrong argument should return input form
    I put some garbage in check-and-error, and no other tests fail.
 */
 dtest3b(-1)$
 'dtest3b(-1);
 
+/* Test 21 */
 /* dtest4 must take int in [-1,0,1] */
-
 dtest4(-1)$
 -1;
 
+/* Test 22 */
 dtest4(0)$
 0;
 
+/* Test 23 */
 dtest4(1)$
 1;
 
+/* Test 24 */
 (errcatch(dtest4(-2)), error_code)$
 chk_int_range;
 
+/* Test 25 */
 (errcatch(dtest4(101)), error_code)$
 chk_int_range;
 
+/* Test 26 */
 (errcatch(dtest4(0.0)), error_code)$
 chk_int_range;
 
+/* Test 27 */
 /* dtest5 takes an option */
-
 dtest5(1)$
 [1,false,false];
 
+/* Test 28 */
 dtest5(1,extra->'dog)$
 [1,'dog,true];
 
+/* Test 29 */
   /* We cannot quote the option name */
 (errcatch(dtest5(1,'extra->3)), error_code)$
 defmfun1_invalid_opt_name;
 
+/* Test 30 */
  /* dtest6 takes 2 opts. We can pass options in a list */
 dtest6(1,[extra->3,opt2->4])$
 [1,3,true,4,true];
 
+/* Test 31 */
 block([optlist : [extra->3,opt2->"dog"]],
   dtest6(1,optlist))$
 [1,3,true,"dog",true];
 
+/* Test 32 */
 /* There is a global variable `extra'. But
  this `->'  means `Rule' which quotes the LHS.*/
 block([optlist : [extra->3,opt2->"dog"]],
   append([extra], dtest6(1,optlist)))$
 [13,1,3,true,"dog",true];
 
+/* Test 33 */
 /* Use options with lisp symbol name for option not the same as option name */
 dtest7()$
 [true,false];
 
+/* Test 34 */
 dtest7(myopt->false)$
 [false,true];
 
+/* Test 35 */
 /* Not a boolean value */
 dtest7(myopt->3)$
 'dtest7(Rule(myopt,3));
 
+/* Test 36 */
 /* takes no normal args */
 dtest7(3)$
 'dtest7(3);
 
+/* Test 37 */
 /* Test &aux in lambda list */
 dtest8('giraffe)$
 'giraffe;
 
+/* Test 38 */
 /* Test overriding set_match_form with option */
-
 (unset_match_form('dtest9), dtest9(3))$
 [3,false,false];
 
+/* Test 39 */
 (errcatch(dtest9('cat)), error_code)$
 chk_number;
 
+/* Test 40 */
 dtest9(3,match->true)$
 [3,true,true];
 
+/* Test 41 */
 dtest9('cat,match->true)$
 'dtest9(cat, Rule(match, true));
 
+/* Test 42 */
 (errcatch(dtest9('cat,match->false)), error_code)$
 chk_number;
 
+/* Test 43 */
 dtest9(37,match->false)$
 [37,false,true];
 
+/* Test 44 */
 (errcatch(dtest9(101,102)), error_code)$
 args_too_many;
 
+/* Test 45 */
 dtest9(101,102,match->true)$
 'dtest9(101, 102, Rule(match, true));
 
+/* Test 46 */
  /* Now set_match_form and try them again */
 (set_match_form('dtest9), dtest9(0))$
 [0,false,false];
 
+/* Test 47 */
 dtest9('cat)$
 'dtest9(cat);
 
+/* Test 48 */
 dtest9('girrafe,match->true)$
 'dtest9(girrafe, Rule(match, true));
 
+/* Test 49 */
 (errcatch(dtest9('cat,match->false)), error_code)$
 chk_number;
 
+/* Test 50 */
 dtest9(111,222,match->true)$
 'dtest9(111, 222, Rule(match, true));
 
+/* Test 51 */
 /* dtest10 takes one argument. But checking for number of args is disabled. */
 dtest10(1)$
 1;
 
+/* Test 52 */
 dtest10()$
 false;
 
+/* Test 53 */
 dtest10(3,4)$
 3;
 
 /* Collect opt arguments either fast or slow */
 /* One required argument; and it is missing. */
-
+/* Test 54 */
 (errcatch(dtest11(opt1->7)), error_code)$
 args_too_few;
 
+/* Test 55 */
 /* Defined with ( :fast-opt ); so the opt is mistaken for an argument */
 dtest11a(opt1->7)$
 'Rule(opt1, 7);
 
+/* Test 56 */
 /* This function takes an arbitary number of args. */
 dtest12("cat","dog")$
 ["cat","dog"];
 
+/* Test 57 */
 /* All args must be strings */
 (errcatch(dtest12("cat",3)), error_code)$
 chk_string;
 
+/* Test 58 */
 kill(extra);
 done$

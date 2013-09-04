@@ -1,13 +1,17 @@
+/* Test 1 */
 ( kill(a,c,x), store_restore(item) := block( store("tst.cls",item),
   restore("tst.cls")),0);
 0;
 
+/* Test 2 */
 store_restore(1);
 1;
 
+/* Test 3 */
 (a:1, store_restore(a));
 1;
 
+/* Test 4 */
 (load(graphs),
      c : petersen_graph(), 0);
 0$
@@ -26,6 +30,7 @@ store_restore(1);
   be somewhere where the user does not have write permission.
 */
 
+/* Test 5 */
 block([bi:build_info()],
    if is(bi@lisp_name # "CLISP") then 
     (store("graph.cls",c),
@@ -33,5 +38,6 @@ block([bi:build_info()],
     else factor(graph_charpoly(c, x)))$
 (x-3)*(x-1)^5*(x+2)^4;
 
+/* Test 6 */
 (kill(a,c,x),0);
 0;

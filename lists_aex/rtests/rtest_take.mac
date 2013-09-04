@@ -1,124 +1,162 @@
+/* Test 1 */
 kill(a,b,c,d,e,f,g,h,i,j,k);
 done;
 
+/* Test 2 */
 take([a,b,c,d,e],3);
 [a,b,c]$
 
+/* Test 3 */
 take([a,b,c,d,e],-3);
 [c,d,e]$
 
+/* Test 4 */
 take([a,b,c,d,e],[2,3]);
 [b,c]$
 
+/* Test 5 */
 take([1,2,3,4,5,6,7,8,9,10],[2,10,2]);
 [2,4,6,8,10]$
 
+/* Test 6 */
 take([a,b,c,d],[-1,1,-1]);
 [d,c,b,a]$
 
+/* Test 7 */
 take([a,b,c,d],'reverse);
 [d,c,b,a]$
 
+/* Test 8 */
 take([[a,b,c], [d,e,f], [g,h,i]], [2,3],-2);
 [[e,f],[h,i]]$
 
+/* Test 9 */
 (a : table( i*j^2*k*3, [i,3],[j,3],[k,3]),
   b : lrange(10),
   c : "abcdefghijk",
   0);
 0$
 
+/* Test 10 */
 take(b,1);
 [1]$
 
+/* Test 11 */
 take(b,2);
 [1,2]$
 
+/* Test 12 */
 take(b,-1);
 [10]$
 
+/* Test 13 */
 is(take(b,[-1,1,-1]) = reverse(b));
 true$
 
+/* Test 14 */
 take(b,[5]);
 [5]$
 
+/* Test 15 */
 take(b,[-2]);
 [9]$
 
+/* Test 16 */
 take(b,-2);
 [9,10]$
 
+/* Test 17 */
 take(b,[2,8,2]);
 [2,4,6,8]$
 
+/* Test 18 */
 take(b,[8,2,-2]);
 [8,6,4,2]$
 
 
+/* Test 19 */
 take(a,[1,-1,1],[1,-1,1],[-1,1,-1]);
 [[[9,6,3],[36,24,12],[81,54,27]],[[18,12,6],[72,48,24],[162,108,54]],
         [[27,18,9],[108,72,36],[243,162,81]]]$
 
+/* Test 20 */
 /* skip every other element at level 2. reverse level 3  */
 take(a,[1,-1,1],[1,-1,2],[-1,1,-2]);
 [[[9,3],[81,27]],[[18,6],[162,54]],[[27,9],[243,81]]]$
 
+/* Test 21 */
 is(take(table(i+j,[i,3],[j,3], ot->ar), 2,2) =  faex([[2,3],[3,4]]));
 true$
 
+/* Test 22 */
 string_take(c,1);
 "a"$
 
+/* Test 23 */
 string_take(c,2);
 "ab"$
 
+/* Test 24 */
 string_take(c,-1);
 "k"$
 
+/* Test 25 */
 string_take(c,-2);
 "jk"$
 
+/* Test 26 */
 string_take(c,[3]);
 "c"$
 
+/* Test 27 */
 string_take(c,[-3]);
 "i"$
 
+/* Test 28 */
 string_take(c,[-1,1,-1]);
 "kjihgfedcba"$
 
+/* Test 29 */
 string_take(c,[2,slength(c),2]);
 "bdfhj"$
 
+/* Test 30 */
 string_take("cat",'none);
 ""$
 
+/* Test 31 */
 string_take("cat",'reverse);
 "tac"$
 
+/* Test 32 */
 string_take("cat",'all);
 "cat"$
 
+/* Test 33 */
 partition_list(lrange(6),2);
 [[1,2],[3,4],[5,6]]$
 
+/* Test 34 */
 partition_list(lrange(6),2,1);
 [[1,2],[2,3],[3,4],[4,5],[5,6]]$
 
+/* Test 35 */
 (b : table(i*j,[i,4],[j,4]),
   partition_list(b,[2,2]));
 [[[[1,2],[3,4]],[[2,4],[6,8]]],[[[3,6],[9,12]],[[4,8],[12,16]]]]$
 
+/* Test 36 */
 partition_list(b,[2,2],1);
 [[[[1,2],[2,3],[3,4]],[[2,4],[4,6],[6,8]]],
          [[[2,4],[4,6],[6,8]],[[3,6],[6,9],[9,12]]],
          [[[3,6],[6,9],[9,12]],[[4,8],[8,12],[12,16]]]]$
 
+/* Test 37 */
 partition_list(b,[2,2],[1,1]);
 [[[[1,2],[2,3],[3,4]],[[2,4],[4,6],[6,8]]],
          [[[2,4],[4,6],[6,8]],[[3,6],[6,9],[9,12]]],
          [[[3,6],[6,9],[9,12]],[[4,8],[8,12],[12,16]]]]$
 
+/* Test 38 */
 kill(a,b,c);
 done$

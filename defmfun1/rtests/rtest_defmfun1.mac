@@ -1,0 +1,32 @@
+/* Test 1 */
+(errcatch(foptions()),error_code);
+'args_too_few$
+
+/* Test 2 */
+(errcatch(foptions(1)),error_code);
+chk_or_string_symbol$
+
+/* Test 3 */
+/* This is bad. It should report an error because there
+  is no item 'dog */
+foptions('dog);
+[]$
+
+/* Test 4 */
+foptions('foptions);
+[]$
+
+/* Test 5 */
+attributes('foptions);
+[]$
+
+/* Test 6 */
+/* Once again, this should give an error */
+attributes('dog);
+[]$
+
+/* Test 7 */
+/* Nothing has any attributes set yet ! */
+attributes_find('dog);
+[]$
+

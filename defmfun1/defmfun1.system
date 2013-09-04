@@ -4,7 +4,8 @@
 (in-package :mext-maxima)
 
 (create-distribution "defmfun1"
-  :loader "load-defmfun1")
+  :loader "load-defmfun1"
+  :install-only "defmfun1-tests")
 
 ;(in-package :cl-user)
 
@@ -29,3 +30,9 @@
   :source-extension "mac"
   :components
    ((:file "defmfun1")))
+
+(mk:defsystem defmfun1-tests
+  :source-extension "mac"
+  :source-pathname "rtests"
+  :components
+    ((:file "rtest_defmfun1")))

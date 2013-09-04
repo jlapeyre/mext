@@ -1,30 +1,40 @@
+/* Test 1 */
 kill(f,x,y,z,a,b,c,d,e,f,g,h,i);
 done$
 
+/* Test 2 */
 count([1,2,"dog"], 'numberp);
 2$
 
+/* Test 3 */
 count([1,2,"dog"], "dog");
 1$
 
+/* Test 4 */
 count(lrange(10^4), lambda([x], is(mod(x,3) = 0)));
 3333$
 
+/* Test 5 */
 count( %%ff(1,2,"dog"), "dog");
 1$
 
+/* Test 6 */
 count(lrange(100,ot->ar), 'evenp);
 50$
 
+/* Test 7 */
 constant_list(1,3);
 [1,1,1]$
 
+/* Test 8 */
 constant_list(a,3)$
 [a,a,a]$
 
+/* Test 9 */
 constant_list([1,2],3);
 [[1,2],[1,2],[1,2]]$
 
+/* Test 10 */
 constant_list(%ff(x),3);
 [%ff(x),%ff(x),%ff(x)]$
 
@@ -36,124 +46,163 @@ constant_list(1,-1);
 []$
 */
 
+/* Test 11 */
 constant_list(1,[2,3], '%ff);
 %ff(%ff(1,1,1),%ff(1,1,1))$
 
+/* Test 12 */
 constant_list(1,[1,1]);
 [[1]]$
 
+/* Test 13 */
 constant_list(1,[2,2]);
 [[1,1],[1,1]]$
 
+/* Test 14 */
 constant_list(a,[2,3,4]);
 [[[a,a,a,a],[a,a,a,a],[a,a,a,a]],[[a,a,a,a],[a,a,a,a],[a,a,a,a]]]$
 
+/* Test 15 */
 nest(f,x,3);
 f(f(f(x)))$
 
+/* Test 16 */
 nest_list(f,x,3);
 [f(x),f(f(x)),f(f(f(x)))]$
 
+/* Test 17 */
 /* should result be aex on one level or all ?  */
 is( nest(f,x,3,ot->ar) =  aex(f(f(f(x)))));
 true$
 
+/* Test 18 */
 nest(sqrt,100.0,100);
 1.0$
 
+/* Test 19 */
 /* automatic compiling of lambda. I guess this would run slowly with gcl. */
 nest(lambda([x],modedeclare(x,float),cos(x)),100.1,10^6);
 .7390851332151607$
 
+/* Test 20 */
 fold(f,x,[a,b,c]);
 f(f(f(x,a),b),c)$
 
+/* Test 21 */
 fold_list(f,x,[a,b,c]);
 [f(x,a),f(f(x,a),b),f(f(f(x,a),b),c)]$
 
+/* Test 22 */
 lrange(3);
 [1,2,3]$
 
+/* Test 23 */
 is(lrange(3,ot->ar)=<<1,2,3>>);
 true$
 
+/* Test 24 */
 is(lrange(1,3) = lrange(3));
 true$
 
+/* Test 25 */
 is(lrange(10) = reverse(lrange(10,1,-1)));
 true$
 
+/* Test 26 */
 lrange(0,10,2);
 [0,2,4,6,8,10]$
 
+/* Test 27 */
 lrange(x,x+4);
 [x,x+1,x+2,x+3,x+4]$
 
+/* Test 28 */
 lrange(x,x+4*a,a);
 [x,x+a,x+2*a,x+3*a,x+4*a]$
 
+/* Test 29 */
 lrange(6.0,1,-1);
 [6.0,5.0,4.0,3.0,2.0,1.0]$
 
+/* Test 30 */
 lrange(1/2,6);
 [1/2,3/2,5/2,7/2,9/2,11/2]$
 
+/* Test 31 */
 lrange(6,1,-2);
 [6,4,2]$
 
+/* Test 32 */
 lrange(6.0,1,-1);
 [6.0,5.0,4.0,3.0,2.0,1.0]$
 
+/* Test 33 */
 lrange(1.0b0,6);
 [1.0b0,2.0b0,3.0b0,4.0b0,5.0b0,6.0b0]$
 
+/* Test 34 */
 (errcatch(lrange()),error_code)$
 'args_too_few;
 
+/* Test 35 */
 (errcatch(lrange(1,2,3,4,5,6)),error_code)$
 'args_too_many;
 
+/* Test 36 */
 /* bug fix. */
 lex(lrange(2,5,2,ot->ar));
 [2,4]$
 
+/* Test 37 */
 tuples([x,y],3);
 [[x,x,x],[x,x,y],[x,y,x],[x,y,y],[y,x,x],[y,x,y],[y,y,x],[y,y,y]]$
 
+/* Test 38 */
 tuples(f(0,1),3);
 [f(0,0,0),f(0,0,1),f(0,1,0),f(0,1,1),f(1,0,0),f(1,0,1),f(1,1,0),f(1,1,1)]$
 
+/* Test 39 */
 tuples([ [0,1] , [x,y,z] ]);
 [[0,x],[0,y],[0,z],[1,x],[1,y],[1,z]]$
 
+/* Test 40 */
 take_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)));
 [-3,-10,-1]$
 
+/* Test 41 */
 select([1,2,3,4,5,6,7], lambda([x], is(x<3)));
 [1,2]$
 
+/* Test 42 */
 /* create aex with op (head) and args */
 ( e : aex( f(1,2) ) , aex_p(e) );
 true$
 
+/* Test 43 */
 ( nreverse( e ), aex_p(e) );
 true$
 
+/* Test 44 */
 lex(e);
 f(2,1)$
 
+/* Test 45 */
 iop( e );
 f$
 
+/* Test 46 */
 iop(lex(e));
 f$
 
+/* Test 47 */
 lex ( iargs( e ) );
 [2,1]$
 
+/* Test 48 */
 /* nreverse also works on lex */
 (kill(a), a:[1,2,3], a : nreverse(a) );
 [3,2,1]$
 
+/* Test 49 */
 (kill(x,a,e),0);
 0$

@@ -1,0 +1,7 @@
+/* to_poly_solve_extra.lisp */
+mext_package_record([
+ "number_of_spanning_trees",
+ "from_degree_sequence",
+ "relabel_graph_vertices"
+ ],
+ "discrete", "discrete_code.mac");
