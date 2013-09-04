@@ -1,6 +1,10 @@
 /* maxima script to print latex documentation for mext packages */
 
-load(mext);
+/*
+  Th
+*/
+
+load(mext_core);
 
 /*
    Some of these can be commented out. But because of dependencies, they

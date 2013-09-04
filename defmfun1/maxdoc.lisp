@@ -560,6 +560,7 @@ must be keyword,value pairs for the doc entry struct."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun print-doc-item (e)
+; (format t "PRINTING ITEM ~a~%" (entry-name e))
   (cond ((entry-p e)
          (print-doc-entry e))
         ((section-p e)
@@ -599,6 +600,7 @@ must be keyword,value pairs for the doc entry struct."
     (print-doc-section s)))
 
 (defun print-doc-entry (e)
+; (format t "PRINTING ITEM ~a~%" (entry-name e))
   (format t "~a" (format-doc-entry e)))
 
 (defun print-doc-entry-latex (e &optional (stream t))

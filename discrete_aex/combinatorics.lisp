@@ -158,6 +158,7 @@
 
 ;; testing using aex-get vs. directly using aref.
 ;; I see no speed difference with perm of length 5*10^6
+;; Hmmm some problem with doc
 (defmfun-ae ($inverse_permutation :doc) ((perm :ae-list))
   :desc ("Returns the inverse permutation of " :argdot "perm")
   (let* ((n (ilength perm))
@@ -172,9 +173,11 @@
           (setf (aref iperm-arr (1- (aref aperm-arr i))) (1+ i)))
     (defmfun-final-to-ae iperm)))
 
+
 (examples::clear-add-example "inverse_permutation" 
  '( :code ( "inverse_permutation([5,1,4,2,6,8,7,3,10,9])"
             "inverse_permutation(inverse_permutation([5,1,4,2,6,8,7,3,10,9]),ot->ml)")))
+
 
 (defmfun1 ($permutation_p :doc) (ain)
   (if ($ae_listp ain)
