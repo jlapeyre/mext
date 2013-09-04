@@ -676,7 +676,7 @@ refers to the head."
   :desc ( 
     "Note: it appears that the core maxima function " :emref "copy" " acheives the same "
     "result as " :mrefcomma "deep_copy" " so that the latter is redundant. It will probably be removed. "
-    :mref  "deep_copy 
+    :mref  "deep_copy"
     " returns a copy of expression " :arg "expr" " which may be of mixed lex/aex representation. "
     "An exact copy is made; that is, the representation is preserved at all levels. "
     :mref "deep_copy" " is similar to " :emrefcomma "copylist" " except that it can copy "
