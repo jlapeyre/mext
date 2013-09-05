@@ -16,14 +16,16 @@
 ;; Can't do this from maxima because of weird %solve alias problems
 (mext::add-to-dont-kill '$to_poly_solve)
 
-;; GJL -- Added the code defining and using *to-poly-temp-list*.
-;; Some temporary symbols still stay on props; need to track that down
-
 ($put '$to_poly 2 '$version)
 ($load '$polynomialp)
 
 (defmacro opapply (op args)
   `(simplify (cons (list ,op) ,args)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; GJL -- Added the code defining and using *to-poly-temp-list*.
+;; Some temporary symbols still stay on props; need to track that down
+;; See also changes in new-gen-temp
 
 ;; push vars creates by new-gentemp here
 (defvar *to-poly-temp-list* '() )
@@ -40,11 +42,12 @@
         (cond ((member k  `($complex $integer))
                (mfuncall '$remove v k))
               ((eq k '$natural_number)
-               (mfuncall '$remove v k)) ; need to do forget, but I have not seen these yet.
-              (t nil))
+               (mfuncall '$remove v k)) ; need to do forget,
+              (t nil))                  ; but I haven't encountered them yet.
         (unintern v)))
     (setf *to-poly-temp-list* nil)
     count))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; The next three functions convert max and min to abs functions.
 
