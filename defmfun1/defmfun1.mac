@@ -8,6 +8,7 @@ mext_provide(
   "arg-spec-definitions",
   "defmfun1",
   "maxdoc",
+  "maxdoc-markup-keys",
   "maxdoc-sections",
   "defmfun1-max",
   "examples",

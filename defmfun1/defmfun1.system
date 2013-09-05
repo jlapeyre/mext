@@ -19,6 +19,7 @@
     (:file "arg-spec-definitions")
     (:file "defmfun1")
     (:file "maxdoc")
+    (:file "maxdoc-markup-keys")
     (:file "maxdoc-sections")
     (:file "defmfun1-max")
     (:file "examples")
