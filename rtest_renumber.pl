@@ -113,6 +113,7 @@ my $Quiet = 0;
 my $Verbose = 0;
 my $Man = 0;
 my $Help = 0;
+my $Totalcount = 0;
 
 GetOptions ("quiet|q" => \$Quiet,
             "verbose|v" => \$Verbose,
@@ -151,6 +152,7 @@ sub rewrite_one_rtest {
     while (<$IH>) {
         if ( /\s*\/\*\s*Test\s*\d*\s*\*\/\s*/ ) {
             $count ++;
+            $Totalcount ++;
             $outstr .= "/* Test $count */\n";
         }
         else {
@@ -176,3 +178,4 @@ else {
 foreach my $rtest (@$files_to_use) {
     rewrite_one_rtest($rtest);
 }
+print "$Totalcount tests renumbered.\n" unless $Quiet;
