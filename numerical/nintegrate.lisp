@@ -93,24 +93,24 @@
     (append (apply 'maxima::mfuncall call-list) (list (maxima::make-mlist-simp call-form)))))
 
 (maxima::ddefun list-fp-singularities (expr lo hi)
-   "Try to return a Maxima list of floating point numbers representing the singularities between
-   `lo' and `hi' (excluding these endpoints) in `expr'. This, of course, can't be done in general.
-   This routine just calls `solve' and has some bugs. If no satisfying numbers are found, return `nil'."
-    (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1))))
-          (nroots))
-;      (format t "lo ~a,  hi ~a, ~a~%" lo hi (maxima::$sconcat roots))
-      (dolist (r (cdr roots))
-        (let ((n (third r)))
-          (when (maxima::$numberp n)
-            (let ((nn (maxima::$float n)))
-              (when (not
-                     (or (and (maxima::$numberp hi) (> 1e-10 (- hi nn)))
-                         (and (maxima::$numberp lo) (> 1e-10 (- nn lo)))))
-                (push (maxima::$float n) nroots))))))
-;      (format t "nroots ~a~%" nroots)
-      (if (consp nroots)
-          (maxima::mk-mlist (sort nroots  #'<))
-        nil)))
+ "Try to return a Maxima list of floating point numbers representing
+ the singularities between `lo' and `hi' (excluding these endpoints)
+ in `expr'. This, of course, can't be done in general.  This routine
+ just calls `solve' and has some bugs. If no satisfying numbers are
+ found, return `nil'."
+ (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1))))
+       (nroots))
+   (dolist (r (cdr roots))
+     (let ((n (third r)))
+       (when (maxima::$numberp n)
+         (let ((nn (maxima::$float n)))
+           (when (not
+                  (or (and (maxima::$numberp hi) (> 1e-10 (- hi nn)))
+                      (and (maxima::$numberp lo) (> 1e-10 (- nn lo)))))
+             (push (maxima::$float n) nroots))))))
+   (if (consp nroots)
+       (maxima::mk-mlist (sort nroots  #'<))
+     nil)))
 
 ;; To reiterate: this could use refactoring!
 (defun do-quad-pack (expr var lo hi singlist quad-ops)
@@ -165,16 +165,23 @@
 (defmfun1:set-mext-package "numerical")
 
 (defmfun1 ($nintegrate :doc) ( expr (varspec :list) &optional (singlist :list) &opt 
-          ($calls nil :bool) ($words t :bool) 
+          ($calls (:member '(nil t $short))) ($words t :bool) 
           ($info :bool t) ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number)
           ($epsrel 1d-8 :non-neg-number)) ; ($method "automatic" :string))
-  :desc ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
+ :desc 
+ ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
   :arg "varspec" " as ["  :argcomma "var" :argcomma "lo" :arg "hi" "]."
-  " Only one-dimensional integrals are implemented."
-  " " :mref "nintegrate" " automatically chooses and combines "
-  :emrefcomma "qags" :emrefcomma "qagp" " and " :emrefdot "qagi"
-  " Some support for complex numbers is implemented." " Some integrable singularities are found automatically."
-  " See the Maxima documentation for quadpack." )
+  " Only one-dimensional integrals are implemented. " :mref "nintegrate" 
+  " automatically chooses and combines " :emrefcomma "qags" :emrefcomma "qagp" 
+  " and " :emrefdot "qagi"  " Some support for complex numbers is implemented." 
+  " Some integrable singularities are found automatically. " :par ""
+  " If the option " :opt "call" " is true, then calls made to quadpack are "
+  " also returned in a list. If " :opt "call" " is " :varcomma "short" " then only the "
+  " name of the quadpack routine is included." :par ""
+  "By default, information on the integration is returned with the results. "
+  "If the option " :opt "info" " is false, then only the result of the integration "
+  "is returned." :par ""
+  "See the Maxima documentation for quadpack.")
   (let* ((vp (rest varspec)) (var (first vp))
          (lo (second vp)) (hi (third vp))
          (quad-ops (list (nint::mkopt $epsrel) (nint::mkopt $epsabs)
@@ -187,8 +194,13 @@
       (when (consp i-res)
         (setf (second i-res) `((mtimes) $%i ,(second i-res))))
       (let ((res (nint::combine-real-imag-results r-res i-res)))
-        (if (not $calls)
-            (setf res (butlast res)))
+        (cond ((eq $calls t) nil)
+              ((eq $calls '$short)
+               (let ((len (length res)))
+                 (setf (nth (- len 1) res)
+                       (mk-mlist (loop :for call :in (cdr (nth (- len 1) res)) :collect
+                                       (caar call))))))
+              (t (setf res (butlast res))))
         (cond ((consp res)
                (cond ($info
                        (when $words (setf (nth 4 res) (nth (nth 4 res) nint::*quad-error-codes*)))
