@@ -69,30 +69,96 @@
 
 (maxdoc:see-also-group '( "length0p" "cmplength" "length_eq" "length1p"))
 
-(defmfun1 ($type_of :doc) (e &optional verbose)
+(defun lisp-lisp-sym-to-max (s)
+ "This certainly exists somewhere in the maxima source."
+  (intern (concatenate 'string "$LISP_"
+                       (coerce (loop for char across (symbol-name s)
+                                     collect (if (eq char #\-) #\_ char)) 'string)) "MAXIMA"))
+
+(defun lisp-type-of (e)
+  (if (symbolp e)
+      '$symbol
+    (lisp-lisp-sym-to-max
+     (let ((et (type-of e)))
+            (if (consp et) (car et) et)))))
+
+(defun type-of-constant-p (e)
+  (let ((res 
+         (mfuncall '$errcatch 
+                   `($constantp ,e))))
+    (if (consp res) (cadr res) res)))
+
+(defun type-of-rat-p (e)
+  (let ((res 
+         (mfuncall '$errcatch 
+                   `($ratp ,e))))
+    (if (consp res) (cadr res) res)))
+
+(defun verbose-type-of (e type verbose-flag &optional already-lisp-type)
+  (if verbose-flag
+      (let ((res '()))
+        (when (type-of-constant-p e)
+          (push '$constant res))
+        (when (type-of-rat-p e)
+          (push '$mrat res))
+        (when (and (not ($stringp e)) (atom e))
+          (when (not already-lisp-type)
+            (let ((lt (lisp-type-of e)))
+              (when (not (eq lt '$symbol))
+                (push (lisp-type-of e) res)))))
+        (if res
+            (mk-mlist (cons type res))
+          type))
+    type))
+
+;;; The idea is give general maxima types, unless verbose is given,
+;;; in which case we give more.
+;;; verbose mixes both properties and representations, which should
+;;; perhaps be separate.
+;;; eg fixnum, aex, mrat, are representations,
+;;; 'constant is a property
+
+(defmfun1 ($type_of :doc) (e &opt (($verbose verbose) nil :bool))
  :desc ("Return something like the `type' of a maxima expression. This
- is a bit ill defined currently. " :mref "type_of" " uses the lisp function " :codedot "type-of")
-  (cond ( (aex-p e)
-          (if verbose (make-mlist-simp ($op e) 'aex)
-            ($aeop e)))
-#+(or sbcl ecl)       ( (stringp e) 'string)
-        ( (atom e)
-          (type-of e))
-        (($mapatom e)
-         (cond (($bfloatp e)
-                'bfloat)
-               (t
-                (let (( res ($op e)))
-                  (if (and verbose (not (eq (caar e) res)))
-                      (make-mlist-simp res (caar e))
-                    ($op e))))))
-        ( ($ratp e)
-                '$cre)
-        (t
-         (let (( res ($op e)))
-           (if (and verbose (not (eq (caar e) res)))
-               (make-mlist-simp res (caar e))
-             ($op e))))))
+ is a bit ill defined currently. " :mref "type_of" " uses the lisp function " :codedot "type-of"
+ :par ""
+ "If the option " :opt "verbose" " is true, then more information is returned.")
+ (cond ((aex-p e)
+        (if verbose (make-mlist-simp (aex-op e) '$aex)
+          (aex-op e)))
+       ; this misses ratp strings
+       #+(or sbcl ecl) ((stringp e)
+                        (verbose-type-of e '$string verbose))
+;        (cond ((symbolp e)
+;               (if (and ($constantp e) verbose)
+;                   (make-mlist-simp '$symbol '$constant)
+;                 '$symbol))
+;              (t (lisp-type-of e))))
+;        (cond ((symbolp e)
+;               (if (and ($constantp e) verbose)
+;                   (make-mlist-simp '$symbol '$constant)
+;                 '$symbol))
+;              (t (lisp-type-of e))))
+       (($mapatom e)
+        (cond (($bfloatp e) '$bfloat)
+              (($stringp e) (verbose-type-of e '$string verbose))
+              (($integerp e) (verbose-type-of e '$integer verbose))
+              ((atom e)
+               (verbose-type-of e (lisp-type-of e) verbose t))
+              (t
+               (let ((res ($op e)))
+                 (if (and verbose (not (eq (caar e) res)))
+                     (make-mlist-simp res (lisp-sym-to-max (caar e)))
+                   ($op e))))))
+       ((atom e)
+        (verbose-type-of e (lisp-type-of e) verbose))
+       (($ratp e)
+        '$mrat)
+       (t
+        (let (( res ($op e)))
+          (if (and verbose (not (eq (caar e) res)))
+              (make-mlist-simp res (lisp-sym-to-max (caar e)))
+            ($op e))))))
 
 (examples::clear-examples "type_of")
 (examples::add-example "type_of" 
