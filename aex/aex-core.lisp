@@ -28,6 +28,9 @@
   (arr *aex-core-dummy-vector* :type vector)
   (adjustable nil :type boolean))
 
+(defun aex-op (e)
+  (getop (car (aex-head e))))
+
 ;; Define a macro for defining functions that takes the options:
 ;; output representation and adjustability.
 ;; defmfun1-opt takes : name, list of opts, code to be inserted before body. the ignorable is to quiet
@@ -614,7 +617,7 @@ refers to the head."
 ;; same as redefinition of $op, which we have disabled
 (defmfun1 ($aeop :doc) ( (expr :non-atom) )
  :desc (  "op function for aex. returns op if " :arg "e" " is not an aex.")
-  (if-aex expr (getop (car (aex-head expr)))
+  (if-aex expr (aex-op expr)
             ($part expr 0)))
 
 ;; used only in iargs, which is used in rtests

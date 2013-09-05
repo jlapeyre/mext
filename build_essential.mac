@@ -1,6 +1,7 @@
 /*
   This is for testing changes to more-or-less essential parts of mext/defmfun1.
   So only a few packages are built.
+  It is getting big. tpsolve requires grobner.
 */
 
 load(mext);
@@ -21,8 +22,8 @@ build_several (package_list) :=
 
 /* build_several([  "maxdoc" ]); */
 
-build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "test_defmfun1", "aex",
-                "lists_aex", "discrete_aex", "numerical", "alt_eigen",
+build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "test_defmfun1", "runtime", "aex",
+                "lists_aex", "discrete_aex", "numerical", "alt_eigen", "grobner_mext",
                 "tpsolve" ]);
 
 /* build_several([ "quicklisp", "store" ]); */

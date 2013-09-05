@@ -31,4 +31,6 @@
   :source-pathname "rtests"
   :components
     ((:file "rtest_afuncs")
-     (:file "rtest_aex")))
+     (:file "rtest_aex")
+     (:file "rtest_type_of")))
+

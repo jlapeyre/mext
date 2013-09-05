@@ -113,8 +113,9 @@
      nil)))
 
 ;; To reiterate: this could use refactoring!
-(defun do-quad-pack (expr var lo hi singlist quad-ops)
-  (when (not singlist)
+(defun do-quad-pack (expr var lo hi singlist quad-ops more-opts &aux sing)
+  (setf sing (first more-opts))
+  (when (and sing (not singlist))
     (setf singlist (list-fp-singularities expr lo hi)))
   (cond ((and singlist (> (length singlist) 1))
          (cond ((and (eq 'maxima::$minf lo) (not (eq 'maxima::$inf hi)))
@@ -165,32 +166,43 @@
 (defmfun1:set-mext-package "numerical")
 
 (defmfun1 ($nintegrate :doc) ( expr (varspec :list) &optional (singlist :list) &opt 
+          ($sing :bool t)
           ($calls (:member '(nil t $short))) ($words t :bool) 
           ($info :bool t) ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number)
-          ($epsrel 1d-8 :non-neg-number)) ; ($method "automatic" :string))
+          ($epsrel 1d-8 :non-neg-number)
+          ) ; ($method "automatic" :string)) only doing automatic for now.
  :desc 
  ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
   :arg "varspec" " as ["  :argcomma "var" :argcomma "lo" :arg "hi" "]."
   " Only one-dimensional integrals are implemented. " :mref "nintegrate" 
   " automatically chooses and combines " :emrefcomma "qags" :emrefcomma "qagp" 
   " and " :emrefdot "qagi"  " Some support for complex numbers is implemented." 
-  " Some integrable singularities are found automatically. " :par ""
+  " Some integrable singularities are found automatically. "
+  :par ""
   " If the option " :opt "call" " is true, then calls made to quadpack are "
   " also returned in a list. If " :opt "call" " is " :varcomma "short" " then only the "
-  " name of the quadpack routine is included." :par ""
+  " name of the quadpack routine is included."
+  :par ""
   "By default, information on the integration is returned with the results. "
   "If the option " :opt "info" " is false, then only the result of the integration "
-  "is returned." :par ""
+  "is returned." 
+  :par ""
+  "If the option " :opt "sing" " is false, then " :mref "nintegrate" " will not search "
+  "for internal singularities, but user supplied singularities will still be used."
+  :par ""
+  "This function is not well tested and may give incorrect results."
+  :par ""
   "See the Maxima documentation for quadpack.")
   (let* ((vp (rest varspec)) (var (first vp))
          (lo (second vp)) (hi (third vp))
          (quad-ops (list (nint::mkopt $epsrel) (nint::mkopt $epsabs)
                          (nint::mkopt2 $limit $subint)))
+         (more-opts (list $sing))
          (r-expr ($realpart expr))
          (i-expr ($imagpart expr)))
     (echeck-arg $nintegrate :or-symbol-subvar var)
-    (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi singlist quad-ops)))
-          (i-res (if (eq 0 i-expr) nil (nint::do-quad-pack i-expr var lo hi singlist quad-ops))))
+    (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi singlist quad-ops more-opts)))
+          (i-res (if (eq 0 i-expr) nil (nint::do-quad-pack i-expr var lo hi singlist quad-ops more-opts))))
       (when (consp i-res)
         (setf (second i-res) `((mtimes) $%i ,(second i-res))))
       (let ((res (nint::combine-real-imag-results r-res i-res)))

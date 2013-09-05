@@ -516,7 +516,8 @@
   "Returns a list of all elements of " :arg "expr" 
   " for which " :arg "test" " is true. " :arg "expr"
   " may have any op. If " :arg "n" " is supplied, then at most " :arg "n"
-  " elements are examined.")
+  " elements are examined. " :mref "select" " is much faster than "
+  :emrefcomma "sublist" " but may be less generally applicable.")
   (declare (fixnum n))
   (option-compile-lambda test)
   (defmfun-final-to-ae

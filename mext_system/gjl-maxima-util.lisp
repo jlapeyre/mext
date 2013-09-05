@@ -2,6 +2,13 @@
 ;(mext:mext-optimize)
 (use-package :gjl.lisp-util)
 
+(defun lisp-sym-to-max (s)
+ "This certainly exists somewhere in the maxima source."
+  (intern (concatenate 'string "$"
+                       (coerce (loop for char across (symbol-name s)
+                                     collect (if (eq char #\-) #\_ char)) 'string)) "MAXIMA"))
+; (symbol-name s)) "MAXIMA"))
+
 ;; maybe allow string to fall through.
 (defun sym-to-string (s)
   (maybe-invert-string-case (format nil "~s" s)))

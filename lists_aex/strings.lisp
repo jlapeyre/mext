@@ -4,6 +4,8 @@
 (max-doc::set-cur-sec 'max-doc::strings-fandv)
 (defmfun1:set-file-and-package "strings.lisp" "lists_aex")
 
+;; This can be moved elsewhere
+;; I don't know why this did not work as a defmfun1
 (defmspec $with_output_to_string (arg)
   "Copied from $with_stdout."
   (eval
@@ -43,8 +45,8 @@ will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
       :protocol "with_output_to_string(<expr_1>, <expr_2>, ...)"
       :see-also ("with_stdout")
       :contents
- ("Evaluates " :argcomma "expr_1" :argcomma "expr_2" :argcomma "expr_3" :dots " and writes any output
-  thus generated to a string, which is returned.")))
+ ("Evaluates " :argcomma "expr_1" :argcomma "expr_2" :argcomma "expr_3" :dots ""
+  " and writes any output generated to a string, which is returned.")))
 
 (examples::clear-examples "with_output_to_string")
 (examples::add-example "with_output_to_string" 
@@ -114,7 +116,3 @@ will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
                        '( :code " string_drop(\"abracadabra\",1)")
                        '( :code " string_drop(\"abracadabra\",-1)")
                        '( :code " string_drop(\"abracadabra\",[2,10])"))
-
-
-
-

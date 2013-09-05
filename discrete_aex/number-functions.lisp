@@ -67,10 +67,16 @@
 (max-doc:see-also "integer_digits" '("from_digits" "integer_string"))
 
 (max-doc:implementation "integer_digits"
- '( "gcl is much faster than the others. " :code "integer_digits(2^(10^6))" ": typical times for lisps:
- ccl-1.7-r15184M = 65s, sbcl-1.0.52.0.debian = 1.5s,  allegro-8.2 = 23s, Mma-3.0 = 5s,
- gcl-2.6.7 = 0.11s, Mma-8 = 0.04s.
- The base is limited to 36 only because we call write-to-string."))
+ '( 
+   "gcl is much faster than the others. " :code "integer_digits(2^(10^6))" ": typical times for lisps:"
+   :par ""
+   "ecl-12.12.1 0.09s, sbcl-1.1.11 0.5s, clisp-2.49 9s, ccl-1.9 62s, "
+   "cmucl-20d error, gcl-2.6.(7,8,9) 0.09s, allegro-8.2 = 23s, "
+   "Mma-3.0 = 5s, Mma-8 = 0.04s."))
+   
+; ccl-1.7-r15184M = 65s, sbcl-1.0.52.0.debian = 1.5s,
+; gcl-2.6.7 = 0.11s, Mma-8 = 0.04s.
+; The base is limited to 36 only because we call write-to-string."))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -29,4 +29,3 @@ attributes('dog);
 /* Nothing has any attributes set yet ! */
 attributes_find('dog);
 []$
-

@@ -7,7 +7,7 @@ require(discrete_aex);
 kill(all);
 */
 
-our_test_list : [mext_system,mext_defmfun1,test_defmfun1,aex,
+our_test_list : [mext_system,mext_defmfun1,test_defmfun1,runtime,aex,
               lists_aex,discrete_aex,alt_eigen,tpsolve];
 
 /*

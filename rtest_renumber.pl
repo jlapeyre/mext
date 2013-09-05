@@ -89,6 +89,7 @@ John Lapeyre
 my @Rtests = qw (
  aex/rtests/rtest_aex.mac
  aex/rtests/rtest_afuncs.mac
+ aex/rtests/rtest_type_of.mac
  alt_eigen/rtests/rtest_alt_eigen.mac
  discrete_aex/rtests/rtest_discrete_aex.mac
  defmfun1/rtests/rtest_defmfun1.mac
@@ -103,6 +104,7 @@ my @Rtests = qw (
  test_defmfun1/rtests/rtest_test_defmfun1.mac
  tpsolve/rtests/rtest_to_poly.mac
  tpsolve/rtests/rtest_to_poly_solve.mac
+ runtime/rtests/rtest_runtime.mac
  store/rtests/rtest_store.mac
 );
 
