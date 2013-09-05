@@ -34,11 +34,11 @@ set_do_one () {
 
 #maximas="maxima-5.31.0-sbcl-1.1.11 maxima-5.31.0-gcl-2.6.8 maxima-5.31.0-ccl-1.9 maxima-5.31.0-clisp-2.49 maxima-5.31.0-cmucl-20d maxima-5.31.0-ecl-12.12.1"
 #maximas="ccmaxima"
-#maximas="smaxima"
+maximas="smaxima"
 #maximas="maxima-5.31.0-gcl-2.6.7"
 
 #maximas="smaxima smaxima-28 smaxima-31 gmaxima gmaxima-5.28.0-2.6.7 clmaxima emaxima cmumaxima ccmaxima ccmaxima-30"
-maximas="smaxima"
+#maximas="smaxima"
 #maximas="gmaxima-5.31-2.6.8"
 
 set_do_all

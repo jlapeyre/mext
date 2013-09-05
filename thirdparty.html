@@ -2900,33 +2900,35 @@ The second argument <I>n</I> must be a non-negative integer.</P><P><B>See also</
 length_eq is implemented with defmfun1, which slows things down a bit. So be cautious using it in a tight loop.</P><!--TOC subsection Function: type_of-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc161">13.6</A>  Function: type_of<A NAME="sec:type_of"></A></H3><!--SEC END --><P>
 <A NAME="type_of"></A>
-<B>type_of</B>(<I>e</I> :optional <I>verbose</I>)</P><P>mext package: aex</P><P>
+<B>type_of</B>(<I>e</I>)</P><P>mext package: aex</P><P>
 <B>Description</B>
-Return something like the ‘type’ of a maxima expression. This is a bit ill defined currently. <A HREF="#type_of"><TT>type_of</TT></A> uses the lisp function <CODE>type-of</CODE>.</P><P><B>Arguments</B>
-<TT>type_of</TT> requires either one or two arguments.</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+Return something like the ‘type’ of a maxima expression. This is a bit ill defined currently. <A HREF="#type_of"><TT>type_of</TT></A> uses the lisp function <CODE>type-of</CODE>. </P><P>If the option <I>verbose</I> is true, then more information is returned.</P><P><B>Arguments</B>
+<TT>type_of</TT> requires one argument.</P><P><B>Options</B>
+<TT>type_of</TT> takes options with default values: <TT>verbose-&gt;false</TT>.
+</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
 <TR><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD><TD><TABLE BORDER=0 CELLPADDING="1" CELLSPACING=0><TR><TD><PRE CLASS="verbatim">(%i1) type_of(1);
-(%o1) ?bit
+(%o1) integer
 (%i1) type_of(1.0);
-(%o1) ?double\-float
+(%o1) lisp_double_float
 (%i2) type_of(1.0b0);
-(%o2) ?bfloat
+(%o2) bfloat
 (%i3) type_of(1/3);
 (%o3) /
 (%i4) type_of("dog");
-(%o4) ?string
+(%o4) string
 (%i5) type_of([1,2,3]);
 (%o5) [
 (%i6) type_of(aex([1,2,3]));
 (%o6) [
 (%i7) type_of(%e);
-(%o7) ?symbol
+(%o7) symbol
 (%i8) type_of(%i);
-(%o8) ?symbol
+(%o8) symbol
 (%i9) type_of(%i+1);
 (%o9) +
 </PRE></TD></TR>
