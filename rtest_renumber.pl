@@ -41,8 +41,9 @@ backed up with a suffix `.back'
 
 More generally, exactly the lines that are renumbered are those that
 consist of: zero or more spaces, the string "/*", zero or more spaces,
-the string "Test", zero or more spaces, the string "*/", zero or more
-spaces, newline.
+the string "Test", zero or more spaces, a sequence of zero or more
+digits, zero or more spaces, the string "*/", zero or more
+spaces, newline. All other lines are reproduced unaltered.
 
 For example, any of the following lines will be renumbered
 
