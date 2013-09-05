@@ -291,7 +291,8 @@
           (format-doc-text (list :var x) *format-codes-default*)))
                       (call-desc-args cd))))
   (format nil "    ~a(~{~a~^, ~})~%  ~a~%~%" (call-desc-name cd) args
-          (wrap-text :text (format-doc-text (call-desc-text cd) *format-codes-default*) :width 80 :indent *indent3* ) )))
+          (wrap-text :text (format-doc-text (call-desc-text cd) *format-codes-default*) 
+                     :width 80 :indent *indent3* ) )))
 
 (defun format-call-desc-list (cd-list)
   (format nil "~{~a~}" (nreverse (mapcar #'format-call-desc cd-list))))
