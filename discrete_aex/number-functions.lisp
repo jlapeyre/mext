@@ -312,8 +312,8 @@
 
 (defmfun1::set-match-form '( $aliquot_sum $divisor_function $divisor_summatory ))
 
-(max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" "divisor_summatory" "perfect_p" "abundant_p"))
-
+(max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" 
+                           "divisor_summatory" "perfect_p" "abundant_p"))
 
 #|
 (defmfun1 ($sum_of_divisor_sigma :doc) ((x :non-neg-number) )
