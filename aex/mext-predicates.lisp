@@ -94,8 +94,8 @@
                    `($ratp ,e))))
     (if (consp res) (cadr res) res)))
 
-(defun verbose-type-of (e type verbose-flag &optional already-lisp-type)
-  (if verbose-flag
+(defun info-type-of (e type info-flag &optional already-lisp-type)
+  (if info-flag
       (let ((res '()))
         (when (type-of-constant-p e)
           (push '$constant res))
@@ -111,52 +111,52 @@
           type))
     type))
 
-;;; The idea is give general maxima types, unless verbose is given,
+;;; The idea is give general maxima types, unless info is given,
 ;;; in which case we give more.
-;;; verbose mixes both properties and representations, which should
+;;; info mixes both properties and representations, which should
 ;;; perhaps be separate.
 ;;; eg fixnum, aex, mrat, are representations,
 ;;; 'constant is a property
 
-(defmfun1 ($type_of :doc) (e &opt (($verbose verbose) nil :bool))
+(defmfun1 ($type_of :doc) (e &opt (($info info) nil :bool))
  :desc ("Return something like the `type' of a maxima expression. This
  is a bit ill defined currently. " :mref "type_of" " uses the lisp function " :codedot "type-of"
  :par ""
- "If the option " :opt "verbose" " is true, then more information is returned.")
+ "If the option " :opt "info" " is true, then more information is returned.")
  (cond ((aex-p e)
-        (if verbose (make-mlist-simp (aex-op e) '$aex)
+        (if info (make-mlist-simp (aex-op e) '$aex)
           (aex-op e)))
        ; this misses ratp strings
        #+(or sbcl ecl) ((stringp e)
-                        (verbose-type-of e '$string verbose))
+                        (info-type-of e '$string info))
 ;        (cond ((symbolp e)
-;               (if (and ($constantp e) verbose)
+;               (if (and ($constantp e) info)
 ;                   (make-mlist-simp '$symbol '$constant)
 ;                 '$symbol))
 ;              (t (lisp-type-of e))))
 ;        (cond ((symbolp e)
-;               (if (and ($constantp e) verbose)
+;               (if (and ($constantp e) info)
 ;                   (make-mlist-simp '$symbol '$constant)
 ;                 '$symbol))
 ;              (t (lisp-type-of e))))
        (($mapatom e)
         (cond (($bfloatp e) '$bfloat)
-              ((mfuncall '$stringp e) (verbose-type-of e '$string verbose))
-              (($integerp e) (verbose-type-of e '$integer verbose))
+              ((mfuncall '$stringp e) (info-type-of e '$string info))
+              (($integerp e) (info-type-of e '$integer info))
               ((atom e)
-               (verbose-type-of e (lisp-type-of e) verbose t))
+               (info-type-of e (lisp-type-of e) info t))
               (t
                (let ((res ($op e)))
-                 (if (and verbose (not (eq (caar e) res)))
+                 (if (and info (not (eq (caar e) res)))
                      (make-mlist-simp res (lisp-sym-to-max (caar e)))
                    ($op e))))))
        ((atom e)
-        (verbose-type-of e (lisp-type-of e) verbose))
+        (info-type-of e (lisp-type-of e) info))
        (($ratp e)
         '$mrat)
        (t
         (let (( res ($op e)))
-          (if (and verbose (not (eq (caar e) res)))
+          (if (and info (not (eq (caar e) res)))
               (make-mlist-simp res (lisp-sym-to-max (caar e)))
             ($op e))))))
 
