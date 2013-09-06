@@ -5,4 +5,5 @@ mext_provide("lists_aex",
      "partition-list",
      "take",
      "list",
-     "strings"]);
+     "strings",
+     "see-also-groups"]);
