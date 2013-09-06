@@ -213,13 +213,14 @@
   "Check if the number of levels and heads agree. If there is
    only one atomic head, make a repeated list with an element for each level."
   (cond ((maxima::$listp head) ; listp should fail here, not qualified!, qualified it anyway
-         (if (= (1+ (length spec)) (length head)) (cdr head)
-           (maxima::merror1 "constant_list: number of heads not equal to number of levels.")))
+         (if (= (1+ (length spec)) (length head)) (list t (reverse (cdr head)))
+           '(nil nil)))
+;           (maxima::merror1 "constant_list: number of heads not equal to number of levels.")))
         (t 
-         (let ( (res (list head)) )
+         (let ((res (list head)))
            (dotimes (i (1- (length spec)))
              (setf res (cons head res)))
-           res))))
+           (list t (nreverse res))))))
 
 (defun max-list::const-list0 (c n head)
  (cons (list head 'maxima::simp) (make-list n :initial-element c)))
@@ -247,7 +248,7 @@
    is used as the op, rather than `list', at every level.")))
 |#
                        
-(defmfun-ae ($constant_list :doc) (c (spec :pos-int-or-listof) &optional (head mlist))
+(defmfun-ae ($constant_list :doc :match) (c (spec :pos-int-or-listof) &optional (head mlist))
   :desc 
   ("Returns a list of " :math "n" " elements, each of which is "
    "an independent copy of expr. "
@@ -257,15 +258,20 @@
    list at each level are independent. If a third argument is given, then it
    is used as the op, rather than `list', at every level.")
   (setf spec (max-list::canon-depth-spec spec))
-  (setf head (reverse (max-list::canon-head-spec spec head)))
+;  (setf head (reverse (max-list::canon-head-spec spec head))) ; easier to work in reverse order
   (setf spec (reverse spec))
-  (let ((lev
-         (if (or (symbolp c) (numberp c))
-             (max-list::const-list0 c (pop spec) (pop head))
-             c)))
-    (dolist (n spec)
-      (setf lev (max-list::const-list1 lev n (pop head))))
-    (if (eq o-type '$ar) ($faex lev) lev)))
+  (dbind (head-err head1)
+         (max-list::canon-head-spec spec head)
+         (unless head-err
+           (defmfun1-error-return '$nheads_neq_nlevels $constant_list 
+                   "Number of heads not equal to number of levels." :match))
+         (let ((lev
+                (if (or (symbolp c) (numberp c))
+                    (max-list::const-list0 c (pop spec) (pop head1))
+                  c)))
+           (dolist (n spec)
+             (setf lev (max-list::const-list1 lev n (pop head1))))
+           (if (eq o-type '$ar) ($faex lev) lev))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
