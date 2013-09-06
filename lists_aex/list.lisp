@@ -6,7 +6,11 @@
 (max-doc:set-cur-sec 'max-doc::lists-fandv)
 (defmfun1:set-file-and-package "list.lisp" "lists_aex")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; lrange
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun num-range (imin imax incr )
   "Range with numeric elements."
@@ -130,10 +134,14 @@
                          :vars "[x,a]"
                          :code ("lrange(x,x+4)" "lrange(x,x+4*a,a)")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; tuples
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; efficiency could be improved, but it's not bad
-
 (defun max-list::tuples-lists ( o-type-p o-type  lists)
   (let* ((n (length lists))
          (b (make-array n :element-type 'fixnum))
@@ -204,7 +212,11 @@
                          :vars "[f]"
                          :code "tuples(f(0,1),3)" ))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; constant_list
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun max-list::canon-depth-spec (spec)
   (if (atom spec) (list spec) (rest spec)))
@@ -215,7 +227,6 @@
   (cond ((maxima::$listp head) ; listp should fail here, not qualified!, qualified it anyway
          (if (= (1+ (length spec)) (length head)) (list t (reverse (cdr head)))
            '(nil nil)))
-;           (maxima::merror1 "constant_list: number of heads not equal to number of levels.")))
         (t 
          (let ((res (list head)))
            (dotimes (i (1- (length spec)))
@@ -232,21 +243,6 @@
     (dotimes (i n)
       (setf res (cons (copy-tree c)  res)))
     (cons (list head 'maxima::simp) res)))
-
-#|
-(add-doc-entry1 :e '( :name "constant_list" :type "Function"
-                       :protocol "constant_list(expr,list)"
-                       :protocol-list ("constant_list" ("EXPR" "LIST") nil nil)
-                       :see-also ("makelist" "lrange" "table")
-                       :contents
- ("Returns a list of " :math "n" " elements, each of which is
-  an independent copy of expr. "
-  :code "constant_list(expr,[n,m,..])" " returns a nested list of dimensions "
-  :argcomma "n" :argcomma "m" :dots ""
-  " where each leaf is an independent copy of expr and the copies of each
-   list at each level are independent. If a third argument is given, then it
-   is used as the op, rather than `list', at every level.")))
-|#
                        
 (defmfun-ae ($constant_list :doc :match) (c (spec :pos-int-or-listof) &optional (head mlist))
   :desc 
@@ -256,7 +252,8 @@
    :argcomma "n" :argcomma "m" :dots ""
    " where each leaf is an independent copy of expr and the copies of each
    list at each level are independent. If a third argument is given, then it
-   is used as the op, rather than `list', at every level.")
+   is used as the op, rather than `list', at every level. The third argument
+   may also be a list of heads to apply, one at each leve.")
   (setf spec (max-list::canon-depth-spec spec))
 ;  (setf head (reverse (max-list::canon-head-spec spec head))) ; easier to work in reverse order
   (setf spec (reverse spec))
@@ -274,7 +271,11 @@
            (if (eq o-type '$ar) ($faex lev) lev))))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; nest_list, nest_while
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-doc-entry '( :name "nest" :type "Function"
                        :protocol "nest(f,x,n)"
@@ -335,7 +336,11 @@
 (max-doc::implementation "nest_while" "This should be modified to allow applying test to more than just the most recent
     result.")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; take_while
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro max-list::take-while (call-type)
   `(let* ((head (car expr))
@@ -357,6 +362,11 @@
 (examples::add-example "take_while" '( :pretext "Take elements as long as they are negative."
                                       :code "take_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)))"))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; drop_while
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro max-list::drop-while (call-type)
   `(let* ((head (car expr))
@@ -377,7 +387,11 @@
 (examples:clear-add-example "drop_while" '( :pretext "Drop elements as long as they are negative."
                                       :code "drop_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)))"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; length_while
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro max-list::length-while (call-type)
   `(let ((expr (cdr expr)))
@@ -396,7 +410,12 @@
 (examples:clear-add-example "length_while" 
      '(:code "length_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)))"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; every1
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro max-list::every1 (call-type)
   `(let ((expr (cdr expr)))
@@ -413,7 +432,11 @@
      " Otherwise, false is returned. This is like " :code "every" " but allow a test that "
      "takes only one argument. For some inputs, every1 is much faster than every.")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; imap
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro max-list::imap-call ( call-type)
 ;;  (when (eq 'direct (car call-type)) (setf call-type nil))
@@ -458,10 +481,13 @@
                          :vars "[a]"
                          :code "(a : lrange(1.0,4,ot->ar),
           imap(lambda([x],modedeclare(x,float),sqrt(x)),a))"))
-
 ;;                         :code ("a : lrange(1.0,10)" "imap(lambda([x],modedeclare(x,float),sqrt(x)),[1.0,2.0])")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; mapall
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun max-list::do-map-all (f expr)
   (if ($mapatom expr)
@@ -481,7 +507,12 @@
   (let (($distribute_over nil))      ; this seems to disable distributing without 
     (max-list::do-map-all f expr)))  ; changing global flag, but the rtest is not working.
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; fold
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 (add-doc-entry '( :name "fold" :type "Function"
@@ -505,7 +536,11 @@
     (if (length1p v) (if ar-p ($aex x) x)
         (if (functionp f) (max-list::fold-call funcall) (max-list::fold-call mfuncall)))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; fold_list
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-doc-entry1 :e '( :name "fold_list" :type "Function"
                        :protocol "fold_list(f,x,v)"
@@ -525,6 +560,13 @@
   (setf v (cdr v))
   (if (length1p v) x
       (if (functionp f) (max-list::fold-list-call funcall) (max-list::fold-list-call mfuncall))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; select
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (defmacro max-list::select-call (call-type)
   `(let* ((head (car expr))
@@ -561,8 +603,13 @@
                        '( :pretext "Select elements less than 3"
                           :code "select([1,2,3,4,5,6,7], lambda([x], is(x<3)))"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; aelistp
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Does this really belong here ?
 (add-doc-entry '("aelistp"
                :contents ( "Returns true if " :arg "e" " is a list, either ml or ar representation.")))
 (defmfun $aelistp (e)
@@ -579,7 +626,11 @@
                           :code ("aelistp([1,2,3])" "aelistp( aex([1,2,3]))" "aelistp(3)" "aelistp(x)"
                                  "x:lrange(10),aelistp(x)" "aelistp(%%f(y))" "aelistp( aex( %%f(y) ))")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; nreverse
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun1  ($nreverse :doc)((e :non-atom))
   :desc ("Destructively reverse the arguments of expression " :argdot "e" 
@@ -597,12 +648,17 @@
     :vars "[a,b]"         
     :code ("a : lrange(10), b : nreverse(a)" "a : lrange(10,ot->ar), b : nreverse(a)")))
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; count
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; This does not recognize lambda functions unless compile is t
 (defmfun1 ($count :doc) ( (expr :non-atom-ae-list) item &opt ($compile t :bool))
-  :desc ("Counts the number of items in " :arg "expr" " matching " :argdot "item" 
-  " If " :arg "item" " is a lambda function then " :arg "compile" " must be true.")
+  :desc 
+  ("Counts the number of items in " :arg "expr" " matching " :argdot "item" 
+   " If " :arg "item" " is a lambda function then " :arg "compile" " must be true.")
   (setf expr (if (aex-p expr) (aex-arr expr)
                (cdr expr)))
   (option-compile-lambda item)
