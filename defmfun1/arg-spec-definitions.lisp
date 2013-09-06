@@ -27,6 +27,11 @@
 (defvar *arg-spec-definitions* `(
                      (:function "a function"
                                 (not (numberp e))) ; a bit fuzzy what this would mean
+                     ; a bit more precise about what we mean.
+                     ; borrowed from badfunchk
+                     (:map-function "a map-able function" 
+                         (not (or (numberp e) 
+                                  (member e '(t nil maxima::$%e maxima::$%pi maxima::$%i) :test #'eq))))
                      (:string  "a string" (stringp e))
                      (:string-or-listof ("a string" "a list of strings")
                                          (or (stringp e)

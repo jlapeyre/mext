@@ -3,7 +3,7 @@
 (max-doc:set-cur-sec 'max-doc::aex-fandv)
 (defmfun1:set-file-and-package "ifunctions.lisp" "aex")
 
-(defmfun-ae ($iapply :doc)  ( (fun :function)  (arg :non-atom :ensure-lex))
+(defmfun-ae ($iapply :doc)  ( (fun :map-function)  (arg :non-atom :ensure-lex))
   :desc ( :mref "iapply" " is like maxima " :emref "apply" ", but it supports aex lists. "
   :arg "arg" " is converted to an ml if it is an aex expression. By default, output is ml 
  regardless of the input representation.")
