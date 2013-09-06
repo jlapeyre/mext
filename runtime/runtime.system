@@ -1,0 +1,25 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing runtime
+
+(in-package :mext-maxima)
+
+(create-distribution "runtime"
+  :loader "load-runtime"
+  :install-only "runtime-rtests")
+
+(mk:defsystem runtime
+  :source-extension "lisp"
+  :components
+   ((:file "timing")))
+
+;; neither compile nor load when building
+(mk:defsystem load-runtime
+  :source-extension "mac"
+  :components
+   ((:file "runtime")))
+  
+(mk:defsystem runtime-rtests
+              :source-extension "mac"
+              :source-pathname "rtests"
+              :components
+              ((:file "rtest_runtime")))
