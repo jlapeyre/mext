@@ -45,11 +45,10 @@
 ;;;    #+sbcl (defmacro our-aref (&rest args) `(aref ,@args))
 ;;;#-sbcl (defmacro our-aref (&rest args) `(svref ,@args))
 
-;; fixed bug by removing 'n' from first fixnum declaration.
-;; if incr is not 1
-;; then division is causing n to take rational value and floor does
-;; not fix this.
-;; Tried a fix, which is apparantly working using floor with 2 arguments
+;; fixed bug by removing 'n' from first fixnum declaration.  if incr
+;; is not 1 then division is causing n to take rational value and
+;; floor does not fix this.  Tried a fix, which is apparantly working
+;; using floor with 2 arguments
 (defmacro def-num-range-ar-type ( name type )
   (dbind (dec1 dec2)
          (if (eq type 'fixnum) '( ((declare (fixnum imin imax incr n))) ((declare (fixnum val))))
@@ -92,34 +91,6 @@
                '( "lrange" ("start" "stop" "incr")
          ("returns a list of expressions from " :arg "start" " through " :arg "stop" " in steps of " :argdot "incr")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun canon-depth-spec (spec)
-  (if (atom spec) (list spec) (rest spec)))
-
-(defun canon-head-spec (spec head)
-  "Check if the number of levels and heads agree. If there is
-   only one atomic head, make a repeated list with an element for each level."
-  (cond ( ($listp head)
-          (if (= (1+ (length spec)) (length head)) (cdr head)
-            (maxima::merror1 "constant_list: number of heads not equal to number of levels.")))
-        (t 
-         (let ( (res (list head)) )
-           (dotimes (i (1- (length spec)))
-             (setf res (cons head res)))
-           res))))
-
-
-(defun const-list0 (c n head)
- (cons (list head 'maxima::simp) (make-list n :initial-element c)))
-
-(defun const-list1 (c n head)
-  (declare (fixnum n))
-  (let ( (res (list (if (listp c) (copy-tree c) c) )))
-    (setf n (1- n))
-    (dotimes (i n)
-      (setf res (cons (copy-tree c)  res)))
-    (cons (list head 'maxima::simp) res)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (in-package :maxima)
@@ -214,10 +185,11 @@
       (progn (pop list-or-lists)
              (max-list::tuples-lists o-type-p o-type (reverse list-or-lists)))))
 
-(max-doc::add-call-desc '( "tuples" ("list" "n")
-      ("Return a list of all lists of length " :arg "n" " whose elements are chosen from " :arg "list" "."))
-      '( "tuples" (("list" "list1" "list2" "..."))
-       ("Return a list of all lists whose " :math "i" "_th element is chosen from " :arg "listi" ".")))
+(max-doc::add-call-desc 
+ '( "tuples" ("list" "n")
+    ("Return a list of all lists of length " :arg "n" " whose elements are chosen from " :arg "list" "."))
+ '( "tuples" (("list" "list1" "list2" "..."))
+    ("Return a list of all lists whose " :math "i" "_th element is chosen from " :arg "listi" ".")))
 
 (examples::clear-examples "tuples")
 
@@ -234,6 +206,33 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun max-list::canon-depth-spec (spec)
+  (if (atom spec) (list spec) (rest spec)))
+
+(defun max-list::canon-head-spec (spec head)
+  "Check if the number of levels and heads agree. If there is
+   only one atomic head, make a repeated list with an element for each level."
+  (cond ((maxima::$listp head) ; listp should fail here, not qualified!, qualified it anyway
+         (if (= (1+ (length spec)) (length head)) (cdr head)
+           (maxima::merror1 "constant_list: number of heads not equal to number of levels.")))
+        (t 
+         (let ( (res (list head)) )
+           (dotimes (i (1- (length spec)))
+             (setf res (cons head res)))
+           res))))
+
+(defun max-list::const-list0 (c n head)
+ (cons (list head 'maxima::simp) (make-list n :initial-element c)))
+
+(defun max-list::const-list1 (c n head)
+  (declare (fixnum n))
+  (let ( (res (list (if (listp c) (copy-tree c) c) )))
+    (setf n (1- n))
+    (dotimes (i n)
+      (setf res (cons (copy-tree c)  res)))
+    (cons (list head 'maxima::simp) res)))
+
+#|
 (add-doc-entry1 :e '( :name "constant_list" :type "Function"
                        :protocol "constant_list(expr,list)"
                        :protocol-list ("constant_list" ("EXPR" "LIST") nil nil)
@@ -246,8 +245,17 @@
   " where each leaf is an independent copy of expr and the copies of each
    list at each level are independent. If a third argument is given, then it
    is used as the op, rather than `list', at every level.")))
+|#
                        
-(defmfun-ae $constant_list (c (spec :pos-int-or-listof) &optional (head mlist))
+(defmfun-ae ($constant_list :doc) (c (spec :pos-int-or-listof) &optional (head mlist))
+  :desc 
+  ("Returns a list of " :math "n" " elements, each of which is "
+   "an independent copy of expr. "
+   :code "constant_list(expr,[n,m,..])" " returns a nested list of dimensions "
+   :argcomma "n" :argcomma "m" :dots ""
+   " where each leaf is an independent copy of expr and the copies of each
+   list at each level are independent. If a third argument is given, then it
+   is used as the op, rather than `list', at every level.")
   (setf spec (max-list::canon-depth-spec spec))
   (setf head (reverse (max-list::canon-head-spec spec head)))
   (setf spec (reverse spec))
@@ -256,7 +264,6 @@
              (max-list::const-list0 c (pop spec) (pop head))
              c)))
     (dolist (n spec)
-;      (format t "level length ~a~%" n)
       (setf lev (max-list::const-list1 lev n (pop head))))
     (if (eq o-type '$ar) ($faex lev) lev)))
 
@@ -275,7 +282,7 @@
           (setf res (,call-type f res)))
         res)))
   
-(defmfun-ae $nest ((f :function) (x :ensure-lex) (n :non-neg-int) &opt ($compile t :bool))
+(defmfun-ae $nest ((f :map-function) (x :ensure-lex) (n :non-neg-int) &opt ($compile t :bool))
   (option-compile-lambda f)
   (defmfun-final-to-ae
       (if (functionp f) (max-list::nest-call funcall) (max-list::nest-call mfuncall))))
@@ -447,6 +454,26 @@
           imap(lambda([x],modedeclare(x,float),sqrt(x)),a))"))
 
 ;;                         :code ("a : lrange(1.0,10)" "imap(lambda([x],modedeclare(x,float),sqrt(x)),[1.0,2.0])")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun max-list::do-map-all (f expr)
+  (if ($mapatom expr)
+      (mfuncall f expr)
+    (mfuncall f
+              (cons (car expr)
+                    (loop :for subexpr :in (cdr expr) :collect
+                          (max-list::do-map-all f subexpr))))))
+
+;; Can't map on ops too. This works in Mma, but not here.
+;; There may be a way to encode mapping onto ops in the car of
+;; the maxima expression, but I don't know what its worth.
+;; ... I bet there is already some support for this.
+;; Note that this is different than fullmap.
+(defmfun1 ($mapall :doc) ((f :map-function) expr)
+  :desc ("Apply " :arg "f" " at all levels of " :argdot "expr")
+  (let (($distribute_over nil))      ; this seems to disable distributing without 
+    (max-list::do-map-all f expr)))  ; changing global flag, but the rtest is not working.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
