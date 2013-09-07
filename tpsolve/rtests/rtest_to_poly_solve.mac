@@ -21,9 +21,12 @@ Removed for mext -- GJL
 
 /* Test 2 */
 /* Select this to clean temporary variables. */
+
 (clean_poly_solve([e]) := (to_poly_clean(), apply('to_poly_solve, e)), 0);
 0$
 
+
+/* Select this to disable cleaning temporary variables. */
 /*
 (clean_poly_solve([e]) := (apply('to_poly_solve, e)), 0);
 0$
@@ -1677,6 +1680,6 @@ true$
 
 /* GJL Sep-3-2013 -- Edited slightly to reset more things. */
 /* Test 336 */
-(reset(algexact), forget(z,complex), forget(facts(a)),forget(facts(b)),to_poly_clean(),
+(reset(algexact), forget(z,complex), forget(facts(a)),forget(facts(b)),
   remvalue(sol,%time,%start,eq,eqn1,eqn2,eqn3),0);
 0$

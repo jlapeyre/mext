@@ -1,5 +1,6 @@
 (in-package :max-list)
-(mext:mext-optimize)
+(declaim (optimize (compilation-speed 0) (speed 3) (space 0) (safety 0) #-gcl (debug 0)))
+;(mext:mext-optimize)
 
 (use-package :max-doc)
 
@@ -410,7 +411,6 @@
 (examples:clear-add-example "length_while" 
      '(:code "length_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)))"))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; every1
@@ -489,25 +489,82 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; This is slow. mapcar would be faster
+;; (defun max-list::do-map-all-old (f expr)
+;;   (if ($mapatom expr)
+;;       (mfuncall f expr)
+;;     (mfuncall f
+;;               (cons (car expr)
+;;                     (loop :for subexpr :in (cdr expr) :collect
+;;                           (max-list::do-map-all-old f subexpr))))))
+
+#|
+;; this if funcer
+(defmfun funcer (fn args)
+  (cond ((member fn '(mplus mtimes mexpt mnctimes) :test #'eq)
+	 (simplify (cons (ncons fn) args)))
+	((or (member fn '(outermap2 constfun) :test #'eq)
+	     (and $transrun (symbolp fn) (get fn 'translated)
+		  (not (mget fn 'local-fun)) (fboundp fn)))
+	 (apply fn (mapcar #'simplify args)))
+	(t (mapply1 fn (mapcar #'simplify args) fn
+		    nil	;; try to get more info to pass
+		    ))))
+
+|#
+
+(defun max-list::do-map-all-1 (f expr)
+  (if (mapatom expr) ; mapatom instead of $mapatom does not help
+      (funcer f (list expr))
+    (funcer f
+            (list (cons (car expr)
+                  (mapcar #'(lambda (x) (max-list::do-map-all f x)) (cdr expr)))))))
+
+
+;; Using funcer instead of mfuncall is much faster.
+;; simple constructing the list, eg for f(a) is lightening
+;; fast, but it fails to apply real functions, such as expand.
+;; This is now faster by a bit than scanmap, but it will fail
+;; on mrats and so forth.
 (defun max-list::do-map-all (f expr)
-  (if ($mapatom expr)
-      (mfuncall f expr)
-    (mfuncall f
-              (cons (car expr)
-                    (loop :for subexpr :in (cdr expr) :collect
-                          (max-list::do-map-all f subexpr))))))
+  (if (mapatom expr) ; mapatom instead of $mapatom does not help
+      (funcer f (list expr))
+    (funcer f
+            (list (cons (car expr)
+                  (mapcar #'(lambda (x) (max-list::do-map-all f x)) (cdr expr)))))))
+
+;; We should be able to check the function f just once to find out what it is
+;; and then either do the fast or slow version!
+;; Look at the code in funcer to figure this out!
+(defun max-list::do-map-all-fast (f expr)
+  (if (mapatom expr)
+      (cons (list f) (list expr))
+    (cons (list f)    
+          (list (cons (car expr)
+                      (mapcar #'(lambda (x) (max-list::do-map-all-fast f x)) (cdr expr)))))))
 
 ;; Can't map on ops too. This works in Mma, but not here.
 ;; There may be a way to encode mapping onto ops in the car of
 ;; the maxima expression, but I don't know what its worth.
 ;; ... I bet there is already some support for this.
 ;; Note that this is different than fullmap.
-(defmfun1 ($mapall :doc) ((f :map-function) expr)
-  :desc ("Apply " :arg "f" " at all levels of " :argdot "expr")
-  (let (($distribute_over nil))      ; this seems to disable distributing without 
-    (max-list::do-map-all f expr)))  ; changing global flag, but the rtest is not working.
+; distribute_over nil  seems to disable distributing without 
+; changing global flag, but the rtest is not working.
 
-
+;; Disable this until it is improved.
+#|
+(defmfun1 ($mapall :doc) ((f :map-function) expr &opt ($fast nil :bool))
+  :desc ("Apply " :arg "f" " at all levels of " :argdot "expr"
+         " It appears that this is the same as " :emrefdot "scanmap"
+         :par ""
+         " If the option " :opt "fast" " is true, then " :arg "f" " is not "
+         "called, but is rather applied as an op. In this case, " :mref "mapall"
+         " runs much faster.")
+  (let (($distribute_over nil))
+    (if $fast 
+        (max-list::do-map-all-fast f expr)
+      (max-list::do-map-all f expr))))
+|#
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; fold
