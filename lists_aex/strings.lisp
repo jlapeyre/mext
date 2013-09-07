@@ -5,15 +5,17 @@
 (defmfun1:set-file-and-package "strings.lisp" "lists_aex")
 
 ;; This can be moved elsewhere
-;; I don't know why this did not work as a defmfun1
-(defmspec $with_output_to_string (arg)
-  "Copied from $with_stdout."
+(defmfun1:set-hold-all '$with_output_to_string)
+(defmfun1 ($with_output_to_string :doc) (&rest exprs)
+  :desc
+  ("Evaluates " :argcomma "expr_1" " " :argcomma "expr_2" " " :argcomma "expr_3" :dots ""
+   " and writes any output generated to a string, which is returned.")
   (eval
     `(with-output-to-string (*standard-output*)
-       (let ((body ',(cdr arg)) result)
+       (let ((body ',exprs) result)
          (dolist (v body)
            (setq result (meval* v)))
-          result))))
+         result))))
 
 #|  Don't know how this works.
 
@@ -39,6 +41,8 @@ will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
 
 |#
 
+#|
+
 (add-doc-entry1 :section 'max-doc::strings-fandv
  :e '(
       :name "with_output_to_string"
@@ -47,6 +51,8 @@ will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
       :contents
  ("Evaluates " :argcomma "expr_1" :argcomma "expr_2" :argcomma "expr_3" :dots ""
   " and writes any output generated to a string, which is returned.")))
+
+|#
 
 (examples::clear-examples "with_output_to_string")
 (examples::add-example "with_output_to_string" 
