@@ -523,7 +523,6 @@ in a  mext package.")
    simply by getting the hash keys from *arg-check-func-table* ")
 
 ;; These are extra directives for arguments.
-;; e.g :threads, which is not yet implemented.
 (defparameter *arg-directive-keywords* '( :thread ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -599,7 +598,6 @@ in a  mext package.")
   The third list contains the pre-processing specs.
 
   The fourth list contains arg-directives, i.e. extra arg directives, such as :threads.
-  This is not yet used for anything.
 
   The fifth list contains the supplied-p args.
 

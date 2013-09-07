@@ -57,6 +57,25 @@
    ,@(loop for n in (get-hash-keys supplied-p-hash) collect `,(gethash n supplied-p-hash))
    ,@(when rest (cdr rest)))) ; binding for &rest arg
 
+;; ... That's all there is to it ...
+;; could look at efficiency:
+;; For instance return before we enter the block (defmspec, defmfun)
+(defun defmfun1-write-threading (name args arg-directives)
+  (let ((arg-d (getf arg-directives :req )) (thread-forms '()) (i 0) )
+    (dolist (req-arg-d arg-d)
+      (when (member :thread req-arg-d)
+        (push `(let ((ith-arg (nth ,i ,args)))
+                 (when ($listp ith-arg)
+                   (let ((newargs (copy-list ,args)))
+                     (return-from ,name 
+                       (cons '(mlist) (loop :for ith-arg-1 :in (cdr ith-arg) :collect
+                         (progn                                            
+                         (setf (nth ,i newargs) ith-arg-1)                                    
+                         (apply ',name newargs))))))))
+              thread-forms))
+      (incf i))
+    (nreverse thread-forms)))
+
 ;; name -- name of function (a symbol)
 ;; args -- a symbol (via gensym) that contains a list of *all* args(parameters) passed at run time
 ;; reqo -- a list of the names of each of the required and optional arguments (each wrapped in a list!)
@@ -67,33 +86,32 @@
 ;; have-match -- flag for :match specified with function name in defmfun1 definition.
 ;; count-args -- a flag specifying whether the function is to verify the number of args.
 (defun defmfun1-write-assignments (name args reqo restarg nargs 
-                                        supplied-p-hash reqo-spec pp-spec-h arg-directives
+                                        supplied-p-hash reqo-spec pp-spec-h
                                         have-match count-args)
  "Write code to set required and &optional args to values supplied by call."
- (let ((reqo-directives (append (getf arg-directives :req) (getf arg-directives :rest)))
-       (collected-args nil))
   `(tagbody
      ,@(do* ((reqo1 reqo (cdr reqo1))
              (targ (caar reqo) (caar reqo1))
-             (reqo-dir reqo-directives (cdr reqo-dir))
              (res))
             ((null reqo1)  (nreverse res))
             (push `(if (endp ,restarg) (go out)) res)
             (when count-args (push `(incf ,nargs) res))
             (push `(setf ,targ (pop ,restarg)) res)
-            (let ((rqd (car reqo-dir)))
-              (when (member :thread rqd)
-;                (format t "~a ")
-                nil))
-;                (format t "*** Got thread directive ~a~%" rqd)))
-            (push targ collected-args)
             (when (gethash targ supplied-p-hash) (push `(setf ,(gethash targ supplied-p-hash) t) res))
             (dolist (tst (gethash targ reqo-spec))
               (push (defmfun1::check-and-error tst targ name args have-match) res))
             (dolist (pp (gethash targ pp-spec-h))
                (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
-   out)))
+   out))
 
+;; name -- name of function (a symbol)
+;; args -- a symbol (via gensym) that contains a list of *all* args(parameters) passed at run time
+;; opt-args -- a symbol ... list of opt-args passed at run time
+;;   each element is a dyad: (optname val) 
+;; opt -- a list of option names (symbols) each wrapped in a list
+;; supplied-p-hash -- hash
+;; reqo-spec -- hash
+;; have-match -- flag for :match specified with function name in defmfun1 definition.
 (defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec have-match)
   "Write code to set option variables to supplied values."
   (when opt `((dolist (ospec ,opt-args) 
@@ -179,7 +197,7 @@
          (setf doc-string (list (car body))) (setf body (cdr body)))
       (when (eq :desc (car body))
         (setf doc-content (second body)) (setf body (cddr body)))
-      (loop while (and (listp (car body)) (eq 'declare (caar body))) do
+      (loop :while (and (listp (car body)) (eq 'declare (caar body))) :do
            (push (car body) declare-form) (setf body (cdr body)))
        (when (defmfun1::are-some-args-held name) (setf defun-type 'defmspec))
        `(progn
@@ -207,17 +225,19 @@
                                       `(defmfun1::collect-opt-args-slow ,args)))
                       `(let ((,restarg ,args)))) ; filter options from other args
                (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
-                   ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
-                   ,(defmfun1-write-assignments name args reqo restarg nargs ; assign required args
-                      supplied-p-hash reqo-spec pp-spec-h arg-directives have-match count-args)
-                   ,@(when rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
-                   ,(when count-args
-                    `(when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match)))
-                   ,@(when (and (null rest) count-args)
-                       `((if ,restarg ,(defmfun1::narg-error-or-message 
-                                         name args restarg nargs nreq nreqo rest have-match))))
-                   ,@(defmfun1-write-rest-assignments name args rest reqo-spec have-match)
-                   ,@body)))))))))
+                ,@(defmfun1-write-threading name args arg-directives)
+        ; write-opt-assignments first so have-match in effect during write-assignments
+                ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
+                ,(defmfun1-write-assignments name args reqo restarg nargs ; assign required args
+                   supplied-p-hash reqo-spec pp-spec-h have-match count-args)
+                ,@(when rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
+                ,(when count-args
+                   `(when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match)))
+                ,@(when (and (null rest) count-args)
+                    `((if ,restarg ,(defmfun1::narg-error-or-message 
+                                      name args restarg nargs nreq nreqo rest have-match))))
+                ,@(defmfun1-write-rest-assignments name args rest reqo-spec have-match)
+                ,@body)))))))))
 
 ;; Not using this
 ;; (defmacro dcheck-arg (spec-name arg)
@@ -352,13 +372,13 @@
    `(progn 
       (defmfun1 (,(intern (sconcat "$SET_" max-attribute)) :doc) ((names :or-string-symbol-or-listof :ensure-list))
         :desc ,set-doc-str
-        (loop for name in names do
+        (loop :for name :in names :do
               (maxima-symbol-to-string name)
               (,(find-symbol (sconcat "SET-" attribute) 'defmfun1) name))
         '$done)
       (defmfun1 (,(intern (sconcat "$UNSET_" max-attribute)) :doc) ((names :or-string-symbol-or-listof :ensure-list))
         :desc ,unset-doc-str
-        (loop for name in names do
+        (loop :for name :in names :do
               (maxima-symbol-to-string name)
               (,(find-symbol (sconcat "UNSET-" attribute) 'defmfun1) name))
         '$done))))
