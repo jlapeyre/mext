@@ -1418,8 +1418,8 @@ Examples:
 (%o1) [z^2=6*z+3,[matrix([2],[z-1])]]
 
    Substituting the two roots of `z^2=6*z+3' in to the column vector 
-   `matrix([2],[z-1])' gives the two eigenvectors. To find explicit expressions 
-   for these eigenvectors, set <maxdegree> to 2; thus
+   `matrix([2],[z-1])' gives the two eigenvectors. To find explicit 
+   expressions for these eigenvectors, set <maxdegree> to 2; thus
 
 (%i2) alt_eigen(matrix([1,2],[4,5]),'var=z, 'maxdegree=2);
 (%o2) [z=2*sqrt(3)+3,[matrix([2],[2*sqrt(3)+2])],z=3-2*sqrt(3),
@@ -1434,8 +1434,9 @@ Examples:
      matrix([0],[0],[0],[-1],[0],[1]), matrix([0],[0],[1],[0],[-1],[0]),
      matrix([1],[0],[-1],[0],[0],[0])],z=33,[matrix([-1],[-1],[-1],[-1],[-1],[-1])]]
 
-   There are four eigenvectors with eigenvalue 0. To find an orthogonal basis 
-   for this eigenspace, set the optional variable <orthogonal> to true; thus
+   There are four eigenvectors with eigenvalue 0. To find an 
+   orthogonal basis for this eigenspace, set the optional variable 
+   <orthogonal> to true; thus
 
 (%i5) alt_eigen(m,'var=z, 'orthogonal=true);
 (%o5) [z=-3,[matrix([-1],[1],[-1],[1],[-1],[1])],z=0,[matrix([1],[0],[-1/2],[0],
@@ -1584,7 +1585,8 @@ Arguments:
 
 Examples:
 
-   Save a graph to a file. This cannot be done with the command <save>.
+   Save a graph to a file. This cannot be done with the command 
+   <save>.
 
 (%i1) load(graphs)$
 (%i2) c : petersen_graph();
@@ -1899,8 +1901,8 @@ Examples:
 (%i5) lrange(6,ot->ar);
 (%o5) <[1,2,3,4,5,6]>
 
-   The type of the first element and increment determine the type of the 
-   elements.
+   The type of the first element and increment determine the type of 
+   the elements.
 
 (%i1) lrange(1.0,6);
 (%o1) [1.0,2.0,3.0,4.0,5.0,6.0]
@@ -1994,8 +1996,8 @@ Arguments:
 
 Examples:
 
-   Be careful not to use <a> after applying nreverse. Do assign the result to 
-   another variable.
+   Be careful not to use <a> after applying nreverse. Do assign the 
+   result to another variable.
 
 (%i1) a : lrange(10), b : nreverse(a);
 (%o1) [10,9,8,7,6,5,4,3,2,1]
@@ -2191,7 +2193,8 @@ Examples:
 (%i1) take([1,2,3,4,5,6,7,8,9,10],[2,10,2]);
 (%o1) [2,4,6,8,10]
 
-   Take the last through first elements of a list counting backwards by one.
+   Take the last through first elements of a list counting backwards 
+   by one.
 
 (%i1) take([a,b,c,d],[-1,1,-1]);
 (%o1) [d,c,b,a]
@@ -2201,8 +2204,8 @@ Examples:
 (%i1) take([a,b,c,d],'reverse);
 (%o1) [d,c,b,a]
 
-   Take the second through third elements at the first level and the last 2 
-   elements at the second level.
+   Take the second through third elements at the first level and the 
+   last 2 elements at the second level.
 
 (%i1) take([[a,b,c], [d,e,f], [g,h,i]], [2,3],-2);
 (%o1) [[e,f],[h,i]]
@@ -2335,8 +2338,8 @@ Examples:
 (%i1) imap(lambda([x],aliquot_sequence(x,100)),[6,28,496,8128]);
 (%o1) [[6],[28],[496],[8128]]
 
-   Aspiring numbers are those which are not perfect, but terminate with a 
-   repeating perfect number.
+   Aspiring numbers are those which are not perfect, but terminate 
+   with a repeating perfect number.
 
 (%i1) imap(lambda([x],aliquot_sequence(x,100)),[25, 95, 119, 143, 417, 445, 565, 608, 650, 652, 675, 685]);
 (%o1) [[25,6],[95,25,6],[119,25,6],[143,25,6],[417,143,25,6],[445,95,25,6],[565,119,25,6],[608,652,496],[650,652,496],[652,496],[675,565,119,25,6],[685,143,25,6]]
@@ -3074,22 +3077,22 @@ Examples:
 (%i1) nintegrate(sin(sin(x)), [x,0,2]);
 (%o1) [1.24706, 1.38451e-14, 21, no problems]
 
-   Integrate over a semi-infinite interval with an internal singularity. The 
-   location of the singularity is supplied. This cannot be done with a single 
-   call to quadpack routines.
+   Integrate over a semi-infinite interval with an internal 
+   singularity. The location of the singularity is supplied. This 
+   cannot be done with a single call to quadpack routines.
 
 (%i2) nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf], [1] );
 (%o2) [1.72821, 1.87197e-10, 660, no problems]
 
-   If a list of possible singular points is not supplied, then they will be 
-   searched for using `solve'.
+   If a list of possible singular points is not supplied, then they 
+   will be searched for using `solve'.
 
 (%i3) nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf]);
 (%o3) [1.72821, 1.87197e-10, 660, no problems]
 
-   In some cases, complex numbers are treated correctly. (The simplifier 
-   replaces `cos(%i*x)' with `cosh(x)' before the routine is called. So this 
-   works with `quad_qags' as well.)
+   In some cases, complex numbers are treated correctly. (The 
+   simplifier replaces `cos(%i*x)' with `cosh(x)' before the routine 
+   is called. So this works with `quad_qags' as well.)
 
 (%i4) nintegrate( cos(%i*x), [x,0,1]);
 (%o4) [1.1752, 1.30474e-14, 21, no problems]
@@ -3097,8 +3100,8 @@ Examples:
 (%i5) sinh(1.0);
 (%o5) 1.1752
 
-   But, the quadpack routines cannot handle the complex numbers in this 
-   example.
+   But, the quadpack routines cannot handle the complex numbers in 
+   this example.
 
 (%i6) nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf]);
 (%o6) [.424436 %i + .690194, 4.988325e-9, 300, no problems]
@@ -3118,7 +3121,8 @@ Examples:
 (%i9) nintegrate(1/(1+x^2), [x, 0, inf], subint -> 2, epsrel -> 1e-10);
 (%o9) [1.5708, 2.57779e-10, 45, too many sub-intervals]
 
-   This integral is not handled well. Giving limits of `minf' and `inf' fails.
+   This integral is not handled well. Giving limits of `minf' and 
+   `inf' fails.
 
 (%i10) nintegrate(exp(%i*x*x),[x,-200,200],subint->10000);
 (%o10) [1.25170114 %i + 1.25804682, 2.507635982e-8, 760578, no problems]
@@ -3136,7 +3140,8 @@ Examples:
  [quad_qagi(%e^-x/sqrt(abs(x-1)),x,1.0,inf,epsrel = 1.e-8,epsabs = 0,limit = 200),
   quad_qagp(%e^-x/sqrt(abs(x-1)),x,0,1.0,[],epsrel = 1.e-8,epsabs = 0,limit = 200)]]
 
-   Here we must supply the roots of `sin(x)' within the range of integration.
+   Here we must supply the roots of `sin(x)' within the range of 
+   integration.
 
 (%i14) nintegrate(1/(sqrt(sin(x))),[x,0,10], [%pi,2*%pi,3*%pi]);
 (%o14) [10.48823021716687 - 6.769465521725385 %i, 9.597496930524585e-8, 1596, no problems]
@@ -3288,8 +3293,8 @@ Examples:
 (%i9) type_of(%i+1);
 (%o9) +
 
-   type_of returns the type of the lisp struct corresponding to a maxima 
-   object.
+   type_of returns the type of the lisp struct corresponding to a 
+   maxima object.
 
 (%i1) load(graphs)$
 (%i2) type_of(new_graph());
@@ -4076,6 +4081,8 @@ Description:
    majority of the maxima system does not understand 
    array-representation, so conversion back to list-representation at 
    may be necessary.
+
+-----------------------------------------------------
 
 LocalWords:  mext maxima defmfun aex contrib perl linux gcl sbcl ccl
 LocalWords:  clisp cmucl ecl subdirectory rtests subfolders distname

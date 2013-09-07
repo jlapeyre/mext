@@ -144,7 +144,7 @@
                 (t (merror (intl:gettext "max-doc:format-code-text: Unrecognized key ~a") key))))))))
 
 (mk-format-code-text format-code-text
-  (format nil "~a~%~%" (wrap-text :text (max-doc:format-doc-text val) :width 80 :indent 3))
+  (format nil "~a~%~%" (wrap-text :text (max-doc:format-doc-text val) :width 70 :indent 3))
   (format nil "~a~%" (format-input-output-list-num val n)))
 
 (mk-format-code-text format-code-text-latex
@@ -189,7 +189,7 @@
     (merror (intl:gettext "max-doc::format-example: Not an example ~a") e))
   (format nil "~a" (concatenate 'string 
                     (form-ent example-pretext "~%~a~%~%"
-                              (wrap-text :text (max-doc:format-doc-text x) :width 80 :indent 3 ))
+                              (wrap-text :text (max-doc:format-doc-text x) :width 70 :indent 3 ))
                     (cond ((example-code-res e)
                            (format-input-output-list-dead (example-code-res e)))
                           ((example-code e)
@@ -212,7 +212,7 @@
   (format nil "~a" (concatenate 'string 
         (if (example-pretext e)
             (form-ent example-pretext "~%~a~%"  ; "~%\\end{Verbatim}~%~a~%\\begin{Verbatim}[frame=single]~%"
-                      (wrap-text :text (max-doc:format-doc-text-latex x) :width 80 :indent 3 ))
+                      (wrap-text :text (max-doc:format-doc-text-latex x) :width 70 :indent 3 ))
           "")
         (if (example-code-text e)
             (format-code-text-latex (example-code-text e)) "")
