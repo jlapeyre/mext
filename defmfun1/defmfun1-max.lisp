@@ -36,10 +36,18 @@
 ;; For efficiency, these should perhaps only be optionally saved, if requested.
 ;; Or better make a macro that only writes them if needed.
 ;; Also, we don't need all three of these. It could be rewritten.
+;;
+;; name -- the function name (symbol)
+;; nargs -- a symbol (via gensym) that will count the number of non-option arguments
+;; args -- a symbol (via gensym) that contains a list of *all* args(parameters) passed at run time
+;; all-args -- a list of all argument names for this defmfun1 function (except &rest args)
+;; supplied-p-hash -- 
+;; rest -- a list containing the name of the rest arg (or nil)
+;; count-args -- a flag specifying whether the function is to verify the number of args.
 (defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest count-args)
   `(,@(when count-args `((,nargs 0))) ; count args passed when calling
    (defmfun1-func-name ',name) ; save this name for echeck-arg macro below. Wasteful as most funcs never use it.
-   (defmfun1-func-call (cons (list ',name) ,args))
+   (defmfun1-func-call (cons (list ',name) ,args)) ; the input form
    (defmfun1-func-call-args ,args)
    ,@(loop for n in all-args collect ; write default bindings for req and &optional
            (if (null (car n))
@@ -49,8 +57,18 @@
    ,@(loop for n in (get-hash-keys supplied-p-hash) collect `,(gethash n supplied-p-hash))
    ,@(when rest (cdr rest)))) ; binding for &rest arg
 
+;; name -- name of function (a symbol)
+;; args -- a symbol (via gensym) that contains a list of *all* args(parameters) passed at run time
+;; reqo -- a list of the names of each of the required and optional arguments (each wrapped in a list!)
+;; nargs -- a symbol (via gensym) that will count the number of non-option arguments
+;; supplied-p-hash -- hash
+;; reqo-spec -- hash
+;; pp-spec -- hash
+;; have-match -- flag for :match specified with function name in defmfun1 definition.
+;; count-args -- a flag specifying whether the function is to verify the number of args.
 (defun defmfun1-write-assignments (name args reqo restarg nargs 
-                                        supplied-p-hash reqo-spec pp-spec-h have-match count-args)
+                                        supplied-p-hash reqo-spec pp-spec-h arg-directives
+                                        have-match count-args)
  "Write code to set required and &optional args to values supplied by call."
   `(tagbody
      ,@(do* ((reqo1 reqo (cdr reqo1))
@@ -130,7 +148,7 @@
     (setf have-match t)
     (setf args (append args `(&opt (($match match-opt) nil match-supplied-p) ))))
   (when (not (member :no-nargs directives)) (setf count-args t))
-  (dbind (arg-list arg-specs pp-specs supplied-p-hash arg-directives) (defmfun1::group-and-parse-args name args)
+  (dbind (arg-list arg-specs pp-specs arg-directives supplied-p-hash) (defmfun1::group-and-parse-args name args)
    (dbind (req optional aux rest opt) (defmfun1::rem-keys-arg-list arg-list)
     (let* ((args (gensym "args-"))
            (restarg (gensym "restarg-")) ; Initialize to non-option arguments,
@@ -181,8 +199,8 @@
                       `(let ((,restarg ,args)))) ; filter options from other args
                (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
                    ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
-                   ,(defmfun1-write-assignments name args reqo restarg nargs 
-                      supplied-p-hash reqo-spec pp-spec-h have-match count-args)
+                   ,(defmfun1-write-assignments name args reqo restarg nargs ; assign required args
+                      supplied-p-hash reqo-spec pp-spec-h arg-directives have-match count-args)
                    ,@(when rest `((setf ,(caadr rest) ,restarg))) ; remaining args go to &rest if it was specified
                    ,(when count-args
                     `(when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match)))

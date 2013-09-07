@@ -267,7 +267,7 @@ in a  mext package.")
   (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
          (force-match-code (write-force-match-code have-match))
          (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',fname ,args ,@force-match-code))
-         (sa `(,sa1 (return-from ,fname (cons (list ',fname) ,args)))))
+         (sa `(,sa1 (return-from ,fname (cons (list ',fname) ,args))))) ; construct and return input form.
     (if (gethash test *arg-check-preprocess-table*)
         `(let ((res ,fc))
            (if (not (first res))
@@ -583,6 +583,8 @@ in a  mext package.")
       (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_unknown_directive
         name (format nil "Unknown directive ~a." (maxima::sym-to-string d))))))
 
+;; A good way to understand this function is to trace it and load
+;; a defmfun1 function with no body.
 (maxima::ddefun parse-args (name arglist)
  "At macro expansion time of defmfun1, this function is called and
   returns five lists constructed from arglist.
@@ -596,13 +598,16 @@ in a  mext package.")
 
   The third list contains the pre-processing specs.
 
-  The fourth list contains the supplied-p args.
+  The fourth list contains arg-directives, i.e. extra arg directives, such as :threads.
+  This is not yet used for anything.
 
-  The fifth list contains arg-directives, i.e. extra arg directives, such as :threads."
+  The fifth list contains the supplied-p args.
 
-  (let ( (arglist1) (arg-specs) (pp-specs) (supplied-p-hash (make-hash-table)))
+  "
+
+  (let ( (arglist1) (arg-specs) (pp-specs) (supplied-p-hash (make-hash-table)) (all-arg-directives))
     (dolist (argt *arg-type-list*)
-      (let ((argt1) (argt-spec) (pp-spec) )
+      (let ((argt1) (argt-spec) (pp-spec) (all-arg-directives-1))
         (dolist (arg (getf arglist argt)) ; arg is complete specification of a single argument
           (when (keyword-p (first arg))
             (parse-args-err 'maxima::$defmfun1_malformed_argspec name 
@@ -620,7 +625,7 @@ in a  mext package.")
                                                           (not (or (member x *arg-spec-keywords*)
                                                                (and (listp x) (keyword-p (first x))
                                                                     (member (first x) *arg-spec-keywords*))))))  arg)))
-               (arg-directives (remove-if #'(lambda(x) (not (member x *arg-directive-keywords*))) arg))
+               (arg-directives (cons (car arg) (remove-if #'(lambda(x) (not (member x *arg-directive-keywords*))) arg)))
                (wppspecs (cons (car arg) (remove-if #'(lambda(x) (not (member x *pp-spec-types*))) arg))))
             (let ((kres (find-if #'(lambda (e) (keyword-p e)) nospecs)))
               (when kres
@@ -634,13 +639,15 @@ in a  mext package.")
             (push (if (length1p nospecs) nospecs (list (first nospecs) `(quote ,(second nospecs))) ) argt1)
             (when (length-eq nospecs 3) (setf (gethash (first nospecs) supplied-p-hash) (third nospecs)))
             (push wspecs argt-spec)
+            (push arg-directives all-arg-directives-1)
             (push wppspecs pp-spec)))
       (setf (getf arg-specs argt) (nreverse argt-spec))
       (setf (getf pp-specs argt) (nreverse pp-spec))
+      (setf (getf all-arg-directives argt) (nreverse all-arg-directives-1))
       (let ( (v (getf *arg-type-param-spec* argt)))
         (setf (getf arglist1 argt) (if v (if argt1 (cons v (nreverse argt1)) nil)
                                      (nreverse argt1))))))
-    (list arglist1 arg-specs pp-specs supplied-p-hash arg-directives)))
+    (list arglist1 arg-specs pp-specs all-arg-directives supplied-p-hash)))
 
 (defun rem-keys-arg-list (arg-list)
   (mapcar #'(lambda (x) (getf arg-list x)) defmfun1::*arg-type-list*))
