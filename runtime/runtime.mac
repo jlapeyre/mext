@@ -1,3 +1,4 @@
 require("maxdoc");
 mext_provide("runtime",
-  [ "timing" ]);
+  [ "runtime" ]);
+

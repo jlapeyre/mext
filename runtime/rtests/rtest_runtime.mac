@@ -25,3 +25,15 @@ timing(1,print->true);
 /* Test 7 */
 numberp(timing(1,result->false));
 true$
+
+/* Test 8 */
+with_output_to_string();
+""$
+
+/* Test 9 */
+with_output_to_string(1);
+""$
+
+/* Test 10 */
+is(with_output_to_string(print(1)) = printf(false,"~a ~%",1));
+true$

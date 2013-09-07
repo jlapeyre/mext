@@ -10,7 +10,7 @@
 (mk:defsystem runtime
   :source-extension "lisp"
   :components
-   ((:file "timing")))
+   ((:file "runtime")))
 
 ;; neither compile nor load when building
 (mk:defsystem load-runtime

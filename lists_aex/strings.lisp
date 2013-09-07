@@ -4,23 +4,6 @@
 (max-doc::set-cur-sec 'max-doc::strings-fandv)
 (defmfun1:set-file-and-package "strings.lisp" "lists_aex")
 
-;; This can be moved elsewhere
-(defmfun1:set-hold-all '$with_output_to_string)
-(defmfun1 ($with_output_to_string :doc) (&rest exprs)
-  :desc
-  ("Evaluates " :argcomma "expr_1" " " :argcomma "expr_2" " " :argcomma "expr_3" :dots ""
-   " and writes any output generated to a string, which is returned.")
-  (eval
-    `(with-output-to-string (*standard-output*)
-       (let ((body ',exprs) result)
-         (dolist (v body)
-           (setq result (meval* v)))
-         result))))
-
-(examples::clear-examples "with_output_to_string")
-(examples::add-example "with_output_to_string" 
-     '( :code "sreverse(with_output_to_string(for i:5 thru 10 do print(\"i! for i=\",i,i!)))"))
-
 (if (find-package :maxima-take ) t (defpackage :maxima-take (:use :common-lisp )))
 (in-package :maxima-take)
 (use-package :gjl.lisp-util)
