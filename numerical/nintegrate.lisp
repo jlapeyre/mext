@@ -165,7 +165,7 @@
 (max-doc:set-cur-sec 'max-doc::numerical-fandv)
 (defmfun1:set-mext-package "numerical")
 
-(defmfun1 ($nintegrate :doc) ( expr (varspec :list) &optional (singlist :list) &opt 
+(defmfun1 ($nintegrate :doc) ((expr :thread) (varspec :list) &optional (singlist :list) &opt 
           ($sing :bool t)
           ($calls (:member '(nil t $short))) ($words t :bool) 
           ($info :bool t) ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number)

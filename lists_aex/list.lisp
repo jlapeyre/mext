@@ -101,7 +101,8 @@
 (in-package :maxima)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmfun-ae $lrange (arg1 &optional imax (incr 1 :not-zero)  &aux (imin 1) d lst)
+;; Can't thread over optional args, probably because of reordering ??
+(defmfun-ae $lrange ((arg1 :thread) &optional (imax :thread) (incr 1 :not-zero)  &aux (imin 1) d lst)
   (if (null imax) (setf imax arg1) (setf imin arg1)) ; different number of args changes semantics
   (cond ( (and (numberp imin) (numberp imax) (numberp incr))
          (if (eq o-type '$ar) (make-aex :head '(mlist simp) :arr (max-list::ar-num-range adj-type imin imax incr)
@@ -171,6 +172,7 @@
                (return))))
       (defmfun-final-to-ae (mk-mlist bres)))))
 
+;; value of n 0 is default just because defmfun1 needs a val.
 (defmfun-ae ($tuples :doc) ( (list-or-lists :non-atom-list ) &optional (n 0 n-supplied-p :non-neg-int)  )
   (declare (fixnum n))
   (if n-supplied-p
@@ -290,7 +292,7 @@
           (setf res (,call-type f res)))
         res)))
   
-(defmfun-ae $nest ((f :map-function) (x :ensure-lex) (n :non-neg-int) &opt ($compile t :bool))
+(defmfun-ae $nest ((f :map-function :thread) (x :ensure-lex) (n :non-neg-int :thread) &opt ($compile t :bool))
   (option-compile-lambda f)
   (defmfun-final-to-ae
       (if (functionp f) (max-list::nest-call funcall) (max-list::nest-call mfuncall))))
@@ -301,7 +303,7 @@
       (push (,call-type f  (car res)) res))
     (defmfun-final-to-ae (mk-mlist (nreverse res)))))
 
-(defmfun-ae ($nest_list :doc)  (f x (n :non-neg-int) &opt ($compile t :bool))
+(defmfun-ae ($nest_list :doc)  ((f :thread) x (n :non-neg-int :thread) &opt ($compile t :bool))
   (option-compile-lambda f)
   (if (functionp f) (max-list::nest-list-call funcall) (max-list::nest-list-call mfuncall)))
 
@@ -312,7 +314,7 @@
 (max-doc::see-also "nest_list" '("nest" "fold" "fold_list"))
 
 ;; try making fixnum declarations here. probably makes no difference at all.
-(defmfun-ae ($nest_while :doc) (f x test &optional (min 1 supplied-min-p :non-neg-int)
+(defmfun-ae ($nest_while :doc) ((f :thread) x (test :thread) &optional (min 1 supplied-min-p :non-neg-int)
                                 (max 1 supplied-max-p :non-neg-int) &opt ($compile t :bool)  )
   (option-compile-lambda test)
   (option-compile-lambda f)
@@ -352,7 +354,7 @@
         ((or (null e) (not (,call-type test el))) (cons head (nreverse res)))
       (push el res))))
 
-(defmfun-ae ($take_while :doc) (( expr :non-atom-list) test &opt ($compile t :bool))
+(defmfun-ae ($take_while :doc) (( expr :non-atom-list) (test :thread)  &opt ($compile t :bool))
   (option-compile-lambda test)
   (defmfun-final-to-ae
       (if (functionp test) (max-list::take-while funcall) (max-list::take-while mfuncall))))
@@ -376,7 +378,7 @@
          (el (car e) (car e)))
         ((or (null e) (not (,call-type test el))) (cons head (copy-list e))))))
 
-(defmfun-ae ($drop_while :doc) (( expr :non-atom-list) test &opt ($compile t :bool)  )
+(defmfun-ae ($drop_while :doc) (( expr :non-atom-list) (test :thread) &opt ($compile t :bool)  )
   (option-compile-lambda test)
   (defmfun-final-to-ae
       (if (functionp test) (max-list::drop-while funcall) (max-list::drop-while mfuncall))))
@@ -403,7 +405,7 @@
       (declare (fixnum count))
       (incf count))))
 
-(defmfun1 ($length_while :doc) (( expr :non-atom-list) test &opt ($compile t :bool)  )
+(defmfun1 ($length_while :doc) (( expr :non-atom-list) (test :thread) &opt ($compile t :bool)  )
   :desc ("Computes the length of " :arg "expr" " while " :arg "test" " is true.")
   (option-compile-lambda test)
   (if (functionp test) (max-list::length-while funcall) (max-list::length-while mfuncall)))
@@ -423,7 +425,7 @@
           (el (car e) (car e)))
         ((or (null e) (not (,call-type test el))) (null e)))))
 
-(defmfun1 ($every1 :doc) (( expr :non-atom-list) test &opt ($compile t :bool)  )
+(defmfun1 ($every1 :doc) (( expr :non-atom-list) (test :thread) &opt ($compile t :bool)  )
   (option-compile-lambda test)
   (if (functionp test) (max-list::every1 funcall) (max-list::every1 mfuncall)))
 
@@ -587,7 +589,7 @@
       (setf res (,call-type f res (car v1)))
       (when ar-p (setf res ($aex res))))))
 
-(defmfun-ae $fold (f x (v :non-atom) &opt ($compile t :bool))
+(defmfun-ae $fold ( (f :thread) x (v :non-atom) &opt ($compile t :bool))
   (option-compile-lambda f)
   (setf v (cdr v))
   (let ((ar-p (if (eq o-type '$ar) t)))
@@ -613,7 +615,7 @@
         ((null v1) (defmfun-final-to-ae (mk-mlist (nreverse res-all))))
       (push (setf res (defmfun-final-to-ae (,call-type f res (car v1)))) res-all))))
 
-(defmfun-ae $fold_list (f x (v :non-atom)  &opt ($compile t :bool))
+(defmfun-ae $fold_list ((f :thread) x (v :non-atom)  &opt ($compile t :bool))
   (option-compile-lambda f)
   (setf v (cdr v))
   (if (length1p v) x
@@ -644,7 +646,8 @@
            (when (,call-type test el) (push el res))))))
          
 
-(defmfun-ae ($select :doc) (( expr :non-atom-list) test &optional (n 0 supplied-n-p :pos-int) &opt ($compile t :bool))
+(defmfun-ae ($select :doc) (( expr :non-atom-list) (test :thread)
+                            &optional (n 0 supplied-n-p :pos-int) &opt ($compile t :bool))
   :desc (
   "Returns a list of all elements of " :arg "expr" 
   " for which " :arg "test" " is true. " :arg "expr"
@@ -713,7 +716,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; This does not recognize lambda functions unless compile is t
-(defmfun1 ($count :doc) ( (expr :non-atom-ae-list) item &opt ($compile t :bool))
+(defmfun1 ($count :doc) ( (expr :non-atom-ae-list) (item :thread)  &opt ($compile t :bool))
   :desc 
   ("Counts the number of items in " :arg "expr" " matching " :argdot "item" 
    " If " :arg "item" " is a lambda function then " :arg "compile" " must be true.")

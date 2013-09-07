@@ -53,7 +53,6 @@
 (maxima::mk-level-func-list partition-list-b partition-list-b-1 partition-list-b 2)
 
 (max-doc::delete-doc-entry "partition_list")
-
 (maxima::defmfun1 (maxima::$partition_list :doc) ((e :non-atom) (nlist :integer-or-listof)
                                                   &optional (dlist :integer-or-listof))
   :desc ("Omitting " :arg "d" " is equivalent to giving " :arg "d" " equal to " :argdot "n" " "

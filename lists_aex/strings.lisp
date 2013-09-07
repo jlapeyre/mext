@@ -26,7 +26,7 @@
 
 ;; TODO in both string_take and string_drop. Check that sequence specification is
 ;; valid. Currently a lisp error is raised by subseq
-(maxima::defmfun1 ( maxima::$string_take :doc) ((s :string) (spec :seq-spec))
+(maxima::defmfun1 ( maxima::$string_take :doc) ((s :string :thread) (spec :seq-spec))
   (dbind (i1 i2 i3 n) (maxima-take::process-seq-spec-0 s spec)
          (declare (ignore n))
          (cond ((= 1 i3)
@@ -47,14 +47,14 @@
 (examples::add-example "string_take" '( :code "string_take(\"dog-goat-pig-zebra\",[5,12])"))
 
 
-(maxima::defmfun1 ( maxima::$string_reverse :doc) ((s :string))
+(maxima::defmfun1 ( maxima::$string_reverse :doc) ((s :string :thread))
   (reverse s))
 
 (max-doc::add-call-desc '("string_reverse" ("s") ("returns a copy of string " :arg "s"
                           " with the characters in reverse order.")))
 
 ;  "string_drop is only partially implemented, but the following examples work."
-(maxima::defmfun1 ( maxima::$string_drop :doc) ((s :string) (spec :seq-spec))
+(maxima::defmfun1 ( maxima::$string_drop :doc) ((s :string :thread) (spec :seq-spec))
   (dbind (i1 i2 i3 n) (maxima-take::process-seq-spec-0 s spec)
          (declare (ignore n))
          (cond ((= 1 i3)

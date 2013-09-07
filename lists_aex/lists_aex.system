@@ -32,4 +32,5 @@
   :components
     ( (:file "rtest_list")
       (:file "rtest_table")
+      (:file "rtest_strings")
       (:file "rtest_take")))
