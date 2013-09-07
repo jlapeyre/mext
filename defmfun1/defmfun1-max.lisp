@@ -70,20 +70,29 @@
                                         supplied-p-hash reqo-spec pp-spec-h arg-directives
                                         have-match count-args)
  "Write code to set required and &optional args to values supplied by call."
+ (let ((reqo-directives (append (getf arg-directives :req) (getf arg-directives :rest)))
+       (collected-args nil))
   `(tagbody
      ,@(do* ((reqo1 reqo (cdr reqo1))
              (targ (caar reqo) (caar reqo1))
+             (reqo-dir reqo-directives (cdr reqo-dir))
              (res))
             ((null reqo1)  (nreverse res))
             (push `(if (endp ,restarg) (go out)) res)
             (when count-args (push `(incf ,nargs) res))
             (push `(setf ,targ (pop ,restarg)) res)
+            (let ((rqd (car reqo-dir)))
+              (when (member :thread rqd)
+;                (format t "~a ")
+                nil))
+;                (format t "*** Got thread directive ~a~%" rqd)))
+            (push targ collected-args)
             (when (gethash targ supplied-p-hash) (push `(setf ,(gethash targ supplied-p-hash) t) res))
             (dolist (tst (gethash targ reqo-spec))
               (push (defmfun1::check-and-error tst targ name args have-match) res))
             (dolist (pp (gethash targ pp-spec-h))
                (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
-   out))
+   out)))
 
 (defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec have-match)
   "Write code to set option variables to supplied values."
