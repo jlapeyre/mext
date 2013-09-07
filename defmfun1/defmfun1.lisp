@@ -606,9 +606,11 @@ in a  mext package.")
                                                                 (and (listp x) (keyword-p (first x))
                                                                      (member (first x) *arg-spec-keywords*)))))  arg)))
                (wppspecs (cons (car arg) (remove-if #'(lambda(x) (not (member x *pp-spec-types*))) arg))))
-            (when (some (lambda (e) (keyword-p e)) nospecs)
-              (parse-args-err 'maxima::$defmfun1_unknown_directive name 
-                              "Found keyword in unexpected position. Probably an unknown directive." nospecs))
+            (let ((kres (find-if #'(lambda (e) (keyword-p e)) nospecs)))
+              (when kres
+                (parse-args-err 'maxima::$defmfun1_unknown_directive name 
+                  (format nil "Found keyword ~s in unexpected position. Probably an unknown directive."
+                          (maxima::sym-to-string kres)) nospecs)))
             (when (some (lambda (e)(and (listp e) (keyword-p (car e)))) nospecs)
               (parse-args-err 'maxima::$defmfun1_unknown_directive name 
                               "Found list beginning with keyword in unexpected position. Probably an unknown directive." nospecs))
