@@ -17,47 +17,9 @@
            (setq result (meval* v)))
          result))))
 
-#|  Don't know how this works.
-
-(defmacro with-output-to-list ((out) &body body)
-  "A simple list analog of WITH-OUTPUT-TO-STRING, which supports the general
-pattern of using list as an accumulator. OUT is bound to a fresh list, that
-will be returned NREVERSE-D.  BODY is wraped in implicit block NIL."
-  `(let ((,out (list)))
-     (block nil
-       (unwind-protect
-            (progn ,@body)))
-     (nreverse ,out)))
-
-(defmspec $with_output_to_list (arg)
-  "Copied from $with_stdout."
-  (let ((m (list)))
-  (eval
-    `(with-output-to-list ( ,m )
-       (let ((body ',(cdr arg)) result)
-         (dolist (v body)
-           (setq result (meval* v)))
-          result)))))
-
-|#
-
-#|
-
-(add-doc-entry1 :section 'max-doc::strings-fandv
- :e '(
-      :name "with_output_to_string"
-      :protocol "with_output_to_string(<expr_1>, <expr_2>, ...)"
-      :see-also ("with_stdout")
-      :contents
- ("Evaluates " :argcomma "expr_1" :argcomma "expr_2" :argcomma "expr_3" :dots ""
-  " and writes any output generated to a string, which is returned.")))
-
-|#
-
 (examples::clear-examples "with_output_to_string")
 (examples::add-example "with_output_to_string" 
      '( :code "sreverse(with_output_to_string(for i:5 thru 10 do print(\"i! for i=\",i,i!)))"))
-
 
 (if (find-package :maxima-take ) t (defpackage :maxima-take (:use :common-lisp )))
 (in-package :maxima-take)
