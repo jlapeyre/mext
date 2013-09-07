@@ -130,7 +130,7 @@
     (setf have-match t)
     (setf args (append args `(&opt (($match match-opt) nil match-supplied-p) ))))
   (when (not (member :no-nargs directives)) (setf count-args t))
-  (dbind (arg-list arg-specs pp-specs supplied-p-hash) (defmfun1::group-and-parse-args name args)
+  (dbind (arg-list arg-specs pp-specs supplied-p-hash arg-directives) (defmfun1::group-and-parse-args name args)
    (dbind (req optional aux rest opt) (defmfun1::rem-keys-arg-list arg-list)
     (let* ((args (gensym "args-"))
            (restarg (gensym "restarg-")) ; Initialize to non-option arguments,

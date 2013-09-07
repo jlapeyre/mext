@@ -522,6 +522,10 @@ in a  mext package.")
    the lambda list are searched for in this list. The list of keywords is built
    simply by getting the hash keys from *arg-check-func-table* ")
 
+;; These are extra directives for arguments.
+;; e.g :threads, which is not yet implemented.
+(defparameter *arg-directive-keywords* '( :thread ))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun set-default-options (name opts)
@@ -581,13 +585,21 @@ in a  mext package.")
 
 (maxima::ddefun parse-args (name arglist)
  "At macro expansion time of defmfun1, this function is called and
-  returns four lists constructed from arglist.  The first list will be
-  directly converted to the lambdalist argument spec for the
-  defmfun (defmspec) definition. This list has only the test
-  specs :list, etc. stripped out. The second list is the same, but for
-  each argument spec, only the argname and the tests are retained (eg
-  default values are removed). The third list contains the pre-processing specs.
-  The fourth list contains the supplied-p args."
+  returns five lists constructed from arglist.
+
+  The first list will be directly converted to the lambdalist argument
+  spec for the defmfun (defmspec) definition. This list has only the
+  test specs :list, etc., and arg directives stripped out.
+
+  The second list is the same, but for each argument spec, only the
+  argname and the tests are retained (eg default values are removed).
+
+  The third list contains the pre-processing specs.
+
+  The fourth list contains the supplied-p args.
+
+  The fifth list contains arg-directives, i.e. extra arg directives, such as :threads."
+
   (let ( (arglist1) (arg-specs) (pp-specs) (supplied-p-hash (make-hash-table)))
     (dolist (argt *arg-type-list*)
       (let ((argt1) (argt-spec) (pp-spec) )
@@ -600,11 +612,15 @@ in a  mext package.")
 ;                            "First element is a list, variable name expected." arg))
           (let
               ((nospecs (remove-if #'(lambda(x) (or (member x *arg-spec-keywords*) (member x *pp-spec-types*)
+                                                    (member x *arg-directive-keywords*)
                                                     (and (listp x) (keyword-p (first x))
-                                                         (member (first x) *arg-spec-keywords*) )))   arg))
-               (wspecs (cons (car arg) (remove-if #'(lambda(x) (not (or (member x *arg-spec-keywords*)
-                                                                (and (listp x) (keyword-p (first x))
-                                                                     (member (first x) *arg-spec-keywords*)))))  arg)))
+                                                         (member (first x) *arg-spec-keywords*))))   arg))
+               (wspecs (cons (car arg) (remove-if #'(lambda(x)
+                                                      (or (member x *arg-directive-keywords*)
+                                                          (not (or (member x *arg-spec-keywords*)
+                                                               (and (listp x) (keyword-p (first x))
+                                                                    (member (first x) *arg-spec-keywords*))))))  arg)))
+               (arg-directives (remove-if #'(lambda(x) (not (member x *arg-directive-keywords*))) arg))
                (wppspecs (cons (car arg) (remove-if #'(lambda(x) (not (member x *pp-spec-types*))) arg))))
             (let ((kres (find-if #'(lambda (e) (keyword-p e)) nospecs)))
               (when kres
@@ -613,8 +629,9 @@ in a  mext package.")
                           (maxima::sym-to-string kres)) nospecs)))
             (when (some (lambda (e)(and (listp e) (keyword-p (car e)))) nospecs)
               (parse-args-err 'maxima::$defmfun1_unknown_directive name 
-                              "Found list beginning with keyword in unexpected position. Probably an unknown directive." nospecs))
-            (push (if (length1p nospecs) nospecs (list (first nospecs) `(quote ,(second nospecs))) ) argt1) ; quote default values
+              "Found list beginning with keyword in unexpected position. Probably an unknown directive." nospecs))
+             ; must quote default values
+            (push (if (length1p nospecs) nospecs (list (first nospecs) `(quote ,(second nospecs))) ) argt1)
             (when (length-eq nospecs 3) (setf (gethash (first nospecs) supplied-p-hash) (third nospecs)))
             (push wspecs argt-spec)
             (push wppspecs pp-spec)))
@@ -623,7 +640,7 @@ in a  mext package.")
       (let ( (v (getf *arg-type-param-spec* argt)))
         (setf (getf arglist1 argt) (if v (if argt1 (cons v (nreverse argt1)) nil)
                                      (nreverse argt1))))))
-    (list arglist1 arg-specs pp-specs supplied-p-hash)))
+    (list arglist1 arg-specs pp-specs supplied-p-hash arg-directives)))
 
 (defun rem-keys-arg-list (arg-list)
   (mapcar #'(lambda (x) (getf arg-list x)) defmfun1::*arg-type-list*))
