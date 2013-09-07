@@ -404,8 +404,8 @@ See also:  unset_match_form, set_match_form, set_nowarn, and unset_nowarn.
     mext package: defmfun1; filename: defmfun1-max.lisp
 
 Description:
-   Return a list of all functions for which the attribute <attribute> is set. 
-   Some attributes are <match_form>,<hold_all>, and <nowarn>.
+   Return a list of all functions for which the attribute <attribute> 
+   is set. Some attributes are <match_form>,<hold_all>, and <nowarn>.
 Arguments:
    `attributes_find' requires either zero or one arguments. If present, the argument <attribute> must be a a string or a symbol.
 
@@ -415,12 +415,13 @@ Arguments:
     mext package: defmfun1; filename: defmfun1-max.lisp
 
 Description:
-   Set the `match_form' attribute for function(s) <names>. If the argument 
-   checks for a function call fail, and the attribute `match_form' is set, then 
-   rather than signaling an error, the unevaluated form is returned. 
-   Furthemore, if the attribute `nowarn' is not set, then a warning message is 
-   printed. Currently, only automatic argument checks generated from the 
-   defmfun1 protocol are controlled. Argument checks and errors written within 
+   Set the `match_form' attribute for function(s) <names>. If the 
+   argument checks for a function call fail, and the attribute 
+   `match_form' is set, then rather than signaling an error, the 
+   unevaluated form is returned. Furthemore, if the attribute 
+   `nowarn' is not set, then a warning message is printed. Currently, 
+   only automatic argument checks generated from the defmfun1 
+   protocol are controlled. Argument checks and errors written within 
    the body of the functions occur regardless of function attributes.
 Arguments:
    `set_match_form' requires one argument <names>, which must be  a string, a symbol, or a list of strings or symbols.
@@ -433,10 +434,11 @@ See also:  unset_match_form, set_nowarn, unset_nowarn, and attributes.
     mext package: defmfun1; filename: defmfun1-max.lisp
 
 Description:
-   Set the `nowarn' attribute for function(s) <names>. If the argument checks 
-   for a function call fail, and the attribute `match_form' is set, and the 
-   attribute `nowarn' is set, then rather than signaling an error, the 
-   unevaluated form is returned and no warning message is printed.
+   Set the `nowarn' attribute for function(s) <names>. If the 
+   argument checks for a function call fail, and the attribute 
+   `match_form' is set, and the attribute `nowarn' is set, then 
+   rather than signaling an error, the unevaluated form is returned 
+   and no warning message is printed.
 Arguments:
    `set_nowarn' requires one argument <names>, which must be  a string, a symbol, or a list of strings or symbols.
 
@@ -448,12 +450,13 @@ See also:  unset_match_form, set_match_form, unset_nowarn, and attributes.
     mext package: defmfun1; filename: defmfun1-max.lisp
 
 Description:
-   Unset the `match_form' attribute for function(s) <names>. If the argument 
-   checks for a function call fail, and the attribute `match_form' is set, then 
-   rather than signaling an error, the unevaluated form is returned. 
-   Furthemore, if the attribute `nowarn' is not set, then a warning message is 
-   printed. Currently, only automatic argument checks generated from the 
-   defmfun1 protocol are controlled. Argument checks and errors written within 
+   Unset the `match_form' attribute for function(s) <names>. If the 
+   argument checks for a function call fail, and the attribute 
+   `match_form' is set, then rather than signaling an error, the 
+   unevaluated form is returned. Furthemore, if the attribute 
+   `nowarn' is not set, then a warning message is printed. Currently, 
+   only automatic argument checks generated from the defmfun1 
+   protocol are controlled. Argument checks and errors written within 
    the body of the functions occur regardless of function attributes.
 Arguments:
    `unset_match_form' requires one argument <names>, which must be  a string, a symbol, or a list of strings or symbols.
@@ -466,10 +469,11 @@ See also:  set_match_form, set_nowarn, unset_nowarn, and attributes.
     mext package: defmfun1; filename: defmfun1-max.lisp
 
 Description:
-   Unset the `nowarn' attribute for function(s) <names>. If the argument checks 
-   for a function call fail, and the attribute `match_form' is set, and the 
-   attribute `nowarn' is set, then rather than signaling an error, the 
-   unevaluated form is returned and no warning message is printed.
+   Unset the `nowarn' attribute for function(s) <names>. If the 
+   argument checks for a function call fail, and the attribute 
+   `match_form' is set, and the attribute `nowarn' is set, then 
+   rather than signaling an error, the unevaluated form is returned 
+   and no warning message is printed.
 Arguments:
    `unset_nowarn' requires one argument <names>, which must be  a string, a symbol, or a list of strings or symbols.
 
@@ -523,10 +527,11 @@ Arguments:
 
 Calling:
     aex(<e>)
-        Converts expression <e> to an array representation. The input expression 
-      <e> is returned unchanged if it is already an array expression or is a 
-      symbol or number or specially represented maxima expression. This 
-      function converts only at the first level.
+        Converts expression <e> to an array representation. The input 
+      expression <e> is returned unchanged if it is already an array 
+      expression or is a symbol or number or specially represented 
+      maxima expression. This function converts only at the first 
+      level.
 
 Arguments:
    `aex' requires either zero or one arguments.
@@ -539,8 +544,9 @@ Options:  aex takes options with default values: adj->true.
 
 Calling:
     aex_cp(<e>)
-        Returns an aex form copy of <e>. <e> may be in either lex or aex form. 
-      Conversion to aex representation occurs only on the first level.
+        Returns an aex form copy of <e>. <e> may be in either lex or 
+      aex form. Conversion to aex representation occurs only on the 
+      first level.
 
 Arguments:
    `aex_cp' requires either one or two arguments.
@@ -553,9 +559,9 @@ Options:  aex_cp takes options with default values: adj->true.
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   Returns the <n-1>th part of aexpr <e>. A value of <n> less than 0 is not 
-   allowed. This is more efficient than `aexg', which returns the head of the 
-   expression when <n> is equal to zero.
+   Returns the <n-1>th part of aexpr <e>. A value of <n> less than 0 
+   is not allowed. This is more efficient than `aexg', which returns 
+   the head of the expression when <n> is equal to zero.
 
 Examples:
 (%i1) a : aex([5,6,7]), aex_get(a,2);
@@ -577,9 +583,9 @@ Arguments:
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   Destructively sets the <n>th part of aexpr <e> to value <v>. A value of 0 
-   for <n> is not allowed. This is more efficient than `aexs'. No argument 
-   checking is done.
+   Destructively sets the <n>th part of aexpr <e> to value <v>. A 
+   value of 0 for <n> is not allowed. This is more efficient than 
+   `aexs'. No argument checking is done.
 
 Examples:
 
@@ -598,10 +604,11 @@ See also: aexs and ipart.
 
 Description:
    destructively removes an element from the end of <e>. For array 
-   representation of expressions we use the words `push' and `pop' for the 
-   beginning of and expression, and `shift' and `unshift' for the end of an 
-   expression, whether the representation is an array or a list. This is 
-   consistent with maxima, but the reverse of the meaning of the terms in perl.
+   representation of expressions we use the words `push' and `pop' 
+   for the beginning of and expression, and `shift' and `unshift' for 
+   the end of an expression, whether the representation is an array 
+   or a list. This is consistent with maxima, but the reverse of the 
+   meaning of the terms in perl.
 Arguments:
    `aex_shift' requires one argument <e>, which must be an adjustable array expression.
 
@@ -620,12 +627,13 @@ Examples:
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   Destructively pushes an element <v> onto the end of <e>. The return value is 
-   <v>. For array representation of expressions we use the words `push' and 
-   `pop' for the beginning of and expression, and `shift' and `unshift' for the 
-   end of an expression, whether the representation is an array or a list. This 
-   is consistent with maxima, but the reverse of the meaning of the terms in 
-   perl.
+   Destructively pushes an element <v> onto the end of <e>. The 
+   return value is <v>. For array representation of expressions we 
+   use the words `push' and `pop' for the beginning of and 
+   expression, and `shift' and `unshift' for the end of an 
+   expression, whether the representation is an array or a list. This 
+   is consistent with maxima, but the reverse of the meaning of the 
+   terms in perl.
 Arguments:
    `aex_unshift' requires two arguments.
     The second argument <e> must be an adjustable array expression.
@@ -641,8 +649,8 @@ Examples:
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   aexg(e,n) returns the nth part of aexpr e. If n is 0, the head of e is 
-   returned. No argument checking is performed.
+   aexg(e,n) returns the nth part of aexpr e. If n is 0, the head of 
+   e is returned. No argument checking is performed.
 
 See also:  aex_get, ipart, inpart, and part.
 
@@ -652,8 +660,8 @@ See also:  aex_get, ipart, inpart, and part.
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   destructively sets the <n>th part of aexpr <e> to value <v>. A value of 0 
-   for <n> returns the head (or op) of <e>.
+   destructively sets the <n>th part of aexpr <e> to value <v>. A 
+   value of 0 for <n> returns the head (or op) of <e>.
 
 ------------------------------------------------
  -- Function: copy_aex_type: copy_aex_type(<ein>)
@@ -661,8 +669,8 @@ Description:
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   Create a new aex with same head,length,adjustability,etc. but contents of 
-   expression are not copied.
+   Create a new aex with same head,length,adjustability,etc. but 
+   contents of expression are not copied.
 Arguments:
    `copy_aex_type' requires one argument <ein>, which must be an array-representation expression.
 
@@ -672,13 +680,14 @@ Arguments:
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   Note: it appears that the core maxima function `copy' acheives the same 
-   result as `deep_copy', so that the latter is redundant. It will probably be 
-   removed. `deep_copy' returns a copy of expression <expr> which may be of 
-   mixed lex/aex representation. An exact copy is made; that is, the 
-   representation is preserved at all levels. `deep_copy' is similar to 
-   `copylist', except that it can copy some expressions that `copylist' cannot. 
-   For instance, if <expr> is of aex representation at the top level.
+   Note: it appears that the core maxima function `copy' acheives the 
+   same result as `deep_copy', so that the latter is redundant. It 
+   will probably be removed. `deep_copy' returns a copy of expression 
+   <expr> which may be of mixed lex/aex representation. An exact copy 
+   is made; that is, the representation is preserved at all levels. 
+   `deep_copy' is similar to `copylist', except that it can copy some 
+   expressions that `copylist' cannot. For instance, if <expr> is of 
+   aex representation at the top level.
 Arguments:
    `deep_copy' requires one argument.
 
@@ -708,9 +717,9 @@ Arguments:
     mext package: aex; filename: ifunctions.lisp
 
 Description:
-   `iapply' is like maxima `apply', but it supports aex lists. <arg> is 
-   converted to an ml if it is an aex expression. By default, output is ml 
-   regardless of the input representation.
+   `iapply' is like maxima `apply', but it supports aex lists. <arg> 
+   is converted to an ml if it is an aex expression. By default, 
+   output is ml regardless of the input representation.
 Arguments:
    `iapply' requires two arguments.
     The first argument <fun> must be a map-able function.
@@ -734,8 +743,8 @@ Examples:
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   returns a list of the arguments of <e>, which may be either a lex or aex 
-   expression. This works like `args', but is more general.
+   returns a list of the arguments of <e>, which may be either a lex 
+   or aex expression. This works like `args', but is more general.
 Arguments:
    `iargs' requires one argument <e>, which must be a subscripted variable or non-atomic.
 Options:  iargs takes options with default values: adj->true, ot->ml.
@@ -746,8 +755,8 @@ Options:  iargs takes options with default values: adj->true, ot->ml.
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   Returns the length of the expression <e>. This is like maxima `length', but 
-   here, <e> can be either an aex or a lex.
+   Returns the length of the expression <e>. This is like maxima 
+   `length', but here, <e> can be either an aex or a lex.
 Arguments:
    `ilength' requires one argument <e>, which must be a subscripted variable or non-atomic.
 
@@ -757,8 +766,9 @@ Arguments:
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   returns the main operator of the expression <expr>, which may be either a 
-   lex or aex expression. This works like `op', but is more general.
+   returns the main operator of the expression <expr>, which may be 
+   either a lex or aex expression. This works like `op', but is more 
+   general.
 Arguments:
    `iop' requires one argument <expr>, which must be a subscripted variable or non-atomic.
 
@@ -769,14 +779,15 @@ Arguments:
 
 Calling:
     ipart(<e>, <ind1>, <ind2>, <...>)
-        Returns the part of expression <e> specified by indices. <e> may be a 
-      mixed (lex and aex) representation expression. When used as an lvalue, 
-      ipart can be used to assign to a part of an expression. If an index is 
-      negative, then it counts from the end of the list. If <e> is an ordinary 
-      maxima list (lex), then using a negative index is potentially slower than 
-      using a positive index because the entire list must first be traversed in 
-      order to determine it's length. If <e> is in aex representation, then 
-      this inefficiency is not present.
+        Returns the part of expression <e> specified by indices. <e> 
+      may be a mixed (lex and aex) representation expression. When 
+      used as an lvalue, ipart can be used to assign to a part of an 
+      expression. If an index is negative, then it counts from the 
+      end of the list. If <e> is an ordinary maxima list (lex), then 
+      using a negative index is potentially slower than using a 
+      positive index because the entire list must first be traversed 
+      in order to determine it's length. If <e> is in aex 
+      representation, then this inefficiency is not present.
 
 
 Examples:
@@ -790,8 +801,8 @@ Examples:
 Implementation:
        Some tests were performed with large lists of numbers. If we set 
     `a:lrange(10^7)', then the times required for `ipart(a,10^7)', 
-    `ipart(a,-1)', `inpart(a,10^7)', and `part(a,10^7)' were 30, 60, 90, and 90 
-    ms.
+    `ipart(a,-1)', `inpart(a,10^7)', and `part(a,10^7)' were 30, 60, 
+    90, and 90 ms.
 
 ------------------------------------------------
  -- Function: ipart_set
@@ -800,8 +811,8 @@ Implementation:
 
 Calling:
     ipart_set(<e>, <val>, <ind1>, <ind2>, <...>)
-        Set part of <e> specified by the final arguments to <val>. <e> is a mixed 
-      representation expression.
+        Set part of <e> specified by the final arguments to <val>. <e> 
+      is a mixed representation expression.
 
 
 ------------------------------------------------
@@ -810,8 +821,9 @@ Calling:
     mext package: aex; filename: ifunctions.lisp
 
 Description:
-   ireverse is like maxima reverse, but is works on both aex and list objects. 
-   ireverse is tries to be identical to maxima reverse for a non-aex argument.
+   ireverse is like maxima reverse, but is works on both aex and list 
+   objects. ireverse is tries to be identical to maxima reverse for a 
+   non-aex argument.
 Arguments:
    `ireverse' requires one argument <e>, which must be non-atomic.
 Options:  ireverse takes options with default values: adj->true, ot->ml.
@@ -834,8 +846,9 @@ Examples:
 
 Calling:
     lex(<e>)
-        converts the aex expression <e> to lex. If <e> is not an aex expression, 
-      <e> is returned. Conversion is only done on the first level.
+        converts the aex expression <e> to lex. If <e> is not an aex 
+      expression, <e> is returned. Conversion is only done on the 
+      first level.
 
 
 ------------------------------------------------
@@ -854,7 +867,8 @@ Arguments:
     mext package: aex; filename: aex-core.lisp
 
 Description:
-   Deep copy, converting <e> to lex representation at the specified levels.
+   Deep copy, converting <e> to lex representation at the specified 
+   levels.
 Arguments:
    `rlex' requires either one or two arguments.
 
@@ -892,9 +906,10 @@ See also:  random_cycle, random_permutation_sym, signature_permutation, perm_to_
     mext package: discrete_aex; filename: combinatorics.lisp
 
 Description:
-   Returns a permutation from its cycle decomposition <cycles>, which is a list 
-   of lists. Here `permutation' means a permutation of a list of the integers 
-   from 1 to some number n. The default output representation is aex.
+   Returns a permutation from its cycle decomposition <cycles>, which 
+   is a list of lists. Here `permutation' means a permutation of a 
+   list of the integers from 1 to some number n. The default output 
+   representation is aex.
 Arguments:
    `cycles_to_perm' requires one argument <cycles>, which must be a list (lex or aex).
 Options:  cycles_to_perm takes options with default values: adj->true, ot->ml.
@@ -925,8 +940,8 @@ Examples:
     mext package: discrete_aex; filename: combinatorics.lisp
 
 Description:
-   Returns a cycle decomposition of the input permutation <ain>. The input must 
-   be a permutation of n integers from 1 through n.
+   Returns a cycle decomposition of the input permutation <ain>. The 
+   input must be a permutation of n integers from 1 through n.
 Arguments:
    `perm_to_cycles' requires one argument <ain>, which must be a list (lex or aex).
 Options:  perm_to_cycles takes options with default values: adj->true, ot->ml.
@@ -945,7 +960,8 @@ See also:  random_cycle, random_permutation_sym, ae_random_permutation, signatur
 
 Description:
    Returns a list representing the permutation <ain> as a product of 
-   transpositions. The output representation type is applied at both levels.
+   transpositions. The output representation type is applied at both 
+   levels.
 Arguments:
    `perm_to_transpositions' requires one argument <ain>, which must be a list (lex or aex).
 Options:  perm_to_transpositions takes options with default values: adj->true, ot->ml.
@@ -957,8 +973,8 @@ Options:  perm_to_transpositions takes options with default values: adj->true, o
 
 Calling:
     permutation_p(<list>)
-        Returns true if the list <list> of length n is a permutation of the 
-      integers from 1 through n. Otherwise returns false.
+        Returns true if the list <list> of length n is a permutation of 
+      the integers from 1 through n. Otherwise returns false.
 
 Arguments:
    `permutation_p' requires one argument.
@@ -972,15 +988,15 @@ Implementation:
     mext package: discrete_aex; filename: combinatorics.lisp
 
 Description:
-   This is the same as `permutation_p', but, if the input is a list, it assumes 
-   all elements in the input list are fixnum integers, while `permutation_p' 
-   does not.
+   This is the same as `permutation_p', but, if the input is a list, 
+   it assumes all elements in the input list are fixnum integers, 
+   while `permutation_p' does not.
 Arguments:
    `permutation_p1' requires one argument.
 
 Implementation:
-       Some variables are declared fixnum, but this does not seem to improve 
-    performance with respect to `permutationp'.
+       Some variables are declared fixnum, but this does not seem to 
+    improve performance with respect to `permutationp'.
 
 ------------------------------------------------
  -- Function: random_cycle: random_cycle(<n>)
@@ -989,9 +1005,9 @@ Implementation:
 
 Calling:
     random_cycle(<n>)
-        Returns a random cycle of length <n>. The return value is a list of the 
-      integers from 1 through <n>, representing an element of the symmetric 
-      group S_n that is a cycle.
+        Returns a random cycle of length <n>. The return value is a 
+      list of the integers from 1 through <n>, representing an 
+      element of the symmetric group S_n that is a cycle.
 
 Arguments:
    `random_cycle' requires one argument <n>, which must be a positive integer.
@@ -1009,8 +1025,9 @@ Implementation:
 
 Calling:
     random_permutation_sym(<n>)
-        Returns a random permutation of the integers from 1 through <n>. This 
-      represents a random element of the symmetric group S_n.
+        Returns a random permutation of the integers from 1 through 
+      <n>. This represents a random element of the symmetric group 
+      S_n.
 
 Arguments:
    `random_permutation_sym' requires one argument <n>, which must be a positive integer.
@@ -1025,9 +1042,9 @@ See also:  random_cycle, ae_random_permutation, signature_permutation, perm_to_c
 
 Calling:
     signature_permutation(<list>)
-        returns the sign, or signature, of the symmetric permutation <list>, 
-      which must be represented by a permuation the integers from 1 through n, 
-      where n is the length of the list.
+        returns the sign, or signature, of the symmetric permutation 
+      <list>, which must be represented by a permuation the integers 
+      from 1 through n, where n is the length of the list.
 
 Arguments:
    `signature_permutation' requires one argument <ain>, which must be a list (lex or aex).
@@ -1040,7 +1057,8 @@ See also:  random_cycle, random_permutation_sym, ae_random_permutation, perm_to_
     mext package: discrete_aex; filename: combinatorics.lisp
 
 Description:
-   Returns the permutation specified by the list of transpositions <ain>.
+   Returns the permutation specified by the list of transpositions 
+   <ain>.
 Arguments:
    `transpositions_to_perm' requires one argument <ain>, which must be a list (lex or aex).
 Options:  transpositions_to_perm takes options with default values: adj->true, ot->ml.
@@ -1084,9 +1102,10 @@ Implementation:
 
   default value `false'.
 Description:
-   A list of the documenatation systems that will be searched by ? and ??. This 
-   can be set to all avaliable systems with the function `set_all_doc_systems'. 
-   If this variable is false, then all documentation is enabled.
+   A list of the documenatation systems that will be searched by ? 
+   and ??. This can be set to all avaliable systems with the function 
+   `set_all_doc_systems'. If this variable is false, then all 
+   documentation is enabled.
 
 ------------------------------------------------
  -- Variable: error_code
@@ -1103,7 +1122,8 @@ Description:
     mext package: maxdoc; filename: maxdoc-max.lisp
 
 Description:
-   Add maxdoc documentation entry for item <name> specified by <docs>.
+   Add maxdoc documentation entry for item <name> specified by 
+   <docs>.
 Arguments:
    `maxdoc' requires two arguments.
     The first argument <name> must be a string.
@@ -1128,11 +1148,11 @@ Arguments:
     mext package: maxdoc; filename: maxdoc-max.lisp
 
 Description:
-   Set the copyright information for the documentation item <name>. <copyright> 
-   should typically be a list whose first element is an integer (the year), 
-   with the remaining strings naming the copyright holder. This copyright 
-   information will not be printed with documentation, unless 
-   <print_copyrights> is true.
+   Set the copyright information for the documentation item <name>. 
+   <copyright> should typically be a list whose first element is an 
+   integer (the year), with the remaining strings naming the 
+   copyright holder. This copyright information will not be printed 
+   with documentation, unless <print_copyrights> is true.
 Arguments:
    `maxdoc_copyright' requires two arguments.
     The first argument <name> must be a string.
@@ -1154,8 +1174,8 @@ Attributes: maxdoc_examples has attributes: [hold_all]
     mext package: maxdoc; filename: maxdoc-max.lisp
 
 Description:
-   Set the current section for maxdoc to <shortname>. This section will be used 
-   by functions such as `maxdoc', and `maxdoc_author'.
+   Set the current section for maxdoc to <shortname>. This section 
+   will be used by functions such as `maxdoc', and `maxdoc_author'.
 Arguments:
    `maxdoc_set_cur_sec' requires one argument <shortname>, which must be a string.
 
@@ -1165,10 +1185,11 @@ Arguments:
     mext package: maxdoc; filename: maxdoc-max.lisp
 
 Description:
-   Set the current mext package name for maxdoc to <packagename>. This name 
-   will be used by functions specifying documentation for functions until the 
-   name is set to another value. When documenting functions written in maxima 
-   code, calling `mext_record_package' is probably more useful.
+   Set the current mext package name for maxdoc to <packagename>. 
+   This name will be used by functions specifying documentation for 
+   functions until the name is set to another value. When documenting 
+   functions written in maxima code, calling `mext_record_package' is 
+   probably more useful.
 Arguments:
    `maxdoc_set_mext_package' requires one argument <packagename>, which must be a string.
 
@@ -1178,8 +1199,9 @@ Arguments:
     mext package: maxdoc; filename: maxdoc-max.lisp
 
 Description:
-   Split the string <text> into a list of strings, using a sequence of one or 
-   more spaces as the delimeter. Single newlines are removed.
+   Split the string <text> into a list of strings, using a sequence 
+   of one or more spaces as the delimeter. Single newlines are 
+   removed.
 Arguments:
    `maxdoc_split_text' requires one argument <text>, which must be a string.
 
@@ -1189,11 +1211,11 @@ Arguments:
     mext package: maxdoc; filename: maxdoc-max.lisp
 
 Description:
-   Set the mext packagename for the function or variable (or list of them) 
-   <docitems> to <packagename>.This name will be used when displaying 
-   documentation.The function `maxdoc_set_mext_package' is useful for setting 
-   the package name of a group of functions, but there is currently no maxima 
-   hook for doing this.
+   Set the mext packagename for the function or variable (or list of 
+   them) <docitems> to <packagename>.This name will be used when 
+   displaying documentation.The function `maxdoc_set_mext_package' is 
+   useful for setting the package name of a group of functions, but 
+   there is currently no maxima hook for doing this.
 Arguments:
    `mext_package_record' requires either two or three arguments.
     The first argument <docitems> must be  a string, a symbol, or a list of strings or symbols.
@@ -1207,8 +1229,8 @@ Arguments:
 
   default value `/usr/bin/less'.
 Description:
-   The pathname to the system command used for paged output, for instance, for 
-   reading documentation.
+   The pathname to the system command used for paged output, for 
+   instance, for reading documentation.
 
 ------------------------------------------------
  -- Variable: print_authors
@@ -1217,7 +1239,8 @@ Description:
 
   default value `true'.
 Description:
-   If true, then print the names of the authors with maxdoc documentation.
+   If true, then print the names of the authors with maxdoc 
+   documentation.
 
 ------------------------------------------------
  -- Variable: print_copyrights
@@ -1226,7 +1249,8 @@ Description:
 
   default value `false'.
 Description:
-   If true, then print copyright information with maxdoc documentation.
+   If true, then print copyright information with maxdoc 
+   documentation.
 
 ------------------------------------------------
  -- Function: print_entry_latex: print_entry_latex(<item>)
@@ -1243,7 +1267,8 @@ Arguments:
 
   default value `true'.
 Description:
-   If true, then print implementation information with maxdoc documentation.
+   If true, then print implementation information with maxdoc 
+   documentation.
 
 ------------------------------------------------
  -- Function: print_maxdoc_entry: print_maxdoc_entry(<item>)
@@ -1259,8 +1284,9 @@ Arguments:
     mext package: maxdoc; filename: maxdoc-max.lisp
 
 Description:
-   Print all sections of maxdoc documentation. This does not include other 
-   documentation databases, such as the main maxima documentation.
+   Print all sections of maxdoc documentation. This does not include 
+   other documentation databases, such as the main maxima 
+   documentation.
 Arguments:
    `print_maxdoc_sections' requires zero arguments.
 
@@ -1270,9 +1296,9 @@ Arguments:
     mext package: maxdoc; filename: maxdoc-max.lisp
 
 Description:
-   Print all sections of maxdoc documentation currently loaded in latex format 
-   to the file <filename>. This does not include other documentation databases, 
-   such as the main maxima documentation.
+   Print all sections of maxdoc documentation currently loaded in 
+   latex format to the file <filename>. This does not include other 
+   documentation databases, such as the main maxima documentation.
 Arguments:
    `print_sections_latex' requires either zero or one arguments. If present, the argument <filename> must be a a string.
 
@@ -1283,9 +1309,10 @@ Arguments:
 
   default value `false'.
 Description:
-   If true, then documenation printed by `describe' or ? or ?? is sent through 
-   the pager specified by `pager_command'. This will most likely only work with 
-   a command line interface under linux/unix with certain lisp implementations.
+   If true, then documenation printed by `describe' or ? or ?? is 
+   sent through the pager specified by `pager_command'. This will 
+   most likely only work with a command line interface under 
+   linux/unix with certain lisp implementations.
 
 ------------------------------------------------
  -- Function: set_all_doc_systems: set_all_doc_systems()
@@ -1293,8 +1320,8 @@ Description:
     mext package: maxdoc; filename: descr1.lisp
 
 Description:
-   Enable all documentation databases for describe, ? and ??. This sets 
-   doc_system_list to a list of all doc systems.
+   Enable all documentation databases for describe, ? and ??. This 
+   sets doc_system_list to a list of all doc systems.
 Arguments:
    `set_all_doc_systems' requires zero arguments.
 
@@ -1304,8 +1331,8 @@ Arguments:
     mext package: maxdoc; filename: simple-doc-max.lisp
 
 Description:
-   Adds documentation string <content> for item <name>. These documentation 
-   strings are accessible via '?' and '??'.
+   Adds documentation string <content> for item <name>. These 
+   documentation strings are accessible via '?' and '??'.
 Arguments:
    `simple_doc_add' requires two arguments.
     The first argument <name> must be a string.
@@ -1375,13 +1402,14 @@ See also:  simple_doc_init, simple_doc_add, simple_doc_delete, and simple_doc_ge
 Description:
    `alt_eigen(mat, ['var=x, 'maxdegree=n, 'orthogonal=boolean])' 
    
-   Express the eigenvectors of the matrix <mat> as a polynomial in the 
-   eigenvalue <var>. When the degree of a factor of the characteristic 
-   polynomial has degree <maxdegree> or less, the code attempts to find all the 
-   roots of the factor. The optional variables <var>, <maxdegree> (default 1), 
-   and <orthogonal> (default false) can be in any order. When the dimension of 
-   an eigenspace is greater than one and <orthogonal> is true, the list of 
-   eigenvectors is orthogonal.
+   Express the eigenvectors of the matrix <mat> as a polynomial in 
+   the eigenvalue <var>. When the degree of a factor of the 
+   characteristic polynomial has degree <maxdegree> or less, the code 
+   attempts to find all the roots of the factor. The optional 
+   variables <var>, <maxdegree> (default 1), and <orthogonal> 
+   (default false) can be in any order. When the dimension of an 
+   eigenspace is greater than one and <orthogonal> is true, the list 
+   of eigenvectors is orthogonal.
 
 Examples:
    The eigenvectors of `matrix([1,2],[4,5])', are
@@ -1459,10 +1487,10 @@ Examples:
     mext package: defmfun1; filename: misc-util.lisp
 
 Description:
-   Compile and load a lisp file. Maxima does not load it by default with 
-   `compile_file'. If the input filename does not end with ".lisp", it will be 
-   appended. If <pathlist> is specified, then <fname> is only searched for in 
-   directories in <pathlist>.
+   Compile and load a lisp file. Maxima does not load it by default 
+   with `compile_file'. If the input filename does not end with 
+   ".lisp", it will be appended. If <pathlist> is specified, then 
+   <fname> is only searched for in directories in <pathlist>.
 Arguments:
    `comp_load' requires either one or two arguments.
     The first argument <fname> must be a string.
@@ -1474,10 +1502,10 @@ Arguments:
     mext package: defmfun1; filename: misc-util.lisp
 
 Description:
-   This is copied from maxima `compile_file', with changes. Sometimes a 
-   loadable binary file is apparently compiled, but an error flag is set and 
-   `compile_file' returns false for the output binary filename. Here we return 
-   the binary filename in any case.
+   This is copied from maxima `compile_file', with changes. Sometimes 
+   a loadable binary file is apparently compiled, but an error flag 
+   is set and `compile_file' returns false for the output binary 
+   filename. Here we return the binary filename in any case.
 Arguments:
    `compile_file1' requires between one and three arguments.
     The first argument <input-file> must be a string.
@@ -1512,7 +1540,8 @@ Calling:
         Reads and returns expressions from the file <file>.
 
 Description:
-   Reads maxima expressions from file <file> created by the function `store'.
+   Reads maxima expressions from file <file> created by the function 
+   `store'.
 Arguments:
    `restore' requires one argument <file>, which must be a string.
 
@@ -1525,12 +1554,13 @@ See also:  store, store_fast, and restore_fast.
 
 Calling:
     restore_fast(<file>)
-        Reads and returns expressios from the file <file>. No checking for 
-      circular references is done.
+        Reads and returns expressios from the file <file>. No checking 
+      for circular references is done.
 
 Description:
-   Reads maxima expressions from file <file> created by the function `store', 
-   or `store_fast'. No checks for circular references are done.
+   Reads maxima expressions from file <file> created by the function 
+   `store', or `store_fast'. No checks for circular references are 
+   done.
 Arguments:
    `restore_fast' requires one argument <file>, which must be a string.
 
@@ -1546,8 +1576,8 @@ Calling:
         stores the expressions to the file <file>.
 
 Description:
-   Stores maxima expressions <exprs> in <file> in binary format. Many types of 
-   lisp expressions and subexpressions are supported: 
+   Stores maxima expressions <exprs> in <file> in binary format. Many 
+   types of lisp expressions and subexpressions are supported: 
    numbers,strings,list,arrays,hashtables,structures,....
 Arguments:
    `store' requires one or more arguments. The first argument <file> must be a string.
@@ -1569,8 +1599,8 @@ Examples:
 See also:  restore, store_fast, and restore_fast.
 
 Implementation:
-       store uses the cl-store library. See the cl-store documentation for more 
-    information.
+       store uses the cl-store library. See the cl-store documentation 
+    for more information.
 
 ------------------------------------------------
  -- Function: store_fast: store_fast(<file> :rest <exprs>)
@@ -1579,12 +1609,13 @@ Implementation:
 
 Calling:
     store_fast(<file>, <expr1>, <expr2>, <...>)
-        stores the expressions to the file <file>. No checking for circular 
-      references is done.
+        stores the expressions to the file <file>. No checking for 
+      circular references is done.
 
 Description:
-   Stores maxima expressions <exprs> in <file> in binary format. This is like 
-   `store', except that no checks for circular references are done.
+   Stores maxima expressions <exprs> in <file> in binary format. This 
+   is like `store', except that no checks for circular references are 
+   done.
 Arguments:
    `store_fast' requires one or more arguments. The first argument <file> must be a string.
 
@@ -1650,12 +1681,13 @@ Examples:
     mext package: lists_aex; filename: list.lisp
 
 Description:
-   Returns a list of n elements, each of which is an independent copy of expr. 
-   `constant_list(expr,[n,m,..])' returns a nested list of dimensions <n>,<m>, 
-   ... where each leaf is an independent copy of expr and the copies of each 
-   list at each level are independent. If a third argument is given, then it is 
-   used as the op, rather than `list', at every level. The third argument may 
-   also be a list of heads to apply, one at each leve.
+   Returns a list of n elements, each of which is an independent copy 
+   of expr. `constant_list(expr,[n,m,..])' returns a nested list of 
+   dimensions <n>,<m>, ... where each leaf is an independent copy of 
+   expr and the copies of each list at each level are independent. If 
+   a third argument is given, then it is used as the op, rather than 
+   `list', at every level. The third argument may also be a list of 
+   heads to apply, one at each leve.
 Arguments:
    `constant_list' requires either two or three arguments.
     The second argument <spec> must be a positive integer or a list of positive integers.
@@ -1669,8 +1701,8 @@ note: 'modedeclare' declares types for translation.
     mext package: lists_aex; filename: list.lisp
 
 Description:
-   Counts the number of items in <expr> matching <item>. If <item> is a lambda 
-   function then <compile> must be true.
+   Counts the number of items in <expr> matching <item>. If <item> is 
+   a lambda function then <compile> must be true.
 Arguments:
    `count' requires two arguments.
     The first argument <expr> must be non-atomic and either aex or represented by a lisp list.
@@ -1698,9 +1730,9 @@ Examples:
 
 Calling:
     drop_while(<expr>, <test>)
-        Tests the elements of <expr> in order, dropping them until <test> fails. 
-      The remaining elements are returned in an expression with the same op as 
-      that <expr>.
+        Tests the elements of <expr> in order, dropping them until 
+      <test> fails. The remaining elements are returned in an 
+      expression with the same op as that <expr>.
 
 Arguments:
    `drop_while' requires two arguments.
@@ -1722,9 +1754,10 @@ Examples:
 
 Calling:
     every1(<expr>, <test>)
-        Returns true if <test> is true for each element in <expr>. Otherwise, 
-      false is returned. This is like `every' but allow a test that takes only 
-      one argument. For some inputs, every1 is much faster than every.
+        Returns true if <test> is true for each element in <expr>. 
+      Otherwise, false is returned. This is like `every' but allow a 
+      test that takes only one argument. For some inputs, every1 is 
+      much faster than every.
 
 Arguments:
    `every1' requires two arguments.
@@ -1751,7 +1784,8 @@ See also: fold_list and nest.
     mext package: lists_aex; filename: list.lisp
 
 Description:
-   fold_list(f,x,[a,b,c]) returns [f(x,a),f(f(x,a),b),f(f(f(x,a),b),c)].
+   fold_list(f,x,[a,b,c]) returns 
+   [f(x,a),f(f(x,a),b),f(f(f(x,a),b),c)].
 Arguments:
    `fold_list' requires three arguments.
     The third argument <v> must be non-atomic.
@@ -1765,17 +1799,18 @@ See also: fold and nest.
     mext package: aex; filename: ifunctions.lisp
 
 Description:
-   `icons' is like maxima `cons', but less general, and much, much faster. <x> 
-   is a maxima object. <e> is a maxima list or list-like object, such as `[a]', 
-   or `f(a)'. It is suitable at a minimum, for pushing a number or list or 
-   string onto a list of numbers, or strings or lists. If you find `icons' 
-   gives buggy behavior that you are not interested in investigating, use 
-   `cons' instead.
+   `icons' is like maxima `cons', but less general, and much, much 
+   faster. <x> is a maxima object. <e> is a maxima list or list-like 
+   object, such as `[a]', or `f(a)'. It is suitable at a minimum, for 
+   pushing a number or list or string onto a list of numbers, or 
+   strings or lists. If you find `icons' gives buggy behavior that 
+   you are not interested in investigating, use `cons' instead.
 
 Implementation:
-       In a function that mostly only does icons in a loop, icons defined with 
-    defmfun rather than defmfun1 runs almost twice as fast. So icons is defined 
-    with defmfun rather than defmfun1. icons does no argument checking.
+       In a function that mostly only does icons in a loop, icons 
+    defined with defmfun rather than defmfun1 runs almost twice as 
+    fast. So icons is defined with defmfun rather than defmfun1. 
+    icons does no argument checking.
 
 ------------------------------------------------
  -- Function: imap: imap(<f>, <expr>)
@@ -1783,10 +1818,10 @@ Implementation:
     mext package: lists_aex; filename: list.lisp
 
 Description:
-   Maps functions of a single argument. I guess that `map' handles more types 
-   of input without error. But `imap' can be much faster for some inputs. This 
-   is especially true if a lambda function is passed to imap, as it can be 
-   compiled.
+   Maps functions of a single argument. I guess that `map' handles 
+   more types of input without error. But `imap' can be much faster 
+   for some inputs. This is especially true if a lambda function is 
+   passed to imap, as it can be compiled.
 Arguments:
    `imap' requires two arguments.
     The second argument <expr> must be non-atomic.
@@ -1837,14 +1872,14 @@ Calling:
         returns a list of expressions from <start> through <stop>.
 
     lrange(<start>, <stop>, <incr>)
-        returns a list of expressions from <start> through <stop> in steps of 
-      <incr>.
+        returns a list of expressions from <start> through <stop> in 
+      steps of <incr>.
 
 Description:
    lrange is much more efficient than makelist for creating ranges, 
-   particularly for large lists (e.g. 10^5 or more items.) Functions for 
-   creating a list of numbers, in order of decreasing speed, are: `lrange', 
-   `table', `create_list',`makelist'.
+   particularly for large lists (e.g. 10^5 or more items.) Functions 
+   for creating a list of numbers, in order of decreasing speed, are: 
+   `lrange', `table', `create_list',`makelist'.
 Arguments:
    `lrange' requires between one and three arguments.
     The third argument <incr> must be an expression that is not zero.
@@ -1892,7 +1927,8 @@ See also:  makelist, table, and constant_list.
     mext package: lists_aex; filename: list.lisp
 
 Description:
-   nest(f,x,n) returns f(...f(f(f(x)))...) where there are n nested calls of f.
+   nest(f,x,n) returns f(...f(f(f(x)))...) where there are n nested 
+   calls of f.
 Arguments:
    `nest' requires three arguments.
     The first argument <f> must be a map-able function.
@@ -1926,8 +1962,8 @@ See also:  nest, fold, and fold_list.
 
 Calling:
     nest_while(<f>, <x>, <test>)
-        applies <f> to <x> until <test> fails to return true when called on the 
-      nested result.
+        applies <f> to <x> until <test> fails to return true when 
+      called on the nested result.
 
     nest_while(<f>, <x>, <test>, <min>)
         applies <f> at least <min> times.
@@ -1942,8 +1978,8 @@ Arguments:
 Options:  nest_while takes options with default values: adj->true, ot->ml, compile->true.
 
 Implementation:
-       This should be modified to allow applying test to more than just the most 
-    recent result.
+       This should be modified to allow applying test to more than just 
+    the most recent result.
 
 ------------------------------------------------
  -- Function: nreverse: nreverse(<e>)
@@ -1951,8 +1987,8 @@ Implementation:
     mext package: lists_aex; filename: list.lisp
 
 Description:
-   Destructively reverse the arguments of expression <e>. This is more 
-   efficient than using reverse.
+   Destructively reverse the arguments of expression <e>. This is 
+   more efficient than using reverse.
 Arguments:
    `nreverse' requires one argument <e>, which must be non-atomic.
 
@@ -1982,12 +2018,13 @@ Calling:
         partitions <e> into sublists of length <n> with offsets <d>.
 
 Description:
-   Omitting <d> is equivalent to giving <d> equal to <n>. <e> can be any 
-   expression, not only a list. If <n> is a list, then `partition_list' 
-   partitions at sucessively deeper levels with elements of <n>. If <n> and <d> 
-   are lists, the first elementsof <n> and <d> apply at the highest level and 
-   so on. If <n> is a list and <d> is a number, then the offset <d> is used 
-   with each of the <n>.
+   Omitting <d> is equivalent to giving <d> equal to <n>. <e> can be 
+   any expression, not only a list. If <n> is a list, then 
+   `partition_list' partitions at sucessively deeper levels with 
+   elements of <n>. If <n> and <d> are lists, the first elementsof 
+   <n> and <d> apply at the highest level and so on. If <n> is a list 
+   and <d> is a number, then the offset <d> is used with each of the 
+   <n>.
 Arguments:
    `partition_list' requires either two or three arguments.
     The first argument <e> must be non-atomic.
@@ -2008,10 +2045,10 @@ Examples:
     mext package: lists_aex; filename: list.lisp
 
 Description:
-   Returns a list of all elements of <expr> for which <test> is true. <expr> 
-   may have any op. If <n> is supplied, then at most <n> elements are examined. 
-   `select' is much faster than `sublist', but may be less generally 
-   applicable.
+   Returns a list of all elements of <expr> for which <test> is true. 
+   <expr> may have any op. If <n> is supplied, then at most <n> 
+   elements are examined. `select' is much faster than `sublist', but 
+   may be less generally applicable.
 Arguments:
    `select' requires either two or three arguments.
     The first argument <expr> must be non-atomic and represented by a lisp list.
@@ -2032,14 +2069,16 @@ Examples:
     mext package: lists_aex; filename: take.lisp
 
 Description:
-   A sequence specification specifies a subsequence of the elements in an 
-   expression. A single positive number n means the first n elements. -n means 
-   the last n elements. A list of three numbers `[i1,i2,i3]' means the `i1'th 
-   through the `i2'th stepping by `i3'. If `i1' or `i2' are negative, they 
-   count from the end. If `i3' is negative, stepping is down and `i1' must be 
-   greater than or equal to `i2'. If `i3' is omitted, it is taken to be 1. A 
-   sequence specifiier can also be one of 'all 'none or 'reverse, which mean 
-   all elements, no elements or all elements in reverse order respectively.
+   A sequence specification specifies a subsequence of the elements 
+   in an expression. A single positive number n means the first n 
+   elements. -n means the last n elements. A list of three numbers 
+   `[i1,i2,i3]' means the `i1'th through the `i2'th stepping by `i3'. 
+   If `i1' or `i2' are negative, they count from the end. If `i3' is 
+   negative, stepping is down and `i1' must be greater than or equal 
+   to `i2'. If `i3' is omitted, it is taken to be 1. A sequence 
+   specifiier can also be one of 'all 'none or 'reverse, which mean 
+   all elements, no elements or all elements in reverse order 
+   respectively.
 
 See also: take and string_take.
 
@@ -2050,21 +2089,24 @@ See also: take and string_take.
 
 Calling:
     table(<expr>, [<n>])
-        Evaluates expression <number> times. If <number> is not an integer or a 
-      floating point number, then `float' is called. If we have a floating 
-      point number, it is truncated into an integer. This type of iterator is 
-      the fastest, since no variable is bound.
+        Evaluates expression <number> times. If <number> is not an 
+      integer or a floating point number, then `float' is called. If 
+      we have a floating point number, it is truncated into an 
+      integer. This type of iterator is the fastest, since no 
+      variable is bound.
 
     table(<expr>, [<variable>, <initial>, <end>, <step>])
-        Returns a list of evaluated expressions where <variable> (a symbol) is 
-      set to a value. The first element of the returned list is <expression> 
-      evaluated with <variable> set to <initial>. The i-th element of the 
-      returned list is <expression> evaluated with <variable> set to <initial> 
-      + (i-1) <step>. The iteration stops once the value is greater (if <step> 
-      is positive) or smaller (if <step> is negative) than <end>. Requirement: 
-      The difference between <end> and <intial> must return a `numberp' number. 
-      <step> must be a nonzero `numberp' number. This allows for iterators of 
-      rather general forms like `[i, %i - 2, %i, 0.1b0] ' ...
+        Returns a list of evaluated expressions where <variable> (a 
+      symbol) is set to a value. The first element of the returned 
+      list is <expression> evaluated with <variable> set to 
+      <initial>. The i-th element of the returned list is 
+      <expression> evaluated with <variable> set to <initial> + (i-1) 
+      <step>. The iteration stops once the value is greater (if 
+      <step> is positive) or smaller (if <step> is negative) than 
+      <end>. Requirement: The difference between <end> and <intial> 
+      must return a `numberp' number. <step> must be a nonzero 
+      `numberp' number. This allows for iterators of rather general 
+      forms like `[i, %i - 2, %i, 0.1b0] ' ...
 
     table(<expr>, [<variable>, <initial>, <end>])
         This iterator uses a step of 1 and is equal to 
@@ -2101,26 +2143,28 @@ See also:  makelist, lrange, and constant_list.
 
 Calling:
     take(<e>, <n>)
-        returns a list of the first <n> elements of list or expression <e>.
+        returns a list of the first <n> elements of list or expression 
+      <e>.
 
     take(<e>, [<n1>, <n2>])
         returns a list of the <n1>th through <n2>th elements of list or 
       expression <e>.
 
     take(<e>, [<n1>, <n2>, <step>])
-        returns a list of the <n1>th through <n2>th elements stepping by <step> 
-      of list or expression <e>.
+        returns a list of the <n1>th through <n2>th elements stepping 
+      by <step> of list or expression <e>.
 
     take(<e>, -n )
         returns the last <n> elements.
 
     take(<e>, <spec1>, <spec2>, <...>)
-        applies the sequence specifications at sucessively deeper levels in <e>.
+        applies the sequence specifications at sucessively deeper 
+      levels in <e>.
 
 Description:
-   <e> can have mixed lex and aex expressions on different levels. If more 
-   sequence specifications are given, they apply to sucessively deeper levels 
-   in <e>.
+   <e> can have mixed lex and aex expressions on different levels. If 
+   more sequence specifications are given, they apply to sucessively 
+   deeper levels in <e>.
 Arguments:
    `take' requires one or more arguments. The first argument <e> must be non-atomic.
    Each of the remaining arguments must be a sequence specification.
@@ -2171,8 +2215,9 @@ Examples:
 
 Calling:
     take_while(<expr>, <test>)
-        collects the elements in <expr> until <test> fails on one of them. The op 
-      of the returned expression is the same as the op of <expr>.
+        collects the elements in <expr> until <test> fails on one of 
+      them. The op of the returned expression is the same as the op 
+      of <expr>.
 
 Arguments:
    `take_while' requires two arguments.
@@ -2194,11 +2239,12 @@ Examples:
 
 Calling:
     tuples(<list>, <n>)
-        Return a list of all lists of length <n> whose elements are chosen from 
-      <list>.
+        Return a list of all lists of length <n> whose elements are 
+      chosen from <list>.
 
     tuples([<list1>, <list2>, <...>])
-        Return a list of all lists whose i_th element is chosen from <listi>.
+        Return a list of all lists whose i_th element is chosen from 
+      <listi>.
 
 Arguments:
    `tuples' requires either one or two arguments.
@@ -2251,7 +2297,8 @@ Examples:
     mext package: discrete_aex; filename: number-functions.lisp
 
 Description:
-   Returns true if <n> is an abundant number. Otherwise, returns false.
+   Returns true if <n> is an abundant number. Otherwise, returns 
+   false.
 Arguments:
    `abundant_p' requires one argument <n>, which must be a positive integer.
 
@@ -2271,11 +2318,11 @@ See also:  divisor_function, aliquot_sum, aliquot_sequence, divisor_summatory, a
     mext package: discrete_aex; filename: number-functions.lisp
 
 Description:
-   The aliquot sequence is a recursive sequence in which each term is the sum 
-   of the proper divisors of the previous term. This function returns the first 
-   <n> elements (counting from zero) in the aliquot sequence whose first term 
-   is <k>. The sequence is truncated at an element if it is zero or repeats the 
-   previous element.
+   The aliquot sequence is a recursive sequence in which each term is 
+   the sum of the proper divisors of the previous term. This function 
+   returns the first <n> elements (counting from zero) in the aliquot 
+   sequence whose first term is <k>. The sequence is truncated at an 
+   element if it is zero or repeats the previous element.
 Arguments:
    `aliquot_sequence' requires two arguments.
     The first argument <k> must be a positive integer.
@@ -2303,8 +2350,8 @@ See also:  divisor_function, aliquot_sum, divisor_summatory, perfect_p, and abun
     mext package: discrete_aex; filename: number-functions.lisp
 
 Description:
-   Returns the aliquot sum of <n>. The aliquot sum of <n> is the sum of the 
-   proper divisors of <n>.
+   Returns the aliquot sum of <n>. The aliquot sum of <n> is the sum 
+   of the proper divisors of <n>.
 Arguments:
    `aliquot_sum' requires one argument <n>, which must be a positive integer.
 Attributes: aliquot_sum has attributes: [match_form]
@@ -2364,9 +2411,10 @@ OEIS number: A000108.
 
 Description:
    Returns the divisor function, or sum of positive divisors function 
-   sigma_x(n). If <x> is omitted it takes the default value 0. Currently, 
-   complex values for x are not supported. After writing this, I noticed that 
-   the function is implemented in the maxima core and is callled `divsum'.
+   sigma_x(n). If <x> is omitted it takes the default value 0. 
+   Currently, complex values for x are not supported. After writing 
+   this, I noticed that the function is implemented in the maxima 
+   core and is callled `divsum'.
 Arguments:
    `divisor_function' requires either one or two arguments.
     The first argument <n> must be a non-negative integer.
@@ -2383,9 +2431,10 @@ See also:  aliquot_sum, aliquot_sequence, divisor_summatory, perfect_p, and abun
     mext package: discrete_aex; filename: number-functions.lisp
 
 Description:
-   Returns the divisor summatory function D(x) for <x>. The `divisor_function' 
-   sigma_0(n) counts the number of unique divisors of the natural number n. 
-   D(x) is the sum of sigma_0(n) over n <= x.
+   Returns the divisor summatory function D(x) for <x>. The 
+   `divisor_function' sigma_0(n) counts the number of unique divisors 
+   of the natural number n. D(x) is the sum of sigma_0(n) over n <= 
+   x.
 Arguments:
    `divisor_summatory' requires one argument <x>, which must be a non-negative number.
 Attributes: divisor_summatory has attributes: [match_form]
@@ -2409,17 +2458,17 @@ See also:  divisor_function, aliquot_sum, aliquot_sequence, perfect_p, and abund
 
 Calling:
     from_digits(<digits>)
-        returns the integer represented by the decimal digits in the list or 
-      string <digits>.
+        returns the integer represented by the decimal digits in the 
+      list or string <digits>.
 
     from_digits(<digits>, <base>)
-        returns the integer represented by the base <base> digits in the list or 
-      string<digits>.
+        returns the integer represented by the base <base> digits in 
+      the list or string<digits>.
 
 Description:
-   <base> need not be number, but may be, for instance, a symbol. If <base> is 
-   a number it must be an integer between 2 and 36. <digits> may be a string 
-   rather than a list.
+   <base> need not be number, but may be, for instance, a symbol. If 
+   <base> is a number it must be an integer between 2 and 36. 
+   <digits> may be a string rather than a list.
 Arguments:
    `from_digits' requires either one or two arguments.
     The first argument <digits> must be a list (lex or aex) or a string.
@@ -2439,8 +2488,8 @@ Calling:
         returns a list of the base <base> digits of <n>.
 
     integer_digits(<n>, <base>, <len>)
-        returns a list of the base <base> digits of <n> padded with 0's so that 
-      the total length of the list is <len>.
+        returns a list of the base <base> digits of <n> padded with 0's 
+      so that the total length of the list is <len>.
 
 Arguments:
    `integer_digits' requires between one and three arguments.
@@ -2452,12 +2501,12 @@ Options:  integer_digits takes options with default values: adj->true, ot->ml.
 See also: from_digits and integer_string.
 
 Implementation:
-       gcl is much faster than the others. `integer_digits(2^(10^6))': typical 
-    times for lisps: 
+       gcl is much faster than the others. `integer_digits(2^(10^6))': 
+    typical times for lisps: 
     
-    ecl-12.12.1 0.09s, sbcl-1.1.11 0.5s, clisp-2.49 9s, ccl-1.9 62s, cmucl-20d 
-    error, gcl-2.6.(7,8,9) 0.09s, allegro-8.2 = 23s, Mma-3.0 = 5s, Mma-8 = 
-    0.04s.
+    ecl-12.12.1 0.09s, sbcl-1.1.11 0.5s, clisp-2.49 9s, ccl-1.9 62s, 
+    cmucl-20d error, gcl-2.6.(7,8,9) 0.09s, allegro-8.2 = 23s, 
+    Mma-3.0 = 5s, Mma-8 = 0.04s.
 
 ------------------------------------------------
  -- Function: integer_string: integer_string(<n> :optional <base>, <pad>)
@@ -2466,25 +2515,28 @@ Implementation:
 
 Calling:
     integer_string(<n>)
-        returns a string containing the decimal digits of the integer <n>.
+        returns a string containing the decimal digits of the integer 
+      <n>.
 
     integer_string(<n>, <base>)
-        returns a string containing the base <base> digits of the integer <n>.
+        returns a string containing the base <base> digits of the 
+      integer <n>.
 
     integer_string(<n>, <base>, <pad>)
-        pads the string on the left with 0's so that the length of the string is 
-      <pad>.
+        pads the string on the left with 0's so that the length of the 
+      string is <pad>.
 
     integer_string(<n>, "roman" )
-        returns a string containing the roman-numeral form of the integer <n>.
+        returns a string containing the roman-numeral form of the 
+      integer <n>.
 
     integer_string(<n>, "cardinal" )
-        returns a string containing the english word form of the integer 
-      (cardinal number) <n>.
+        returns a string containing the english word form of the 
+      integer (cardinal number) <n>.
 
     integer_string(<n>, "ordinal" )
-        returns a string containing the english word form of the ordinal 
-      (counting) number <n>.
+        returns a string containing the english word form of the 
+      ordinal (counting) number <n>.
 
 Arguments:
    `integer_string' requires between one and three arguments.
@@ -2500,7 +2552,8 @@ See also: integer_digits and from_digits.
     mext package: discrete_aex; filename: number-functions.lisp
 
 Description:
-   Returns the cumulative product of all divisors of integers from 1 to <n>.
+   Returns the cumulative product of all divisors of integers from 1 
+   to <n>.
 Arguments:
    `oeis_A092143' requires one argument <n>, which must be a positive integer.
 
@@ -2517,9 +2570,9 @@ Arguments:
 See also:  divisor_function, aliquot_sum, aliquot_sequence, divisor_summatory, and abundant_p.
 
 Implementation:
-       This function computes divisors. It would be far more efficient to use a 
-    table of known perfect numbers, as very few of them are accessible by 
-    current computer hardware.
+       This function computes divisors. It would be far more efficient 
+    to use a table of known perfect numbers, as very few of them are 
+    accessible by current computer hardware.
 
 ------------------------------------------------
  -- Function: prime_pi: prime_pi(<n>)
@@ -2531,14 +2584,14 @@ Calling:
         returns the number of primes less than or equal to <n>.
 
 Description:
-   Computes the prime counting function. The option <threads> specifies the 
-   maximum number of cpu threads to use. The routine may use fewer threads, 
-   depending on the value of <n>. The value of <n> is limited to 2^64, that is, 
-   about 1.84e+18. 
+   Computes the prime counting function. The option <threads> 
+   specifies the maximum number of cpu threads to use. The routine 
+   may use fewer threads, depending on the value of <n>. The value of 
+   <n> is limited to 2^64, that is, about 1.84e+18. 
    
-   The percent of the calculation that is finished is printed during the 
-   calculation if the option <status> is true. The status will only work under 
-   some terminals.
+   The percent of the calculation that is finished is printed during 
+   the calculation if the option <status> is true. The status will 
+   only work under some terminals.
 Arguments:
    `prime_pi' requires one argument <n>, which must be equivalent to an unsigned 64 bit integer
  (that is, an integer between 0 and 2 to the power 64)
@@ -2549,9 +2602,9 @@ Options:  prime_pi takes options with default values: status->false, threads->1.
 See also:  prime_pi_soe, next_prime, and prev_prime.
 
 Implementation:
-       This algorithm is fast, especially for a general purpose mathematics 
-    program. It combines a segmented sieve implemented as a C library with 
-    tables.
+       This algorithm is fast, especially for a general purpose 
+    mathematics program. It combines a segmented sieve implemented as 
+    a C library with tables.
 
   Authors:  Kim Walisch (C library), Tomas Oliveira e Silva (tables), and John Lapeyre (lisp).
 
@@ -2561,8 +2614,8 @@ Implementation:
     mext package: discrete_aex; filename: number-functions.lisp
 
 Description:
-   The prime counting function. The algorithm is the sieve of Eratosthenes. 
-   Internally an array of <n> bits is used.
+   The prime counting function. The algorithm is the sieve of 
+   Eratosthenes. Internally an array of <n> bits is used.
 Arguments:
    `prime_pi_soe' requires one argument <n>, which must be a non-negative integer.
 
@@ -2584,8 +2637,8 @@ Calling:
         returns the number of prime twins between <nmin> and <max>.
 
 Description:
-   The option <ktuplet> counts the <ktuplet>-constellation rather than the 
-   twins. <ktuplet> must be an integer between 1 and 7.
+   The option <ktuplet> counts the <ktuplet>-constellation rather 
+   than the twins. <ktuplet> must be an integer between 1 and 7.
 Arguments:
    `prime_twins' requires either one or two arguments.
     The first argument <min> must be equivalent to an unsigned 64 bit integer
@@ -2616,8 +2669,8 @@ Calling:
         returns a list of the primes between <min> and <max>.
 
 Description:
-   The algorithm is the sieve of Eratosthenes. This is not an efficient 
-   algorithm.
+   The algorithm is the sieve of Eratosthenes. This is not an 
+   efficient algorithm.
 Arguments:
    `primes1' requires either one or two arguments.
     The first argument <n1> must be a non-negative integer.
@@ -2630,10 +2683,10 @@ Options:  primes1 takes options with default values: adj->true, ot->ml.
     mext package: tpsolve; filename: to_poly_clean.lisp
 
 Description:
-   Removes the temporary variables created by `to_poly'. These are also created 
-   by `to_poly_solve'. They can be created from maxima with `new_variable'. 
-   These variables can be found in the infolist `props'. `to_poly_clean' 
-   returns the number of variables removed.
+   Removes the temporary variables created by `to_poly'. These are 
+   also created by `to_poly_solve'. They can be created from maxima 
+   with `new_variable'. These variables can be found in the infolist 
+   `props'. `to_poly_clean' returns the number of variables removed.
 Arguments:
    `to_poly_clean' requires zero arguments.
 
@@ -2801,10 +2854,10 @@ Options:  mquad_qaws takes options with default values: match->false, epsrel->1.
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_abs calls the lisp numeric function ?abs. This function accepts only float 
-   or integer arguments from maxima (lisp complex and rationals, as well.). 
-   n_abs may be considerably faster in some code, particularly untranslated 
-   code.
+   n_abs calls the lisp numeric function ?abs. This function accepts 
+   only float or integer arguments from maxima (lisp complex and 
+   rationals, as well.). n_abs may be considerably faster in some 
+   code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_acos
@@ -2812,10 +2865,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_acos calls the lisp numeric function ?acos. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_acos may be considerably faster in some code, particularly 
-   untranslated code.
+   n_acos calls the lisp numeric function ?acos. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_acos may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_acosh
@@ -2823,10 +2876,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_acosh calls the lisp numeric function ?acosh. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_acosh may be considerably faster in some code, particularly 
-   untranslated code.
+   n_acosh calls the lisp numeric function ?acosh. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_acosh may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_asin
@@ -2834,10 +2887,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_asin calls the lisp numeric function ?asin. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_asin may be considerably faster in some code, particularly 
-   untranslated code.
+   n_asin calls the lisp numeric function ?asin. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_asin may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_asinh
@@ -2845,10 +2898,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_asinh calls the lisp numeric function ?asinh. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_asinh may be considerably faster in some code, particularly 
-   untranslated code.
+   n_asinh calls the lisp numeric function ?asinh. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_asinh may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_atan
@@ -2856,10 +2909,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_atan calls the lisp numeric function ?atan. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_atan may be considerably faster in some code, particularly 
-   untranslated code.
+   n_atan calls the lisp numeric function ?atan. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_atan may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_atanh
@@ -2867,10 +2920,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_atanh calls the lisp numeric function ?atanh. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_atanh may be considerably faster in some code, particularly 
-   untranslated code.
+   n_atanh calls the lisp numeric function ?atanh. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_atanh may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_cos
@@ -2878,10 +2931,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_cos calls the lisp numeric function ?cos. This function accepts only float 
-   or integer arguments from maxima (lisp complex and rationals, as well.). 
-   n_cos may be considerably faster in some code, particularly untranslated 
-   code.
+   n_cos calls the lisp numeric function ?cos. This function accepts 
+   only float or integer arguments from maxima (lisp complex and 
+   rationals, as well.). n_cos may be considerably faster in some 
+   code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_cosh
@@ -2889,10 +2942,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_cosh calls the lisp numeric function ?cosh. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_cosh may be considerably faster in some code, particularly 
-   untranslated code.
+   n_cosh calls the lisp numeric function ?cosh. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_cosh may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_exp
@@ -2900,10 +2953,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_exp calls the lisp numeric function ?exp. This function accepts only float 
-   or integer arguments from maxima (lisp complex and rationals, as well.). 
-   n_exp may be considerably faster in some code, particularly untranslated 
-   code.
+   n_exp calls the lisp numeric function ?exp. This function accepts 
+   only float or integer arguments from maxima (lisp complex and 
+   rationals, as well.). n_exp may be considerably faster in some 
+   code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_expt
@@ -2911,10 +2964,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_expt calls the lisp numeric function ?expt. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_expt may be considerably faster in some code, particularly 
-   untranslated code.
+   n_expt calls the lisp numeric function ?expt. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_expt may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_log
@@ -2922,10 +2975,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_log calls the lisp numeric function ?log. This function accepts only float 
-   or integer arguments from maxima (lisp complex and rationals, as well.). 
-   n_log may be considerably faster in some code, particularly untranslated 
-   code.
+   n_log calls the lisp numeric function ?log. This function accepts 
+   only float or integer arguments from maxima (lisp complex and 
+   rationals, as well.). n_log may be considerably faster in some 
+   code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_sin
@@ -2933,10 +2986,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_sin calls the lisp numeric function ?sin. This function accepts only float 
-   or integer arguments from maxima (lisp complex and rationals, as well.). 
-   n_sin may be considerably faster in some code, particularly untranslated 
-   code.
+   n_sin calls the lisp numeric function ?sin. This function accepts 
+   only float or integer arguments from maxima (lisp complex and 
+   rationals, as well.). n_sin may be considerably faster in some 
+   code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_sinh
@@ -2944,10 +2997,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_sinh calls the lisp numeric function ?sinh. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_sinh may be considerably faster in some code, particularly 
-   untranslated code.
+   n_sinh calls the lisp numeric function ?sinh. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_sinh may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_sqrt
@@ -2955,10 +3008,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_sqrt calls the lisp numeric function ?sqrt. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_sqrt may be considerably faster in some code, particularly 
-   untranslated code.
+   n_sqrt calls the lisp numeric function ?sqrt. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_sqrt may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_tan
@@ -2966,10 +3019,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_tan calls the lisp numeric function ?tan. This function accepts only float 
-   or integer arguments from maxima (lisp complex and rationals, as well.). 
-   n_tan may be considerably faster in some code, particularly untranslated 
-   code.
+   n_tan calls the lisp numeric function ?tan. This function accepts 
+   only float or integer arguments from maxima (lisp complex and 
+   rationals, as well.). n_tan may be considerably faster in some 
+   code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: n_tanh
@@ -2977,10 +3030,10 @@ Description:
     mext package: aex; filename: lisp-numeric.lisp
 
 Description:
-   n_tanh calls the lisp numeric function ?tanh. This function accepts only 
-   float or integer arguments from maxima (lisp complex and rationals, as 
-   well.). n_tanh may be considerably faster in some code, particularly 
-   untranslated code.
+   n_tanh calls the lisp numeric function ?tanh. This function 
+   accepts only float or integer arguments from maxima (lisp complex 
+   and rationals, as well.). n_tanh may be considerably faster in 
+   some code, particularly untranslated code.
 
 ------------------------------------------------
  -- Function: nintegrate: nintegrate(<expr>, <varspec> :optional <singlist>)
@@ -2988,25 +3041,27 @@ Description:
     mext package: numerical; filename: nintegrate.lisp
 
 Description:
-   Numerically integrate <expr>, with the variable and limits supplied in the 
-   list <varspec> as [<var>,<lo>,<hi>]. Only one-dimensional integrals are 
-   implemented. `nintegrate' automatically chooses and combines `qags',`qagp', 
-   and `qagi'. Some support for complex numbers is implemented. Some integrable 
+   Numerically integrate <expr>, with the variable and limits 
+   supplied in the list <varspec> as [<var>,<lo>,<hi>]. Only 
+   one-dimensional integrals are implemented. `nintegrate' 
+   automatically chooses and combines `qags',`qagp', and `qagi'. Some 
+   support for complex numbers is implemented. Some integrable 
    singularities are found automatically. 
    
-   If the option <call> is true, then calls made to quadpack are also returned 
-   in a list. If <call> is <short>, then only the name of the quadpack routine 
-   is included. 
+   If the option <call> is true, then calls made to quadpack are also 
+   returned in a list. If <call> is <short>, then only the name of 
+   the quadpack routine is included. 
    
-   By default, information on the integration is returned with the results. If 
-   the option <info> is false, then only the result of the integration is 
-   returned. 
+   By default, information on the integration is returned with the 
+   results. If the option <info> is false, then only the result of 
+   the integration is returned. 
    
-   If the option <sing> is false, then `nintegrate' will not search for 
-   internal singularities, but user supplied singularities will still be used. 
-   
+   If the option <sing> is false, then `nintegrate' will not search 
+   for internal singularities, but user supplied singularities will 
+   still be used. 
    
    This function is not well tested and may give incorrect results. 
+   
    
    See the Maxima documentation for quadpack.
 Arguments:
@@ -3126,9 +3181,10 @@ Arguments:
     mext package: aex; filename: mext-predicates.lisp
 
 Description:
-   return the smaller of <n> and `length(e)'. This is useful if <e> is very 
-   large and <n> is small, so that computing the entire length of <e> is 
-   inefficient. Expression <e> can be either a lex of aex expression.
+   return the smaller of <n> and `length(e)'. This is useful if <e> 
+   is very large and <n> is small, so that computing the entire 
+   length of <e> is inefficient. Expression <e> can be either a lex 
+   of aex expression.
 Arguments:
    `cmplength' requires two arguments.
     The second argument <n> must be a non-negative integer.
@@ -3136,8 +3192,8 @@ Arguments:
 See also:  length0p, length_eq, and length1p.
 
 Implementation:
-       cmplength is implemented with defmfun1, which slows things down a bit. So 
-    be cautious using it in a tight loop.
+       cmplength is implemented with defmfun1, which slows things down a 
+    bit. So be cautious using it in a tight loop.
 
 ------------------------------------------------
  -- Function: length0p: length0p(<e>)
@@ -3145,16 +3201,17 @@ Implementation:
     mext package: aex; filename: mext-predicates.lisp
 
 Description:
-   Returns true if <e> is of length 0, false otherwise. This implementation 
-   traverse no more elements of <e> than necessary to return the result.
+   Returns true if <e> is of length 0, false otherwise. This 
+   implementation traverse no more elements of <e> than necessary to 
+   return the result.
 Arguments:
    `length0p' requires one argument <e>, which must be a string or non-atomic.
 
 See also:  cmplength, length_eq, and length1p.
 
 Implementation:
-       length0p is implemented with defmfun1, which slows things down a bit. So be 
-    cautious using it in a tight loop.
+       length0p is implemented with defmfun1, which slows things down a 
+    bit. So be cautious using it in a tight loop.
 
 ------------------------------------------------
  -- Function: length1p: length1p(<e>)
@@ -3162,16 +3219,17 @@ Implementation:
     mext package: aex; filename: mext-predicates.lisp
 
 Description:
-   Returns true if <e> is of length 1, false otherwise. This implementation 
-   traverse no more elements of <e> than necessary to return the result.
+   Returns true if <e> is of length 1, false otherwise. This 
+   implementation traverse no more elements of <e> than necessary to 
+   return the result.
 Arguments:
    `length1p' requires one argument <e>, which must be a string or non-atomic.
 
 See also:  length0p, cmplength, and length_eq.
 
 Implementation:
-       length1p is implemented with defmfun1, which slows things down a bit. So be 
-    cautious using it in a tight loop.
+       length1p is implemented with defmfun1, which slows things down a 
+    bit. So be cautious using it in a tight loop.
 
 ------------------------------------------------
  -- Function: length_eq: length_eq(<e>, <n>)
@@ -3179,8 +3237,9 @@ Implementation:
     mext package: aex; filename: mext-predicates.lisp
 
 Description:
-   Returns true if <e> is of length <n>, false otherwise. This implementation 
-   traverses no more elements of <e> than necessary to return the result.
+   Returns true if <e> is of length <n>, false otherwise. This 
+   implementation traverses no more elements of <e> than necessary to 
+   return the result.
 Arguments:
    `length_eq' requires two arguments.
     The first argument <e> must be a string or non-atomic.
@@ -3189,8 +3248,8 @@ Arguments:
 See also:  length0p, cmplength, and length1p.
 
 Implementation:
-       length_eq is implemented with defmfun1, which slows things down a bit. So 
-    be cautious using it in a tight loop.
+       length_eq is implemented with defmfun1, which slows things down a 
+    bit. So be cautious using it in a tight loop.
 
 ------------------------------------------------
  -- Function: type_of: type_of(<e>)
@@ -3198,8 +3257,9 @@ Implementation:
     mext package: aex; filename: mext-predicates.lisp
 
 Description:
-   Return something like the `type' of a maxima expression. This is a bit ill 
-   defined currently. `type_of' uses the lisp function `type-of'. 
+   Return something like the `type' of a maxima expression. This is a 
+   bit ill defined currently. `type_of' uses the lisp function 
+   `type-of'. 
    
    If the option <info> is true, then more information is returned.
 Arguments:
@@ -3247,8 +3307,8 @@ Examples:
     mext package: defmfun1; filename: misc-util.lisp
 
 Description:
-   Returns the last error message as a string. This differs from `errormsg', 
-   which prints the error message.
+   Returns the last error message as a string. This differs from 
+   `errormsg', which prints the error message.
 Arguments:
    `error_str' requires zero arguments.
 
@@ -3278,9 +3338,9 @@ Arguments:
     mext package: quicklisp; filename: max-ql.lisp
 
 Description:
-   Download and install quicklisp from the internet. This is usually done 
-   automatically as the final step of building and installing the maxima 
-   interface to quicklisp.
+   Download and install quicklisp from the internet. This is usually 
+   done automatically as the final step of building and installing 
+   the maxima interface to quicklisp.
 Arguments:
    `quicklisp_install' requires zero arguments.
 
@@ -3290,8 +3350,8 @@ Arguments:
     mext package: quicklisp; filename: max-ql.lisp
 
 Description:
-   Load the asdf lisp package <package_name>, or, if not installed, install 
-   from the internet and then load.
+   Load the asdf lisp package <package_name>, or, if not installed, 
+   install from the internet and then load.
 Arguments:
    `quicklisp_load' requires one argument <package_name>, which must be a string.
 
@@ -3345,9 +3405,10 @@ Arguments:
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Remove <item>s from the list of symbols that are not killed by `kill(all)'. 
-   This facility is part of the maxima core, but is apparantly unused. Maybe 
-   putting a property in the symbol's property list would be better.
+   Remove <item>s from the list of symbols that are not killed by 
+   `kill(all)'. This facility is part of the maxima core, but is 
+   apparantly unused. Maybe putting a property in the symbol's 
+   property list would be better.
 Arguments:
    `allow_kill' requires zero or more arguments.
 Attributes: allow_kill has attributes: [hold_all]
@@ -3360,9 +3421,10 @@ See also:  dont_kill, dont_kill_share, and get_dont_kill.
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Allow symbols in maxima share package <package> from being killed by `kill'. 
-   This undoes the effect of `dont_kill_share'. Currently (if this document is 
-   up-to-date) only `basic' and `lrats' are in the database.
+   Allow symbols in maxima share package <package> from being killed 
+   by `kill'. This undoes the effect of `dont_kill_share'. Currently 
+   (if this document is up-to-date) only `basic' and `lrats' are in 
+   the database.
 Arguments:
    `allow_kill_share' requires one argument <package>, which must be a string or a symbol.
 
@@ -3373,15 +3435,16 @@ Arguments:
 
 Calling:
     chdir()
-        Set the working directory to the value it had when mext was loaded.
+        Set the working directory to the value it had when mext was 
+      loaded.
 
     chdir(<dir>)
         Set the working directory to <dir>.
 
 Description:
-   Set the working directory for maxima/lisp. With some lisps, such as cmu lisp 
-   the system directory is changed as well. This should be made uniform across 
-   lisp implementations.
+   Set the working directory for maxima/lisp. With some lisps, such 
+   as cmu lisp the system directory is changed as well. This should 
+   be made uniform across lisp implementations.
 Arguments:
    `chdir' requires either zero or one arguments. If present, the argument <dir> must be a a string.
 
@@ -3393,7 +3456,8 @@ See also:  pwd, popdir, updir, dirstack, and list_directory.
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Returns the pathname as a string if <dir> exists, and `false' otherwise.
+   Returns the pathname as a string if <dir> exists, and `false' 
+   otherwise.
 Arguments:
    `dir_exists' requires one argument <dir>, which must be a string.
 
@@ -3403,8 +3467,8 @@ Arguments:
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Return a list of the directories on the directory stack. This list is 
-   manipulated with `chdir', `updir', and `popdir'.
+   Return a list of the directories on the directory stack. This list 
+   is manipulated with `chdir', `updir', and `popdir'.
 Arguments:
    `dirstack' requires zero arguments.
 
@@ -3416,9 +3480,10 @@ See also:  chdir, pwd, popdir, updir, and list_directory.
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Add the <item>s to the list of symbols that are not killed by `kill(all)'. 
-   This facility is part of the maxima core, but is apparantly unused. Maybe 
-   putting a property in the symbol's property list would be better.
+   Add the <item>s to the list of symbols that are not killed by 
+   `kill(all)'. This facility is part of the maxima core, but is 
+   apparantly unused. Maybe putting a property in the symbol's 
+   property list would be better.
 Arguments:
    `dont_kill' requires zero or more arguments.
 Attributes: dont_kill has attributes: [hold_all]
@@ -3431,9 +3496,9 @@ See also:  dont_kill_share, get_dont_kill, and allow_kill.
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Prevent symbols in maxima share package <package> from being killed by 
-   `kill'. Currently (if this document is up-to-date) only `basic' and `lrats' 
-   are in the database.
+   Prevent symbols in maxima share package <package> from being 
+   killed by `kill'. Currently (if this document is up-to-date) only 
+   `basic' and `lrats' are in the database.
 Arguments:
    `dont_kill_share' requires one argument <package>, which must be a string or a symbol.
 
@@ -3445,8 +3510,8 @@ See also:  dont_kill, get_dont_kill, and allow_kill.
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Returns the list of symbols that are not killed by `kill(all)'. Items are 
-   added to this list with `dont_kill'.
+   Returns the list of symbols that are not killed by `kill(all)'. 
+   Items are added to this list with `dont_kill'.
 Arguments:
    `get_dont_kill' requires zero arguments.
 
@@ -3468,8 +3533,9 @@ Description:
 
   default value `fasl'.
 Description:
-   The extension of compiled lisp binaries for the lisp implementation used by 
-   Maxima. This should be read-only. Setting it has no effect.
+   The extension of compiled lisp binaries for the lisp 
+   implementation used by Maxima. This should be read-only. Setting 
+   it has no effect.
 
 ------------------------------------------------
  -- Variable: lisp_type
@@ -3487,8 +3553,8 @@ Description:
 
   default value `1.1.11'.
 Description:
-   The lisp version number of the lisp implementation on which Maxima is 
-   running.
+   The lisp version number of the lisp implementation on which Maxima 
+   is running.
 
 ------------------------------------------------
  -- Function: list_directory: list_directory( :optional <dir>)
@@ -3496,8 +3562,8 @@ Description:
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Returns a directory listing for <dir> or the current directory if no 
-   argument is given.
+   Returns a directory listing for <dir> or the current directory if 
+   no argument is given.
 Arguments:
    `list_directory' requires either zero or one arguments. If present, the argument <dir> must be a a string.
 
@@ -3518,9 +3584,10 @@ Description:
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Like `compile_file', except that the intermediate, translated filename may 
-   be specified as an option. If the intermediate filename, < is not given, 
-   then >,it will be written in the same directory as the ouput (binary) file.
+   Like `compile_file', except that the intermediate, translated 
+   filename may be specified as an option. If the intermediate 
+   filename, < is not given, then >,it will be written in the same 
+   directory as the ouput (binary) file.
 Arguments:
    `mcompile_file' requires either one or two arguments.
     The first argument <input-file> must be a string.
@@ -3533,8 +3600,8 @@ Options:  mcompile_file takes options with default values: tr_file->false.
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Clears the list of mext packages that have been loaded with require. 
-   Subsequent calls to require will reload the packages.
+   Clears the list of mext packages that have been loaded with 
+   require. Subsequent calls to require will reload the packages.
 Arguments:
    `mext_clear' requires zero arguments.
 
@@ -3546,10 +3613,11 @@ See also:  mext_list_loaded, mext_list, mext_info, mext_list_package, and mext_f
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Find mext packages in which the function or variable <items> are defined. 
-   This only works if the package has been loaded, and its symbols registered. 
-   If more than one package is found, then all are listed. If the option <file> 
-   is true, then the filename in which the item is defined is also returned.
+   Find mext packages in which the function or variable <items> are 
+   defined. This only works if the package has been loaded, and its 
+   symbols registered. If more than one package is found, then all 
+   are listed. If the option <file> is true, then the filename in 
+   which the item is defined is also returned.
 Arguments:
    `mext_find_package' requires zero or more arguments.
    Each of the remaining arguments must be a string or a symbol.
@@ -3563,8 +3631,9 @@ See also:  mext_list_loaded, mext_list, mext_info, mext_clear, and mext_list_pac
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Print information about installed mext distribution <distname>. The list of 
-   installed distributions is built by calling `mext_list'.
+   Print information about installed mext distribution <distname>. 
+   The list of installed distributions is built by calling 
+   `mext_list'.
 Arguments:
    `mext_info' requires one argument <distname>, which must be a string or a symbol.
 
@@ -3576,8 +3645,8 @@ See also:  mext_list_loaded, mext_list, mext_clear, mext_list_package, and mext_
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Returns a list of all installed mext distributions. These are installed, but 
-   not neccessarily loaded.
+   Returns a list of all installed mext distributions. These are 
+   installed, but not neccessarily loaded.
 Arguments:
    `mext_list' requires zero arguments.
 
@@ -3601,10 +3670,10 @@ See also:  mext_list, mext_info, mext_clear, mext_list_package, and mext_find_pa
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   List functions and variables defined in the mext pacakge <package>. A 
-   mis-feature is that an empty list is returned if the package is not loaded. 
-   This function incorrectly returns an empty list for some packages, and may 
-   miss some functions.
+   List functions and variables defined in the mext pacakge 
+   <package>. A mis-feature is that an empty list is returned if the 
+   package is not loaded. This function incorrectly returns an empty 
+   list for some packages, and may miss some functions.
 Arguments:
    `mext_list_package' requires one argument <package>, which must be a string or a symbol.
 
@@ -3616,18 +3685,21 @@ See also:  mext_list_loaded, mext_list, mext_info, mext_clear, and mext_find_pac
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Run the test suites for a mext distribution or list of distributions. If the 
-   argument `all' is given, then all tests are run for all installed mext 
-   distributions. If the argument `loaded' is given, then all tests are run for 
-   all loaded mext distributions. If no argument is given, a subfolder named 
-   `rtests' is searched for in the current directory. An item may be a list, in 
-   which case, the first element is the package name and the remaining elements 
-   are strings specifying the name of the rtests to run. The strings must not 
-   include directory or file extension parts. If the option <list> is `true', 
-   then the tests are not performed, but a list of the rtest files is returned. 
-   If <list> is <long>, then the full pathnames of the rtest files are listed. 
-   Note: if the package `mext_defmfun1' is not loaded, then only a rudimentary 
-   version of `mext_test', which does not accept options, is available.
+   Run the test suites for a mext distribution or list of 
+   distributions. If the argument `all' is given, then all tests are 
+   run for all installed mext distributions. If the argument `loaded' 
+   is given, then all tests are run for all loaded mext 
+   distributions. If no argument is given, a subfolder named `rtests' 
+   is searched for in the current directory. An item may be a list, 
+   in which case, the first element is the package name and the 
+   remaining elements are strings specifying the name of the rtests 
+   to run. The strings must not include directory or file extension 
+   parts. If the option <list> is `true', then the tests are not 
+   performed, but a list of the rtest files is returned. If <list> is 
+   <long>, then the full pathnames of the rtest files are listed. 
+   Note: if the package `mext_defmfun1' is not loaded, then only a 
+   rudimentary version of `mext_test', which does not accept options, 
+   is available.
 Arguments:
    `mext_test' requires zero or more arguments.
    Each of the remaining arguments must be  a string, a symbol, or a list of strings or symbols.
@@ -3657,8 +3729,8 @@ Examples:
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Like `translate_file', except that the output filename may be specified as 
-   an option.
+   Like `translate_file', except that the output filename may be 
+   specified as an option.
 Arguments:
    `mtranslate_file' requires either one or two arguments.
     The first argument <input-file> must be a string.
@@ -3670,8 +3742,9 @@ Options:  mtranslate_file takes options with default values: output_file->false.
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Pop a value from the current directory stack and chdir to this value. If <n> 
-   is given, pop <n> values and chdir to the last value popped.
+   Pop a value from the current directory stack and chdir to this 
+   value. If <n> is given, pop <n> values and chdir to the last value 
+   popped.
 Arguments:
    `popdir' requires either zero or one arguments. If present, the argument <n> must be a a non-negative integer.
 
@@ -3684,12 +3757,13 @@ See also:  chdir, pwd, updir, dirstack, and list_directory.
 
 Calling:
     probe_file(<filespec>)
-        returns a string representing a canonical pathname to the file specified 
-      by <filespec>. False is returned if the file can't be found.
+        returns a string representing a canonical pathname to the file 
+      specified by <filespec>. False is returned if the file can't be 
+      found.
 
 Description:
-   Probe_File tries to find a canonical pathname for a file specified by the 
-   string <filespec>.
+   Probe_File tries to find a canonical pathname for a file specified 
+   by the string <filespec>.
 
 Examples:
 (%i1) probe_file("a/b.txt");
@@ -3714,10 +3788,11 @@ See also:  chdir, popdir, updir, dirstack, and list_directory.
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
 
 Description:
-   Load the mext pacakge <distname> and register that it has been loaded. 
-   `require('all)' will load all installed mext packages. If <force> is true, 
-   then <distname> is loaded even if it has been loaded previously. <distname> 
-   may also be a list of package names to be loaded.
+   Load the mext pacakge <distname> and register that it has been 
+   loaded. `require('all)' will load all installed mext packages. If 
+   <force> is true, then <distname> is loaded even if it has been 
+   loaded previously. <distname> may also be a list of package names 
+   to be loaded.
 Arguments:
    `require' requires either one or two arguments.
     The first argument <distname> must be  a string, a symbol, or a list of strings or symbols.
@@ -3729,21 +3804,21 @@ Arguments:
 
 Calling:
     timing(<exprs>)
-        evaluates each of the expressions <exprs> and returns a list of the time 
-      in seconds used, together with the result of evaluating the final 
-      expression.
+        evaluates each of the expressions <exprs> and returns a list of 
+      the time in seconds used, together with the result of 
+      evaluating the final expression.
 
     timing(<exprs>, <print->true>)
-        returns the result of evaluating the final expression and prints the time 
-      in seconds used.
+        returns the result of evaluating the final expression and 
+      prints the time in seconds used.
 
     timing(<exprs>, <result->false>)
         returns the time in seconds used, and discards all results.
 
 Description:
-   `timing' evaluates each of the <exprs>, and returns a list of the total time 
-   in seconds used, together the result of the last expression. See also 
-   `showtime'.
+   `timing' evaluates each of the <exprs>, and returns a list of the 
+   total time in seconds used, together the result of the last 
+   expression. See also `showtime'.
 Arguments:
    `timing' requires zero or more arguments.
 Options:  timing takes options with default values: result->true, print->false.
@@ -3756,12 +3831,12 @@ Attributes: timing has attributes: [hold_all]
 
 Calling:
     truename(<filespec>)
-        returns a string representing a canonical pathname to the file specified 
-      by <filespec>
+        returns a string representing a canonical pathname to the file 
+      specified by <filespec>
 
 Description:
-   Truename tries to find a canonical pathanme for a file specified by the 
-   string <filespec>.
+   Truename tries to find a canonical pathanme for a file specified 
+   by the string <filespec>.
 
 ------------------------------------------------
  -- Function: updir: updir( :optional <n>)
@@ -3810,7 +3885,8 @@ Examples:
 
 Calling:
     string_reverse(<s>)
-        returns a copy of string <s> with the characters in reverse order.
+        returns a copy of string <s> with the characters in reverse 
+      order.
 
 Arguments:
    `string_reverse' requires one argument <s>, which must be a string.
@@ -3843,8 +3919,8 @@ Examples:
     mext package: runtime; filename: timing.lisp
 
 Description:
-   Evaluates <expr_1>, <expr_2>, <expr_3>, ... and writes any output generated 
-   to a string, which is returned.
+   Evaluates <expr_1>, <expr_2>, <expr_3>, ... and writes any output 
+   generated to a string, which is returned.
 Arguments:
    `with_output_to_string' requires zero or more arguments.
 Attributes: with_output_to_string has attributes: [hold_all]
@@ -3873,8 +3949,9 @@ Examples:
 
 Calling:
     examples(<item>)
-        Print examples for the topic <item>. Note these examples are different 
-      from those extracted from the maxima manual with the command `example'.
+        Print examples for the topic <item>. Note these examples are 
+      different from those extracted from the maxima manual with the 
+      command `example'.
 
 Arguments:
    `examples' requires one argument <item>, which must be a string or a symbol.
@@ -3886,11 +3963,12 @@ Arguments:
 
 Calling:
     examples_add(<item>, <text>, <protected-var-list>, <code>)
-        Add an example for item <item>. <text> will be printed before the example 
-      is displayed. <protected-var-list> is string giving a list of variables 
-      such as "[x,y]" that appear in the example code. The example code will be 
-      wrapped in a block that makes <protected-var-list> local. <code> may be a 
-      string or list of strings that is/are the example code.
+        Add an example for item <item>. <text> will be printed before 
+      the example is displayed. <protected-var-list> is string giving 
+      a list of variables such as "[x,y]" that appear in the example 
+      code. The example code will be wrapped in a block that makes 
+      <protected-var-list> local. <code> may be a string or list of 
+      strings that is/are the example code.
 
 Arguments:
    `examples_add' requires four arguments.
@@ -3919,9 +3997,9 @@ Examples:
 
   default value `false'.
 Description:
-   If this is true, then print translated code when automatically compiling 
-   lambda functions passed as arguments. This is done in the macro 
-   option-compile-lambda.
+   If this is true, then print translated code when automatically 
+   compiling lambda functions passed as arguments. This is done in 
+   the macro option-compile-lambda.
 
 ==============================================================
 ==  section: Options
@@ -3947,11 +4025,12 @@ Description:
     mext package: maxdoc; filename: maxdoc-entries.lisp
 
 Description:
-   This option takes values of `true' or ` false. If '`true', then the output 
-   aex expression is adjustable, that is, the underlying array can be extended 
-   in size. If `false', then the output aex expression is not adjustable. The 
-   non-adjustable array may have some advantanges in efficiency, but I have not 
-   observed them, and this may be lisp-implementation dependent.
+   This option takes values of `true' or ` false. If '`true', then 
+   the output aex expression is adjustable, that is, the underlying 
+   array can be extended in size. If `false', then the output aex 
+   expression is not adjustable. The non-adjustable array may have 
+   some advantanges in efficiency, but I have not observed them, and 
+   this may be lisp-implementation dependent.
 
 ------------------------------------------------
  -- Option: compile
@@ -3959,11 +4038,11 @@ Description:
     mext package: maxdoc; filename: maxdoc-entries.lisp
 
 Description:
-   If this option is true, then lambda functions passed as arguments to a 
-   function will be automatically translated or compiled. If it is false they 
-   will used as interpreted maxima code. Compiling lambda functions usually 
-   greatly deceases the execution time of the function if the lambda function 
-   is called many times.
+   If this option is true, then lambda functions passed as arguments 
+   to a function will be automatically translated or compiled. If it 
+   is false they will used as interpreted maxima code. Compiling 
+   lambda functions usually greatly deceases the execution time of 
+   the function if the lambda function is called many times.
 
 ------------------------------------------------
  -- Function: foptions: foptions(<name>)
@@ -3971,9 +4050,9 @@ Description:
     mext package: defmfun1; filename: defmfun1-max.lisp
 
 Description:
-   Return a list of allowed options to `defmfun1' function <name>. I would 
-   prefer to call this `options', but that name is taken by an unused, 
-   undocumented function.
+   Return a list of allowed options to `defmfun1' function <name>. I 
+   would prefer to call this `options', but that name is taken by an 
+   unused, undocumented function.
 Arguments:
    `foptions' requires one argument <name>, which must be a string or a symbol.
 
@@ -3984,19 +4063,19 @@ Arguments:
 
 Description:
    With a value `ar' this option causes the function to return an 
-   array-representation expression. With a value `ml' a standard lisp list 
-   representation is returned. The array-representation is not a maxima array, 
-   but rather a more-or-less arbitrary maxima expression that is stored 
-   internally as an array. For certain operations, such as random access to 
-   elements of the expression, an array representation is faster than the 
-   standard list representation. One disadvantange of the array representations 
-   is that creating an array is relatively slow. For instance, execution time 
-   may be large if a function returns an expression with many small 
-   subexpressions that are in the array-representation. The majority of the 
-   maxima system does not understand array-representation, so conversion back 
-   to list-representation at may be necessary.
-
-----------------------------------------------------------------
+   array-representation expression. With a value `ml' a standard lisp 
+   list representation is returned. The array-representation is not a 
+   maxima array, but rather a more-or-less arbitrary maxima 
+   expression that is stored internally as an array. For certain 
+   operations, such as random access to elements of the expression, 
+   an array representation is faster than the standard list 
+   representation. One disadvantange of the array representations is 
+   that creating an array is relatively slow. For instance, execution 
+   time may be large if a function returns an expression with many 
+   small subexpressions that are in the array-representation. The 
+   majority of the maxima system does not understand 
+   array-representation, so conversion back to list-representation at 
+   may be necessary.
 
 LocalWords:  mext maxima defmfun aex contrib perl linux gcl sbcl ccl
 LocalWords:  clisp cmucl ecl subdirectory rtests subfolders distname

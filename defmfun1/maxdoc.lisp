@@ -61,7 +61,7 @@
 
 (defvar *ignore-silently* t)
 
-(defvar *text-width* 80)
+(defvar *text-width* 70)
 ;; kludge. we wrap latex text just to improve human readability. but this may
 ;; split argument \verb, which causes latex error. so make lines large.
 (defvar *latex-text-width* 300)
@@ -292,7 +292,7 @@
                       (call-desc-args cd))))
   (format nil "    ~a(~{~a~^, ~})~%  ~a~%~%" (call-desc-name cd) args
           (wrap-text :text (format-doc-text (call-desc-text cd) *format-codes-default*) 
-                     :width 80 :indent *indent3* ) )))
+                     :width 70 :indent *indent3* ) )))
 
 (defun format-call-desc-list (cd-list)
   (format nil "~{~a~}" (nreverse (mapcar #'format-call-desc cd-list))))
