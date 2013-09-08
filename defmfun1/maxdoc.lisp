@@ -137,6 +137,9 @@
         (t (maxima::merror1 (intl:gettext 
            "max-doc:set-format-codes-table Unknown code name ~s.") code-name))))
 
+;; caret escape is not working ??
+;; no, it assumes we are in math mode
+;; a caret in text mode is escaped, when it should  not be
 (defun latex-esc (str)
   (let ((res str))
     (loop for pair in '( ("_" "\\_") ("^" "\\^") ("$" "\\$"))
@@ -641,7 +644,6 @@ must be keyword,value pairs for the doc entry struct."
             (incf i)
             (when (member :thread arg-dir)
               (push i threading-arg-nums)))
-          (format t "threading-arg-nums ~s~%" threading-arg-nums)
           (if (consp threading-arg-nums)
               (progn
                 (setf threading-arg-nums (reverse threading-arg-nums))
@@ -812,6 +814,10 @@ must be keyword,value pairs for the doc entry struct."
                    (let ((sspec (format-arg-specs name)))
                      (if (> (length sspec) 0) 
                        (format nil "~a~%~a~%~a~%" (sect "Arguments") (latex-esc (format nil "~a" sspec)) (skip))
+                       ""))
+                   (let ((sdirective (format-arg-directives name)))
+                     (if (> (length sdirective) 0) 
+                         (format nil "~a~a~%" (latex-esc (format nil "  ~a~%" sdirective)) (skip))
                        ""))
                    (let ((opts (maxima::$foptions name)))
                      (if (> (length opts) 1)
