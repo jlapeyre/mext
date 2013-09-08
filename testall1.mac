@@ -1,32 +1,10 @@
-load(mext);
-
-our_mext_list : mext_list();
-require(discrete_aex);
+load(mext_core);
 
 /* test surviving kill
 kill(all);
 */
+require(["test_defmfun1", "prime_pi", "store", "pw"]);
 
-our_test_list : [mext_system,mext_defmfun1,test_defmfun1,runtime,aex,
-              lists_aex,discrete_aex,alt_eigen,tpsolve];
-
-/*
-mto_poly_solve:
-
-Not really ready yet because we need to exclude some tests and mext::set-rtests is not
-written yet.
-*/
-
-/* our_test_list : [mext_system,aex,lists_aex,discrete_aex]; */
-
-/* our_extra_test_list : []; */
-our_extra_test_list : [pw,implicit];
-
-if member("store", our_mext_list) then our_test_list :
-        cons("store",our_test_list);
-if member("prime_pi", our_mext_list) then our_test_list :
-        cons("prime_pi",our_test_list);
-
-apply('mext_test, our_test_list);
+mext_test('loaded);
 
 kill(our_mext_list, our_test_list, out_extra_test_list);

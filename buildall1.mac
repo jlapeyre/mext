@@ -17,13 +17,10 @@ build_several (package_list) :=
 build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "test_defmfun1",
                 "runtime", "aex",
                 "lists_aex", "discrete_aex", "numerical" ]);
-
+build_several(["alt_eigen", "tpsolve" ]);
 build_several([ "quicklisp", "store" ]);
 
-build_several(["alt_eigen", "tpsolve" ]);
-
 /* Examples from contrib and share */
-
 build_several(["bernstein", "grobner_mext"]);
 
 /* Uncomment this if you have prime_pi package in a subdir of the parent dir */

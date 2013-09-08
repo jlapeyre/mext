@@ -57,12 +57,25 @@
    ,@(loop for n in (get-hash-keys supplied-p-hash) collect `,(gethash n supplied-p-hash))
    ,@(when rest (cdr rest)))) ; binding for &rest arg
 
-;; ... That's all there is to it ...
-;; could look at efficiency:
-;; For instance return before we enter the block (defmspec, defmfun)
+;; Threading, or distributing, over lists of arguments. This is similar
+;; to stock maxima distributing over bags. But presently, stock maxima
+;; either threads over all or none of the arguments. Here, we allow
+;; threading over only specified arguments, which is useful.
+;; We could look at efficiency:
+;; for instance return before we enter the block (defmspec, defmfun)
 ;; IMPORTANT: functions using thread like this cannot put opts before
 ;; the threading args. If we want to allow this, we need to walk through
 ;; and look for Rule an skip over them.
+;;
+;; The present setup calls the function repeatedly, parses all args and opts
+;; every time (after all thread loops are started.) For functions that take
+;; a long time to execute compared to calling, this is ok.
+;; It would be good to have another directive that loops over argments within
+;; the first call. this is more efficient, but restricts what the writer of the
+;; function can do. i.e. the body may not be in the same state each time through
+;; the loop, which is probably not desireable.
+;; After checking threading with string_reverse, I see that threading is
+;; very fast, so I won't be implementing another scheme soon.
 (defun defmfun1-write-threading (name args arg-directives)
   (let ((arg-d (append (getf arg-directives :req ) (getf arg-directives :optional )))
                        (thread-forms '()) (i 0) )
