@@ -629,8 +629,31 @@ must be keyword,value pairs for the doc entry struct."
   "print info abot directives for args, such as :thread"
   (let* ((keyname (concatenate 'string "$" name)) ; why ?
          (lambda-info (defmfun1::get-arg-directives keyname)))
-    nil))
-  
+    (if lambda-info
+        (let* ((arg-list (second lambda-info))
+               (req (getf  arg-list :req))
+               (optional (getf arg-list :optional ))
+               (rest-args (getf arg-list :rest ))
+               (reqo (append req optional))
+               (i 0)
+               (threading-arg-nums '()))
+          (dolist (arg-dir reqo)
+            (incf i)
+            (when (member :thread arg-dir)
+              (push i threading-arg-nums)))
+          (format t "threading-arg-nums ~s~%" threading-arg-nums)
+          (if (consp threading-arg-nums)
+              (progn
+                (setf threading-arg-nums (reverse threading-arg-nums))
+                (let ((verb-end (if (length1p threading-arg-nums) "s" ""))
+                      (pl-end (if (length1p threading-arg-nums) "" "s")))
+                  (format nil "  The ~a argument~a thread~a (distribute~a) over lists."
+                          (comma-separated-english 
+                           (mapcar  #'(lambda (x) (format nil "~:R" x)) threading-arg-nums))
+                          pl-end verb-end verb-end)))
+                         ; hmm comma-separated english inserts a leading space for more than one arg
+            ""))
+      "")))
 
 (defun format-one-spec-in-list (arg-count arg type)
   (format nil "    The ~:R argument ~a must be ~a.~%"
@@ -727,7 +750,7 @@ must be keyword,value pairs for the doc entry struct."
                  (let ((sspec (format-arg-specs name)))
                    (when (> (length sspec) 0) (format nil "Arguments:~%~a" sspec)))
                  (let ((sdirective (format-arg-directives name)))
-                   (when (> (length sdirective) 0) (format nil "  ~a" sdirective)))
+                   (when (> (length sdirective) 0) (format nil "  ~a~%" sdirective)))
                  (let ((opts (maxima::$foptions name)))
                    (if (> (length opts) 1)
                        (format nil "Options:  ~a takes options with default values:~%~a.~%" name 

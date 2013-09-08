@@ -65,7 +65,8 @@
 ;; for instance return before we enter the block (defmspec, defmfun)
 ;; IMPORTANT: functions using thread like this cannot put opts before
 ;; the threading args. If we want to allow this, we need to walk through
-;; and look for Rule an skip over them.
+;; and look for Rule an skip over them. We could make this routine respect
+;; fast-opt and slow-opt.
 ;;
 ;; The present setup calls the function repeatedly, parses all args and opts
 ;; every time (after all thread loops are started.) For functions that take
@@ -227,6 +228,7 @@
           (defmfun1::set-default-options ',name ',opt) ; only for user, not used in macro or function body
           (defmfun1::save-lambda-list-etc ',name ',arg-specs)
           (defmfun1::save-preprocess-specs ',name ',pp-specs)
+          (defmfun1::save-arg-directives ',name ',arg-directives)
 ;          (defmfun1:record-mext-package ',name defmfun1::*mext-package*) ; move to add-doc-entry
           ; Here is the function definition.
           (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) 

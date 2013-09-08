@@ -199,6 +199,7 @@ in a  mext package.")
 
 (defvar *arg-doc-string-table* (make-hash-table :test 'equal))
 (defvar *pp-doc-string-table* (make-hash-table :test 'equal))
+(defvar *arg-directives-doc-string-table* (make-hash-table :test 'equal))
 
 (defun save-lambda-list-etc (&rest info)
   "While expanding a defmfun1 definition, save some lambda list information for documentation."
@@ -208,8 +209,14 @@ in a  mext package.")
   "While expanding a defmfun1 definition, save preprocessing info for documentation."
   (setf (gethash (maxima::maybe-invert-string-case (symbol-name (car info))) *pp-doc-string-table*) info))
 
+(defun save-arg-directives (&rest info)
+  (setf (gethash (maxima::maybe-invert-string-case (symbol-name (car info))) *arg-directives-doc-string-table*) info))
+
 (defun get-lambda-list-etc (name)
   (gethash name *arg-doc-string-table*))
+
+(defun get-arg-directives (name)
+  (gethash name *arg-directives-doc-string-table*))
 
 (defun get-pp-specs (name)
   (gethash name *pp-doc-string-table*))
