@@ -64,7 +64,7 @@
 ;; the threading args. If we want to allow this, we need to walk through
 ;; and look for Rule an skip over them.
 (defun defmfun1-write-threading (name args arg-directives)
-  (let ((arg-d (append (getf arg-directives :req ) (getf arg-directives :rest )))
+  (let ((arg-d (append (getf arg-directives :req ) (getf arg-directives :optional )))
                        (thread-forms '()) (i 0) )
     (dolist (req-arg-d arg-d)
       (when (member :thread req-arg-d)

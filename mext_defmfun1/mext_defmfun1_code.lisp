@@ -90,7 +90,7 @@
 
 ;; redefined
 (mext::no-warning
-(defmfun1 ($mext_info :doc) ((distname :or-string-symbol))
+(defmfun1 ($mext_info :doc) ((distname :or-string-symbol :thread))
   :desc ("Print information about installed mext distribution " :arg "distname"
     ". The list of installed  distributions is built by calling " :mref "mext_list" ".")
     (or (mext::mext-info distname)
@@ -138,7 +138,7 @@
           with " :mrefdot "dont_kill")
   (mk-mlist allbutl))
 
-(defmfun1 ($dont_kill_share :doc) ((package :or-string-symbol))
+(defmfun1 ($dont_kill_share :doc) ((package :or-string-symbol :thread))
   :desc (
  "Prevent symbols in maxima share package " :arg "package"
  " from being killed by " :emrefdot "kill"
@@ -148,7 +148,7 @@
     (mext:do-dont-kill-share name))
   '$done)
 
-(defmfun1 ($allow_kill_share :doc) ((package :or-string-symbol))
+(defmfun1 ($allow_kill_share :doc) ((package :or-string-symbol :thread))
   :desc (
  "Allow symbols in maxima share package " :arg "package"
  " from being killed by " :emrefdot "kill"
@@ -159,12 +159,12 @@
     (mext:do-allow-kill-share name))
   '$done)
 
-(defmfun1 ($dir_exists :doc) ((dir :string))
+(defmfun1 ($dir_exists :doc) ((dir :string :thread))
   :desc ("Returns the pathname as a string  if " :arg "dir" " exists, and " :code "false" " otherwise.")
   (let ((res  (mext::mext-dir-exists-p dir)))
     (if res (namestring res) nil)))
 
-(defmfun1 ($list_directory :doc) ( &optional (dir :string))
+(defmfun1 ($list_directory :doc) ( &optional (dir :string :thread))
   :desc ("Returns a directory listing for " :arg "dir" " or the current directory if no argument is given.")
   (mext::maxima-list-directory dir))
 
@@ -216,7 +216,7 @@ This is from wxmaxima
 ;; 
 ;; !!! Still not right. Not that it does not exist. it's that
 ;; it is not loaded!
-(defmfun1 ($mext_list_package :doc) ((package :or-string-symbol))
+(defmfun1 ($mext_list_package :doc) ((package :or-string-symbol :thread))
   :desc ("List functions and variables defined in the mext pacakge "
  :argdot "package" " A mis-feature is that an empty list is returned
  if the package is not loaded. This function incorrectly returns an empty list
@@ -233,6 +233,7 @@ This is from wxmaxima
           (format nil "Package `~a' is not loaded" name))))))
                                                         
 
+;; convoluted. should rewrite to use :thread
 (defmfun1 ($mext_find_package :doc) ( &rest (items :or-string-symbol) &opt ($file nil :bool))
   :desc 
   ("Find mext packages in which the function or variable "
@@ -265,14 +266,14 @@ This is from wxmaxima
 ;      (car allres))))
 
 
-(defmfun1 ($mtranslate_file :doc) ((input-file :string)
+(defmfun1 ($mtranslate_file :doc) ((input-file :string :thread)
         &optional (ttymsgsp $tr_file_tty_messagesp) 
                                  &opt ($output_file :string))
   :desc( "Like " :emrefcomma "translate_file" " except that the "
          " output filename may be specified as an option.")
   (mext::mext-translate-file input-file $output_file ttymsgsp))
 
-(defmfun1 ($mcompile_file :doc) ((input-file :string) &optional
+(defmfun1 ($mcompile_file :doc) ((input-file :string :thread) &optional
        (bin_file :string) &opt ($tr_file :string))
   :desc( "Like " :emrefcomma "compile_file" " except that the "
          " intermediate, translated filename may be specified as an option. "
@@ -287,4 +288,3 @@ This is from wxmaxima
 (max-doc:see-also-group '("chdir" "pwd" "popdir" "updir" "dirstack" "list_directory"))
 
 (max-doc:see-also-group '("dont_kill" "dont_kill_share" "get_dont_kill" "allow_kill"))
-

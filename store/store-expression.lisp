@@ -23,13 +23,13 @@
     (cl-store::store (if (length1p exprs) (car exprs) (mk-mlist exprs)) file))
   '$done);
 
-(defmfun1 ($restore :doc) ((file :string) )
+(defmfun1 ($restore :doc) ((file :string :thread) )
   :desc ("Reads maxima expressions from file " :arg "file" 
   " created by the function " :mrefdot "store")
   (let ((cl-store::*check-for-circs* t))
     (cl-store::restore file)))
 
-(defmfun1 ($restore_fast :doc) ((file :string) )
+(defmfun1 ($restore_fast :doc) ((file :string :thread) )
   :desc ("Reads maxima expressions from file " :arg "file" " created by the function " 
    :mref "store" ", or " :mref "store_fast" ". No checks for circular references are done.")
   (let ((cl-store::*check-for-circs* nil))

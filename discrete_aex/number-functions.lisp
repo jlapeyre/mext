@@ -21,7 +21,8 @@
   (let ((fs (format nil "~~{~~~d,R~~}" base)))
     (parse-integer (format nil fs digits) :radix base)))
 
-(defmfun1 ($from_digits :doc)  ( (digits :or-ae-list-string :ensure-lex) &optional (base 10))
+;; thread is not working here for some reason
+(defmfun1 ($from_digits :doc)  ( (digits :or-ae-list-string :ensure-lex) &optional (base 10 :thread))
   :desc ( :var "base" " need not be number, but may be, for instance, a symbol. If "
   :var "base" " is a number it must be an integer between 2 and 36. " :var "digits"
   " may be a string rather than a list.")
@@ -80,7 +81,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmfun1 ($integer_string :doc) ((n :integer) &optional (base :or-radix-string 10) (pad :pos-int))
+(defmfun1 ($integer_string :doc) ((n :integer :thread) &optional 
+                                  (base :or-radix-string 10 :thread) (pad :pos-int :thread))
   (let ((fmt 
          (cond ((equal base "roman")
                 (echeck-arg $integer_string :roman-integer n)
@@ -179,7 +181,7 @@
                                            :arg "max" ".")))
 
 
-(defmfun1 ($catalan_number :doc) (n)
+(defmfun1 ($catalan_number :doc) ((n :thread))
  :desc ("Returns the " :var "n" "th catalan number.")
   (if (numberp n) (/ ($binomial (* 2 n) n) (+ n 1))
       (meval (mul (list '(mexpt simp) (add 1 n) -1) ($binomial (mul 2 n) n)))))
@@ -194,7 +196,7 @@
                           :code "catalan_number(n)"))
 
 
-(defmfun1 ($divisor_summatory :doc) ((x :non-neg-number) )
+(defmfun1 ($divisor_summatory :doc) ((x :non-neg-number :thread) )
   :desc 
   ("Returns the divisor summatory function "
    :math "D(x)" " for " :argdot "x"  " The " :mref "divisor_function" " " 
@@ -240,7 +242,7 @@
     prod))
 
 ;         :tmath ( "\\sigma_{x}(n)" "sigma_x(n)")
-(defmfun1 ($divisor_function :doc) ((n :non-neg-int) &optional (x :number 0 ))
+(defmfun1 ($divisor_function :doc) ((n :non-neg-int :thread) &optional (x :number 0 :thread))
   :desc ("Returns the divisor function, or sum of positive divisors function " 
       :lif ((:dmath "\\sigma_{x}(n)=\\sum_{d|n} d^x," "where " :math "d|x"
           " means " :math "d" " divides " :math "n") "sigma_x(n)")
@@ -259,7 +261,7 @@
 
 (max-doc::oeis "divisor_function" '("A000005 for x=0" "A000203 for x=1"))
 
-(defmfun1 ($perfect_p :doc) ((n :pos-int))
+(defmfun1 ($perfect_p :doc) ((n :pos-int :thread))
   :desc ("Returns true if " :arg "n" " is a perfect number. Otherwise, returns false.")
   (if (= n (- ($divisor_function n 1) n)) t nil))
 
@@ -267,7 +269,7 @@
   '("This function computes divisors. It would be far more efficient to use a table of
    known perfect numbers, as very few of them are accessible by current computer hardware."))
 
-(defmfun1 ($abundant_p :doc) ((n :pos-int))
+(defmfun1 ($abundant_p :doc) ((n :pos-int :thread))
   :desc ("Returns true if " :arg "n" " is an abundant number. Otherwise, returns false.")
   (if (< n (- ($divisor_function n 1) n)) t nil))
 
@@ -275,12 +277,12 @@
                        '( :pretext "The abundant numbers between 1 and 100"
                           :code "select(lrange(100),abundant_p)"))
 
-(defmfun1 ($aliquot_sum :doc) ((n :pos-int))
+(defmfun1 ($aliquot_sum :doc) ((n :pos-int :thread))
   :desc ("Returns the aliquot sum of " :argdot "n" " The aliquot sum
  of " :arg "n" " is the sum of the proper divisors of " :argdot "n")
   (- ($divisor_function n 1) n))
 
-(defmfun1 ($amicable_p :doc) ((n :pos-int) (m :pos-int))
+(defmfun1 ($amicable_p :doc) ((n :pos-int :thread) (m :pos-int :thread))
   :desc ("Returns true if " :arg "n" " and " :arg "m" " are amicable, and false otherwise.")
   (and (not (= m n)) (= ($aliquot_sum n) m) (= ($aliquot_sum m) n)))
 
@@ -291,7 +293,7 @@
 
 ;; TODO: allow keeping only the later part of the sequence. Look for periods greater than 1
 ;;(defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) &optional (n2 0 n2-supplied-p :non-neg-int ) )
-(defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) )
+(defmfun1 ($aliquot_sequence :doc) ((k :pos-int :thread) (n :non-neg-int :thread) )
   :desc (" The aliquot sequence is a recursive sequence in which each term is the sum 
     of the proper divisors of the previous term. This function returns the first " :arg "n" 
    " elements (counting from zero) in the aliquot sequence whose first term is " :argdot "k" 

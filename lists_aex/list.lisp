@@ -101,8 +101,7 @@
 (in-package :maxima)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Can't thread over optional args, probably because of reordering ??
-(defmfun-ae $lrange ((arg1 :thread) &optional (imax :thread) (incr 1 :not-zero)  &aux (imin 1) d lst)
+(defmfun-ae $lrange ((arg1 :thread) &optional (imax :thread) (incr 1 :not-zero :thread)  &aux (imin 1) d lst)
   (if (null imax) (setf imax arg1) (setf imin arg1)) ; different number of args changes semantics
   (cond ( (and (numberp imin) (numberp imax) (numberp incr))
          (if (eq o-type '$ar) (make-aex :head '(mlist simp) :arr (max-list::ar-num-range adj-type imin imax incr)

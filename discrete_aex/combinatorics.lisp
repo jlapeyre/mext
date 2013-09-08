@@ -268,14 +268,14 @@
            ,(rand-perm-sym-loop cycle-p)
            oa))))
 
-(defmfun-ae ($random_permutation_sym :doc) ((n :pos-int))
+(defmfun-ae ($random_permutation_sym :doc) ((n :pos-int :thread))
   (rand-perm-sym-body nil))
 
 (add-call-desc '("random_permutation_sym" ("n") 
   ("Returns a random permutation of the integers from " :math "1" " through " :argdot "n"
    " This represents a random element of the symmetric group " :math "S_n" ".")))
 
-(defmfun-ae ($random_cycle :doc) ((n :pos-int))
+(defmfun-ae ($random_cycle :doc) ((n :pos-int :thread))
   (rand-perm-sym-body t))
 
 (add-call-desc '("random_cycle" ("n") 

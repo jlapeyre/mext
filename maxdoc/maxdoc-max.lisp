@@ -63,12 +63,12 @@
 ;    (format stream "\\end{itemize}~%")
 
 
-(defmfun1 ($print_maxdoc_entry :doc) ((item :string))
+(defmfun1 ($print_maxdoc_entry :doc) ((item :string :thread))
   (let ((entry (max-doc:get-doc-entry :es item :section :all)))
     (if entry (max-doc:print-doc-entry entry)
       (format t "Can't find maxdoc entry '~a'.~%" item))))
 
-(defmfun1 ($print_entry_latex :doc) ((item :string))
+(defmfun1 ($print_entry_latex :doc) ((item :string :thread))
   (let ((entry (max-doc:get-doc-entry :es item :section :all)))
     (if entry (max-doc:print-doc-entry-latex entry)
       (format t "Can't find maxdoc entry '~a'.~%" item))))
@@ -116,18 +116,18 @@
    (apply #'examples:add-example (cons name exs)))
  '$done)
 
-(defmfun1 ($maxdoc_split_text :doc) ((text :string))
+(defmfun1 ($maxdoc_split_text :doc) ((text :string :thread))
   :desc ("Split the string " :arg "text" " into a list of strings, using a sequence
  of one or more spaces as the delimeter. Single newlines are removed.")
   (mk-mlist (gjl:split-by-space-and-newline text)))
 
-(defmfun1 ($maxdoc_author :doc) ((name :string) (author :string-or-listof))
+(defmfun1 ($maxdoc_author :doc) ((name :string :thread) (author :string-or-listof))
   :desc ("Set the author(s) for the documentation item " :argdot "name")
   (when (listp author) (pop author))
   (max-doc:author name author)
   '$done)
 
-(defmfun1 ($maxdoc_copyright :doc) ((name :string) copyright)
+(defmfun1 ($maxdoc_copyright :doc) ((name :string :thread) copyright)
   :desc ("Set the copyright information for the documentation item " :argdot "name"
   " " :arg "copyright" " should typically be a list whose first element is an integer
  (the year), with the remaining strings naming the copyright holder. This copyright

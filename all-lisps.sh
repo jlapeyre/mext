@@ -41,8 +41,8 @@ maximas="smaxima"
 #maximas="smaxima"
 #maximas="gmaxima-5.31-2.6.8"
 
-#set_do_all
-set_do_essential
+set_do_all
+#set_do_essential
 
 #build_package_script="buildall1.mac"
 #build_package_script="build_essential.mac"
