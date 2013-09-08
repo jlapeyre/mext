@@ -625,6 +625,13 @@ must be keyword,value pairs for the doc entry struct."
                        (if rest-args (format-arg-specs-rest name rest-args)
                            ""))))))
 
+(defun format-arg-directives (name)
+  "print info abot directives for args, such as :thread"
+  (let* ((keyname (concatenate 'string "$" name)) ; why ?
+         (lambda-info (defmfun1::get-arg-directives keyname)))
+    nil))
+  
+
 (defun format-one-spec-in-list (arg-count arg type)
   (format nil "    The ~:R argument ~a must be ~a.~%"
           arg-count
@@ -719,10 +726,14 @@ must be keyword,value pairs for the doc entry struct."
                                :width *text-width* :indent *indent1*)) "")
                  (let ((sspec (format-arg-specs name)))
                    (when (> (length sspec) 0) (format nil "Arguments:~%~a" sspec)))
+                 (let ((sdirective (format-arg-directives name)))
+                   (when (> (length sdirective) 0) (format nil "  ~a" sdirective)))
                  (let ((opts (maxima::$foptions name)))
                    (if (> (length opts) 1)
-                       (format nil "Options:  ~a takes options with default values: ~a.~%" name 
-                               (format nil "~{~a~^, ~}" (cdr opts)))
+                       (format nil "Options:  ~a takes options with default values:~%~a.~%" name 
+                               (wrap-text 
+                               :text (format nil "~{~a~^, ~}" (cdr opts))
+                               :width *text-width* :indent *indent1*))
                        ""))
                  (let ((atts (maxima::$attributes name)))
                    (if (> (length atts) 1)
