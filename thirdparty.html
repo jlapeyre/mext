@@ -553,7 +553,7 @@ deep copy <I>e</I> converting to lex representation at all levels.</P><P><B>Argu
 <B>Description</B>
 <A HREF="#iapply"><TT>iapply</TT></A> is like maxima <TT>apply</TT>, but it supports aex lists. <I>arg</I> is converted to an ml if it is an aex expression. By default, output is ml regardless of the input representation.</P><P><B>Arguments</B>
 <TT>iapply</TT> requires two arguments.
-The first argument <I>fun</I> must be a function.
+The first argument <I>fun</I> must be a map-able function.
 The second argument <I>arg</I> must be non-atomic.</P><P><B>Options</B>
 <TT>iapply</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>.
 </P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
@@ -579,7 +579,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <TR><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD><TD><TABLE BORDER=0 CELLPADDING="1" CELLSPACING=0><TR><TD><PRE CLASS="verbatim">(%i1) iapply(%%ff,lrange(4,[ot-&gt;ar]));
-(%o1) %%ff(1,2,3,4)
+(%o1) %%ff(&lt;[1,2,3,4]&gt;)
 </PRE></TD></TR>
 </TABLE></TD><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
@@ -595,7 +595,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <TR><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD><TD><TABLE BORDER=0 CELLPADDING="1" CELLSPACING=0><TR><TD><PRE CLASS="verbatim">(%i1) iapply(%%ff,lrange(4,[ot-&gt;ar]), [ot-&gt;ar] );
-(%o1) %%ff&lt;1,2,3,4&gt;
+(%o1) %%ff&lt;&lt;[1,2,3,4]&gt;&gt;
 </PRE></TD></TR>
 </TABLE></TD><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
@@ -718,7 +718,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <TR><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD><TD><TABLE BORDER=0 CELLPADDING="1" CELLSPACING=0><TR><TD><PRE CLASS="verbatim">(%i1) ireverse(lrange(4, [ot-&gt;ar]) );
-(%o1) &lt;[4,3,2,1]&gt;
+(%o1) [&lt;[1,2,3,4]&gt;]
 </PRE></TD></TR>
 </TABLE></TD><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
@@ -734,7 +734,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <TR><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD><TD><TABLE BORDER=0 CELLPADDING="1" CELLSPACING=0><TR><TD><PRE CLASS="verbatim">(%i1) ireverse(lrange(4, [ot-&gt;ar]), [ot-&gt;ml] );
-(%o1) [4,3,2,1]
+(%o1) [&lt;[1,2,3,4]&gt;]
 </PRE></TD></TR>
 </TABLE></TD><TD BGCOLOR=black COLSPAN="1"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
@@ -877,7 +877,7 @@ Some variables are declared fixnum, but this does not seem to improve performanc
  <B>random_cycle</B>(<I>n</I>)
 Returns a random cycle of length <I>n</I>. The return value is a list of the integers from 1 through <I>n</I>, representing an element of the symmetric group <I>S</I><SUB><I>n</I></SUB> that is a cycle.</LI></UL><P>
 <B>Arguments</B>
-<TT>random_cycle</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P><B>Options</B>
+<TT>random_cycle</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P>The first argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>random_cycle</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>.
 </P><P><B>See also</B>
 <A HREF="#random_permutation_sym"><TT>random_permutation_sym</TT></A>, <A HREF="#ae_random_permutation"><TT>ae_random_permutation</TT></A>, <A HREF="#signature_permutation"><TT>signature_permutation</TT></A>, <A HREF="#perm_to_cycles"><TT>perm_to_cycles</TT></A>, and <A HREF="#cycles_to_perm"><TT>cycles_to_perm</TT></A>.</P><P><B>Implementation</B>
@@ -890,7 +890,7 @@ This function uses Sattolo’s algorithm.</P><!--TOC subsection Function: random
  <B>random_permutation_sym</B>(<I>n</I>)
 Returns a random permutation of the integers from 1 through <I>n</I>. This represents a random element of the symmetric group <I>S</I><SUB><I>n</I></SUB>.</LI></UL><P>
 <B>Arguments</B>
-<TT>random_permutation_sym</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P><B>Options</B>
+<TT>random_permutation_sym</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P>The first argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>random_permutation_sym</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>.
 </P><P><B>See also</B>
 <A HREF="#random_cycle"><TT>random_cycle</TT></A>, <A HREF="#ae_random_permutation"><TT>ae_random_permutation</TT></A>, <A HREF="#signature_permutation"><TT>signature_permutation</TT></A>, <A HREF="#perm_to_cycles"><TT>perm_to_cycles</TT></A>, and <A HREF="#cycles_to_perm"><TT>cycles_to_perm</TT></A>.</P><!--TOC subsection Function: signature_permutation-->
@@ -965,14 +965,14 @@ maxdoc has attributes: [hold_all]</P><!--TOC subsection Function: maxdoc_author-
 Set the author(s) for the documentation item <I>name</I>.</P><P><B>Arguments</B>
 <TT>maxdoc_author</TT> requires two arguments.
 The first argument <I>name</I> must be a string.
-The second argument <I>author</I> must be a string or a list of strings.</P><!--TOC subsection Function: maxdoc_copyright-->
+The second argument <I>author</I> must be a string or a list of strings.</P><P>The first argument threads (distributes) over lists.</P><!--TOC subsection Function: maxdoc_copyright-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc51">5.5</A>  Function: maxdoc_copyright<A NAME="sec:maxdoc_copyright"></A></H3><!--SEC END --><P>
 <A NAME="maxdoc_copyright"></A>
 <B>maxdoc_copyright</B>(<I>name</I>, <I>copyright</I>)</P><P>mext package: maxdoc</P><P>
 <B>Description</B>
 Set the copyright information for the documentation item <I>name</I>. <I>copyright</I> should typically be a list whose first element is an integer (the year), with the remaining strings naming the copyright holder. This copyright information will not be printed with documentation, unless <I>print_copyrights</I> is true.</P><P><B>Arguments</B>
 <TT>maxdoc_copyright</TT> requires two arguments.
-The first argument <I>name</I> must be a string.</P><!--TOC subsection Function: maxdoc_examples-->
+The first argument <I>name</I> must be a string.</P><P>The first argument threads (distributes) over lists.</P><!--TOC subsection Function: maxdoc_examples-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc52">5.6</A>  Function: maxdoc_examples<A NAME="sec:maxdoc_examples"></A></H3><!--SEC END --><P>
 <A NAME="maxdoc_examples"></A>
 <B>maxdoc_examples</B>(<I>name</I> :rest <I>examples</I>)</P><P>mext package: maxdoc</P><P>
@@ -997,7 +997,7 @@ Set the current mext package name for maxdoc to <I>packagename</I>. This name wi
 <B>maxdoc_split_text</B>(<I>text</I>)</P><P>mext package: maxdoc</P><P>
 <B>Description</B>
 Split the string <I>text</I> into a list of strings, using a sequence of one or more spaces as the delimeter. Single newlines are removed.</P><P><B>Arguments</B>
-<TT>maxdoc_split_text</TT> requires one argument <I>text</I>, which must be a string.</P><!--TOC subsection Function: mext_package_record-->
+<TT>maxdoc_split_text</TT> requires one argument <I>text</I>, which must be a string.</P><P>The first argument threads (distributes) over lists.</P><!--TOC subsection Function: mext_package_record-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc56">5.10</A>  Function: mext_package_record<A NAME="sec:mext_package_record"></A></H3><!--SEC END --><P>
 <A NAME="mext_package_record"></A>
 <B>mext_package_record</B>(<I>docitems</I>, <I>packagename</I> :optional <I>source-filename</I>)</P><P>mext package: maxdoc</P><P>
@@ -1024,7 +1024,7 @@ If true, then print copyright information with maxdoc documentation.</P><!--TOC 
 <A NAME="print_entry_latex"></A>
 <B>print_entry_latex</B>(<I>item</I>)</P><P>mext package: maxdoc</P><P>
 <B>Arguments</B>
-<TT>print_entry_latex</TT> requires one argument <I>item</I>, which must be a string.</P><!--TOC subsection Variable: print_implementation-->
+<TT>print_entry_latex</TT> requires one argument <I>item</I>, which must be a string.</P><P>The first argument threads (distributes) over lists.</P><!--TOC subsection Variable: print_implementation-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc61">5.15</A>  Variable: print_implementation<A NAME="sec:print_implementation"></A></H3><!--SEC END --><P>
 <A NAME="print_implementation"></A></P><P>mext package: defmfun1</P><P>
 default value <CODE>true</CODE>.</P><P><B>Description</B>
@@ -1033,7 +1033,7 @@ If true, then print implementation information with maxdoc documentation.</P><!-
 <A NAME="print_maxdoc_entry"></A>
 <B>print_maxdoc_entry</B>(<I>item</I>)</P><P>mext package: maxdoc</P><P>
 <B>Arguments</B>
-<TT>print_maxdoc_entry</TT> requires one argument <I>item</I>, which must be a string.</P><!--TOC subsection Function: print_maxdoc_sections-->
+<TT>print_maxdoc_entry</TT> requires one argument <I>item</I>, which must be a string.</P><P>The first argument threads (distributes) over lists.</P><!--TOC subsection Function: print_maxdoc_sections-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc63">5.17</A>  Function: print_maxdoc_sections<A NAME="sec:print_maxdoc_sections"></A></H3><!--SEC END --><P>
 <A NAME="print_maxdoc_sections"></A>
 <B>print_maxdoc_sections</B>()</P><P>mext package: maxdoc</P><P>
@@ -1293,7 +1293,7 @@ Read the string <I>s</I> in the pager given by the maxima variable <CODE>pager_c
 Reads and returns expressions from the file <I>file</I>.</LI></UL><P>
 <B>Description</B>
 Reads maxima expressions from file <I>file</I> created by the function <A HREF="#store"><TT>store</TT></A>.</P><P><B>Arguments</B>
-<TT>restore</TT> requires one argument <I>file</I>, which must be a string.</P><P><B>See also</B>
+<TT>restore</TT> requires one argument <I>file</I>, which must be a string.</P><P>The first argument threads (distributes) over lists.</P><P><B>See also</B>
 <A HREF="#store"><TT>store</TT></A>, <A HREF="#store_fast"><TT>store_fast</TT></A>, and <A HREF="#restore_fast"><TT>restore_fast</TT></A>.</P><!--TOC subsection Function: restore_fast-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc83">8.5</A>  Function: restore_fast<A NAME="sec:restore_fast"></A></H3><!--SEC END --><P>
 <A NAME="restore_fast"></A>
@@ -1304,7 +1304,7 @@ Reads maxima expressions from file <I>file</I> created by the function <A HREF="
 Reads and returns expressios from the file <I>file</I>. No checking for circular references is done.</LI></UL><P>
 <B>Description</B>
 Reads maxima expressions from file <I>file</I> created by the function <A HREF="#store"><TT>store</TT></A>, or <A HREF="#store_fast"><TT>store_fast</TT></A>. No checks for circular references are done.</P><P><B>Arguments</B>
-<TT>restore_fast</TT> requires one argument <I>file</I>, which must be a string.</P><P><B>See also</B>
+<TT>restore_fast</TT> requires one argument <I>file</I>, which must be a string.</P><P>The first argument threads (distributes) over lists.</P><P><B>See also</B>
 <A HREF="#store"><TT>store</TT></A>, <A HREF="#restore"><TT>restore</TT></A>, and <A HREF="#store_fast"><TT>store_fast</TT></A>.</P><!--TOC subsection Function: store-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc84">8.6</A>  Function: store<A NAME="sec:store"></A></H3><!--SEC END --><P>
 <A NAME="store"></A>
@@ -1315,7 +1315,8 @@ Reads maxima expressions from file <I>file</I> created by the function <A HREF="
 stores the expressions to the file <I>file</I>.</LI></UL><P>
 <B>Description</B>
 Stores maxima expressions <I>exprs</I> in <I>file</I> in binary format. Many types of lisp expressions and subexpressions are supported: numbers,strings,list,arrays,hashtables,structures,....</P><P><B>Arguments</B>
-<TT>store</TT> requires one or more arguments. The first argument <I>file</I> must be a string.</P><P><B>Examples</B></P><P>Save a graph to a file. This cannot be done with the command &lt;save&gt;.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+<TT>store</TT> requires one or more arguments. The first argument <I>file</I> must be a string.</P><P><B>Examples</B></P><P>Save a graph to a file. This cannot be done with the command 
+&lt;save&gt;.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -1410,22 +1411,21 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 </TABLE><!--TOC subsection Function: constant_list-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc88">9.2</A>  Function: constant_list<A NAME="sec:constant_list"></A></H3><!--SEC END --><P>
 <A NAME="constant_list"></A>
-<B>constant_list</B>(<I>expr</I>, <I>list</I>)</P><P>mext package: lists_aex</P><P>
+<B>constant_list</B>(<I>c</I>, <I>spec</I> :optional <I>head</I>)</P><P>mext package: lists_aex</P><P>
 <B>Description</B>
 Returns a list of <I>n</I> elements, each of which is an independent copy of expr. <CODE>constant_list(expr,[n,m,..])</CODE> returns a nested list of dimensions <I>n</I>,<I>m</I>,…where each leaf is an independent copy of expr and the copies of each list at each level are independent. If a third argument 
-is given, then it is used as the op, rather than ‘list’, at every level.</P><P><B>Arguments</B>
+is given, then it is used as the op, rather than ‘list’, at every level. The third argument may also be a list of heads to apply, one at each leve.</P><P><B>Arguments</B>
 <TT>constant_list</TT> requires either two or three arguments.
 The second argument <I>spec</I> must be a positive integer or a list of positive integers.</P><P><B>Options</B>
-<TT>constant_list</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>.
-</P><P><B>See also</B>
-<A HREF="#makelist"><TT>makelist</TT></A>, <A HREF="#lrange"><TT>lrange</TT></A>, and <A HREF="#table"><TT>table</TT></A>.</P><!--TOC subsection Function: count-->
+<TT>constant_list</TT> takes options with default values: <TT>match-&gt;false</TT>, <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>.
+</P><!--TOC subsection Function: count-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc89">9.3</A>  Function: count<A NAME="sec:count"></A></H3><!--SEC END --><P>
 <A NAME="count"></A>
 <B>count</B>(<I>expr</I>, <I>item</I>)</P><P>mext package: lists_aex</P><P>
 <B>Description</B>
 Counts the number of items in <I>expr</I> matching <I>item</I>. If <I>item</I> is a lambda function then <I>compile</I> must be true.</P><P><B>Arguments</B>
 <TT>count</TT> requires two arguments.
-The first argument <I>expr</I> must be non-atomic and either aex or represented by a lisp list.</P><P><B>Options</B>
+The first argument <I>expr</I> must be non-atomic and either aex or represented by a lisp list.</P><P>The second argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>count</TT> takes options with default values: <TT>compile-&gt;true</TT>.
 </P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
@@ -1463,7 +1463,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 Tests the elements of <I>expr</I> in order, dropping them until <I>test</I> fails. The remaining elements are returned in an expression with the same op as that <I>expr</I>.</LI></UL><P>
 <B>Arguments</B>
 <TT>drop_while</TT> requires two arguments.
-The first argument <I>expr</I> must be non-atomic and represented by a lisp list.</P><P><B>Options</B>
+The first argument <I>expr</I> must be non-atomic and represented by a lisp list.</P><P>The second argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>drop_while</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>, <TT>compile-&gt;true</TT>.
 </P><P><B>Examples</B></P><P>Drop elements as long as they are negative.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
@@ -1491,7 +1491,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 Returns true if <I>test</I> is true for each element in <I>expr</I>. Otherwise, false is returned. This is like <CODE>every</CODE> but allow a test that takes only one argument. For some inputs, every1 is much faster than every.</LI></UL><P>
 <B>Arguments</B>
 <TT>every1</TT> requires two arguments.
-The first argument <I>expr</I> must be non-atomic and represented by a lisp list.</P><P><B>Options</B>
+The first argument <I>expr</I> must be non-atomic and represented by a lisp list.</P><P>The second argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>every1</TT> takes options with default values: <TT>compile-&gt;true</TT>.
 </P><!--TOC subsection Function: fold-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc92">9.6</A>  Function: fold<A NAME="sec:fold"></A></H3><!--SEC END --><P>
@@ -1499,7 +1499,7 @@ The first argument <I>expr</I> must be non-atomic and represented by a lisp list
 <B>Description</B>
 <CODE>fold(f,x,[a,b,c])</CODE> returns <CODE> f(f(f(x,a),b),c).</CODE></P><P><B>Arguments</B>
 <TT>fold</TT> requires three arguments.
-The third argument <I>v</I> must be non-atomic.</P><P><B>Options</B>
+The third argument <I>v</I> must be non-atomic.</P><P>The first argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>fold</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>, <TT>compile-&gt;true</TT>.
 </P><P><B>See also</B>
 <A HREF="#fold_list"><TT>fold_list</TT></A> and <A HREF="#nest"><TT>nest</TT></A>.</P><!--TOC subsection Function: fold_list-->
@@ -1508,7 +1508,7 @@ The third argument <I>v</I> must be non-atomic.</P><P><B>Options</B>
 <B>Description</B>
 fold_list(f,x,[a,b,c]) returns [f(x,a),f(f(x,a),b),f(f(f(x,a),b),c)].</P><P><B>Arguments</B>
 <TT>fold_list</TT> requires three arguments.
-The third argument <I>v</I> must be non-atomic.</P><P><B>Options</B>
+The third argument <I>v</I> must be non-atomic.</P><P>The first argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>fold_list</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>, <TT>compile-&gt;true</TT>.
 </P><P><B>See also</B>
 <A HREF="#fold"><TT>fold</TT></A> and <A HREF="#nest"><TT>nest</TT></A>.</P><!--TOC subsection Function: icons-->
@@ -1568,7 +1568,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <B>Description</B>
 Computes the length of <I>expr</I> while <I>test</I> is true.</P><P><B>Arguments</B>
 <TT>length_while</TT> requires two arguments.
-The first argument <I>expr</I> must be non-atomic and represented by a lisp list.</P><P><B>Options</B>
+The first argument <I>expr</I> must be non-atomic and represented by a lisp list.</P><P>The second argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>length_while</TT> takes options with default values: <TT>compile-&gt;true</TT>.
 </P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
@@ -1598,7 +1598,7 @@ returns a list of expressions from <I>start</I> through <I>stop</I> in steps of 
 <B>Description</B>
 lrange is much more efficient than makelist for creating ranges, particularly for large lists (e.g. 10<SUP>5</SUP> or more items.) Functions for creating a list of numbers, in order of decreasing speed, are: <A HREF="#lrange"><TT>lrange</TT></A>, <A HREF="#table"><TT>table</TT></A>, <TT>create_list</TT>,<TT>makelist</TT>.</P><P><B>Arguments</B>
 <TT>lrange</TT> requires between one and three arguments.
-The third argument <I>incr</I> must be an expression that is not zero.</P><P><B>Options</B>
+The third argument <I>incr</I> must be an expression that is not zero.</P><P>The first, second, and third arguments thread (distribute) over lists.</P><P><B>Options</B>
 <TT>lrange</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>.
 </P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
@@ -1626,8 +1626,8 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 </TD></TR>
 </TABLE></TD></TR>
 </TABLE></TD></TR>
-</TABLE><P>The type of the first element and increment determine the type of the 
-elements.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+</TABLE><P>The type of the first element and increment determine the type of 
+the elements.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -1674,8 +1674,8 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <B>Description</B>
 nest(f,x,n) returns f(...f(f(f(x)))...) where there are n nested calls of f.</P><P><B>Arguments</B>
 <TT>nest</TT> requires three arguments.
-The first argument <I>f</I> must be a function.
-The third argument <I>n</I> must be a non-negative integer.</P><P><B>Options</B>
+The first argument <I>f</I> must be a map-able function.
+The third argument <I>n</I> must be a non-negative integer.</P><P>The first and third arguments thread (distribute) over lists.</P><P><B>Options</B>
 <TT>nest</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>, <TT>compile-&gt;true</TT>.
 </P><!--TOC subsection Function: nest_list-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc99">9.13</A>  Function: nest_list<A NAME="sec:nest_list"></A></H3><!--SEC END --><P>
@@ -1683,7 +1683,7 @@ The third argument <I>n</I> must be a non-negative integer.</P><P><B>Options</B>
 <B>nest_list</B>(<I>f</I>, <I>x</I>, <I>n</I>)</P><P>mext package: lists_aex</P><P>
 <B>Arguments</B>
 <TT>nest_list</TT> requires three arguments.
-The third argument <I>n</I> must be a non-negative integer.</P><P><B>Options</B>
+The third argument <I>n</I> must be a non-negative integer.</P><P>The first and third arguments thread (distribute) over lists.</P><P><B>Options</B>
 <TT>nest_list</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>, <TT>compile-&gt;true</TT>.
 </P><P><B>Examples</B></P><P>Find the first 10 primes after 100.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
@@ -1715,7 +1715,7 @@ applies <I>f</I> not more than <I>max</I> times.</LI></UL><P>
 <B>Arguments</B>
 <TT>nest_while</TT> requires between three and five arguments.
 The fourth argument <I>min</I> must be a non-negative integer.
-The fifth argument <I>max</I> must be a non-negative integer.</P><P><B>Options</B>
+The fifth argument <I>max</I> must be a non-negative integer.</P><P>The first and third arguments thread (distribute) over lists.</P><P><B>Options</B>
 <TT>nest_while</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>, <TT>compile-&gt;true</TT>.
 </P><P><B>Implementation</B>
 This should be modified to allow applying test to more than just the most recent result.</P><!--TOC subsection Function: nreverse-->
@@ -1724,8 +1724,8 @@ This should be modified to allow applying test to more than just the most recent
 <B>nreverse</B>(<I>e</I>)</P><P>mext package: lists_aex</P><P>
 <B>Description</B>
 Destructively reverse the arguments of expression <I>e</I>. This is more efficient than using reverse.</P><P><B>Arguments</B>
-<TT>nreverse</TT> requires one argument <I>e</I>, which must be non-atomic.</P><P><B>Examples</B></P><P>Be careful not to use <I>a</I> after applying nreverse. Do assign the result 
-to another variable.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+<TT>nreverse</TT> requires one argument <I>e</I>, which must be non-atomic.</P><P><B>Examples</B></P><P>Be careful not to use <I>a</I> after applying nreverse. Do assign 
+the result to another variable.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -1783,7 +1783,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 Returns a list of all elements of <I>expr</I> for which <I>test</I> is true. <I>expr</I> may have any op. If <I>n</I> is supplied, then at most <I>n</I> elements are examined. <A HREF="#select"><TT>select</TT></A> is much faster than <TT>sublist</TT>, but may be less generally applicable.</P><P><B>Arguments</B>
 <TT>select</TT> requires either two or three arguments.
 The first argument <I>expr</I> must be non-atomic and represented by a lisp list.
-The third argument <I>n</I> must be a positive integer.</P><P><B>Options</B>
+The third argument <I>n</I> must be a positive integer.</P><P>The second argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>select</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>, <TT>compile-&gt;true</TT>.
 </P><P><B>Examples</B></P><P>Select elements less than 3</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
@@ -1937,7 +1937,8 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 </TD></TR>
 </TABLE></TD></TR>
 </TABLE></TD></TR>
-</TABLE><P>Take the last through first elements of a list counting backwards by one.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+</TABLE><P>Take the last through first elements of a list counting backwards 
+by one.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -1969,8 +1970,8 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 </TD></TR>
 </TABLE></TD></TR>
 </TABLE></TD></TR>
-</TABLE><P>Take the second through third elements at the first level and the last 2 
-elements at the second level.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+</TABLE><P>Take the second through third elements at the first level and the 
+last 2 elements at the second level.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -1996,7 +1997,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 collects the elements in <I>expr</I> until <I>test</I> fails on one of them. The op of the returned expression is the same as the op of <I>expr</I>.</LI></UL><P>
 <B>Arguments</B>
 <TT>take_while</TT> requires two arguments.
-The first argument <I>expr</I> must be non-atomic and represented by a lisp list.</P><P><B>Options</B>
+The first argument <I>expr</I> must be non-atomic and represented by a lisp list.</P><P>The second argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>take_while</TT> takes options with default values: <TT>adj-&gt;true</TT>, <TT>ot-&gt;ml</TT>, <TT>compile-&gt;true</TT>.
 </P><P><B>Examples</B></P><P>Take elements as long as they are negative.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
@@ -2101,7 +2102,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <B>abundant_p</B>(<I>n</I>)</P><P>mext package: discrete_aex</P><P>
 <B>Description</B>
 Returns true if <I>n</I> is an abundant number. Otherwise, returns false.</P><P><B>Arguments</B>
-<TT>abundant_p</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P><B>Examples</B></P><P>The abundant numbers between 1 and 100</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+<TT>abundant_p</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P>The first argument threads (distributes) over lists.</P><P><B>Examples</B></P><P>The abundant numbers between 1 and 100</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -2127,7 +2128,7 @@ The aliquot sequence is a recursive sequence in which each term is the sum of th
 repeats the previous element.</P><P><B>Arguments</B>
 <TT>aliquot_sequence</TT> requires two arguments.
 The first argument <I>k</I> must be a positive integer.
-The second argument <I>n</I> must be a non-negative integer.</P><P><B>Examples</B></P><P>Perfect numbers give a repeating sequence of period 1.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+The second argument <I>n</I> must be a non-negative integer.</P><P>The first and second arguments thread (distribute) over lists.</P><P><B>Examples</B></P><P>Perfect numbers give a repeating sequence of period 1.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -2143,8 +2144,8 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 </TD></TR>
 </TABLE></TD></TR>
 </TABLE></TD></TR>
-</TABLE><P>Aspiring numbers are those which are not perfect, but terminate with a 
-repeating perfect number.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+</TABLE><P>Aspiring numbers are those which are not perfect, but terminate 
+with a repeating perfect number.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -2167,7 +2168,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <B>aliquot_sum</B>(<I>n</I>)</P><P>mext package: discrete_aex</P><P>
 <B>Description</B>
 Returns the aliquot sum of <I>n</I>. The aliquot sum of <I>n</I> is the sum of the proper divisors of <I>n</I>.</P><P><B>Arguments</B>
-<TT>aliquot_sum</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P><B>Attributes</B>
+<TT>aliquot_sum</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P>The first argument threads (distributes) over lists.</P><P><B>Attributes</B>
 aliquot_sum has attributes: [match_form]</P><P><B>See also</B>
 <A HREF="#divisor_function"><TT>divisor_function</TT></A>, <A HREF="#aliquot_sequence"><TT>aliquot_sequence</TT></A>, <A HREF="#divisor_summatory"><TT>divisor_summatory</TT></A>, <A HREF="#perfect_p"><TT>perfect_p</TT></A>, and <A HREF="#abundant_p"><TT>abundant_p</TT></A>.</P><!--TOC subsection Function: amicable_p-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc113">10.4</A>  Function: amicable_p<A NAME="sec:amicable_p"></A></H3><!--SEC END --><P>
@@ -2177,7 +2178,7 @@ aliquot_sum has attributes: [match_form]</P><P><B>See also</B>
 Returns true if <I>n</I> and <I>m</I> are amicable, and false otherwise.</P><P><B>Arguments</B>
 <TT>amicable_p</TT> requires two arguments.
 The first argument <I>n</I> must be a positive integer.
-The second argument <I>m</I> must be a positive integer.</P><P><B>Examples</B></P><P>The first few amicable pairs.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+The second argument <I>m</I> must be a positive integer.</P><P>The first and second arguments thread (distribute) over lists.</P><P><B>Examples</B></P><P>The first few amicable pairs.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -2200,7 +2201,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <B>catalan_number</B>(<I>n</I>)</P><P>mext package: discrete_aex</P><P>
 <B>Description</B>
 Returns the <I>n</I>th catalan number.</P><P><B>Arguments</B>
-<TT>catalan_number</TT> requires one argument.</P><P><B>Examples</B></P><P>The catalan number for n from 1 through 12.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+<TT>catalan_number</TT> requires one argument.</P><P>The first argument threads (distributes) over lists.</P><P><B>Examples</B></P><P>The catalan number for n from 1 through 12.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -2245,7 +2246,7 @@ Returns the divisor function, or sum of positive divisors function </P><TABLE CL
 implemented in the maxima core and is callled <TT>divsum</TT>.</P><P><B>Arguments</B>
 <TT>divisor_function</TT> requires either one or two arguments.
 The first argument <I>n</I> must be a non-negative integer.
-The second argument <I>x</I> must be a number.</P><P><B>Attributes</B>
+The second argument <I>x</I> must be a number.</P><P>The first and second arguments thread (distribute) over lists.</P><P><B>Attributes</B>
 divisor_function has attributes: [match_form]</P><P>OEIS number: A000005 for x=0 and A000203 for x=1.</P><P><B>See also</B>
 <A HREF="#aliquot_sum"><TT>aliquot_sum</TT></A>, <A HREF="#aliquot_sequence"><TT>aliquot_sequence</TT></A>, <A HREF="#divisor_summatory"><TT>divisor_summatory</TT></A>, <A HREF="#perfect_p"><TT>perfect_p</TT></A>, and <A HREF="#abundant_p"><TT>abundant_p</TT></A>.</P><!--TOC subsection Function: divisor_summatory-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc116">10.7</A>  Function: divisor_summatory<A NAME="sec:divisor_summatory"></A></H3><!--SEC END --><P>
@@ -2253,7 +2254,7 @@ divisor_function has attributes: [match_form]</P><P>OEIS number: A000005 for x=0
 <B>divisor_summatory</B>(<I>x</I>)</P><P>mext package: discrete_aex</P><P>
 <B>Description</B>
 Returns the divisor summatory function <I>D</I>(<I>x</I>) for <I>x</I>. The <A HREF="#divisor_function"><TT>divisor_function</TT></A> σ<SUB>0</SUB>(<I>n</I>) counts the number of unique divisors of the natural number <I>n</I>. <I>D</I>(<I>x</I>) is the sum of σ<SUB>0</SUB>(<I>n</I>) over <I>n</I> ≤ <I>x</I>.</P><P><B>Arguments</B>
-<TT>divisor_summatory</TT> requires one argument <I>x</I>, which must be a non-negative number.</P><P><B>Attributes</B>
+<TT>divisor_summatory</TT> requires one argument <I>x</I>, which must be a non-negative number.</P><P>The first argument threads (distributes) over lists.</P><P><B>Attributes</B>
 divisor_summatory has attributes: [match_form]</P><P><B>Examples</B></P><P>D(n) for n from 1 through 12</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
@@ -2283,7 +2284,7 @@ returns the integer represented by the base <I>base</I> digits in the list or st
 <B>Description</B>
 <I>base</I> need not be number, but may be, for instance, a symbol. If <I>base</I> is a number it must be an integer between 2 and 36. <I>digits</I> may be a string rather than a list.</P><P><B>Arguments</B>
 <TT>from_digits</TT> requires either one or two arguments.
-The first argument <I>digits</I> must be a list (lex or aex) or a string.</P><P><B>See also</B>
+The first argument <I>digits</I> must be a list (lex or aex) or a string.</P><P>The second argument threads (distributes) over lists.</P><P><B>See also</B>
 <A HREF="#integer_digits"><TT>integer_digits</TT></A> and <A HREF="#integer_string"><TT>integer_string</TT></A>.</P><!--TOC subsection Function: integer_digits-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc118">10.9</A>  Function: integer_digits<A NAME="sec:integer_digits"></A></H3><!--SEC END --><P>
 <A NAME="integer_digits"></A>
@@ -2319,7 +2320,7 @@ returns a string containing the english word form of the ordinal (counting) numb
 <TT>integer_string</TT> requires between one and three arguments.
 The first argument <I>n</I> must be an integer.
 The second argument <I>base</I> must be a valid radix (an integer between 2 and 36) or a string.
-The third argument <I>pad</I> must be a positive integer.</P><P><B>See also</B>
+The third argument <I>pad</I> must be a positive integer.</P><P>The first, second, and third arguments thread (distribute) over lists.</P><P><B>See also</B>
 <A HREF="#integer_digits"><TT>integer_digits</TT></A> and <A HREF="#from_digits"><TT>from_digits</TT></A>.</P><!--TOC subsection Function: oeis_A092143-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc120">10.11</A>  Function: oeis_A092143<A NAME="sec:oeis_A092143"></A></H3><!--SEC END --><P>
 <A NAME="oeis_A092143"></A>
@@ -2332,7 +2333,7 @@ Returns the cumulative product of all divisors of integers from 1 to <I>n</I>.</
 <B>perfect_p</B>(<I>n</I>)</P><P>mext package: discrete_aex</P><P>
 <B>Description</B>
 Returns true if <I>n</I> is a perfect number. Otherwise, returns false.</P><P><B>Arguments</B>
-<TT>perfect_p</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P><B>See also</B>
+<TT>perfect_p</TT> requires one argument <I>n</I>, which must be a positive integer.</P><P>The first argument threads (distributes) over lists.</P><P><B>See also</B>
 <A HREF="#divisor_function"><TT>divisor_function</TT></A>, <A HREF="#aliquot_sum"><TT>aliquot_sum</TT></A>, <A HREF="#aliquot_sequence"><TT>aliquot_sequence</TT></A>, <A HREF="#divisor_summatory"><TT>divisor_summatory</TT></A>, and <A HREF="#abundant_p"><TT>abundant_p</TT></A>.</P><P><B>Implementation</B>
 This function computes divisors. It would be far more efficient to use a table of known perfect numbers, as very few of them are accessible by current computer hardware.</P><!--TOC subsection Function: prime_pi-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc122">10.13</A>  Function: prime_pi<A NAME="sec:prime_pi"></A></H3><!--SEC END --><P>
@@ -2343,16 +2344,15 @@ This function computes divisors. It would be far more efficient to use a table o
  <B>prime_pi</B>(<I>n</I>)
 returns the number of primes less than or equal to <I>n</I>.</LI></UL><P>
 <B>Description</B>
-Computes the prime counting function. The option <I>threads</I> specifies the maximum number of cpu threads to use. The routine may use fewer threads, depending on the value of <I>n</I>. The percent of the calculation that is finished is printed during the calculation if the option <I>status</I> is 
-true. The status will only work under some terminals.</P><P><B>Arguments</B>
+Computes the prime counting function. The option <I>threads</I> specifies the maximum number of cpu threads to use. The routine may use fewer threads, depending on the value of <I>n</I>. The value of <I>n</I> is limited to 2<SUP>64</SUP> that is, about 1.84e+18. </P><P>The percent of the calculation that is finished is printed during the calculation if the option <I>status</I> is true. The status will only work under some terminals.</P><P><B>Arguments</B>
 <TT>prime_pi</TT> requires one argument <I>n</I>, which must be equivalent to an unsigned 64 bit integer
 (that is, an integer between 0 and 2 to the power 64)
 (We need to modify the doc system so we can use notation for powers in arg check strings.
-.</P><P><B>Options</B>
+.</P><P>The first argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>prime_pi</TT> takes options with default values: <TT>status-&gt;false</TT>, <TT>threads-&gt;1</TT>.
 </P><P><B>See also</B>
 <A HREF="#prime_pi_soe"><TT>prime_pi_soe</TT></A>, <A HREF="#next_prime"><TT>next_prime</TT></A>, and <A HREF="#prev_prime"><TT>prev_prime</TT></A>.</P><P><B>Implementation</B>
-This algorithm is fast, for a general purpose mathematics program. It combines a segmented sieve implemented as a C library with tables.</P><P><B>Authors</B>
+This algorithm is fast, especially for a general purpose mathematics program. It combines a segmented sieve implemented as a C library with tables.</P><P><B>Authors</B>
 Kim Walisch (C library), Tomas Oliveira e Silva (tables), and John Lapeyre (lisp).</P><!--TOC subsection Function: prime_pi_soe-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc123">10.14</A>  Function: prime_pi_soe<A NAME="sec:prime_pi_soe"></A></H3><!--SEC END --><P>
 <A NAME="prime_pi_soe"></A>
@@ -2380,7 +2380,7 @@ The first argument <I>min</I> must be equivalent to an unsigned 64 bit integer
 The second argument <I>max</I> must be equivalent to an unsigned 64 bit integer
 (that is, an integer between 0 and 2 to the power 64)
 (We need to modify the doc system so we can use notation for powers in arg check strings.
-.</P><P><B>Options</B>
+.</P><P>The first and second arguments thread (distribute) over lists.</P><P><B>Options</B>
 <TT>prime_twins</TT> takes options with default values: <TT>ktuplet-&gt;2</TT>, <TT>status-&gt;false</TT>, <TT>threads-&gt;1</TT>.
 </P><P><B>See also</B>
 <A HREF="#prime_pi"><TT>prime_pi</TT></A>, <A HREF="#next_prime"><TT>next_prime</TT></A>, <A HREF="#prev_prime"><TT>prev_prime</TT></A>, and <A HREF="#primep"><TT>primep</TT></A>.</P><P><B>Implementation</B>
@@ -2613,7 +2613,7 @@ Numerically integrate <I>expr</I>, with the variable and limits supplied in the 
 support for complex numbers is implemented. Some integrable singularities are found automatically. </P><P>If the option <I>call</I> is true, then calls made to quadpack are also returned in a list. If <I>call</I> is <I>short</I>, then only the name of the quadpack routine is included. </P><P>By default, information on the integration is returned with the results. If the option <I>info</I> is false, then only the result of the integration is returned. </P><P>If the option <I>sing</I> is false, then <A HREF="#nintegrate"><TT>nintegrate</TT></A> will not search for internal singularities, but user supplied singularities will still be used. </P><P>This function is not well tested and may give incorrect results. </P><P>See the Maxima documentation for quadpack.</P><P><B>Arguments</B>
 <TT>nintegrate</TT> requires either two or three arguments.
 The second argument <I>varspec</I> must be a list.
-The third argument <I>singlist</I> must be a list.</P><P><B>Options</B>
+The third argument <I>singlist</I> must be a list.</P><P>The first argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>nintegrate</TT> takes options with default values: <TT>epsrel-&gt;1.e-8</TT>, <TT>epsabs-&gt;0</TT>, <TT>subint-&gt;200</TT>, <TT>info-&gt;true</TT>, <TT>words-&gt;true</TT>, <TT>calls-&gt;false</TT>, <TT>sing-&gt;true</TT>.
 </P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
@@ -2902,9 +2902,9 @@ length_eq is implemented with defmfun1, which slows things down a bit. So be cau
 <A NAME="type_of"></A>
 <B>type_of</B>(<I>e</I>)</P><P>mext package: aex</P><P>
 <B>Description</B>
-Return something like the ‘type’ of a maxima expression. This is a bit ill defined currently. <A HREF="#type_of"><TT>type_of</TT></A> uses the lisp function <CODE>type-of</CODE>. </P><P>If the option <I>verbose</I> is true, then more information is returned.</P><P><B>Arguments</B>
+Return something like the ‘type’ of a maxima expression. This is a bit ill defined currently. <A HREF="#type_of"><TT>type_of</TT></A> uses the lisp function <CODE>type-of</CODE>. </P><P>If the option <I>info</I> is true, then more information is returned.</P><P><B>Arguments</B>
 <TT>type_of</TT> requires one argument.</P><P><B>Options</B>
-<TT>type_of</TT> takes options with default values: <TT>verbose-&gt;false</TT>.
+<TT>type_of</TT> takes options with default values: <TT>info-&gt;false</TT>.
 </P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
@@ -2939,8 +2939,8 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 </TD></TR>
 </TABLE></TD></TR>
 </TABLE></TD></TR>
-</TABLE><P>type_of returns the type of the lisp struct corresponding to a maxima 
-object.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+</TABLE><P>type_of returns the type of the lisp struct corresponding to a 
+maxima object.</P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -3043,7 +3043,7 @@ allow_kill has attributes: [hold_all]</P><P><B>See also</B>
 <B>allow_kill_share</B>(<I>package</I>)</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
 Allow symbols in maxima share package <I>package</I> from being killed by <TT>kill</TT>. This undoes the effect of <A HREF="#dont_kill_share"><TT>dont_kill_share</TT></A>. Currently (if this document is up-to-date) only ‘basic’ and ‘lrats’ are in the database.</P><P><B>Arguments</B>
-<TT>allow_kill_share</TT> requires one argument <I>package</I>, which must be a string or a symbol.</P><!--TOC subsection Function: chdir-->
+<TT>allow_kill_share</TT> requires one argument <I>package</I>, which must be a string or a symbol.</P><P>The first argument threads (distributes) over lists.</P><!--TOC subsection Function: chdir-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc172">16.3</A>  Function: chdir<A NAME="sec:chdir"></A></H3><!--SEC END --><P>
 <A NAME="chdir"></A>
 <B>chdir</B>( :optional <I>dir</I>)</P><P>mext package: mext_defmfun1</P><P>
@@ -3061,7 +3061,7 @@ Set the working directory for maxima/lisp. With some lisps, such as cmu lisp the
 <B>dir_exists</B>(<I>dir</I>)</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
 Returns the pathname as a string if <I>dir</I> exists, and <CODE>false</CODE> otherwise.</P><P><B>Arguments</B>
-<TT>dir_exists</TT> requires one argument <I>dir</I>, which must be a string.</P><!--TOC subsection Function: dirstack-->
+<TT>dir_exists</TT> requires one argument <I>dir</I>, which must be a string.</P><P>The first argument threads (distributes) over lists.</P><!--TOC subsection Function: dirstack-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc174">16.5</A>  Function: dirstack<A NAME="sec:dirstack"></A></H3><!--SEC END --><P>
 <A NAME="dirstack"></A>
 <B>dirstack</B>()</P><P>mext package: mext_defmfun1</P><P>
@@ -3082,7 +3082,7 @@ dont_kill has attributes: [hold_all]</P><P><B>See also</B>
 <B>dont_kill_share</B>(<I>package</I>)</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
 Prevent symbols in maxima share package <I>package</I> from being killed by <TT>kill</TT>. Currently (if this document is up-to-date) only ‘basic’ and ‘lrats’ are in the database.</P><P><B>Arguments</B>
-<TT>dont_kill_share</TT> requires one argument <I>package</I>, which must be a string or a symbol.</P><P><B>See also</B>
+<TT>dont_kill_share</TT> requires one argument <I>package</I>, which must be a string or a symbol.</P><P>The first argument threads (distributes) over lists.</P><P><B>See also</B>
 <A HREF="#dont_kill"><TT>dont_kill</TT></A>, <A HREF="#get_dont_kill"><TT>get_dont_kill</TT></A>, and <A HREF="#allow_kill"><TT>allow_kill</TT></A>.</P><!--TOC subsection Function: get_dont_kill-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc177">16.8</A>  Function: get_dont_kill<A NAME="sec:get_dont_kill"></A></H3><!--SEC END --><P>
 <A NAME="get_dont_kill"></A>
@@ -3112,7 +3112,7 @@ The lisp version number of the lisp implementation on which Maxima is running.</
 <B>list_directory</B>( :optional <I>dir</I>)</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
 Returns a directory listing for <I>dir</I> or the current directory if no argument is given.</P><P><B>Arguments</B>
-<TT>list_directory</TT> requires either zero or one arguments. If present, the argument <I>dir</I> must be a a string.</P><P><B>See also</B>
+<TT>list_directory</TT> requires either zero or one arguments. If present, the argument <I>dir</I> must be a a string.</P><P>The first argument threads (distributes) over lists.</P><P><B>See also</B>
 <A HREF="#chdir"><TT>chdir</TT></A>, <A HREF="#pwd"><TT>pwd</TT></A>, <A HREF="#popdir"><TT>popdir</TT></A>, <A HREF="#updir"><TT>updir</TT></A>, and <A HREF="#dirstack"><TT>dirstack</TT></A>.</P><!--TOC subsection Variable: maxima_version-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc183">16.14</A>  Variable: maxima_version<A NAME="sec:maxima_version"></A></H3><!--SEC END --><P>
 <A NAME="maxima_version"></A></P><P>mext package: mext_defmfun1</P><P>
@@ -3125,7 +3125,7 @@ The Maxima version number.</P><!--TOC subsection Function: mcompile_file-->
 Like <TT>compile_file</TT>, except that the intermediate, translated filename may be specified as an option. If the intermediate filename, <I>is not given, then </I>,it will be written in the same directory as the ouput (binary) file.</P><P><B>Arguments</B>
 <TT>mcompile_file</TT> requires either one or two arguments.
 The first argument <I>input-file</I> must be a string.
-The second argument <I>bin_file</I> must be a string.</P><P><B>Options</B>
+The second argument <I>bin_file</I> must be a string.</P><P>The first argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>mcompile_file</TT> takes options with default values: <TT>tr_file-&gt;false</TT>.
 </P><!--TOC subsection Function: mext_clear-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc185">16.16</A>  Function: mext_clear<A NAME="sec:mext_clear"></A></H3><!--SEC END --><P>
@@ -3151,7 +3151,7 @@ Each of the remaining arguments must be a string or a symbol.</P><P><B>Options</
 <B>mext_info</B>(<I>distname</I>)</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
 Print information about installed mext distribution <I>distname</I>. The list of installed distributions is built by calling <A HREF="#mext_list"><TT>mext_list</TT></A>.</P><P><B>Arguments</B>
-<TT>mext_info</TT> requires one argument <I>distname</I>, which must be a string or a symbol.</P><P><B>See also</B>
+<TT>mext_info</TT> requires one argument <I>distname</I>, which must be a string or a symbol.</P><P>The first argument threads (distributes) over lists.</P><P><B>See also</B>
 <A HREF="#mext_list_loaded"><TT>mext_list_loaded</TT></A>, <A HREF="#mext_list"><TT>mext_list</TT></A>, <A HREF="#mext_clear"><TT>mext_clear</TT></A>, <A HREF="#mext_list_package"><TT>mext_list_package</TT></A>, and <A HREF="#mext_find_package"><TT>mext_find_package</TT></A>.</P><!--TOC subsection Function: mext_list-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc188">16.19</A>  Function: mext_list<A NAME="sec:mext_list"></A></H3><!--SEC END --><P>
 <A NAME="mext_list"></A>
@@ -3172,7 +3172,7 @@ Returns a list of mext packages currently loaded.</P><P><B>Arguments</B>
 <B>mext_list_package</B>(<I>package</I>)</P><P>mext package: mext_defmfun1</P><P>
 <B>Description</B>
 List functions and variables defined in the mext pacakge <I>package</I>. A mis-feature is that an empty list is returned if the package is not loaded. This function incorrectly returns an empty list for some packages, and may miss some functions.</P><P><B>Arguments</B>
-<TT>mext_list_package</TT> requires one argument <I>package</I>, which must be a string or a symbol.</P><P><B>See also</B>
+<TT>mext_list_package</TT> requires one argument <I>package</I>, which must be a string or a symbol.</P><P>The first argument threads (distributes) over lists.</P><P><B>See also</B>
 <A HREF="#mext_list_loaded"><TT>mext_list_loaded</TT></A>, <A HREF="#mext_list"><TT>mext_list</TT></A>, <A HREF="#mext_info"><TT>mext_info</TT></A>, <A HREF="#mext_clear"><TT>mext_clear</TT></A>, and <A HREF="#mext_find_package"><TT>mext_find_package</TT></A>.</P><!--TOC subsection Function: mext_test-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc191">16.22</A>  Function: mext_test<A NAME="sec:mext_test"></A></H3><!--SEC END --><P>
 <A NAME="mext_test"></A>
@@ -3241,7 +3241,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 <B>Description</B>
 Like <TT>translate_file</TT>, except that the output filename may be specified as an option.</P><P><B>Arguments</B>
 <TT>mtranslate_file</TT> requires either one or two arguments.
-The first argument <I>input-file</I> must be a string.</P><P><B>Options</B>
+The first argument <I>input-file</I> must be a string.</P><P>The first argument threads (distributes) over lists.</P><P><B>Options</B>
 <TT>mtranslate_file</TT> takes options with default values: <TT>output_file-&gt;false</TT>.
 </P><!--TOC subsection Function: popdir-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc193">16.24</A>  Function: popdir<A NAME="sec:popdir"></A></H3><!--SEC END --><P>
@@ -3294,9 +3294,9 @@ The first argument <I>distname</I> must be a string, a symbol, or a list of stri
 <B>timing</B>( :rest <I>exprs</I>)</P><P>mext package: runtime</P><P>
 <B>Calling</B>
 </P><UL CLASS="itemize"><LI CLASS="li-itemize">
- <B>timing</B>(<I>expr</I>)
-evaluates each of the expressions <I>expr</I> and returns a list of the time in seconds used, together with the result of evaluating the final expression.</LI><LI CLASS="li-itemize"> <B>timing</B>(<I>expr</I>, <I>print-&gt;true</I>)
-returns the result of evaluating the final expression and prints the time in seconds used.</LI><LI CLASS="li-itemize"> <B>timing</B>(<I>expr</I>, <I>result-&gt;false</I>)
+ <B>timing</B>(<I>exprs</I>)
+evaluates each of the expressions <I>exprs</I> and returns a list of the time in seconds used, together with the result of evaluating the final expression.</LI><LI CLASS="li-itemize"> <B>timing</B>(<I>exprs</I>, <I>print-&gt;true</I>)
+returns the result of evaluating the final expression and prints the time in seconds used.</LI><LI CLASS="li-itemize"> <B>timing</B>(<I>exprs</I>, <I>result-&gt;false</I>)
 returns the time in seconds used, and discards all results.</LI></UL><P>
 <B>Description</B>
 <A HREF="#timing"><TT>timing</TT></A> evaluates each of the <I>exprs</I>, and returns a list of the total time in seconds used, together the result of the last expression. See also <TT>showtime</TT>.</P><P><B>Arguments</B>
@@ -3331,7 +3331,7 @@ Change the working directory to be <I>n</I> (or 1 if <I>n</I> is not given) subd
 <B>Arguments</B>
 <TT>string_drop</TT> requires two arguments.
 The first argument <I>s</I> must be a string.
-The second argument <I>spec</I> must be a sequence specification.</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+The second argument <I>spec</I> must be a sequence specification.</P><P>The first argument threads (distributes) over lists.</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -3388,7 +3388,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
  <B>string_reverse</B>(<I>s</I>)
 returns a copy of string <I>s</I> with the characters in reverse order.</LI></UL><P>
 <B>Arguments</B>
-<TT>string_reverse</TT> requires one argument <I>s</I>, which must be a string.</P><!--TOC subsection Function: string_take-->
+<TT>string_reverse</TT> requires one argument <I>s</I>, which must be a string.</P><P>The first argument threads (distributes) over lists.</P><!--TOC subsection Function: string_take-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc203">17.3</A>  Function: string_take<A NAME="sec:string_take"></A></H3><!--SEC END --><P>
 <A NAME="string_take"></A>
 <B>string_take</B>(<I>s</I>, <I>spec</I>)</P><P>mext package: lists_aex</P><P>
@@ -3400,7 +3400,7 @@ returns a string of the last <I>n</I> characters of <I>s</I>.</LI></UL><P>
 <B>Arguments</B>
 <TT>string_take</TT> requires two arguments.
 The first argument <I>s</I> must be a string.
-The second argument <I>spec</I> must be a sequence specification.</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+The second argument <I>spec</I> must be a sequence specification.</P><P>The first argument threads (distributes) over lists.</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -3418,9 +3418,12 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 </TABLE></TD></TR>
 </TABLE><!--TOC subsection Function: with_output_to_string-->
 <H3 CLASS="subsection"><!--SEC ANCHOR --><A NAME="htoc204">17.4</A>  Function: with_output_to_string<A NAME="sec:with_output_to_string"></A></H3><!--SEC END --><P>
-<A NAME="with_output_to_string"></A></P><P>mext package: lists_aex</P><P>
+<A NAME="with_output_to_string"></A>
+<B>with_output_to_string</B>( :rest <I>exprs</I>)</P><P>mext package: runtime</P><P>
 <B>Description</B>
-Evaluates <I>expr_1</I>,<I>expr_2</I>,<I>expr_3</I>,…and writes any output generated to a string, which is returned.</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
+Evaluates <I>expr_1</I>, <I>expr_2</I>, <I>expr_3</I>,…and writes any output generated to a string, which is returned.</P><P><B>Arguments</B>
+<TT>with_output_to_string</TT> requires zero or more arguments.</P><P><B>Attributes</B>
+with_output_to_string has attributes: [hold_all]</P><P><B>Examples</B></P><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD><TABLE BORDER=0 CELLPADDING=0
 CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDING=0 BORDER=0><TR><TD>
 </TD></TR>
 </TABLE></TD></TR>
@@ -3442,8 +3445,7 @@ CELLSPACING=0><TR><TD BGCOLOR=black COLSPAN="3"><TABLE CELLSPACING="2" CELLPADDI
 </TD></TR>
 </TABLE></TD></TR>
 </TABLE></TD></TR>
-</TABLE><P><B>See also</B>
-<A HREF="#with_stdout"><TT>with_stdout</TT></A>.</P><!--TOC section Miscellaneous Functions-->
+</TABLE><!--TOC section Miscellaneous Functions-->
 <H2 CLASS="section"><!--SEC ANCHOR --><A NAME="htoc205">18</A>  Miscellaneous Functions</H2><!--SEC END --><UL CLASS="itemize"><LI CLASS="li-itemize">
 <A HREF="#examples"><TT>examples</TT></A>
 </LI><LI CLASS="li-itemize"><A HREF="#examples_add"><TT>examples_add</TT></A>
