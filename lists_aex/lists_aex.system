@@ -17,8 +17,7 @@
     (:file "list")
     (:file "list")
     (:file "strings")
-    (:file "see-also-groups.lisp")))
-
+    (:file "see-also-groups")))
 
 ;; neither compile nor load when building
 (mk:defsystem load-lists_aex
