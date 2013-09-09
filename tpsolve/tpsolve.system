@@ -16,9 +16,9 @@
   :language :mext-maxima
   :components
    (
-;    (:file "to_poly" :source-extension "lisp" :load-only nil)
     (:file "to_poly_solve_setup" :load-only t)
-    (:file "dontkill" :load-only t)
+    (:file "dontkill" :load-only t) ; dont't kill has to be loaded first to avoid
+                                    ; incorrect syntax: %AND is not a prefix operator
     (:file "to_poly_solve_extra" :source-extension "lisp" :load-only nil)
     (:file "dont_compile1" :load-only t)
     (:file "do_compile1" :load-only nil)
