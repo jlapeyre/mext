@@ -1,4 +1,10 @@
-load("mext-build.lisp");
+block( [res],
+  res:errcatch(load("mext-build.lisp")),
+  if length(res) = 0 then
+  error("mext_system/ibuild.mac must be loaded from the mext_system directory.",
+       "For example 'chdir mext_system; maxima -b ibuild.mac'.",
+       "The ibuild.mac for all other mext packages may be loaded from anywhere.")
+  );
 mext_dist_user_install();
 mext_dist_clean();
 
