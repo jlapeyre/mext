@@ -68,6 +68,11 @@
    " version of " :mrefcomma "mext_test" " which does not accept options, is available.")
   (apply #'mext::mext-test (cons $list dists))))
 
+(max-doc:add-call-desc 
+ '( "mext_test" (("lit" "'loaded"))
+    ("Run rtests for all loaded mext packages."))
+ '( "mext_test" ("package")
+    ("Run rtests for the mext pacakge " :argdot "package")))
 
 (examples:clear-add-example 
  "mext_test"
