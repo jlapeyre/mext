@@ -152,6 +152,7 @@
             (setf (gethash (first pair) hash-table) (second pair))) element-list)
   hash-table)
 
+;;; We have moved the following to another file. Delete the following soon.
 ;;; :code -- computer code as in other markup systems
 ;;; :mref -- references to other entries in the maxdoc system
 ;;; :emref -- references to stock Maxima command. (info docs)

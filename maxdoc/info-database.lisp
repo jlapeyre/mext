@@ -62,18 +62,18 @@
     (defparameter cl-info::*info-deffn-defvr-hashtable* (first info-tables))
     (defparameter cl-info::*info-section-hashtable* (second info-tables))))
 
-(unless (doc-system::ds-registered-p "info-deffn-defvr")
+(unless (doc-system::ds-registered-p "maxima_funcs_and_vars")
   (doc-system::ds-make-and-register
-   :name "info-deffn-defvr"
+   :name "maxima_funcs_and_vars"
    :data cl-info::*info-deffn-defvr-hashtable*
    :search-key-func #'search-key
    :str-item-func #'str-item
    :str-item-name-func #'str-item-name
    :full-match-arg t)) ;; last arg is a hack because these tables don't fit the doc system
 
-(unless (doc-system::ds-registered-p "info-section")
+(unless (doc-system::ds-registered-p "maxima_sections")
   (doc-system::ds-make-and-register
-   :name "info-section"
+   :name "maxima_sections"
    :data cl-info::*info-section-hashtable*
    :search-key-func #'search-key
    :str-item-func #'str-item

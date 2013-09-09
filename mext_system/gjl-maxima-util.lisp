@@ -38,3 +38,16 @@
 ;; Very similar to macros in src/strmac.lisp
 ;; But this one is not there, and I want a short name.
 (defmacro mk-mlist (e) `(cons '(mlist simp) ,e))
+
+;; Why is this a macro?,.. i guess to avoid let or setf
+;; uh this one is probably leaky, but it should not
+;; be called with complicated expressions, i hope.
+(defmacro maxima-symbol-to-string (or-sym-str)
+  "Convert symbol to string. String falls through."
+  (let ((s (gensym)))
+    `(let ((,s ,or-sym-str))
+       (unless (stringp ,s) (setf ,or-sym-str ($sconcat ,s))))))
+
+;; function version for mapping, etc.
+(defun fmaxima-symbol-to-string (s)
+  (if (stringp s) s ($sconcat s)))

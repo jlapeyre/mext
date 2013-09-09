@@ -22,14 +22,60 @@
  with certain lisp implementations."))
 
 (maxdoc:mdefmvar maxima::$doc_system_list nil
-  ("A list of the documenatation systems that will be searched by ? and ??.
- This can be set to all avaliable systems with the function " :mrefdot "set_all_doc_systems"
+  ("A list of the documenatation systems (as strings) that will be searched by ? and ??.
+ This can be set to all avaliable systems with the function " :mrefdot "doc_system_set_all"
  " If this variable is false, then all documentation is enabled."))
 
-(maxima::defmfun1 (maxima::$set_all_doc_systems :doc) ()
-  "Enable all documentation databases for describe, ? and ??.
-   This sets doc_system_list to a list of all doc systems."
-  (setf maxima::$doc_system_list (maxima::$doc_system_list)))
+;(maxima::defmfun1 (maxima::$doc_system_set_all :doc) ()
+;  "Enable all documentation databases for describe, ? and ??.
+;   This sets doc_system_list to a list of all doc systems."
+;  (setf maxima::$doc_system_list (maxima::$doc_system_list)))
+
+(maxima::defmfun1 (maxima::$doc_system_set :doc) ( &optional (systems :or-string-symbol-or-listof))
+  :desc
+  ("Set the list of documentation systems that will be searched by describe, ? and ??. "
+   "This sets " :varcomma "doc_system_list" " which can also be set by any other means.")
+  (setf maxima::$doc_system_list
+        (maxima::mk-mlist
+         (if (or (eq systems 'maxima::$all) (not systems))
+             (cdr (maxima::$doc_system_list))
+           (let ((avail (cdr (maxima::$doc_system_list)))
+                 (max-only (list "maxima_funcs_and_vars" "maxima_sections"))
+                 (systems1 (if (consp systems)
+                                        (mapcar #'maxima::fmaxima-symbol-to-string (cdr systems))
+                             (list (maxima::fmaxima-symbol-to-string systems))))
+                 (new1 '()))
+             (dolist (sys systems1)
+               (cond ((string= "maxima" sys)
+                      (setf new1 (append new1 max-only)))
+                     ((string= "nonmaxima" sys)
+                      (dolist (asys avail)
+                        (when (not (member asys max-only :test #'string=))
+                          (push asys new1))))
+                     (t
+                      (if (member sys avail :test #'string=)
+                          (push sys new1)
+                        (maxima::merror1 'maxima::$no_such_doc_system 
+                                         "doc_system_set: The documentation system ~a does not exist." sys)))))
+             new1)))))
+
+; ... um, we should make lit  a keyword
+; and this does not work!
+; '("doc_system_set" (("list" "system" ("lit" "'maxima")))
+; add-call-desc needs improvement.
+(max-doc::add-call-desc
+ '("doc_system_set" ()
+   ("Enables all available documentation systems."))
+ '("doc_system_set" (("lit" "'all"))
+   ("Enables all available documentation systems."))
+ '("doc_system_set" (("lit" "'maxima"))
+   ("Enables only stock maxima systems."))
+ '("doc_system_set" (("lit" "'nonmaxima"))
+   ("Enables only documentation systems that are not in the stock maxima distribution."))
+ '("doc_system_set" ("system")
+   ("Enables only the documentation system " :vardot "system"))
+ '("doc_system_set" (("list" "system1" "system2"))
+   ("Enables two documentation systems. The arguments may be \"maxima\" \"nonmaxima\", etc.")))
 
 (defmacro maybe-read-with-pager (&body body)
   `(if maxima::$read_docs_with_pager

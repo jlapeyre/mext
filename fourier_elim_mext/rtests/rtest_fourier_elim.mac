@@ -604,7 +604,7 @@ fourier_elim([x - z^42 < 0],[x]);
 
 /* I think this bug is related to linsolve([x=3.14],[x]) --> [x = 157/50]. Even when
 keepfloat is true, linsolve converts floats to rationals. */
-/* Test 146 */
+/* Test 143 */
 /*
 fourier_elim([x<=3.14],[x]);
 [x = 3.14] or [x < 3.14]$

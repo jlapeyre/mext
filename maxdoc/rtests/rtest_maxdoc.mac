@@ -1,0 +1,11 @@
+/* Test 2 */
+doc_system_set("maxima");
+["maxima_funcs_and_vars","maxima_sections"]$
+
+/* Test 2 */
+doc_system_set("maxima_funcs_and_vars");
+["maxima_funcs_and_vars"]$
+
+/* Test 1 */
+listp(doc_system_set());
+true$

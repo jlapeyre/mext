@@ -64,15 +64,6 @@
   (mk-mk-level-func mk-level-func-list  mk-level-list-inner))
 
 
-;; Why is this a macro?,.. i guess to avoid let or setf
-;; uh this one is probably leaky, but it should not
-;; be called with complicated expressions, i hope.
-(defmacro maxima-symbol-to-string (or-sym-str)
-  "Convert symbol to string. String falls through."
-  (let ((s (gensym)))
-    `(let ((,s ,or-sym-str))
-       (unless (stringp ,s) (setf ,or-sym-str ($sconcat ,s))))))
-
 (defun read-file-with-pager (filename &optional (pager-command nil) )
   (unless pager-command (setf pager-command $pager_command))
   ($system (concatenate 'string pager-command " " filename)))
