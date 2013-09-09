@@ -82,10 +82,11 @@
      (let ((et (type-of e)))
             (if (consp et) (car et) et)))))
 
+;; constantp seems a bit buggy
 (defun type-of-constant-p (e)
   (let ((res 
-         (mfuncall '$errcatch 
-                   `($constantp ,e))))
+         (and (not (or (numberp e) (stringp e))) (mfuncall '$errcatch 
+                   `($constantp ,e)))))
     (if (consp res) (cadr res) res)))
 
 (defun type-of-rat-p (e)
@@ -101,7 +102,7 @@
           (push '$constant res))
         (when (type-of-rat-p e)
           (push '$mrat res))
-        (when (and (not (mfuncall '$stringp e)) (atom e))
+        (when (and (not (stringp e)) (atom e))
           (when (not already-lisp-type)
             (let ((lt (lisp-type-of e)))
               (when (not (eq lt '$symbol))
@@ -119,10 +120,14 @@
 ;;; 'constant is a property
 
 (defmfun1 ($type_of :doc) (e &opt (($info info) nil :bool))
- :desc ("Return something like the `type' of a maxima expression. This
- is a bit ill defined currently. " :mref "type_of" " uses the lisp function " :codedot "type-of"
+ :desc 
+ ("Return something like the `type' of a maxima expression. "
+  :mref "type_of" " uses the lisp function " 
+ :codedot "type-of" " Currently, " :mref "type_of" " is a bit ill-defined; "
+ " it may be better called `what-is-this?'."
  :par ""
- "If the option " :opt "info" " is true, then more information is returned.")
+ "If the option " :opt "info" " is true, then more information is returned on "
+ "properties and the underlying maxima and lisp representations.")
  (cond ((aex-p e)
         (if info (make-mlist-simp (aex-op e) '$aex)
           (aex-op e)))
@@ -141,7 +146,7 @@
 ;              (t (lisp-type-of e))))
        (($mapatom e)
         (cond (($bfloatp e) '$bfloat)
-              ((mfuncall '$stringp e) (info-type-of e '$string info))
+              ((stringp e) (info-type-of e '$string info))
               (($integerp e) (info-type-of e '$integer info))
               ((atom e)
                (info-type-of e (lisp-type-of e) info t))
@@ -162,7 +167,8 @@
 
 (examples::clear-examples "type_of")
 (examples::add-example "type_of" 
-                       '( :code ("type_of(1)" "type_of(1.0)" "type_of(1.0b0)" "type_of(1/3)"
+                       '( :code ("type_of(1)" "type_of(1, info->true)" "type_of(1.0)" 
+                                 "type_of(1.0b0)" "type_of(1/3)" "type_of(1/3, info->true)"
                                  "type_of(\"dog\")" "type_of([1,2,3])" "type_of(aex([1,2,3]))"
                                  "type_of(%e)"  "type_of(%i)" "type_of(%i+1)"))
                        '( :pretext "type_of returns the type of the lisp struct corresponding to a maxima object."

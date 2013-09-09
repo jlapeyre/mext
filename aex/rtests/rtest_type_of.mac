@@ -6,121 +6,142 @@ quite what we want.
 */
 
 /* Test 1 */
+( %%test_bit%%(x) :=
+    is(first(x) = 'integer) and
+    is(member(second(x), ['lisp_bit, 'lisp_fixnum])),
+  %%test_int%%(x) :=
+    is(first(x) = 'integer) and
+    is(member(second(x), ['lisp_fixnum, 'lisp_integer])),
+  %%test_float%%(x) :=
+    is(member( x, ['lisp_long_float, 'lisp_double_float])),
+
+0);
+0$
+
+/* Test 2 */
 (errcatch(type_of()),error_code);
 'args_too_few$
 
-/* Test 2 */
+/* Test 3 */
 type_of(0);
 'integer$
 
-/* Test 3 */
-type_of(0,info->true);
-'[integer,lisp_bit,constant]$
-
 /* Test 4 */
+first(type_of(0,info->true));
+'integer$
+
+/* Test 6 */
+%%test_bit%%(type_of(0,info->true));
+true$
+
+/* Test 7 */
 type_of(1);
 'integer$
 
-/* Test 5 */
-type_of(1,info->true);
-'[integer,lisp_bit,constant]$
+/* Test 8 */
+%%test_bit%%(type_of(1,info->true));
+true$
 
-/* Test 6 */
+/* Test 10 */
 type_of(2);
 'integer$
 
-/* Test 7 */
-type_of(2,info->true);
-'[integer,lisp_integer,constant]$
-
-/* Test 8 */
-type_of(1.0);
-'lisp_double_float$
-
-/* Test 9 */
-type_of(0.0);
-'lisp_double_float$
-
-/* Test 10 */
-type_of(-1.0);
-'lisp_double_float$
-
 /* Test 11 */
+%%test_int%%(type_of(2,info->true));
+true$
+
+/* Test 13 */
+%%test_float%%(type_of(1.0));
+true$
+
+/* Test 14 */
+%%test_float%%(type_of(0.0));
+true$
+
+/* Test 15 */
+%%test_float%%(type_of(-1.0));
+true$
+
+/* Test 16 */
 type_of(-1);
 'integer$
 
-/* Test 12 */
+/* Test 17 */
 type_of(-1,info->true);
-'[integer,lisp_fixnum,constant]$
+'[integer,lisp_fixnum]$
 
-/* Test 13 */
+/* Test 18 */
 type_of(1b10);
 'bfloat$
 
-/* Test 14 */
+/* Test 19 */
 type_of("cat");
 'string$
 
-/* Test 15 */
+/* Test 20 */
 type_of('b);
 'symbol$
 
-/* Test 16 */
+/* Test 21 */
 type_of([]);
 "["$
 
-/* Test 17 */
+/* Test 22 */
 type_of(%%fg(x));
 '%%fg$
 
-/* Test 18 */
+/* Test 23 */
 type_of(%%fg(x), info->true);
 '%%fg$
 
-/* Test 19 */
+/* Test 24 */
 type_of(%e);
 'symbol$
 
-/* Test 20 */
+/* Test 25 */
 type_of(%e,info->true);
 ['symbol, 'constant]$
 
-/* Test 21 */
+/* Test 26 */
 type_of('aabb,info->true);
 'symbol$
 
-/* Test 22 */
+/* Test 27 */
 type_of(%i,info->true);
 ['symbol, 'constant]$
 
-/* Test 23 */
+/* Test 28 */
 type_of(<<1,2>>);
 "["$
 
-/* Test 24 */
+/* Test 29 */
 type_of( <<1,2>>, info->true);
 ["[",'aex]$
 
-/* Test 25 */
+/* Test 30 */
 type_of(rat(1))$
 'integer$
 
-/* Test 26 */
+/* Test 31 */
 type_of(rat(1),info->true)$
 '[integer,mrat,constant]$
 
-/* Test 27 */
+/* Test 32 */
 type_of({1})$
 'set;
 
-/* Test 28 */
+/* Test 33 */
 type_of({1},info->true);
 'set;
 
-/* Test 29 */
+/* Test 34 */
 type_of('a+'b);
 "+"$
 
-/* Test 30 */
+/* Test 35 */
 type_of('a+'b,info->true);
 '["+",mplus]$
+
+/* Test 36 */
+(kill(%%res%%), 0);
+0$
