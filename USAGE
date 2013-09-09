@@ -1,0 +1,59 @@
+Introduction to using mext.
+
+For installing, see 
+  INSTALL-windows.txt and INSTALL
+
+---------------
+
+ Load mext, mext1, mext2, or mext3. Increasing numbers load more packages.
+
+(%i1) load(mext3)$
+
+ See which mext packages were loaded.
+  
+(%i2) mext_list_loaded();
+(%o2) [aex, alt_eigen, defmfun1, discrete_aex, fourier_elim, grobner, 
+lists_aex, maxdoc, mext_defmfun1, mext_system, numerical, runtime, to_poly, 
+tpsolve]
+
+ See all available mext packages.
+
+(%i3) mext_list();
+(%o3) [aex, alt_eigen, bernstein, circuits, coma, defmfun1, discrete, 
+discrete_aex, fourier_elim, grobner, implicit, lists_aex, maxdoc, 
+mext_defmfun1, mext_system, nelder_mead, numerical, pw, runtime, 
+test_defmfun1, to_poly, tpsolve]
+
+ List the functions available in package 'numerical'
+
+(%i4) mext_list_package(numerical);
+(%o4) [mquad_qag, mquad_qagi, mquad_qagp, mquad_qags, mquad_qawc, mquad_qawf, 
+                                            mquad_qawo, mquad_qaws, nintegrate]
+
+ See the documentation for 'nintegrate'
+
+(%i5) ? nintegrate
+
+------------------------------------------------
+ -- Function: nintegrate: nintegrate(<expr>, <varspec> :optional <singlist>)
+    Section: Functions and Variables for Numerical Computation
+    mext package: numerical; filename: nintegrate.lisp
+
+Description:
+   Numerically integrate <expr>, with the variable and limits ...
+
+
+    Try a numerical integral
+
+(%i6) nintegrate(1/sqrt(1-x) * exp(-x),[x,0,inf],calls->short);
+(%o6) [1.076159013825558 - 0.65204933217299 %i, 1.8719703565039936E-10, 1026, 
+                     no problems, [quad_qagi, quad_qagp, quad_qagi, quad_qagp]]
+
+  The result shows that, in computing the integral,
+  two calls were made to each of qagi and qagp.
+
+    See some functions related to mext.
+
+(%i7) ?? mext
+
+       ...

@@ -8,8 +8,6 @@ mext maxima third party code installation system.
  (at your option) any later version.
 --------
 
-The latest code works with Maxima 5.28, and most of it works with 5.30.
-
 This repository contains the mext packaging system and packages for
 the Maxima computer algebra system.
 
@@ -21,7 +19,13 @@ in the maxima share and contrib folders. (Currently, we refer to all
 of these as 'distributions' rather than 'packages', but we may change
 to 'package'.)
 
-See the file 'INSTALL' for installation instructions.
+For installation instructions, see the files
+
+  INSTALL and INSTALL-windows.txt
+
+For a brief introduction to using mext, see
+
+   USAGE
 
 --------
 Features in Brief:

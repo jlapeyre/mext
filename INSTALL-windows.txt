@@ -3,6 +3,10 @@ mext maxima distribution (or package) installer.
 INSTALLATION INSTRUCTIONS
 for wxmaxima on MS Windows.
 
+For instructions on using mext once it is installed, see
+
+   USAGE
+
 ---------------------------------------------------
 
 1) Download the source from github (google for
@@ -74,7 +78,7 @@ show how to install them one at a time.
 
 * After restarting maxima, type
 
- load(mext3);
+ load(mext);
  mext_test('all);
 
 * Some other commands to try are: (Use ?? to see documentation)
