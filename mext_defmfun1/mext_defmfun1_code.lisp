@@ -198,6 +198,13 @@ Setting it has no effect.")
 (maxdoc:mdefmvar $lisp_type (cl::lisp-implementation-type)
 "The name of the lisp implementation on which Maxima is running.")
 
+;; this is defined in mext-maxima-system.lisp
+(max-doc:add-doc-entry 
+ '( :name "lisp_type_symbol"
+    :type "Function"
+    :contents ("Returns a maxima symbol representing the lisp vendor. "
+               "For example, gcl, sbcl, clisp, ...")))
+
 #|
 
 This is from wxmaxima
