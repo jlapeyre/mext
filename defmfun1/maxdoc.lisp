@@ -254,9 +254,10 @@
               (maxima::merror1 "An error"))
             (pop txt1)
             (cond ((member item '(:code :codedot :codecomma)  :test #'equal)
-                   (let* ((delim (loop for char in '(#\# #\$ #\~ #\@ #\& #\- #\% \#^ \#?) do
-                                       (when (not (find char s)) (return char))))
-                          (str (format nil "\\verb~a~a~a" delim s delim)))
+                   (let* ((ss (if (stringp s) s (format nil "~a" s))) ; was a bug when default-value a number
+                          (delim (loop for char in '(#\# #\$ #\~ #\@ #\& #\- #\% \#^ \#?) do
+                                       (when (not (find char ss)) (return char))))
+                          (str (format nil "\\verb~a~a~a" delim ss delim)))
                      (push 
                       (cond ((eq item :code) str)
                             ((eq item :codedot) (format nil "~a." str))
