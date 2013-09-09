@@ -58,12 +58,6 @@ show how to install them one at a time.
  * Edit the file mext-master\buildall.mac to include all or some of
  the distributions. (there are some dependencies; see below.)
 
-  Note: Both of the packages 'discrete' and 'lists_aex' have a
-  function called `count'. If both are installed, errors can
-  occur. For instance, mext_test('all) will load them both and then
-  run tests, some of which will cause maxima to crash.
-  Renaming the function in one of the packages solves the problem.
-
  * Click File-->Load Package and choose the file
  mext-master\buildall.mac.  This should build and install all
  packages. Maxima might seem to be hung sometimes, so you have to be
@@ -78,15 +72,10 @@ show how to install them one at a time.
  `discrete'. There is a bug that prevents it from being
   loaded twice.
 
-* Assuming you did not build both `discrete' and `lists_aex':
- After restarting maxima. Type
+* After restarting maxima, type
 
- load(mext_core);
+ load(mext3);
  mext_test('all);
-
- If you did build both packages (without renaming 'count'), then
- you can do mext_test() on individual packages. Try
- ?? mext_test.
 
 * Some other commands to try are: (Use ?? to see documentation)
   mext_list, mext_list_loaded.
@@ -111,8 +100,6 @@ show how to install them one at a time.
 separately because the tables are relatively
 large. Google github prime_pi, to find this
 package.
-
-You can also try reading and loading testall.mac.
 
 To see some documentation, restart maxima and type
  load(mext);
