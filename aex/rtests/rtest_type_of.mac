@@ -67,8 +67,8 @@ type_of(-1);
 'integer$
 
 /* Test 14 */
-type_of(-1,info->true);
-'[integer,lisp_fixnum]$
+%%test_int%%(type_of(-1,info->true));
+true$
 
 /* Test 15 */
 type_of(1b10);
