@@ -30,118 +30,118 @@ type_of(0);
 first(type_of(0,info->true));
 'integer$
 
-/* Test 6 */
+/* Test 5 */
 %%test_bit%%(type_of(0,info->true));
 true$
 
-/* Test 7 */
+/* Test 6 */
 type_of(1);
 'integer$
 
-/* Test 8 */
+/* Test 7 */
 %%test_bit%%(type_of(1,info->true));
 true$
 
-/* Test 10 */
+/* Test 8 */
 type_of(2);
 'integer$
 
-/* Test 11 */
+/* Test 9 */
 %%test_int%%(type_of(2,info->true));
 true$
 
-/* Test 13 */
+/* Test 10 */
 %%test_float%%(type_of(1.0));
 true$
 
-/* Test 14 */
+/* Test 11 */
 %%test_float%%(type_of(0.0));
 true$
 
-/* Test 15 */
+/* Test 12 */
 %%test_float%%(type_of(-1.0));
 true$
 
-/* Test 16 */
+/* Test 13 */
 type_of(-1);
 'integer$
 
-/* Test 17 */
+/* Test 14 */
 type_of(-1,info->true);
 '[integer,lisp_fixnum]$
 
-/* Test 18 */
+/* Test 15 */
 type_of(1b10);
 'bfloat$
 
-/* Test 19 */
+/* Test 16 */
 type_of("cat");
 'string$
 
-/* Test 20 */
+/* Test 17 */
 type_of('b);
 'symbol$
 
-/* Test 21 */
+/* Test 18 */
 type_of([]);
 "["$
 
-/* Test 22 */
+/* Test 19 */
 type_of(%%fg(x));
 '%%fg$
 
-/* Test 23 */
+/* Test 20 */
 type_of(%%fg(x), info->true);
 '%%fg$
 
-/* Test 24 */
+/* Test 21 */
 type_of(%e);
 'symbol$
 
-/* Test 25 */
+/* Test 22 */
 type_of(%e,info->true);
 ['symbol, 'constant]$
 
-/* Test 26 */
+/* Test 23 */
 type_of('aabb,info->true);
 'symbol$
 
-/* Test 27 */
+/* Test 24 */
 type_of(%i,info->true);
 ['symbol, 'constant]$
 
-/* Test 28 */
+/* Test 25 */
 type_of(<<1,2>>);
 "["$
 
-/* Test 29 */
+/* Test 26 */
 type_of( <<1,2>>, info->true);
 ["[",'aex]$
 
-/* Test 30 */
+/* Test 27 */
 type_of(rat(1))$
 'integer$
 
-/* Test 31 */
+/* Test 28 */
 type_of(rat(1),info->true)$
 '[integer,mrat,constant]$
 
-/* Test 32 */
+/* Test 29 */
 type_of({1})$
 'set;
 
-/* Test 33 */
+/* Test 30 */
 type_of({1},info->true);
 'set;
 
-/* Test 34 */
+/* Test 31 */
 type_of('a+'b);
 "+"$
 
-/* Test 35 */
+/* Test 32 */
 type_of('a+'b,info->true);
 '["+",mplus]$
 
-/* Test 36 */
+/* Test 33 */
 (kill(%%res%%), 0);
 0$

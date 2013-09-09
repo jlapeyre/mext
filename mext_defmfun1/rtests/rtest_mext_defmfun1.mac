@@ -55,12 +55,21 @@ listp(mext_list_loaded());
 true$
 
 /* Test 15 */
-mext_list_package(defmfun1);
+is(
+  (mext_list_package(defmfun1) =
 ["attributes","attributes_find","comp_load","compile_file1",
         "compile_lambda_verbose","error_code","error_str","examples",
         "examples_add","foptions","pager_command","pager_string",
         "print_authors","print_copyrights","print_implementation",
-        "set_match_form","set_nowarn","unset_match_form","unset_nowarn"]$
+        "set_match_form","set_nowarn","unset_match_form","unset_nowarn"])
+  or
+  (mext_list_package(defmfun1) =
+["attributes","attributes_find","compile_file1",
+       "compile_lambda_verbose","comp_load","error_code","error_str",
+       "examples","examples_add","foptions","pager_command","pager_string",
+       "print_authors","print_copyrights","print_implementation",
+       "set_match_form","set_nowarn","unset_match_form","unset_nowarn"]));
+true$    
 
 /* Test 16 */
 mext_find_package('mext_test);
