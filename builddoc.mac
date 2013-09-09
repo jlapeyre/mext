@@ -1,27 +1,24 @@
 /* maxima script to print latex documentation for mext packages */
 
-/*
-  Th
-*/
-
-load(mext_core);
+load(mext3);
 
 /*
    Some of these can be commented out. But because of dependencies, they
    may be loaded anyway.
 */
 
-require('all);
+/* require('all); */
+
+require(store);
+require(quicklisp);
+require(prime_pi);
+require(nelder_mead);
 
 /*
 require(mext_defmfun1);
 require(defmfun1);
 require(discrete_aex);
 require(alt_eigen);
-require(store);
-require(quicklisp);
-require(prime_pi);
-require(nelder_mead);
 */
 
 /*print_copyrights : true$ */

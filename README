@@ -339,7 +339,6 @@ third party packages.
 
 -------------------------------------------------------------------
 -------------------------------------------------------------------
-
  ---  maxdoc sections
 
  *  Array Representation For Expressions
@@ -535,7 +534,8 @@ Calling:
 
 Arguments:
    `aex' requires either zero or one arguments.
-Options:  aex takes options with default values: adj->true.
+Options:  aex takes options with default values:
+   adj->true.
 
 ------------------------------------------------
  -- Function: aex_cp: aex_cp(<e> :optional <head>)
@@ -551,7 +551,8 @@ Calling:
 Arguments:
    `aex_cp' requires either one or two arguments.
     The first argument <e> must be non-atomic.
-Options:  aex_cp takes options with default values: adj->true.
+Options:  aex_cp takes options with default values:
+   adj->true.
 
 ------------------------------------------------
  -- Function: aex_get: aex_get(e,n)
@@ -724,15 +725,16 @@ Arguments:
    `iapply' requires two arguments.
     The first argument <fun> must be a map-able function.
     The second argument <arg> must be non-atomic.
-Options:  iapply takes options with default values: adj->true, ot->ml.
+Options:  iapply takes options with default values:
+   adj->true, ot->ml.
 
 Examples:
 (%i1) iapply(%%ff,lrange(4));
 (%o1) %%ff(1,2,3,4)
 (%i1) iapply(%%ff,lrange(4,[ot->ar]));
-(%o1) %%ff(1,2,3,4)
+(%o1) %%ff(<[1,2,3,4]>)
 (%i1) iapply(%%ff,lrange(4,[ot->ar]), [ot->ar] );
-(%o1) %%ff<1,2,3,4>
+(%o1) %%ff<<[1,2,3,4]>>
 (%i1) iapply(%%ff,lrange(4), [ot->ar] );
 (%o1) %%ff<1,2,3,4>
 
@@ -747,7 +749,8 @@ Description:
    or aex expression. This works like `args', but is more general.
 Arguments:
    `iargs' requires one argument <e>, which must be a subscripted variable or non-atomic.
-Options:  iargs takes options with default values: adj->true, ot->ml.
+Options:  iargs takes options with default values:
+   adj->true, ot->ml.
 
 ------------------------------------------------
  -- Function: ilength: ilength(<e>)
@@ -826,7 +829,8 @@ Description:
    non-aex argument.
 Arguments:
    `ireverse' requires one argument <e>, which must be non-atomic.
-Options:  ireverse takes options with default values: adj->true, ot->ml.
+Options:  ireverse takes options with default values:
+   adj->true, ot->ml.
 
 Examples:
 (%i1) ireverse(lrange(4));
@@ -834,9 +838,9 @@ Examples:
 (%i1) ireverse(lrange(4), [ot->ar] );
 (%o1) <[4,3,2,1]>
 (%i1) ireverse(lrange(4, [ot->ar]) );
-(%o1) <[4,3,2,1]>
+(%o1) [<[1,2,3,4]>]
 (%i1) ireverse(lrange(4, [ot->ar]), [ot->ml] );
-(%o1) [4,3,2,1]
+(%o1) [<[1,2,3,4]>]
 
 
 ------------------------------------------------
@@ -896,7 +900,8 @@ Description:
    returns <a> with subexpressions permuted randomly.
 Arguments:
    `ae_random_permutation' requires one argument <a>, which must be non-atomic.
-Options:  ae_random_permutation takes options with default values: adj->true, ot->ml.
+Options:  ae_random_permutation takes options with default values:
+   adj->true, ot->ml.
 
 See also:  random_cycle, random_permutation_sym, signature_permutation, perm_to_cycles, and cycles_to_perm.
 
@@ -912,7 +917,8 @@ Description:
    representation is aex.
 Arguments:
    `cycles_to_perm' requires one argument <cycles>, which must be a list (lex or aex).
-Options:  cycles_to_perm takes options with default values: adj->true, ot->ml.
+Options:  cycles_to_perm takes options with default values:
+   adj->true, ot->ml.
 
 See also:  random_cycle, random_permutation_sym, ae_random_permutation, signature_permutation, and perm_to_cycles.
 
@@ -925,7 +931,8 @@ Description:
    Returns the inverse permutation of <perm>.
 Arguments:
    `inverse_permutation' requires one argument <perm>, which must be a list (lex or aex).
-Options:  inverse_permutation takes options with default values: adj->true, ot->ml.
+Options:  inverse_permutation takes options with default values:
+   adj->true, ot->ml.
 
 Examples:
 (%i1) inverse_permutation([5,1,4,2,6,8,7,3,10,9]);
@@ -944,7 +951,8 @@ Description:
    input must be a permutation of n integers from 1 through n.
 Arguments:
    `perm_to_cycles' requires one argument <ain>, which must be a list (lex or aex).
-Options:  perm_to_cycles takes options with default values: adj->true, ot->ml.
+Options:  perm_to_cycles takes options with default values:
+   adj->true, ot->ml.
 
 Examples:
 (%i1) perm_to_cycles([5,4,3,2,1,10,6,7,8,9]);
@@ -964,7 +972,8 @@ Description:
    levels.
 Arguments:
    `perm_to_transpositions' requires one argument <ain>, which must be a list (lex or aex).
-Options:  perm_to_transpositions takes options with default values: adj->true, ot->ml.
+Options:  perm_to_transpositions takes options with default values:
+   adj->true, ot->ml.
 
 ------------------------------------------------
  -- Function: permutation_p: permutation_p(<ain>)
@@ -1011,7 +1020,9 @@ Calling:
 
 Arguments:
    `random_cycle' requires one argument <n>, which must be a positive integer.
-Options:  random_cycle takes options with default values: adj->true, ot->ml.
+    The first argument threads (distributes) over lists.
+Options:  random_cycle takes options with default values:
+   adj->true, ot->ml.
 
 See also:  random_permutation_sym, ae_random_permutation, signature_permutation, perm_to_cycles, and cycles_to_perm.
 
@@ -1031,7 +1042,9 @@ Calling:
 
 Arguments:
    `random_permutation_sym' requires one argument <n>, which must be a positive integer.
-Options:  random_permutation_sym takes options with default values: adj->true, ot->ml.
+    The first argument threads (distributes) over lists.
+Options:  random_permutation_sym takes options with default values:
+   adj->true, ot->ml.
 
 See also:  random_cycle, ae_random_permutation, signature_permutation, perm_to_cycles, and cycles_to_perm.
 
@@ -1061,7 +1074,8 @@ Description:
    <ain>.
 Arguments:
    `transpositions_to_perm' requires one argument <ain>, which must be a list (lex or aex).
-Options:  transpositions_to_perm takes options with default values: adj->true, ot->ml.
+Options:  transpositions_to_perm takes options with default values:
+   adj->true, ot->ml.
 
 Implementation:
        Input is converted to lex on both levels. Default output is aex.
@@ -1071,6 +1085,7 @@ Implementation:
 ==============================================================
   note: this 'section' is not in the maxima manual.
  *  doc_system_list
+ *  doc_system_set
  *  error_code
  *  maxdoc
  *  maxdoc_author
@@ -1089,7 +1104,6 @@ Implementation:
  *  print_maxdoc_sections
  *  print_sections_latex
  *  read_docs_with_pager
- *  set_all_doc_systems
  *  simple_doc_add
  *  simple_doc_delete
  *  simple_doc_get
@@ -1102,10 +1116,43 @@ Implementation:
 
   default value `false'.
 Description:
-   A list of the documenatation systems that will be searched by ? 
-   and ??. This can be set to all avaliable systems with the function 
-   `set_all_doc_systems'. If this variable is false, then all 
-   documentation is enabled.
+   A list of the documenatation systems (as strings) that will be 
+   searched by ? and ??. This can be set to all avaliable systems 
+   with the function `doc_system_set_all'. If this variable is false, 
+   then all documentation is enabled.
+
+------------------------------------------------
+ -- Function: doc_system_set: doc_system_set( :optional <systems>)
+    Section: Functions and Variables for Documentation
+    mext package: maxdoc; filename: descr1.lisp
+
+Calling:
+    doc_system_set()
+        Enables all available documentation systems.
+
+    doc_system_set('all )
+        Enables all available documentation systems.
+
+    doc_system_set('maxima )
+        Enables only stock maxima systems.
+
+    doc_system_set('nonmaxima )
+        Enables only documentation systems that are not in the stock 
+      maxima distribution.
+
+    doc_system_set(<system>)
+        Enables only the documentation system <system>.
+
+    doc_system_set([<system1>, <system2>])
+        Enables two documentation systems. The arguments may be 
+      "maxima" "nonmaxima", etc.
+
+Description:
+   Set the list of documentation systems that will be searched by 
+   describe, ? and ??. This sets <doc_system_list>, which can also be 
+   set by any other means.
+Arguments:
+   `doc_system_set' requires either zero or one arguments. If present, the argument <systems> must be a  a string, a symbol, or a list of strings or symbols.
 
 ------------------------------------------------
  -- Variable: error_code
@@ -1127,7 +1174,8 @@ Description:
 Arguments:
    `maxdoc' requires two arguments.
     The first argument <name> must be a string.
-Options:  maxdoc takes options with default values: package->false, source_filename->false.
+Options:  maxdoc takes options with default values:
+   package->false, source_filename->false.
 Attributes: maxdoc has attributes: [hold_all]
 
 ------------------------------------------------
@@ -1141,6 +1189,7 @@ Arguments:
    `maxdoc_author' requires two arguments.
     The first argument <name> must be a string.
     The second argument <author> must be a string or a list of strings.
+    The first argument threads (distributes) over lists.
 
 ------------------------------------------------
  -- Function: maxdoc_copyright: maxdoc_copyright(<name>, <copyright>)
@@ -1156,6 +1205,7 @@ Description:
 Arguments:
    `maxdoc_copyright' requires two arguments.
     The first argument <name> must be a string.
+    The first argument threads (distributes) over lists.
 
 ------------------------------------------------
  -- Function: maxdoc_examples: maxdoc_examples(<name> :rest <examples>)
@@ -1204,6 +1254,7 @@ Description:
    removed.
 Arguments:
    `maxdoc_split_text' requires one argument <text>, which must be a string.
+    The first argument threads (distributes) over lists.
 
 ------------------------------------------------
  -- Function: mext_package_record: mext_package_record(<docitems>, <packagename> :optional <source-filename>)
@@ -1259,6 +1310,7 @@ Description:
 
 Arguments:
    `print_entry_latex' requires one argument <item>, which must be a string.
+    The first argument threads (distributes) over lists.
 
 ------------------------------------------------
  -- Variable: print_implementation
@@ -1277,6 +1329,7 @@ Description:
 
 Arguments:
    `print_maxdoc_entry' requires one argument <item>, which must be a string.
+    The first argument threads (distributes) over lists.
 
 ------------------------------------------------
  -- Function: print_maxdoc_sections: print_maxdoc_sections()
@@ -1313,17 +1366,6 @@ Description:
    sent through the pager specified by `pager_command'. This will 
    most likely only work with a command line interface under 
    linux/unix with certain lisp implementations.
-
-------------------------------------------------
- -- Function: set_all_doc_systems: set_all_doc_systems()
-    Section: Functions and Variables for Documentation
-    mext package: maxdoc; filename: descr1.lisp
-
-Description:
-   Enable all documentation databases for describe, ? and ??. This 
-   sets doc_system_list to a list of all doc systems.
-Arguments:
-   `set_all_doc_systems' requires zero arguments.
 
 ------------------------------------------------
  -- Function: simple_doc_add: simple_doc_add(<name>, <content>)
@@ -1393,7 +1435,7 @@ See also:  simple_doc_init, simple_doc_add, simple_doc_delete, and simple_doc_ge
 ==============================================================
   note: this 'section' is not in the maxima manual.
  *  alt_eigen
- *  nelder_mead
+ *  to_poly_clean
 ------------------------------------------------
  -- Function: alt_eigen
     Section: Functions and Variables for Equations
@@ -1448,33 +1490,17 @@ Examples:
   Author: Barton Willis.
 
 ------------------------------------------------
- -- Function: nelder_mead: nelder_mead(<expr>, <vars>, <init>)
+ -- Function: to_poly_clean: to_poly_clean()
     Section: Functions and Variables for Equations
-    mext package: nelder_mead; filename: nm-maxima.lisp
+    mext package: tpsolve; filename: to_poly_clean.lisp
 
 Description:
-   The Nelder-Mead optimization algorithm.
+   Removes the temporary variables created by `to_poly'. These are 
+   also created by `to_poly_solve'. They can be created from maxima 
+   with `new_variable'. These variables can be found in the infolist 
+   `props'. `to_poly_clean' returns the number of variables removed.
 Arguments:
-   `nelder_mead' requires three arguments.
-    The second argument <vars> must be a list of symbols.
-    The third argument <init> must be a list of numbers.
-
-Examples:
-
-   Find the minimum of a function at a non-analytic point.
-
-(%i1) nelder_mead(if x<0 then -x else x^2, [x], [4]);
-(%o1) [x = 9.536387892694629e-11]
-(%i1) f(x) := if x<0 then -x else x^2$
-(%i2) nelder_mead(f, [x], [4]);
-(%o2) [x = 9.536387892694628e-11]
-(%i3) nelder_mead(f(x), [x], [4]);
-(%o3) [x = 9.536387892694628e-11]
-(%i1) nelder_mead(x^4+y^4-2*x*y-4*x-3*y, [x,y], [2,2]);
-(%o1) [x = 1.157212489168102,y = 1.099342680267472]
-
-
-  Author: Mario S. Mommer.
+   `to_poly_clean' requires zero arguments.
 
 ==============================================================
 ==  section: Functions and Variables for Function Definition
@@ -1516,10 +1542,6 @@ Arguments:
 ==============================================================
   note: this 'section' is not in the maxima manual.
  *  pager_string
- *  restore
- *  restore_fast
- *  store
- *  store_fast
 ------------------------------------------------
  -- Function: pager_string: pager_string(<s>)
     Section: Functions and Variables for Input and Output
@@ -1530,98 +1552,6 @@ Description:
    `pager_command'.This works at least with gcl under linux.
 Arguments:
    `pager_string' requires one argument <s>, which must be a string.
-
-------------------------------------------------
- -- Function: restore: restore(<file>)
-    Section: Functions and Variables for Input and Output
-    mext package: store; filename: store-expression.lisp
-
-Calling:
-    restore(<file>)
-        Reads and returns expressions from the file <file>.
-
-Description:
-   Reads maxima expressions from file <file> created by the function 
-   `store'.
-Arguments:
-   `restore' requires one argument <file>, which must be a string.
-
-See also:  store, store_fast, and restore_fast.
-
-------------------------------------------------
- -- Function: restore_fast: restore_fast(<file>)
-    Section: Functions and Variables for Input and Output
-    mext package: store; filename: store-expression.lisp
-
-Calling:
-    restore_fast(<file>)
-        Reads and returns expressios from the file <file>. No checking 
-      for circular references is done.
-
-Description:
-   Reads maxima expressions from file <file> created by the function 
-   `store', or `store_fast'. No checks for circular references are 
-   done.
-Arguments:
-   `restore_fast' requires one argument <file>, which must be a string.
-
-See also:  store, restore, and store_fast.
-
-------------------------------------------------
- -- Function: store: store(<file> :rest <exprs>)
-    Section: Functions and Variables for Input and Output
-    mext package: store; filename: store-expression.lisp
-
-Calling:
-    store(<file>, <expr1>, <expr2>, <...>)
-        stores the expressions to the file <file>.
-
-Description:
-   Stores maxima expressions <exprs> in <file> in binary format. Many 
-   types of lisp expressions and subexpressions are supported: 
-   numbers,strings,list,arrays,hashtables,structures,....
-Arguments:
-   `store' requires one or more arguments. The first argument <file> must be a string.
-
-Examples:
-
-   Save a graph to a file. This cannot be done with the command 
-   <save>.
-
-(%i1) load(graphs)$
-(%i2) c : petersen_graph();
-(%o2) GRAPH(10 vertices, 15 edges)
-(%i3) factor(graph_charpoly(c,x));
-(%o3) (x-3)*(x-1)^5*(x+2)^4
-(%i4) store("graph.cls",c)$
-(%i5) factor(graph_charpoly( restore("graph.cls"), x));
-(%o5) (x-3)*(x-1)^5*(x+2)^4
-
-
-See also:  restore, store_fast, and restore_fast.
-
-Implementation:
-       store uses the cl-store library. See the cl-store documentation 
-    for more information.
-
-------------------------------------------------
- -- Function: store_fast: store_fast(<file> :rest <exprs>)
-    Section: Functions and Variables for Input and Output
-    mext package: store; filename: store-expression.lisp
-
-Calling:
-    store_fast(<file>, <expr1>, <expr2>, <...>)
-        stores the expressions to the file <file>. No checking for 
-      circular references is done.
-
-Description:
-   Stores maxima expressions <exprs> in <file> in binary format. This 
-   is like `store', except that no checks for circular references are 
-   done.
-Arguments:
-   `store_fast' requires one or more arguments. The first argument <file> must be a string.
-
-See also:  store, restore, and restore_fast.
 
 ==============================================================
 ==  section: Functions and Variables for Lists
@@ -1693,7 +1623,8 @@ Description:
 Arguments:
    `constant_list' requires either two or three arguments.
     The second argument <spec> must be a positive integer or a list of positive integers.
-Options:  constant_list takes options with default values: match->false, adj->true, ot->ml.
+Options:  constant_list takes options with default values:
+   match->false, adj->true, ot->ml.
 
 warning: no type declaration for x; assume type is 'any'.
 note: 'modedeclare' declares types for translation.
@@ -1708,7 +1639,9 @@ Description:
 Arguments:
    `count' requires two arguments.
     The first argument <expr> must be non-atomic and either aex or represented by a lisp list.
-Options:  count takes options with default values: compile->true.
+    The second argument threads (distributes) over lists.
+Options:  count takes options with default values:
+   compile->true.
 
 Examples:
 (%i1) count([1,2,"dog"], 'numberp);
@@ -1739,7 +1672,9 @@ Calling:
 Arguments:
    `drop_while' requires two arguments.
     The first argument <expr> must be non-atomic and represented by a lisp list.
-Options:  drop_while takes options with default values: adj->true, ot->ml, compile->true.
+    The second argument threads (distributes) over lists.
+Options:  drop_while takes options with default values:
+   adj->true, ot->ml, compile->true.
 
 Examples:
 
@@ -1764,7 +1699,9 @@ Calling:
 Arguments:
    `every1' requires two arguments.
     The first argument <expr> must be non-atomic and represented by a lisp list.
-Options:  every1 takes options with default values: compile->true.
+    The second argument threads (distributes) over lists.
+Options:  every1 takes options with default values:
+   compile->true.
 
 ------------------------------------------------
  -- Function: fold: fold(f,x,v)
@@ -1776,7 +1713,9 @@ Description:
 Arguments:
    `fold' requires three arguments.
     The third argument <v> must be non-atomic.
-Options:  fold takes options with default values: adj->true, ot->ml, compile->true.
+    The first argument threads (distributes) over lists.
+Options:  fold takes options with default values:
+   adj->true, ot->ml, compile->true.
 
 See also: fold_list and nest.
 
@@ -1791,7 +1730,9 @@ Description:
 Arguments:
    `fold_list' requires three arguments.
     The third argument <v> must be non-atomic.
-Options:  fold_list takes options with default values: adj->true, ot->ml, compile->true.
+    The first argument threads (distributes) over lists.
+Options:  fold_list takes options with default values:
+   adj->true, ot->ml, compile->true.
 
 See also: fold and nest.
 
@@ -1827,7 +1768,8 @@ Description:
 Arguments:
    `imap' requires two arguments.
     The second argument <expr> must be non-atomic.
-Options:  imap takes options with default values: compile->true.
+Options:  imap takes options with default values:
+   compile->true.
 
 Examples:
 
@@ -1854,7 +1796,9 @@ Description:
 Arguments:
    `length_while' requires two arguments.
     The first argument <expr> must be non-atomic and represented by a lisp list.
-Options:  length_while takes options with default values: compile->true.
+    The second argument threads (distributes) over lists.
+Options:  length_while takes options with default values:
+   compile->true.
 
 Examples:
 (%i1) length_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)));
@@ -1885,7 +1829,9 @@ Description:
 Arguments:
    `lrange' requires between one and three arguments.
     The third argument <incr> must be an expression that is not zero.
-Options:  lrange takes options with default values: adj->true, ot->ml.
+    The  first, second, and third arguments thread (distribute) over lists.
+Options:  lrange takes options with default values:
+   adj->true, ot->ml.
 
 Examples:
 (%i1) lrange(6);
@@ -1935,7 +1881,9 @@ Arguments:
    `nest' requires three arguments.
     The first argument <f> must be a map-able function.
     The third argument <n> must be a non-negative integer.
-Options:  nest takes options with default values: adj->true, ot->ml, compile->true.
+    The first and third arguments thread (distribute) over lists.
+Options:  nest takes options with default values:
+   adj->true, ot->ml, compile->true.
 
 ------------------------------------------------
  -- Function: nest_list: nest_list(<f>, <x>, <n>)
@@ -1945,7 +1893,9 @@ Options:  nest takes options with default values: adj->true, ot->ml, compile->tr
 Arguments:
    `nest_list' requires three arguments.
     The third argument <n> must be a non-negative integer.
-Options:  nest_list takes options with default values: adj->true, ot->ml, compile->true.
+    The first and third arguments thread (distribute) over lists.
+Options:  nest_list takes options with default values:
+   adj->true, ot->ml, compile->true.
 
 Examples:
 
@@ -1977,7 +1927,9 @@ Arguments:
    `nest_while' requires between three and five arguments.
     The fourth argument <min> must be a non-negative integer.
     The fifth argument <max> must be a non-negative integer.
-Options:  nest_while takes options with default values: adj->true, ot->ml, compile->true.
+    The first and third arguments thread (distribute) over lists.
+Options:  nest_while takes options with default values:
+   adj->true, ot->ml, compile->true.
 
 Implementation:
        This should be modified to allow applying test to more than just 
@@ -2055,7 +2007,9 @@ Arguments:
    `select' requires either two or three arguments.
     The first argument <expr> must be non-atomic and represented by a lisp list.
     The third argument <n> must be a positive integer.
-Options:  select takes options with default values: adj->true, ot->ml, compile->true.
+    The second argument threads (distributes) over lists.
+Options:  select takes options with default values:
+   adj->true, ot->ml, compile->true.
 
 Examples:
 
@@ -2118,7 +2072,8 @@ Arguments:
    `table' requires two or more arguments.
     The second argument <iterator1> must be a list.
    Each of the remaining arguments must be a list.
-Options:  table takes options with default values: adj->true, ot->ml.
+Options:  table takes options with default values:
+   adj->true, ot->ml.
 Attributes: table has attributes: [hold_all]
 
 Examples:
@@ -2225,7 +2180,9 @@ Calling:
 Arguments:
    `take_while' requires two arguments.
     The first argument <expr> must be non-atomic and represented by a lisp list.
-Options:  take_while takes options with default values: adj->true, ot->ml, compile->true.
+    The second argument threads (distributes) over lists.
+Options:  take_while takes options with default values:
+   adj->true, ot->ml, compile->true.
 
 Examples:
 
@@ -2253,7 +2210,8 @@ Arguments:
    `tuples' requires either one or two arguments.
     The first argument <list-or-lists> must be non-atomic and represented by a lisp list.
     The second argument <n> must be a non-negative integer.
-Options:  tuples takes options with default values: adj->true, ot->ml.
+Options:  tuples takes options with default values:
+   adj->true, ot->ml.
 
 Examples:
 
@@ -2289,11 +2247,8 @@ Examples:
  *  integer_string
  *  oeis_A092143
  *  perfect_p
- *  prime_pi
  *  prime_pi_soe
- *  prime_twins
  *  primes1
- *  to_poly_clean
 ------------------------------------------------
  -- Function: abundant_p: abundant_p(<n>)
     Section: Functions and Variables for Number Theory
@@ -2304,6 +2259,7 @@ Description:
    false.
 Arguments:
    `abundant_p' requires one argument <n>, which must be a positive integer.
+    The first argument threads (distributes) over lists.
 
 Examples:
 
@@ -2330,6 +2286,7 @@ Arguments:
    `aliquot_sequence' requires two arguments.
     The first argument <k> must be a positive integer.
     The second argument <n> must be a non-negative integer.
+    The first and second arguments thread (distribute) over lists.
 
 Examples:
 
@@ -2357,6 +2314,7 @@ Description:
    of the proper divisors of <n>.
 Arguments:
    `aliquot_sum' requires one argument <n>, which must be a positive integer.
+    The first argument threads (distributes) over lists.
 Attributes: aliquot_sum has attributes: [match_form]
 
 See also:  divisor_function, aliquot_sequence, divisor_summatory, perfect_p, and abundant_p.
@@ -2372,6 +2330,7 @@ Arguments:
    `amicable_p' requires two arguments.
     The first argument <n> must be a positive integer.
     The second argument <m> must be a positive integer.
+    The first and second arguments thread (distribute) over lists.
 
 Examples:
 
@@ -2391,6 +2350,7 @@ Description:
    Returns the <n>th catalan number.
 Arguments:
    `catalan_number' requires one argument.
+    The first argument threads (distributes) over lists.
 
 Examples:
 
@@ -2422,6 +2382,7 @@ Arguments:
    `divisor_function' requires either one or two arguments.
     The first argument <n> must be a non-negative integer.
     The second argument <x> must be a number.
+    The first and second arguments thread (distribute) over lists.
 Attributes: divisor_function has attributes: [match_form]
 
 OEIS number: A000005 for x=0 and A000203 for x=1.
@@ -2440,6 +2401,7 @@ Description:
    x.
 Arguments:
    `divisor_summatory' requires one argument <x>, which must be a non-negative number.
+    The first argument threads (distributes) over lists.
 Attributes: divisor_summatory has attributes: [match_form]
 
 Examples:
@@ -2475,6 +2437,7 @@ Description:
 Arguments:
    `from_digits' requires either one or two arguments.
     The first argument <digits> must be a list (lex or aex) or a string.
+    The second argument threads (distributes) over lists.
 
 See also: integer_digits and integer_string.
 
@@ -2499,7 +2462,8 @@ Arguments:
     The first argument <n> must be an integer.
     The second argument <base> must be a valid radix (an integer between 2 and 36).
     The third argument <len> must be a non-negative integer.
-Options:  integer_digits takes options with default values: adj->true, ot->ml.
+Options:  integer_digits takes options with default values:
+   adj->true, ot->ml.
 
 See also: from_digits and integer_string.
 
@@ -2546,6 +2510,7 @@ Arguments:
     The first argument <n> must be an integer.
     The second argument <base> must be a valid radix (an integer between 2 and 36) or a string.
     The third argument <pad> must be a positive integer.
+    The  first, second, and third arguments thread (distribute) over lists.
 
 See also: integer_digits and from_digits.
 
@@ -2569,6 +2534,7 @@ Description:
    Returns true if <n> is a perfect number. Otherwise, returns false.
 Arguments:
    `perfect_p' requires one argument <n>, which must be a positive integer.
+    The first argument threads (distributes) over lists.
 
 See also:  divisor_function, aliquot_sum, aliquot_sequence, divisor_summatory, and abundant_p.
 
@@ -2576,40 +2542,6 @@ Implementation:
        This function computes divisors. It would be far more efficient 
     to use a table of known perfect numbers, as very few of them are 
     accessible by current computer hardware.
-
-------------------------------------------------
- -- Function: prime_pi: prime_pi(<n>)
-    Section: Functions and Variables for Number Theory
-    mext package: prime_pi; filename: max-ql.lisp
-
-Calling:
-    prime_pi(<n>)
-        returns the number of primes less than or equal to <n>.
-
-Description:
-   Computes the prime counting function. The option <threads> 
-   specifies the maximum number of cpu threads to use. The routine 
-   may use fewer threads, depending on the value of <n>. The value of 
-   <n> is limited to 2^64, that is, about 1.84e+18. 
-   
-   The percent of the calculation that is finished is printed during 
-   the calculation if the option <status> is true. The status will 
-   only work under some terminals.
-Arguments:
-   `prime_pi' requires one argument <n>, which must be equivalent to an unsigned 64 bit integer
- (that is, an integer between 0 and 2 to the power 64)
-(We need to modify the doc system so we can use notation for powers in arg check strings.
-.
-Options:  prime_pi takes options with default values: status->false, threads->1.
-
-See also:  prime_pi_soe, next_prime, and prev_prime.
-
-Implementation:
-       This algorithm is fast, especially for a general purpose 
-    mathematics program. It combines a segmented sieve implemented as 
-    a C library with tables.
-
-  Authors:  Kim Walisch (C library), Tomas Oliveira e Silva (tables), and John Lapeyre (lisp).
 
 ------------------------------------------------
  -- Function: prime_pi_soe: prime_pi_soe(<n>)
@@ -2626,38 +2558,6 @@ See also:  prime_pi, next_prime, and prev_prime.
 
 Implementation:
        This is not the most efficient way to compute primes.
-
-------------------------------------------------
- -- Function: prime_twins: prime_twins(<min> :optional <max>)
-    Section: Functions and Variables for Number Theory
-    mext package: prime_pi; filename: max-ql.lisp
-
-Calling:
-    prime_twins(<n>)
-        returns the number of prime twins less than or equal to <n>.
-
-    prime_twins(<nmin>, <nmax>)
-        returns the number of prime twins between <nmin> and <max>.
-
-Description:
-   The option <ktuplet> counts the <ktuplet>-constellation rather 
-   than the twins. <ktuplet> must be an integer between 1 and 7.
-Arguments:
-   `prime_twins' requires either one or two arguments.
-    The first argument <min> must be equivalent to an unsigned 64 bit integer
- (that is, an integer between 0 and 2 to the power 64)
-(We need to modify the doc system so we can use notation for powers in arg check strings.
-.
-    The second argument <max> must be equivalent to an unsigned 64 bit integer
- (that is, an integer between 0 and 2 to the power 64)
-(We need to modify the doc system so we can use notation for powers in arg check strings.
-.
-Options:  prime_twins takes options with default values: ktuplet->2, status->false, threads->1.
-
-See also:  prime_pi, next_prime, prev_prime, and primep.
-
-Implementation:
-       No tables are used in this algorithm.
 
 ------------------------------------------------
  -- Function: primes1: primes1(<n1> :optional <n2>)
@@ -2678,20 +2578,8 @@ Arguments:
    `primes1' requires either one or two arguments.
     The first argument <n1> must be a non-negative integer.
     The second argument <n2> must be a non-negative integer.
-Options:  primes1 takes options with default values: adj->true, ot->ml.
-
-------------------------------------------------
- -- Function: to_poly_clean: to_poly_clean()
-    Section: Functions and Variables for Number Theory
-    mext package: tpsolve; filename: to_poly_clean.lisp
-
-Description:
-   Removes the temporary variables created by `to_poly'. These are 
-   also created by `to_poly_solve'. They can be created from maxima 
-   with `new_variable'. These variables can be found in the infolist 
-   `props'. `to_poly_clean' returns the number of variables removed.
-Arguments:
-   `to_poly_clean' requires zero arguments.
+Options:  primes1 takes options with default values:
+   adj->true, ot->ml.
 
 ==============================================================
 ==  section: Functions and Variables for Numerical Computation
@@ -2743,7 +2631,8 @@ Arguments:
     The third argument <a> must be an expression that can be converted to a float.
     The fourth argument <b> must be an expression that can be converted to a float.
     The fifth argument <key> must be an integer between 1 and 6.
-Options:  mquad_qag takes options with default values: match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
+Options:  mquad_qag takes options with default values:
+   match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
 
 ------------------------------------------------
  -- Function: mquad_qagi: mquad_qagi(<fun>, <var>, <a>, <b>)
@@ -2757,7 +2646,8 @@ Arguments:
     The second argument <var> must be a symbol or a subscripted variable.
     The third argument <a> must be inf, minf, or an expression that can be converted to a float.
     The fourth argument <b> must be inf, minf, or an expression that can be converted to a float.
-Options:  mquad_qagi takes options with default values: match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
+Options:  mquad_qagi takes options with default values:
+   match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
 
 ------------------------------------------------
  -- Function: mquad_qagp: mquad_qagp(<fun>, <var>, <a>, <b>, <points>)
@@ -2772,7 +2662,8 @@ Arguments:
     The third argument <a> must be an expression that can be converted to a float.
     The fourth argument <b> must be an expression that can be converted to a float.
     The fifth argument <points> must be a list.
-Options:  mquad_qagp takes options with default values: match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
+Options:  mquad_qagp takes options with default values:
+   match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
 
 ------------------------------------------------
  -- Function: mquad_qags: mquad_qags(<fun>, <var>, <a>, <b>)
@@ -2786,7 +2677,8 @@ Arguments:
     The second argument <var> must be a symbol or a subscripted variable.
     The third argument <a> must be an expression that can be converted to a float.
     The fourth argument <b> must be an expression that can be converted to a float.
-Options:  mquad_qags takes options with default values: match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
+Options:  mquad_qags takes options with default values:
+   match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
 
 ------------------------------------------------
  -- Function: mquad_qawc: mquad_qawc(<fun>, <var>, <c>, <a>, <b>)
@@ -2801,7 +2693,8 @@ Arguments:
     The third argument <c> must be an expression that can be converted to a float.
     The fourth argument <a> must be an expression that can be converted to a float.
     The fifth argument <b> must be an expression that can be converted to a float.
-Options:  mquad_qawc takes options with default values: match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
+Options:  mquad_qawc takes options with default values:
+   match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
 
 ------------------------------------------------
  -- Function: mquad_qawf: mquad_qawf(<fun>, <var>, <a>, <omega>, <trig>)
@@ -2816,7 +2709,8 @@ Arguments:
     The third argument <a> must be an expression that can be converted to a float.
     The fourth argument <omega> must be an expression that can be converted to a float.
     The fifth argument <trig> must be one of '($COS 1 %COS $SIN %SIN 2).
-Options:  mquad_qawf takes options with default values: match->false, limlst->10, maxp1->100, epsabs->1.e-10, limit->200.
+Options:  mquad_qawf takes options with default values:
+   match->false, limlst->10, maxp1->100, epsabs->1.e-10, limit->200.
 
 ------------------------------------------------
  -- Function: mquad_qawo: mquad_qawo(<fun>, <var>, <a>, <b>, <omega>, <trig>)
@@ -2832,7 +2726,8 @@ Arguments:
     The fourth argument <b> must be an expression that can be converted to a float.
     The fifth argument <omega> must be an expression that can be converted to a float.
     The sixth argument <trig> must be one of '($COS 1 %COS $SIN %SIN 2).
-Options:  mquad_qawo takes options with default values: match->false, epsrel->1.e-8, epsabs->0.0, limit->200, maxp1->100.
+Options:  mquad_qawo takes options with default values:
+   match->false, epsrel->1.e-8, epsabs->0.0, limit->200, maxp1->100.
 
 ------------------------------------------------
  -- Function: mquad_qaws: mquad_qaws(<fun>, <var>, <a>, <b>, <alfa>, <beta>, <wfun>)
@@ -2849,7 +2744,8 @@ Arguments:
     The fifth argument <alfa> must be an expression that can be converted to a float.
     The sixth argument <beta> must be an expression that can be converted to a float.
     The seventh argument <wfun> must be an integer between 1 and 4.
-Options:  mquad_qaws takes options with default values: match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
+Options:  mquad_qaws takes options with default values:
+   match->false, epsrel->1.e-8, epsabs->0.0, limit->200.
 
 ------------------------------------------------
  -- Function: n_abs
@@ -3071,80 +2967,86 @@ Arguments:
    `nintegrate' requires either two or three arguments.
     The second argument <varspec> must be a list.
     The third argument <singlist> must be a list.
-Options:  nintegrate takes options with default values: epsrel->1.e-8, epsabs->0, subint->200, info->true, words->true, calls->false, sing->true.
+    The first argument threads (distributes) over lists.
+Options:  nintegrate takes options with default values:
+   epsrel->1.e-8, epsabs->0, subint->200, info->true, words->true, 
+   calls->false, sing->true.
 
 Examples:
-(%i1) nintegrate(sin(sin(x)), [x,0,2]);
-(%o1) [1.24706, 1.38451e-14, 21, no problems]
+(%i1) nintegrate([x,x^2,x^3], [x,0,1], info->false);
+(%o1) [0.5,.3333333333333334,0.25]
+
+(%i2) nintegrate(sin(sin(x)), [x,0,2]);
+(%o2) [1.24706, 1.38451e-14, 21, no problems]
 
    Integrate over a semi-infinite interval with an internal 
    singularity. The location of the singularity is supplied. This 
    cannot be done with a single call to quadpack routines.
 
-(%i2) nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf], [1] );
-(%o2) [1.72821, 1.87197e-10, 660, no problems]
+(%i3) nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf], [1] );
+(%o3) [1.72821, 1.87197e-10, 660, no problems]
 
    If a list of possible singular points is not supplied, then they 
    will be searched for using `solve'.
 
-(%i3) nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf]);
-(%o3) [1.72821, 1.87197e-10, 660, no problems]
+(%i4) nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf]);
+(%o4) [1.72821, 1.87197e-10, 660, no problems]
 
    In some cases, complex numbers are treated correctly. (The 
    simplifier replaces `cos(%i*x)' with `cosh(x)' before the routine 
    is called. So this works with `quad_qags' as well.)
 
-(%i4) nintegrate( cos(%i*x), [x,0,1]);
-(%o4) [1.1752, 1.30474e-14, 21, no problems]
+(%i5) nintegrate( cos(%i*x), [x,0,1]);
+(%o5) [1.1752, 1.30474e-14, 21, no problems]
 
-(%i5) sinh(1.0);
-(%o5) 1.1752
+(%i6) sinh(1.0);
+(%o6) 1.1752
 
    But, the quadpack routines cannot handle the complex numbers in 
    this example.
 
-(%i6) nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf]);
-(%o6) [.424436 %i + .690194, 4.988325e-9, 300, no problems]
+(%i7) nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf]);
+(%o7) [.424436 %i + .690194, 4.988325e-9, 300, no problems]
 
    Return quadpack error code rather than error text.
 
-(%i7) nintegrate(sin(sin(x)), [x,0,2], words->false);
-(%o7) [1.24706, 1.38451e-14, 21, 0]
+(%i8) nintegrate(sin(sin(x)), [x,0,2], words->false);
+(%o8) [1.24706, 1.38451e-14, 21, 0]
 
    Request a relative error.
 
-(%i8) nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf], epsrel -> 1e-12);
-(%o8) [.424436 %i + .690194, 1.06796e-13, 480, no problems]
+(%i9) nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf], epsrel -> 1e-12);
+(%o9) [.424436 %i + .690194, 1.06796e-13, 480, no problems]
 
    Trying to do the integral with too few sub-intervals fails.
 
-(%i9) nintegrate(1/(1+x^2), [x, 0, inf], subint -> 2, epsrel -> 1e-10);
-(%o9) [1.5708, 2.57779e-10, 45, too many sub-intervals]
+(%i10) nintegrate(1/(1+x^2), [x, 0, inf], subint -> 2, epsrel -> 1e-10);
+(%o10) [1.5708, 2.57779e-10, 45, too many sub-intervals]
 
    This integral is not handled well. Giving limits of `minf' and 
    `inf' fails.
 
-(%i10) nintegrate(exp(%i*x*x),[x,-200,200],subint->10000);
-(%o10) [1.25170114 %i + 1.25804682, 2.507635982e-8, 760578, no problems]
+(%i11) nintegrate(exp(%i*x*x),[x,-200,200],subint->10000);
+(%o11) [1.25170114 %i + 1.25804682, 2.507635982e-8, 760578, no problems]
 
-(%i11) integrate(exp(%i*x*x),x,minf,inf);
-(%o11) sqrt(%pi)*(%i/sqrt(2)+1/sqrt(2))
+(%i12) integrate(exp(%i*x*x),x,minf,inf);
+(%o12) sqrt(%pi)*(%i/sqrt(2)+1/sqrt(2))
 
-(%i12) rectform(float(%));
-(%o12) 1.25331414*%i+1.25331414
+(%i13) rectform(float(%));
+(%o13) 1.25331414*%i+1.25331414
 
    Return a list of calls made to quadpack.
 
-(%i13) nintegrate(1/sqrt(abs(1-x)) * exp(-x),[x,0,inf], calls->true);
-(%o13) [1.72821,1.87197e-10,660, no problems,
+(%i14) nintegrate(1/sqrt(abs(1-x)) * exp(-x),[x,0,inf], calls->true);
+(%o14) [1.72821,1.87197e-10,660, no problems,
  [quad_qagi(%e^-x/sqrt(abs(x-1)),x,1.0,inf,epsrel = 1.e-8,epsabs = 0,limit = 200),
   quad_qagp(%e^-x/sqrt(abs(x-1)),x,0,1.0,[],epsrel = 1.e-8,epsabs = 0,limit = 200)]]
 
    Here we must supply the roots of `sin(x)' within the range of 
    integration.
 
-(%i14) nintegrate(1/(sqrt(sin(x))),[x,0,10], [%pi,2*%pi,3*%pi]);
-(%o14) [10.48823021716687 - 6.769465521725385 %i, 9.597496930524585e-8, 1596, no problems]
+(%i15) nintegrate(1/(sqrt(sin(x))),[x,0,10], [%pi,2*%pi,3*%pi]);
+(%o15) [10.48823021716687 - 6.769465521725385 %i, 9.597496930524585e-8, 1596, no problems]
 
 
 
@@ -3262,36 +3164,42 @@ Implementation:
     mext package: aex; filename: mext-predicates.lisp
 
 Description:
-   Return something like the `type' of a maxima expression. This is a 
-   bit ill defined currently. `type_of' uses the lisp function 
-   `type-of'. 
+   Return something like the `type' of a maxima expression. `type_of' 
+   uses the lisp function `type-of'. Currently, `type_of' is a bit 
+   ill-defined; it may be better called `what-is-this?'. 
    
-   If the option <info> is true, then more information is returned.
+   If the option <info> is true, then more information is returned on 
+   properties and the underlying maxima and lisp representations.
 Arguments:
    `type_of' requires one argument.
-Options:  type_of takes options with default values: info->false.
+Options:  type_of takes options with default values:
+   info->false.
 
 Examples:
 (%i1) type_of(1);
 (%o1) integer
-(%i1) type_of(1.0);
-(%o1) lisp_double_float
-(%i2) type_of(1.0b0);
-(%o2) bfloat
-(%i3) type_of(1/3);
-(%o3) /
-(%i4) type_of("dog");
-(%o4) string
-(%i5) type_of([1,2,3]);
-(%o5) [
-(%i6) type_of(aex([1,2,3]));
-(%o6) [
-(%i7) type_of(%e);
-(%o7) symbol
-(%i8) type_of(%i);
-(%o8) symbol
-(%i9) type_of(%i+1);
-(%o9) +
+(%i1) type_of(1, info->true);
+(%o1) [integer,lisp_bit]
+(%i2) type_of(1.0);
+(%o2) lisp_double_float
+(%i3) type_of(1.0b0);
+(%o3) bfloat
+(%i4) type_of(1/3);
+(%o4) /
+(%i5) type_of(1/3, info->true);
+(%o5) ["/",rat]
+(%i6) type_of("dog");
+(%o6) string
+(%i7) type_of([1,2,3]);
+(%o7) [
+(%i8) type_of(aex([1,2,3]));
+(%o8) [
+(%i9) type_of(%e);
+(%o9) symbol
+(%i10) type_of(%i);
+(%o10) symbol
+(%i11) type_of(%i+1);
+(%o11) +
 
    type_of returns the type of the lisp struct corresponding to a 
    maxima object.
@@ -3323,53 +3231,6 @@ See also: error and errormsg.
 ==  section: Functions and Variables for Quicklisp
 ==============================================================
   note: this 'section' is not in the maxima manual.
- *  quicklisp_apropos
- *  quicklisp_install
- *  quicklisp_load
- *  quicklisp_start
-------------------------------------------------
- -- Function: quicklisp_apropos: quicklisp_apropos(<term>)
-    Section: Functions and Variables for Quicklisp
-    mext package: quicklisp; filename: max-ql.lisp
-
-Description:
-   Search quicklisp for lisp `systems' (packages) matching <term>.
-Arguments:
-   `quicklisp_apropos' requires one argument <term>, which must be a string.
-
-------------------------------------------------
- -- Function: quicklisp_install: quicklisp_install()
-    Section: Functions and Variables for Quicklisp
-    mext package: quicklisp; filename: max-ql.lisp
-
-Description:
-   Download and install quicklisp from the internet. This is usually 
-   done automatically as the final step of building and installing 
-   the maxima interface to quicklisp.
-Arguments:
-   `quicklisp_install' requires zero arguments.
-
-------------------------------------------------
- -- Function: quicklisp_load: quicklisp_load(<package_name>)
-    Section: Functions and Variables for Quicklisp
-    mext package: quicklisp; filename: max-ql.lisp
-
-Description:
-   Load the asdf lisp package <package_name>, or, if not installed, 
-   install from the internet and then load.
-Arguments:
-   `quicklisp_load' requires one argument <package_name>, which must be a string.
-
-------------------------------------------------
- -- Function: quicklisp_start: quicklisp_start()
-    Section: Functions and Variables for Quicklisp
-    mext package: quicklisp; filename: max-ql.lisp
-
-Description:
-   Load (setup) quicklisp. It must already be installed.
-Arguments:
-   `quicklisp_start' requires zero arguments.
-
 ==============================================================
 ==  section: Functions and Variables for Runtime Environment
 ==============================================================
@@ -3385,6 +3246,7 @@ Arguments:
  *  homedir
  *  lisp_bin_ext
  *  lisp_type
+ *  lisp_type_symbol
  *  lisp_version
  *  list_directory
  *  maxima_version
@@ -3396,6 +3258,7 @@ Arguments:
  *  mext_list_loaded
  *  mext_list_package
  *  mext_test
+ *  mext_verbose
  *  mtranslate_file
  *  popdir
  *  probe_file
@@ -3432,6 +3295,7 @@ Description:
    the database.
 Arguments:
    `allow_kill_share' requires one argument <package>, which must be a string or a symbol.
+    The first argument threads (distributes) over lists.
 
 ------------------------------------------------
  -- Function: chdir: chdir( :optional <dir>)
@@ -3465,6 +3329,7 @@ Description:
    otherwise.
 Arguments:
    `dir_exists' requires one argument <dir>, which must be a string.
+    The first argument threads (distributes) over lists.
 
 ------------------------------------------------
  -- Function: dirstack: dirstack()
@@ -3506,6 +3371,7 @@ Description:
    `basic' and `lrats' are in the database.
 Arguments:
    `dont_kill_share' requires one argument <package>, which must be a string or a symbol.
+    The first argument threads (distributes) over lists.
 
 See also:  dont_kill, get_dont_kill, and allow_kill.
 
@@ -3552,6 +3418,15 @@ Description:
    The name of the lisp implementation on which Maxima is running.
 
 ------------------------------------------------
+ -- Function: lisp_type_symbol
+    Section: Functions and Variables for Runtime Environment
+    mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
+
+Description:
+   Returns a maxima symbol representing the lisp vendor. For example, 
+   gcl, sbcl, clisp, ...
+
+------------------------------------------------
  -- Variable: lisp_version
     Section: Functions and Variables for Runtime Environment
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
@@ -3571,6 +3446,7 @@ Description:
    no argument is given.
 Arguments:
    `list_directory' requires either zero or one arguments. If present, the argument <dir> must be a a string.
+    The first argument threads (distributes) over lists.
 
 See also:  chdir, pwd, popdir, updir, and dirstack.
 
@@ -3597,7 +3473,9 @@ Arguments:
    `mcompile_file' requires either one or two arguments.
     The first argument <input-file> must be a string.
     The second argument <bin_file> must be a string.
-Options:  mcompile_file takes options with default values: tr_file->false.
+    The first argument threads (distributes) over lists.
+Options:  mcompile_file takes options with default values:
+   tr_file->false.
 
 ------------------------------------------------
  -- Function: mext_clear: mext_clear()
@@ -3625,8 +3503,9 @@ Description:
    which the item is defined is also returned.
 Arguments:
    `mext_find_package' requires zero or more arguments.
-   Each of the remaining arguments must be a string or a symbol.
-Options:  mext_find_package takes options with default values: file->false.
+   Each of the arguments must be a string or a symbol.
+Options:  mext_find_package takes options with default values:
+   file->false.
 
 See also:  mext_list_loaded, mext_list, mext_info, mext_clear, and mext_list_package.
 
@@ -3641,6 +3520,7 @@ Description:
    `mext_list'.
 Arguments:
    `mext_info' requires one argument <distname>, which must be a string or a symbol.
+    The first argument threads (distributes) over lists.
 
 See also:  mext_list_loaded, mext_list, mext_clear, mext_list_package, and mext_find_package.
 
@@ -3681,6 +3561,7 @@ Description:
    list for some packages, and may miss some functions.
 Arguments:
    `mext_list_package' requires one argument <package>, which must be a string or a symbol.
+    The first argument threads (distributes) over lists.
 
 See also:  mext_list_loaded, mext_list, mext_info, mext_clear, and mext_find_package.
 
@@ -3688,6 +3569,13 @@ See also:  mext_list_loaded, mext_list, mext_info, mext_clear, and mext_find_pac
  -- Function: mext_test: mext_test( :rest <dists>)
     Section: Functions and Variables for Runtime Environment
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
+
+Calling:
+    mext_test('loaded )
+        Run rtests for all loaded mext packages.
+
+    mext_test(<package>)
+        Run rtests for the mext pacakge <package>.
 
 Description:
    Run the test suites for a mext distribution or list of 
@@ -3707,8 +3595,9 @@ Description:
    is available.
 Arguments:
    `mext_test' requires zero or more arguments.
-   Each of the remaining arguments must be  a string, a symbol, or a list of strings or symbols.
-Options:  mext_test takes options with default values: list->false.
+   Each of the arguments must be  a string, a symbol, or a list of strings or symbols.
+Options:  mext_test takes options with default values:
+   list->false.
 
 Examples:
    Run regression tests for the packages `aex', and `lists_aex'.
@@ -3729,6 +3618,16 @@ Examples:
 
 
 ------------------------------------------------
+ -- Variable: mext_verbose
+    Section: Functions and Variables for Runtime Environment
+    mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
+
+  default value `0'.
+Description:
+   Set this to `0' to suppress messages from mext while loading 
+   packages, or `1' to enable messages.
+
+------------------------------------------------
  -- Function: mtranslate_file: mtranslate_file(<input-file> :optional <ttymsgsp>)
     Section: Functions and Variables for Runtime Environment
     mext package: mext_defmfun1; filename: mext_defmfun1_code.lisp
@@ -3739,7 +3638,9 @@ Description:
 Arguments:
    `mtranslate_file' requires either one or two arguments.
     The first argument <input-file> must be a string.
-Options:  mtranslate_file takes options with default values: output_file->false.
+    The first argument threads (distributes) over lists.
+Options:  mtranslate_file takes options with default values:
+   output_file->false.
 
 ------------------------------------------------
  -- Function: popdir: popdir( :optional <n>)
@@ -3810,23 +3711,33 @@ Arguments:
 Calling:
     timing(<exprs>)
         evaluates each of the expressions <exprs> and returns a list of 
-      the time in seconds used, together with the result of 
-      evaluating the final expression.
+      the total cpu time and real time in seconds used, together with 
+      the result of evaluating the final expression.
 
-    timing(<exprs>, <print->true>)
+    timing(<exprs>, print->true )
         returns the result of evaluating the final expression and 
-      prints the time in seconds used.
+      prints the cpu and real time used.
 
-    timing(<exprs>, <result->false>)
+    timing(<exprs>, result->false )
         returns the time in seconds used, and discards all results.
+
+    timing(<exprs>, time->cpu )
+        Return only the cpu (run) time used and the last result.
+
+    timing(<exprs>, time->real )
+        Return only the real time used and the last result.
+
+    timing(<exprs>, time->all )
+        Return both the cpu and real time used and the last result.
 
 Description:
    `timing' evaluates each of the <exprs>, and returns a list of the 
-   total time in seconds used, together the result of the last 
-   expression. See also `showtime'.
+   total cpu time in seconds and real time in second used, together 
+   the result of the last expression. See also `showtime'.
 Arguments:
    `timing' requires zero or more arguments.
-Options:  timing takes options with default values: result->true, print->false.
+Options:  timing takes options with default values:
+   time->all, result->true, print->false.
 Attributes: timing has attributes: [hold_all]
 
 ------------------------------------------------
@@ -3873,6 +3784,7 @@ Arguments:
    `string_drop' requires two arguments.
     The first argument <s> must be a string.
     The second argument <spec> must be a sequence specification.
+    The first argument threads (distributes) over lists.
 
 Examples:
 (%i1)  string_drop("abracadabra",1);
@@ -3895,6 +3807,7 @@ Calling:
 
 Arguments:
    `string_reverse' requires one argument <s>, which must be a string.
+    The first argument threads (distributes) over lists.
 
 ------------------------------------------------
  -- Function: string_take: string_take(<s>, <spec>)
@@ -3912,6 +3825,7 @@ Arguments:
    `string_take' requires two arguments.
     The first argument <s> must be a string.
     The second argument <spec> must be a sequence specification.
+    The first argument threads (distributes) over lists.
 
 Examples:
 (%i1) string_take("dog-goat-pig-zebra",[5,12]);
@@ -4082,7 +3996,7 @@ Description:
    array-representation, so conversion back to list-representation at 
    may be necessary.
 
------------------------------------------------------
+--------------------------------------------------------------
 
 LocalWords:  mext maxima defmfun aex contrib perl linux gcl sbcl ccl
 LocalWords:  clisp cmucl ecl subdirectory rtests subfolders distname
