@@ -9,8 +9,13 @@
 (maxdoc:mdefmvar $homedir (namestring mext::*homedir-pathname*)
  "The user's home directory.")
 
-;; For testing error message
-;;(maxdoc:mdefmvar $anotherhomedir (namestring mext::*homedir-pathname*) )
+(max-doc:add-doc-entry 
+ '( :name "mext_verbose"
+    :type "Variable"
+    :default-value 0
+    :contents ("Set this to " :code "0" " to suppress messages from mext while
+                loading packages, or " :code "1"
+                " to enable messages.")))
 
 ;; redefined
 (mext::no-warning
