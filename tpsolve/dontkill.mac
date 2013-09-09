@@ -29,11 +29,16 @@ dont_kill_share("lrats");
    to_poly_solve_extra
 */
 
+/* try removing these 
+ to avoid:  incorrect syntax: %AND is not a prefix operator
+%and,
+%or,
+ Wow that solved some problems.
+*/
+
 dont_kill(
 "%and",
 "%or",
-%and,
-%or,
 %solve,
 %union_p,
 catch_easy_cases,
