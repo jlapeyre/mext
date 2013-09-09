@@ -40,5 +40,6 @@ with_output_to_string(1);
    The two strings are (string= in gcl, but maxima
    still says they are not equal
 */
-is((with_output_to_string(print(1)) = printf(false,"~a ~%",1)) or (lisp_type_symbol() = 'gcl ));
+is((with_output_to_string(print(1)) = printf(false,"~a ~%",1)) or
+  (member(lisp_type_symbol() ,['gcl, 'ecl]) ));
 true$
