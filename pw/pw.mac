@@ -1,9 +1,10 @@
-require(mext_defmfun1);
+/*require(mext_defmfun1);*/
 /*
    The following is not enough. There are many more functions
    that need to be placed on this list to prevent pw from breaking
    after `kill(all)'.
 */   
-dont_kill(pwint,pwdefint,linearfunc,quadraticfunc,pwdelta,abs2signum,p2signum);
 mext_provide( "pw",
   [ "pw_code"]);
+
+dont_kill(pwint,pwdefint,linearfunc,quadraticfunc,pwdelta,abs2signum,p2signum);
