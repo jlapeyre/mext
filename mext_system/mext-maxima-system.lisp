@@ -250,8 +250,9 @@ This was copied from maxima source init-cl.lisp.")
     (setf ,dir-list
           (maxima::mk-mlist (cons ,to-add (cdr ,dir-list))))))
 
-(add-dir-to-file-search *search-path-maxima-mext-user* maxima::$file_search_maxima)
-(add-dir-to-file-search *search-path-lisp-mext-user* maxima::$file_search_lisp)
+;(add-dir-to-file-search *search-path-maxima-mext-user* maxima::$file_search_maxima)
+;(add-dir-to-file-search *search-path-lisp-mext-user* maxima::$file_search_lisp)
+
 
 (defvar *maxima-contribdir* (merge-pathnames "contrib" 
                   (pathname-as-directory maxima::*maxima-sharedir*)))
@@ -542,26 +543,29 @@ This was copied from maxima source init-cl.lisp.")
  "Clear list of loaded mext distributions."
  (clrhash *loaded-dist-table*))
 
-
 (defun mext-require (pack-name-list &optional force)
-  (dolist (pack-name (maxima::ensure-lisp-list pack-name-list))
-   (setf pack-name (maxima::$sconcat pack-name))
-   (if (string= "all" pack-name)
-    (progn (loop :for dist :in (mext-list) :do
-                 (mext-require dist))
-           'maxima::$done)
-     (if (string= "mext_system" pack-name) t
-      (let ((is-loaded (gethash pack-name *loaded-dist-table*)))
-       (if (or (not is-loaded) force)
-        (let ((file (mext-file-search pack-name)))
-         (if file (progn (mext-message (format nil "Require loading ~a" file))
-                         (maxima::$load file) 'maxima::$done)
-           (progn
-             (setf maxima::$error_code 'maxima::$mext_package_loader_not_found) ; not defined yet
-             (maxima::merror
-              (intl:gettext "mext require: Unable to find file to load package '~a'.")  pack-name))))
-          t)))))
-  'maxima::$done)
+  (let ((maxima::$file_search_lisp (copy-list maxima::$file_search_lisp))
+        (maxima::$file_search_maxima (copy-list maxima::$file_search_maxima)))
+    (add-dir-to-file-search *search-path-maxima-mext-user* maxima::$file_search_maxima)
+    (add-dir-to-file-search *search-path-lisp-mext-user* maxima::$file_search_lisp)
+    (dolist (pack-name (maxima::ensure-lisp-list pack-name-list))
+      (setf pack-name (maxima::$sconcat pack-name))
+      (if (string= "all" pack-name)
+          (progn (loop :for dist :in (mext-list) :do
+                       (mext-require dist))
+                 'maxima::$done)
+        (if (string= "mext_system" pack-name) t
+          (let ((is-loaded (gethash pack-name *loaded-dist-table*)))
+            (if (or (not is-loaded) force)
+                (let ((file (mext-file-search pack-name)))
+                  (if file (progn (mext-message (format nil "Require loading ~a" file))
+                                  (maxima::$load file) 'maxima::$done)
+                    (progn
+                      (setf maxima::$error_code 'maxima::$mext_package_loader_not_found) ; not defined yet
+                      (maxima::merror
+                       (intl:gettext "mext require: Unable to find file to load package '~a'.")  pack-name))))
+              t)))))
+    'maxima::$done))
 
 (defun add-to-dont-kill (&rest items )                         
   (loop :for item :in items :do
