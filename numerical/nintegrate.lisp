@@ -60,19 +60,21 @@
      "bad integrand behavior" "failed to converge" "probably divergent or slowly convergent"
      "invalid input"))
 
-;; This should take a list of results, rather than just two
-(defun combine-quad-results (r1 r2)
+;; res is a (maxima) list of lists
+;; return list where first through third elements are summed.
+;; fifth element is largest of fifth elements (better would be a list of all)
+;; sixth is appending of all sixth elements (which are lists of calls to quadpack)
+(defun combine-quad-results ( &rest res)
  "Add the results of integrating over two intervals. Make an attempt
   to write reasonable information fields. Really Should do sqrt of sqs of errors."
-; (format t "~a~%" ($sconcat r1))
- (maxima::make-mlist-simp (+ (second r1) (second r2))
-       (+ (third r1) (third r2)) (+ (fourth r1) (fourth r2))
-       (if (> (fifth r1) (fifth r2)) (fifth r1) (fifth r2))
-       (append (sixth r1) (rest (sixth r2)))))
+ (let* ((vals (apply #'+ (mapcar #'second res)))
+        (errs (apply #'+ (mapcar #'third res)))
+        (nit (apply #'+ (mapcar #'fourth res)))
+        (calls (maxima::mk-mlist (apply #'append (mapcar #'(lambda (x) (cdr (sixth x))) res))))
+        (max-err (reduce #'max (mapcar #'fifth res))))
+   (maxima::make-mlist-simp vals errs nit max-err calls)))
 
 (defun combine-real-imag-results (r1 r2)
-; (format t "~a~%" (maxima::$sconcat r1))
-; (format t "~a~%" r1)
   (cond ((and (consp r1) (consp r2))
          (maxima::make-mlist-simp (maxima::simplify `((maxima::mplus) ,(second r1) ,(second r2)))
                (+ (third r1) (third r2)) (+ (fourth r1) (fourth r2))
@@ -92,6 +94,9 @@
          (call-form (cons (list (car call-list) 'maxima::simp) (cdr call-list))))
     (append (apply 'maxima::mfuncall call-list) (list (maxima::make-mlist-simp call-form)))))
 
+;; TODO:
+;; use to_poly_solve to get zeroes of sin, cos, between limits
+;; look for logs and solve for arg = 0.
 (maxima::ddefun list-fp-singularities (expr lo hi)
  "Try to return a Maxima list of floating point numbers representing
  the singularities between `lo' and `hi' (excluding these endpoints)
@@ -150,8 +155,10 @@
                                  (quad-call :qagp expr var nlo nhi quad-ops (maxima::mk-mlist n1singlist))
                                nil)))
                   (if (consp int3)
-                      (nint::combine-quad-results (nint::combine-quad-results int1 int2) int3)
+                      (nint::combine-quad-results int1 int2 int3)
                     (nint::combine-quad-results int1 int2))))
+;                      (nint::combine-quad-results (nint::combine-quad-results int1 int2) int3)
+;                    (nint::combine-quad-results int1 int2))))
                (t
                 (quad-call :qagp expr var lo hi quad-ops singlist))))
         ((and (not (eq 'maxima::$minf lo)) (not (eq 'maxima::$inf hi)))
@@ -226,6 +233,7 @@
  "nintegrate"
  '(:code-text
  (
+  :ex ("nintegrate([x,x^2,x^3], [x,0,1], info->false)" "[0.5,.3333333333333334,0.25]")
   :ex ("nintegrate(sin(sin(x)), [x,0,2])" "[1.24706, 1.38451e-14, 21, no problems]")
   :text ("Integrate over a semi-infinite interval with an internal singularity. The location of the singularity is
 supplied. This cannot be done with a single call to quadpack routines.")
