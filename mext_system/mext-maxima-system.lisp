@@ -171,6 +171,19 @@ This was copied from maxima source init-cl.lisp.")
 (defparameter *search-path-lisp-mext-user*
   (concatenate 'string *mext-user-dir-as-string* *lisp-patterns*))
 
+(unless (boundp 'maxima::$mext_verbose)
+(defparameter maxima::$mext_verbose 0))
+
+(defun mext-message (mssg)
+  (when (or (eq t maxima::$mext_verbose)  
+            (and (numberp maxima::$mext_verbose)
+                 (> maxima::$mext_verbose 0)))
+    (format t "~a~%" mssg)))
+
+;(defun mext-message (mssg)
+;  (when (> maxima::$mext_verbose 0)
+;    (format t "~a~%" mssg)))
+
 (defun find-mext-description (distname)
   "Find the .mxt file in the distribution directory. (not installed)"
   (fmake-pathname :name distname :type "mxt" :directory *dist-dir*))
@@ -527,7 +540,8 @@ This was copied from maxima source init-cl.lisp.")
       (let ((is-loaded (gethash pack-name *loaded-dist-table*)))
        (if (or (not is-loaded) force)
         (let ((file (mext-file-search pack-name)))
-         (if file (progn (format t "require loading ~a~%" file) (maxima::$load file) 'maxima::$done)
+         (if file (progn (mext-message (format nil "Require loading ~a" file))
+                         (maxima::$load file) 'maxima::$done)
            (progn
              (setf maxima::$error_code 'maxima::$mext_package_loader_not_found) ; not defined yet
              (maxima::merror

@@ -12,7 +12,12 @@
 ;;  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the		 
 ;;  GNU General Public License for more details.
 
-($load "fourier_elim")
+;; GJL--
+;; Can't do this from maxima because of weird %solve alias problems
+(mext::add-to-dont-kill '$to_poly_solve)
+
+;; GJL -- load the mext package
+;;($load "fourier_elim")
 
 (defun $simp_inequality (e)
   (let ((ee (standardize-inequality e)))

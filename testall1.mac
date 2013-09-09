@@ -3,8 +3,10 @@ load(mext_core);
 /* test surviving kill
 kill(all);
 */
-require(["test_defmfun1", "prime_pi", "store", "pw"]);
+require(["test_defmfun1", "pw"]);
+
+errcatch(require(["prime_pi"]));
+errcatch(require(["store"]));
 
 mext_test('loaded);
 
-kill(our_mext_list, our_test_list, out_extra_test_list);

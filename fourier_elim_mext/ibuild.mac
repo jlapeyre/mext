@@ -1,7 +1,5 @@
 load(mext);
-require("mext_defmfun1");
-require("to_poly");
-load_in_subdir(["tpsolve","system"]);
+load_in_subdir(["fourier_elim","system"]);
 mext_dist_clean();
 mext_dist_build();
 mext_dist_user_install();

@@ -16,7 +16,7 @@
   :language :mext-maxima
   :components
    (
-    (:file "to_poly" :source-extension "lisp" :load-only nil)
+;    (:file "to_poly" :source-extension "lisp" :load-only nil)
     (:file "to_poly_solve_setup" :load-only t)
     (:file "dontkill" :load-only t)
     (:file "to_poly_solve_extra" :source-extension "lisp" :load-only nil)
@@ -36,5 +36,4 @@
   :source-extension "mac"
   :source-pathname "rtests"
   :components
-    ((:file "rtest_to_poly")
-     (:file "rtest_to_poly_solve")))
+     ((:file "rtest_to_poly_solve")))

@@ -1,0 +1,32 @@
+;;-*- Mode: Lisp -*-
+;; Template. This file must be edited
+;; System definition file for building and installing mext package to_poly
+
+(in-package :mext-maxima)
+
+(create-distribution "to_poly"
+  :loader "load-to_poly"
+  :install-only "to_poly-rtests")
+
+;; Here we list the source files to be installed.
+;; Choose "lisp" or "mac" as the default source file extension.
+;; The source extension may be overridden.
+;; All files are compiled unless overidden with :load-only
+(mk:defsystem to_poly
+  :source-extension "lisp"
+  :components
+    (:file "to_poly"))
+
+;; This file will load to_poly at run time.
+(mk:defsystem load-to_poly
+  :source-extension "mac"
+  :components
+   ((:file "to_poly")))
+
+;; Here we list the rtest files for to_poly.
+;; Put one or more files here that begin with "rtest_"
+(mk:defsystem to_poly-rtests
+              :source-extension "mac"
+              :source-pathname "rtests"
+              :components
+              ((:file "rtest_to_poly"))) ; for example

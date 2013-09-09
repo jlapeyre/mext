@@ -89,14 +89,14 @@ sub make_package_system {
     (:file "file2")))
 
 ;; This file will load $pack at run time.
-(mk:defsystem $pack
+(mk:defsystem load-$pack
   :source-extension "mac"
   :components
    ((:file "$pack")))
 
 ;; Here we list the rtest files for $pack.
 ;; Put one or more files here that begin with "rtest_"
-(mk:defsystem discrete_aex-rtests
+(mk:defsystem $pack-rtests
               :source-extension "mac"
               :source-pathname "rtests"
               :components
@@ -131,7 +131,9 @@ sub make_package_mac {
    my $fstr2 = <<"EOFS";
 /* Template. This file must be edited */
 /* This file loads mext package $pack at run time. */
-require("mext"); /* replace with a mext package, or list of them, on which $pack depends at runtime. */
+/* Replace the following a mext package, or list of them, on which $pack depends at runtime. */
+/* Or else, remove it. */
+require(""); 
 /* List files to be loaded: source, lisp, or binary, without extensions. */
 mext_provide("$pack",
   [ "file1",

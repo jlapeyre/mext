@@ -10,11 +10,19 @@
 (in-package :cl-user)
 
 (mk:defsystem grobner
-  :source-pathname (mext::subdir-of-contrib "Grobner")
-  :binary-pathname *default-pathname-defaults*
   :source-extension "lisp"
   :components
-   ((:file "grobner" :source-extension "lisp")))
+   ((:file "grobner")))
+
+;; The following works for building from the contrib dir, but
+;; we want to edit the source a bit.
+;(mk:defsystem grobner
+;  :source-pathname (mext::subdir-of-contrib "Grobner")
+;  :binary-pathname *default-pathname-defaults*
+;  :source-extension "lisp"
+;  :components
+;   ((:file "grobner" :source-extension "lisp")))
+
 
 (mk:defsystem load-grobner
   :source-extension "mac"

@@ -1,0 +1,613 @@
+/* Let's place the known bugs at the end. */
+
+/* GJL -- already loaded by mext
+(kill(all),load("fourier_elim"), 0);
+0$
+*/
+
+/* Test 1 */
+fourier_elim([max(x,0) > 0],[x]);
+[0 < x]$
+
+/* Test 2 */
+fourier_elim([max(x,0) >= 0],[x]);
+universalset$
+
+/* Test 3 */
+fourier_elim([min(x,0) >= 0],[x]);
+[x=0] or [0 < x]$
+
+/* Test 4 */
+fourier_elim([abs(x) <= 1],[x]);
+[x=1] or [x=-1] or [-1<x,x<1]$
+
+/* Test 5 */
+fourier_elim([0 < 1],[]);
+universalset$
+
+/* Test 6 */
+fourier_elim([0 < 1],[x]);
+universalset$
+
+/* Test 7 */
+fourier_elim([0 >= 1],[]);
+emptyset$
+
+/* Test 8 */
+fourier_elim([0 > 1],[x]);
+emptyset$
+
+/* Test 9 */
+fourier_elim([abs(x) < 1],[x]);
+[-1 < x, x < 1]$
+
+/* Test 10 */
+fourier_elim([],[]);
+universalset$
+
+/* Test 11 */
+fourier_elim([x # inf],[x]);
+universalset$
+
+/* Test 12 */
+fourier_elim([-x # inf],[x]);
+universalset$
+
+/* Test 13 */
+fourier_elim([x # minf],[x,y]);
+universalset$
+
+/* Test 14 */
+fourier_elim([-x # minf],[x,y]);
+universalset$
+
+/* Test 15 */
+fourier_elim([x # %i],[x,y,z]);
+universalset$
+
+/* Test 16 */
+fourier_elim([-x # %i],[x]);
+universalset$
+
+/* Test 17 */
+fourier_elim([x # 0],[x]);
+[x < 0] or [0 < x]$
+
+/* Test 18 */
+fourier_elim([-x # 0],[x]);
+[0 < x] or [x < 0]$
+
+/* Test 19 */
+fourier_elim([x # 10],[x]);
+[x < 10] or [10 < x]$
+
+/* Test 20 */
+fourier_elim([-x # 10],[x]);
+[-10 < x] or [x < -10]$
+
+/* Test 21 */
+fourier_elim([x^2 # 100],[x]);
+[-10 < x,x < 10] or [10 < x] or [x < -10]$
+
+/* Test 22 */
+fourier_elim([-x^2 # 100],[x]);
+universalset$
+
+/* Test 23 */
+fourier_elim([x = 5, x <= 5],[x]);
+[x=5]$
+
+/* Test 24 */
+fourier_elim([x = 5, x >= 5],[x]);
+[x=5]$
+
+/* Test 25 */
+fourier_elim([x = 5, x < 5],[x]);
+emptyset$
+
+/* Test 26 */
+fourier_elim([x = 5],[x]);
+[x = 5]$
+
+/* Test 27 */
+fourier_elim([x = 5, x = 6],[x]);
+emptyset$
+
+/* Test 28 */
+fourier_elim([x = 5, x < 6],[x]);
+[x = 5]$
+
+/* Test 29 */
+fourier_elim([x = 5, x > 6],[x]);
+emptyset$
+
+/* Test 30 */
+fourier_elim([x = 5, x >= 5],[x]);
+[x = 5]$
+
+/* Test 31 */
+fourier_elim([x = 5, x >= 0],[x]);
+[x = 5]$
+
+/* Test 32 */
+fourier_elim([x = y, y = 7],[x,y]);
+[x=7, y=7]$
+
+/* Test 33 */
+fourier_elim([x = 2*y + 1, y = 7],[x,y]);
+[x=15, y=7]$
+
+/* Test 34 */
+fourier_elim([x + y = 2, x - y = 0],[x,y]);
+[x=1, y=1]$
+
+/* Test 35 */
+fourier_elim([x + y = 2, x - y = 0],[]);
+[y-x, y+x-2]$
+
+/* Test 36 */
+(eqs : [0 < x, x < 1, 0 < y, y < 1, 0 < z, x+y+z < 4],0);
+0$
+
+/* Test 37 */
+fourier_elim(eqs,[z,y,x]);
+[0<z,z<-y-x+4,0<y,y<1,0<x,x<1]$
+
+/* Test 38 */
+fourier_elim(eqs,[x,y,z]);
+[0<x,x<min(1,-z-y+4),0<y,y<min(1,4-z),0<z,z<4]$
+
+/* Test 39 */
+fourier_elim(fourier_elim(eqs,[y,x,z]),[z,y,x]);
+[0<z,z<-y-x+4,0<y,y<1,0<x,x<1]$
+
+/* Test 40 */
+(remvalue(eqs),0);
+0$
+
+/* Test 41 */
+fourier_elim([x^2 > 0],[x]);
+[x < 0] or [0 < x]$
+
+/* Test 42 */
+fourier_elim([x^3 > 0],[x]);
+[0 < x]$
+
+/* Test 43 */
+fourier_elim([x^4 > 0],[x]);
+[x < 0] or [0 < x]$
+
+/* Test 44 */
+fourier_elim([x^2 >= 0],[x]);
+'universalset$
+
+/* Test 45 */
+fourier_elim([x^2 <= 0],[x]);
+[x = 0]$
+
+/* Test 46 */
+fourier_elim([x^2 + 1 < 0], [x]);
+'emptyset$
+
+/* Test 47 */
+fourier_elim([x^2 + 1 > 0], [x]);
+'universalset$
+
+/* Test 48 */
+fourier_elim([x^2 + 1 >= 0], [x]);
+'universalset$
+
+/* Test 49 */
+fourier_elim([x^2 + 1 # 0], [x]);
+'universalset$
+
+/* Test 50 */
+fourier_elim([a * b > 0],[a,b]);
+[0<a,0<b] or [a<0,b<0]$
+
+/* Test 51 */
+fourier_elim([x >= x],[x]);
+'universalset$
+
+/* Test 52 */
+fourier_elim([1 >= 1/10],[]);
+'universalset$
+
+/* Test 53 */
+fourier_elim([x^2 # 100],[x]);
+[-10 < x,x < 10] or [10 < x] or [x < -10]$
+
+/* Test 54 */
+fourier_elim([x # inf, x # minf],[]);
+'universalset$
+
+/* Test 55 */
+fourier_elim([x # inf],[]);
+'universalset$
+
+/* Test 56 */
+fourier_elim([x # %i],[]);
+'universalset$
+
+/* Test 57 */
+fourier_elim([1-x > 0, x - %e > 0],[x]);
+'emptyset$
+
+/* Test 58 */
+fourier_elim([-1/a > 0],[a]);
+[a < 0]$
+
+/* Test 59 */
+fourier_elim([x # infinity],[x]);
+'universalset$
+
+/* Test 60 */
+fourier_elim([x^2-1 < 0],[x]);
+[-1 < x, x < 1]$
+
+/* Test 61 */
+fourier_elim([(x^2+1) < 0],[x]);
+'emptyset$
+
+/* Test 62 */
+fourier_elim([x^2 < 0],[x]);
+'emptyset$
+
+/* Test 63 */
+fourier_elim([x^2+1 = 0],[x]);
+'emptyset$
+
+/* Test 64 */
+fourier_elim([x /(1 + x^2) <  1],[x]);
+[x^2-x+1>0]$
+
+/* Test 65 */
+fourier_elim([x*(1-x) > 0, (x-12) * (1/2-x) > 0],[x]);
+[1/2 < x,x < 1]$
+
+/* Test 66 */
+fourier_elim([(x-12) * (1/2-x) > 0],[x]);
+[1/2 < x, x < 12]$
+
+/* Test 67 */
+fourier_elim([y >= 0, y <= 0],[y]);
+[y = 0]$
+
+/* Test 68 */
+fourier_elim([(x-5) / (x-7) <= 10],[x]);
+[x = 65/9] or [65/9 < x] or [x < 7]$
+
+/* Test 69 */
+fourier_elim([x*(1-x) < 0, (x-6)*(10-x) < 0],[x]);
+[10 < x] or [1 < x,x < 6] or [x < 0]$
+
+/* Test 70 */
+fourier_elim([x*y*z < 0],[x,y,z]);
+[x<0,0<y,0<z] or [0<x,y<0,0<z] or [0<x,0<y,z<0] or [x<0,y<0,z<0]$
+
+/* Test 71 */
+fourier_elim([1 = 1],[]);
+'universalset$
+
+/* Test 72 */
+fourier_elim([1 = 1, x + y < 1, x - y > 1],[x,y]);
+[y+1<x,x<1-y,y<0]$
+
+/* Test 73 */
+fourier_elim([1 = -1, x + y < 1, x - y > 1],[x,y]);
+emptyset$
+
+/* Test 74 */
+fourier_elim([1 = 0],[]);
+'emptyset$
+
+/* Test 75 */
+fourier_elim([inf = 0],[]);
+'emptyset$
+
+/* Test 76 */
+fourier_elim([inf = minf],[]);
+'emptyset$
+
+/* Test 77 */
+fourier_elim([sqrt(2) = sqrt(5)],[]);
+'emptyset$
+
+/* Test 78 */
+fourier_elim([sqrt(2) # sqrt(5)],[]);
+'universalset$
+
+/* Test 79 */
+fourier_elim([max(x,y) < 1, min(x,y) > -1],[x,y]);
+[-1<x,x<1,-1<y,y<1]$
+
+/* Test 80 */
+fourier_elim([min(x,0) > 0],[x]);
+'emptyset$
+
+/* Test 81 */
+fourier_elim([x[1] + x[2] < 1, x[1] - x[2] > -1], [x[1], x[2]]);
+[x[2]-1<x[1],x[1]<1-x[2],x[2]<1]$
+
+/* Test 82 */
+fourier_elim([rat(x+y) < 1, x - y > -1],[x, rat(y)]);
+[y-1<x,x<1-y,y<1]$
+
+/* Test 83 */
+fourier_elim([rat(x*(1-x)) < 0, rat((x-6)*(10-x)) < 0],[x]);
+[10 < x] or [1 < x,x < 6] or [x < 0]$
+
+/* Test 84 */
+fourier_elim([x * (x+1) * (x+2) < 0],[y,x]);
+[-1 < x,x < 0] or [x < -2]$
+
+/* Test 85 */
+fourier_elim([x * (x+1) * (x+2) < 0, x > -2],[y,x]);
+[-1 < x,x < 0]$
+
+/* Test 86 */
+fourier_elim([x * (x+1) * (x+2) < 0, x > -2, x > 0],[y,x]);
+'emptyset$
+
+/* Test 87 */
+fourier_elim([x < 1 and x > 5],[x]);
+'emptyset$
+
+/* Test 88 */
+fourier_elim([x < 1 or x > 5],[x]);
+[5 < x] or [x < 1]$
+
+/* Test 89 */
+fourier_elim([y+x=2,x-y=0, y < 8],[x,y]);
+[x = 1,y = 1]$
+
+/* Test 90 */
+fourier_elim([y+x=2,x-y=0, y < 1],[x,y]);
+'emptyset$
+
+/* Test 91 */
+fourier_elim([y+x=2,x-y=0, y < 8],[x,y]);
+[x = 1,y = 1]$
+
+/* Test 92 */
+fourier_elim([abs(x) + abs(x/2) + abs(x/3) =  1],[x]);
+[x=-6/11] or [x=6/11]$
+
+/* Test 93 */
+fourier_elim([abs(x) + abs(x/2) + abs(x/3) #  1],[x]);
+[x = 0] or [0 < x,x < 6/11] or [-6/11 < x,x < 0] or [x < -6/11] or [6/11 < x]$
+
+/* Test 94 */
+fourier_elim([max(x,6) < max(x,7)],[x]);
+[x<6] or [x=6] or [6<x,x<7]$
+
+/* Test 95 */
+fourier_elim([max(x,6) < max(x,7) - 1],[x]);
+'emptyset$
+
+/* Test 96 */
+fourier_elim([max(x,-x) = abs(x)],[x]);
+[x=0] or [0<x] or [x<0]$  /* universal set is a better answer */
+
+/* Test 97 */
+fourier_elim([max(x,-x) # abs(x)],[x]);
+'emptyset$
+
+/* Test 98 */
+fourier_elim([max(x,-x) < abs(x)],[x]);
+'emptyset$
+
+/* Test 99 */
+fourier_elim([min(x,1) < max(x,1)],[x]);
+[1<x] or [x<1]$
+
+/* Test 100 */
+fourier_elim([max(x,-x/2) < 1],[x]);
+[-2<x,x<1]$
+
+/* Test 101 */
+fourier_elim([abs(x - abs(x-1)) + abs(x) < 1],[x]);
+[1/2<x,x<2/3] or [x=1/2] or [0<x,x<1/2]$  /* [0 < x, x < 2/3] is better */
+
+/* Test 102 */
+fourier_elim([x * (x-1) < a * (a - 1)],[x,a]);
+[1-a<x,x<a,1/2<a] or [a<x,x<1-a,a<1/2]$
+
+/* Test 103 */
+fourier_elim([x < 3.14], [x]);
+[x < 3.14]$
+
+/* Test 104 */
+fourier_elim([x > 3.14],[x]);
+[3.14 < x]$
+
+/* Test 105 */
+fourier_elim([2.78b0 *  x > 3.14b0],[x]);
+[1.129496402877698b0 < x]$
+
+/* Test 106 */
+fourier_elim([min(x,0) >= 0],[x]);
+[x=0] or [0<x]$
+
+/* This answer isn't wrong, but it could be simplified. */
+
+/* Test 107 */
+fourier_elim([abs(x - abs(x - abs(x - 23))) > abs(x-1)],[x]);
+[x<1] or [x=1] or [1<x,x<6] or [23/2<x,x<12] or [x=23/2] or [11<x,x<23/2]$
+
+/* Test 108 */
+fourier_elim([sqrt(5) * x < 1],[x]);
+[x<1/sqrt(5)]$
+
+/* Test 109 */
+fourier_elim([sqrt(2) < x + y, x < sqrt(5), y  < 1],[x,y]);
+[sqrt(2)-y<x,x<sqrt(5),sqrt(2)-sqrt(5)<y,y<1]$
+
+/* Test 110 */
+fourier_elim([max(x,y) < min(x,y)],[x,y]);
+'emptyset$
+
+/* Test 111 */
+fourier_elim([min(x,y) < max(x,y)],[x,y]);
+[x<y] or [y<x]$
+
+/* Test 112 */
+fourier_elim([min(x,y) <= max(x,y)],[x,y]);
+[x=y] or [x<y] or [y<x]$ 
+
+/* Test 113 */
+fourier_elim([0>=x,0=z],[x,z]);
+[x=0,z=0] or [z=0,x<0]$
+
+/* Test 114 */
+fourier_elim(x < 1 and x >= 1,[x]);
+'emptyset$
+
+/* Test 115 */
+fourier_elim(x <= 1 and x >= 1,[x]);
+[x = 1]$
+
+/* Test 116 */
+fourier_elim([log(x) > log(a)],[x, a]);
+[a<x,0<a]$
+
+/* SF bug 1952642 */
+
+/* Test 117 */
+fourier_elim([abs(x)>1], [x]);
+[x<-1] or [1<x]$
+
+/* SF bug 2030675 */
+
+/* Test 118 */
+fourier_elim([f(abs(x)) < 0],[x]);
+[- f(abs(x)) > 0]$
+
+/* Test 119 */
+fourier_elim([f(abs(x)) > 0],[x]);
+[f(abs(x)) > 0]$
+
+/* Test 120 */
+fourier_elim([log(x) < log(a)],[x,a]);
+[0 < x, x < a, 0 < a]$
+
+/* affine_p tests */
+
+/* Test 121 */
+affine_p(0,[]);
+true$
+
+/* Test 122 */
+affine_p(2*%pi*%i,[x,y,z]);
+true$
+
+/* Test 123 */
+affine_p(0,[x]);
+true$
+
+/* Test 124 */
+affine_p(x,[x]);
+true$
+
+/* Test 125 */
+affine_p(x[1],[x[1]]);
+true$
+
+/* Test 126 */
+affine_p(y,[x]);
+true$
+
+/* Test 127 */
+affine_p(a*x,[x]);
+true$
+
+/* Test 128 */
+affine_p(a*x,[x,y]);
+true$
+
+/* Test 129 */
+affine_p(a*x+y,[x,y]);
+true$
+
+/* Test 130 */
+affine_p(a*x+y*sin(q),[x,y]);
+true$
+
+/* Test 131 */
+affine_p((x-y)/(a-b),[x,y]);
+true$
+
+/* Test 132 */
+affine_p((x^2-y^2)/(x-y),[x,y]);
+true$
+
+/* Test 133 */
+affine_p(sin(x),[x]);
+false$
+
+/* Test 134 */
+affine_p(x*y,[x,y]);
+false$
+
+/* Test 135 */
+affine_p(1/x,[x]);
+false$
+
+/* Test 136 */
+affine_p([1,2],[]);
+false$
+
+/* Test 137 */
+affine_p(x=y,[]);
+false$
+
+/* Test 138 */
+affine_p(taylor(x,x,0,1),[x]);
+false$
+
+/* Test 139 */
+affine_p((x^2+y^2)/(x-y),[x,y]);
+false$
+
+/* Test 140 */
+affine_p(x[1]^2,[x[1]]);
+false$
+
+/* Test 141 */
+affine_p(x[1]*y[1],[x[1],y[1]]);
+false$
+
+/* actual regressions */
+
+/* Test 142 */
+fourier_elim(x = y*z,[x,y,z]); /* #2628 fourier elimination on equality */
+[y*z-x=0]$
+
+/* GJL -- disable tests for mext, since we can't yet skip them */
+/* known bugs!  */
+/* x Test 143 */
+/*
+fourier_elim([x < 1/a],[x]);
+[x < 1/a]$
+*/
+
+/* x Test 144 */
+/*
+fourier_elim([x - cos(z) < 0],[x]);
+[x < cos(z)]$
+*/
+/* x Test 145 */
+/*
+fourier_elim([x - z^42 < 0],[x]);
+[x < z^42]$
+*/
+
+/* I think this bug is related to linsolve([x=3.14],[x]) --> [x = 157/50]. Even when
+keepfloat is true, linsolve converts floats to rationals. */
+/* Test 146 */
+/*
+fourier_elim([x<=3.14],[x]);
+[x = 3.14] or [x < 3.14]$
+*/
+
+/* end of known bugs */

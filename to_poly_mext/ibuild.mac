@@ -1,0 +1,7 @@
+/* Load this file in maxima to build mext package to_poly. */
+load(mext);
+load_in_subdir(["to_poly","system"]);
+mext_dist_clean();
+mext_dist_build();
+mext_dist_user_install();
+mext_dist_clean();

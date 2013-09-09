@@ -5,12 +5,12 @@ The upstream file to_poly_solve.mac was rename to_poly_solve_code.mac
 */
 
 require("mext_defmfun1");
-require("grobner");
+require(["grobner","to_poly","fourier_elim"]);
 
 /* Order of loading is important */
 mext_provide( "tpsolve",
   [
-  "to_poly",
+/*  "to_poly", */
   "to_poly_solve_setup",
   "dontkill",
   "dont_compile1",

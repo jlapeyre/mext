@@ -1,0 +1,5 @@
+/* This file loads mext package fourier_elim at run time. */
+/* List files to be loaded: source, lisp, or binary, without extensions. */
+require("to_poly");
+mext_provide("fourier_elim",
+  [ "fourier_elim" ]);

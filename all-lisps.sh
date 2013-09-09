@@ -122,9 +122,9 @@ print_max_doc () {
 
 mkdir "./logfiles"
 
-build_mext
-build_mext_packages
-parse_build_logs
+#build_mext
+#build_mext_packages
+#parse_build_logs
 
 test_mext_packages
 parse_test_logs

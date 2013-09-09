@@ -1,0 +1,30 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing mext package fourier_elim
+
+(in-package :mext-maxima)
+
+(create-distribution "fourier_elim"
+  :loader "load-fourier_elim"
+  :install-only "fourier_elim-rtests")
+
+;; Here we list the source files to be installed.
+;; Choose "lisp" or "mac" as the default source file extension.
+;; The source extension may be overridden.
+;; All files are compiled unless overidden with :load-only
+(mk:defsystem fourier_elim
+  :source-extension "lisp"
+  :components
+  (:file "fourier_elim"))
+
+;; This file will load fourier_elim at run time.
+(mk:defsystem load-fourier_elim
+  :source-extension "mac"
+  :components
+   ((:file "fourier_elim")))
+
+;; Here we list the rtest files for fourier_elim.
+(mk:defsystem fourier_elim-rtests
+              :source-extension "mac"
+              :source-pathname "rtests"
+              :components
+              ((:file "rtest_fourier_elim")))

@@ -94,6 +94,7 @@ my @Rtests = qw (
  alt_eigen/rtests/rtest_alt_eigen.mac
  discrete_aex/rtests/rtest_discrete_aex.mac
  defmfun1/rtests/rtest_defmfun1.mac
+ fourier_elim_mext/rtests/rtest_fourier_elim.mac
  lists_aex/rtests/rtest_list.mac
  lists_aex/rtests/rtest_table.mac
  lists_aex/rtests/rtest_take.mac
@@ -103,7 +104,7 @@ my @Rtests = qw (
  numerical/rtests/rtest_numerical.mac
  pw/rtests/rtest_pw.mac
  test_defmfun1/rtests/rtest_test_defmfun1.mac
- tpsolve/rtests/rtest_to_poly.mac
+ to_poly_mext/rtests/rtest_to_poly.mac
  tpsolve/rtests/rtest_to_poly_solve.mac
  runtime/rtests/rtest_runtime.mac
  store/rtests/rtest_store.mac
