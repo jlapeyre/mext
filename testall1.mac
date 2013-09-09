@@ -1,4 +1,4 @@
-load(mext_core);
+load(mext3);
 
 /* test surviving kill
 kill(all);

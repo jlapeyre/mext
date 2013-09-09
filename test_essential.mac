@@ -1,4 +1,4 @@
-load(mext_core);
+load(mext3);
 require('test_defmfun1);
 mext_test('loaded);
 
