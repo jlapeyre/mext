@@ -64,6 +64,20 @@ This was copied from maxima source init-cl.lisp.")
   #+digitool   (subseq (lisp-implementation-version) 8))
 
 
+;; stolen from someone who stole from swank/slime
+(defun lisp-type-symbol ()
+  #+cmu       'maxima::$cmu
+  #+sbcl      'maxima::$sbcl
+  #+gcl       'maxima::$gcl
+  #+ecl       'maxima::$ecl
+  #+openmcl   'maxima::$openmcl
+  #+clisp     'maxima::$clisp
+  #+allegro   'maxima::$allegro
+)
+
+(defun maxima::$lisp_type_symbol ()
+  (lisp-type-symbol))
+
 ;; extensions of filenames created during building that we want to remove
 ;; (clean). defsystem does some of this, but not all.
 (defparameter *extensions-to-clean* (list
