@@ -626,7 +626,7 @@ must be keyword,value pairs for the doc entry struct."
                        (defmfun1::format-nargs-expected nmin nmax (not (null rest-args))  nil)
                        (if (and (< nmin 2) (= nmax 1))  "" (format nil ".~%"))
                        (format-arg-specs1 name req optional rest-args)
-                       (if rest-args (format-arg-specs-rest name rest-args)
+                       (if rest-args (format-arg-specs-rest name rest-args nmin)
                            ""))))))
 
 (defun format-arg-directives (name)
@@ -680,11 +680,12 @@ must be keyword,value pairs for the doc entry struct."
                                   (maxima::maybe-invert-string-case (symbol-name arg))) *format-codes-default*)
           (defmfun1::get-arg-spec-to-english type)))
 
-(defun format-arg-specs-rest (name arg)
+(defun format-arg-specs-rest (name arg nmin)
   (declare (ignore name))
-  (let ((type (second (first arg))))
+  (let ((type (second (first arg)))
+        (sst (if (= 0 nmin) "" "remaining ")))
     (if type
-        (format nil "   Each of the remaining arguments must be ~a.~%"
+        (format nil "   Each of the ~aarguments must be ~a.~%" sst
                 (defmfun1::get-arg-spec-to-english type))
         "")))
 
