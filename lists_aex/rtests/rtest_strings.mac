@@ -1,0 +1,11 @@
+/* Test */
+string_reverse("cat");
+"tac"$
+
+/* Test */
+string_reverse(["cat","dog"]);
+["tac","god"]$
+
+/* Test */
+(errcatch(string_reverse(["cat","dog",3])),error_code);
+chk_string$
