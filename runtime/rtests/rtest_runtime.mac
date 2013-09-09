@@ -7,15 +7,15 @@ numberp(first(timing()));
 true$
 
 /* Test 3 */
-second(timing());
-false$
+numberp(second(timing()));
+true$
 
 /* Test 4 */
 numberp(first(timing(1)));
 true$
 
 /* Test 5 */
-second(timing(1));
+third(timing(1));
 1$
 
 /* Test 6 */
@@ -23,7 +23,7 @@ timing(1,print->true);
 1$
 
 /* Test 7 */
-numberp(timing(1,result->false));
+numberp(first(timing(1,result->false)));
 true$
 
 /* Test 8 */
