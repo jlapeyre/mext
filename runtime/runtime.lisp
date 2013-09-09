@@ -11,38 +11,60 @@
 
 ;; TODO, option to report wall clock time, as well
 (defmfun1:set-hold-all '$timing)
-(defmfun1 ($timing :doc) (&rest exprs &opt ($print nil :bool) ($result t :bool))
+(defmfun1 ($timing :doc) (&rest exprs &opt ($print nil :bool) ($result t :bool)
+                                ($time $all (:member '($all $cpu $real))))
   :desc
   ( :mref "timing" " evaluates each of the " :argcomma "exprs" " and returns a list of "
-    " the total time in seconds used, together the result of the last expression. "
+    " the total cpu time in seconds and real time in second used, together the result of the last expression."
     " See also " :emrefdot "showtime")
-  (let (( start (get-internal-run-time)))
-    (let ((last-result
+  (let ((start-run  (get-internal-run-time))
+        (start-real (get-internal-real-time)))
+    (let* ((to-sec (float internal-time-units-per-second))
+           (last-result
            (eval
             `(let ((body ',exprs) each-result)
                (dolist (v body)
                  (setq each-result (meval* v)))
                each-result)))
-          (elapsed-seconds
-           (/ (- (get-internal-run-time) start)
-               (float internal-time-units-per-second))))
+          (elapsed-run-seconds
+           (/ (- (get-internal-run-time) start-run) to-sec))
+          (elapsed-real-seconds
+           (/ (- (get-internal-real-time) start-real) to-sec)))
       (if $print
           (progn
-              ($disp elapsed-seconds)
+            (cond ((eq $time '$all)
+                   ($disp (format nil "user ~as    real ~as" elapsed-run-seconds elapsed-real-seconds)))
+                  ((eq $time '$cpu)
+                   ($disp (format nil "user ~as" elapsed-run-seconds)))
+                  ((eq $time '$real)
+                   ($disp (format nil "real ~as" elapsed-real-seconds))))
             (if $result last-result '$done))
-        (if $result
-            (make-mlist-simp elapsed-seconds last-result)
-          elapsed-seconds)))))
+        (let ((out-res '()))
+          (when $result (push last-result out-res))
+          (cond ((eq $time '$all)
+                 (setf out-res (append (list elapsed-run-seconds elapsed-real-seconds) out-res)))
+                ((eq $time '$cpu)
+                 (push elapsed-run-seconds out-res))
+                ((eq $time '$real)
+                 (push elapsed-real-seconds out-res)))
+          (mk-mlist out-res))))))
 
 (add-call-desc '("timing" ("exprs") 
                  ("evaluates each of the expressions " :arg "exprs" 
-                  " and returns a list of the time in seconds used, together with the result of evaluating "
+                  " and returns a list of the total cpu time and real time in 
+                   seconds used, together with the result of evaluating "
                   "the final expression."))
-               '("timing" ("exprs" "print->true")
+               '("timing" ("exprs" ("lit" "print->true"))
                  ("returns the result of evaluating the final expression and prints the "
-                  "time in seconds used."))
-               '("timing" ("exprs" "result->false")
-                 ("returns the time in seconds used, and discards all results.")))
+                  "cpu and real time used."))
+               '("timing" ("exprs" ("lit" "result->false"))
+                 ("returns the time in seconds used, and discards all results."))
+               '("timing" ("exprs" ("lit" "time->cpu"))
+                 ("Return only the cpu (run) time used and the last result."))
+               '("timing" ("exprs" ("lit" "time->real"))
+                 ("Return only the real time used and the last result."))
+               '("timing" ("exprs" ("lit" "time->all"))
+                 ("Return both the cpu and real time used and the last result.")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
