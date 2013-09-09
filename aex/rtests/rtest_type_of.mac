@@ -5,10 +5,11 @@ quite what we want.
 
 */
 
+/* At least three different 'types' reported by different lisps */
 /* Test 1 */
 ( %%test_bit%%(x) :=
     is(first(x) = 'integer) and
-    is(member(second(x), ['lisp_bit, 'lisp_fixnum])),
+    is(member(second(x), ['lisp_bit, 'lisp_fixnum, 'lisp_integer])),
   %%test_int%%(x) :=
     is(first(x) = 'integer) and
     is(member(second(x), ['lisp_fixnum, 'lisp_integer])),
