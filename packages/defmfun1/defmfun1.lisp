@@ -804,13 +804,14 @@ in a  mext package.")
           (t
            (format nil "between ~d and ~d arguments~a" (err-itostr1 nmin) (err-itostr nmax) are-word)))))
 
-;; why does this look this way ??
 (defun compute-narg-error-code (restarg nargs nmin nmax restp)
   (declare (ignore restp restarg))
   (cond ((< nargs nmin)
          'maxima::$args_too_few)
         ((> nargs nmax)
-         'maxima::$args_too_many)))
+         'maxima::$args_too_many)
+        (t
+         (error "compute-narg-error-code programmer error."))))
 
 (defun narg-error-message (name restarg nargs nmin nmax restp force-match match-val)
   "Call merror1 with message about incorrect number of arguments."
