@@ -5,7 +5,7 @@ maximas="maxima-5.31.0-sbcl-1.1.11 maxima-5.31.0-gcl-2.6.8 maxima-5.31.0-ccl-1.9
 
 ################################
 
-git archive -o ../mext-test.tar.gz --prefix="mext/" HEAD
+git archive -o ../../mext-test.tar.gz --prefix="mext/" HEAD
 
 for maxima in $maximas
 do
