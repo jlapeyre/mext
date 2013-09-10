@@ -1,0 +1,33 @@
+Developer notes on building.
+
+--------------
+
+1) mext_system --
+
+    1.1) Unix -- gcl, sbcl at least, probably all lisps
+       > cd ./mext_system
+
+       1.1.1) From within maxima:
+             > maxima
+            (%i1) load("00mext-ibuild.lisp");
+               or
+            load("./ibuild.mac");
+         
+       1.1.2) From command line:
+             > maxima -b ibuild.mac
+             But *NOT* this maxima -b 00mext-ibuild.lisp
+
+2)  All (or a list of) mext packages
+
+    From mext distribution top level.
+    2.1) Unix -- gcl, sbcl, ...
+     
+    2.1.1) From within maxima:
+       > maxima
+       (%i1) load("./buildall_gcl_win32.mac"); (or one of many other scripts)
+             (I know this says win32, but is ok for unix too)
+       
+      
+
+   
+  
