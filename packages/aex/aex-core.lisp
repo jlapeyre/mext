@@ -339,12 +339,12 @@ refers to the head."
 ;; output the input form
 (defmacro aesimp-out (oe)
     `(cond ((eq o-type 'ar)
-           ($aex ,oe))
-          ((eq o-type 'ml)
-           ($lex ,oe))
-          ((eq i-type 'ar)
-           ($aex ,oe))
-          (t ,oe)))
+            ($aex ,oe))
+           ((eq o-type 'ml)
+            ($lex ,oe))
+           ((eq i-type 'ar)
+            ($aex ,oe))
+           (t ,oe)))
 
 ;; used only in apply_a in system-essential.lisp, which is not used
 (defmacro aesimp-in-to-ml (ein)
@@ -362,12 +362,12 @@ refers to the head."
 ;; used only in apply_a in system-essential.lisp, which is not used
 (defmacro aesimp-out-1 (oe)
     `(cond ((eq o-type '$ar)
-           ($aex ,oe))
-          ((eq o-type '$ml)
-           ($lex ,oe))
-          ((eq i-type '$ar)
-           ($aex ,oe))
-          (t ,oe)))
+            ($aex ,oe))
+           ((eq o-type '$ml)
+            ($lex ,oe))
+           ((eq i-type '$ar)
+            ($aex ,oe))
+           (t ,oe)))
 
 ;; used only in apply_a in system-essential.lisp, which is not used
 (defmacro aesimp-in-to-ml-1 (ein)
@@ -633,12 +633,12 @@ refers to the head."
 ;; is used
 (defmfun-aeo ($aex_cp :doc) ( (e :non-atom)  &optional head)
   (when (and head (atom head)) (setf head (list head 'msimp)))
-  (cond ( (aex-p e)
-          (make-aex :head (if head head (aex-head e)) :arr (gjl::copy-array (aex-arr e))
-                    :adjustable (if adj-type-p adj-type (aex-adjustable e))))
-        ( t
-          (when head (setf e (cons head (cdr e))))
-          ($aex e (rule-opt '$adj adj-type)))))
+  (cond ((aex-p e)
+         (make-aex :head (if head head (aex-head e)) :arr (gjl::copy-array (aex-arr e))
+                   :adjustable (if adj-type-p adj-type (aex-adjustable e))))
+        (t
+         (when head (setf e (cons head (cdr e))))
+         ($aex e (rule-opt '$adj adj-type)))))
 
 (add-call-desc '("aex_cp" ("e")
     ("Returns an aex form copy of " :arg "e" ". " :arg "e" " may be in either lex or aex form."
@@ -648,10 +648,10 @@ refers to the head."
 ;;  then change these, otherwise copy them
 ;; is used
 (defun aex-cp (e &key (adjustable t adj-type-p) (head nil) (element-type t))
-  (cond ( (aex-p e)
+  (cond ((aex-p e)
          (make-aex :head (if head head (aex-head e)) :arr (gjl::copy-array (aex-arr e))
                    :adjustable (if adj-type-p adjustable (aex-adjustable e)) ))
-        ( t
+        (t
          (when head (setf e (cons head (cdr e))))
          (aex-to e :adjustable adjustable :element-type element-type))))
 
@@ -686,25 +686,25 @@ refers to the head."
     :mref "deep_copy" " is similar to " :emrefcomma "copylist" " except that it can copy "
     " some expressions that " :emref "copylist" " cannot. For instance, if "
     :arg "expr" " is of aex representation at the top level.")
-  (cond ( (aex-p expr)
-          (let* ((ar (aex-arr expr))
-                 (n (length ar))
-                 (e1 (copy-aex-type expr))
-                 (ar1 (aex-arr e1))
-                 (x))
-            (dotimes (i n)
-              (setf x (elt ar i))
-                (setf (elt ar1 i)
-                      (if (or (listp x) (aex-p x)) ($deep_copy x) x )))
-            e1))
-        ( (listp expr)
-          (do* ( (e1 expr (cdr e1))
-                (res)
-                (x (car expr) (car e1)))
-              ( (null e1) (nreverse res))
-            (setf res (cons (if (or (listp x) (aex-p x)) ($deep_copy  x) x  ) res))))
+  (cond ((aex-p expr)
+         (let* ((ar (aex-arr expr))
+                (n (length ar))
+                (e1 (copy-aex-type expr))
+                (ar1 (aex-arr e1))
+                (x))
+           (dotimes (i n)
+             (setf x (elt ar i))
+             (setf (elt ar1 i)
+                   (if (or (listp x) (aex-p x)) ($deep_copy x) x )))
+           e1))
+        ((listp expr)
+         (do* ((e1 expr (cdr e1))
+               (res)
+               (x (car expr) (car e1)))
+             ((null e1) (nreverse res))
+           (setf res (cons (if (or (listp x) (aex-p x)) ($deep_copy  x) x  ) res))))
         (t expr)))
-  
+
 ;; not used
 (defmfun $aeargs (x)
   (if (aex-p x) (aex-mk-head-args '(mlist simp) (aex-cp-args x))
