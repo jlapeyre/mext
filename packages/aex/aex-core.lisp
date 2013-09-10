@@ -327,10 +327,11 @@ refers to the head."
   "We want to get rid of these. functions"
   `(defmfun ,name (,@args &rest ropts &aux o-type i-type )
      (if ropts
-         (cond ( (eq (car ropts) '$oar)
-                 (setf o-type 'ar))
-               ( (eq (car ropts) '$oml)
-                 (setf o-type 'ml))))
+         (ecase (car ropts)
+           ($oar
+            (setf o-type 'ar))
+           ('$oml
+            (setf o-type 'ml))))
      ,@body))
 
 ;; used only in apply_a in system-essential.lisp, which is not used
