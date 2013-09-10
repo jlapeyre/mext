@@ -1,0 +1,25 @@
+load(mext);
+
+/* Don't touch these lines */
+chdir(pathname_directory(load_pathname));
+build_several (package_list) := 
+ for package in package_list do
+  load_in_subdir(["ibuild","mac"],[package]);
+
+/*
+  Remove or comment out packages or lists of packages below
+  that you do not want to or cannot compile/install.
+*/
+
+build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "test_defmfun1",
+                "runtime", "aex", "lists_aex", "discrete_aex", "numerical" ]);
+
+/* Some packages from stock maxima share and contrib */
+build_several(["alt_eigen", "grobner_mext",
+              "to_poly_mext", "fourier_elim_mext", "tpsolve" ]);
+
+/* Following are third party packages adapted to mext */
+/* Note: bernstein is not available in Maxima 5.25 */
+build_several( [
+            "nelder_mead", "pw", "coma", "circuits",
+            "implicit", "bernstein", "discrete" ]);
