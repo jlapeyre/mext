@@ -538,7 +538,11 @@ This was copied from maxima source init-cl.lisp.")
   (let* ((sname (maxima::$sconcat distname))
          (info (gethash sname *dist-descr-table*)))
       (if info (progn (print-dist-info info) 'maxima::$done)
-        nil)))
+        (progn
+          (scan-installed-distributions)
+          (let ((info1 (gethash sname *dist-descr-table*)))
+            (if info1 (progn (print-dist-info info1) 'maxima::$done)
+              nil))))))
 
 (defun mext-list ()
   "List installed distributions."
