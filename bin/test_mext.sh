@@ -14,9 +14,12 @@
 # Run this script from the top level like this:
 # ./bin/text_mext.sh
 
+# put the archive of the master branch of the git repo here
 tardist="../mext-test.tar.gz"
+# unpack and build and test here
 mext_test_top="../mext_test_top"
 
+# build and test for these
 maximas="
  maxima-5.31.0-sbcl-1.1.11 
  maxima-5.31.0-gcl-2.6.7
