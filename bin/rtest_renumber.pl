@@ -4,6 +4,7 @@ use warnings;
 use File::Copy;
 use Getopt::Long;
 use Pod::Usage;
+use File::Spec::Functions;
 
 =head1 NAME 
 
@@ -63,6 +64,14 @@ effect on numbering the tests.
 
 =over 4
 
+=item B<-d> | B<--dir> 
+
+Prepend the directory B<dir> to each filename 
+
+=item B<--dry>
+
+Dry run, do not write any files.
+
 =item B<-q> | B<--quiet> 
 
 Do not print messages while running.
@@ -117,11 +126,15 @@ my $Verbose = 0;
 my $Man = 0;
 my $Help = 0;
 my $Totalcount = 0;
+my $Toplevel = undef;
+my $Dry = 0;
 
 GetOptions ("quiet|q" => \$Quiet,
             "verbose|v" => \$Verbose,
             "help|h" => \$Help,
-            "man" => \$Man)
+            "man" => \$Man,
+            "dir|d=s" => \$Toplevel,
+            "dry" => \$Dry)
  or die("rtest_renumber: Error in command line arguments: $!");
 
 pod2usage( -verbose => 2 ) if $Man;
@@ -140,6 +153,9 @@ my @Files = @ARGV;
 
 sub rewrite_one_rtest {
     my ($rtest) = @_;
+    if ($Toplevel) {
+        $rtest = catfile($Toplevel,$rtest);
+    }
     print "Rewriting `$rtest'.\n" unless $Quiet;
     if ( not -e $rtest ) {
         die "File `$rtest' does not exist";
@@ -149,7 +165,9 @@ sub rewrite_one_rtest {
         "Can't open `$rtest' for reading";
     my $backup = $rtest . '.back';
     print "Copying `$rtest' to `$backup'.\n" if $Verbose;
-    copy($rtest,$backup) or die "Copy `$rtest' to `$backup' failed: $!";
+    if (not $Dry) {
+        copy($rtest,$backup) or die "Copy `$rtest' to `$backup' failed: $!";
+    }
     my $outstr = '';
     print "Reading `$rtest'.\n" if $Verbose;
     while (<$IH>) {
@@ -164,10 +182,12 @@ sub rewrite_one_rtest {
     }
     close($IH);
     print "Writing `$rtest'.\n" if $Verbose;
-    open my $OH , '>', $rtest or die
-        "Can't open `$rtest' for writing";
-    print $OH $outstr or die "Writing line to file `$rtest' failed: $!";
-    close($OH);
+    if (not $Dry) {
+        open my $OH , '>', $rtest or die
+            "Can't open `$rtest' for writing";
+        print $OH $outstr or die "Writing line to file `$rtest' failed: $!";
+        close($OH);
+    }
 }
 
 my $files_to_use;
