@@ -393,7 +393,10 @@ This was copied from maxima source init-cl.lisp.")
       (setf (gethash (maxima::$sconcat name) *dist-descr-table*) descr)))
 
 (defun print-dist-info-record (info txt key)
-  (format t " ~a: ~a~%" txt (getf info key)))
+  (let ((record (getf info key)))
+    (if record
+        (format t " ~a: ~a~%" txt record)
+      nil)))
 
 (defun print-dist-info (info)
   (print-dist-info-record info "Name" :name)
@@ -402,7 +405,8 @@ This was copied from maxima source init-cl.lisp.")
   (print-dist-info-record info "Version" :version)
   (print-dist-info-record info "Author" :author)
   (print-dist-info-record info "License" :license)
-  (print-dist-info-record info "Maintainer" :maintainer))
+  (print-dist-info-record info "Maintainer" :maintainer)
+  (print-dist-info-record info "URL" :url))
 
 (defun pwd ()
   (namestring *default-pathname-defaults*))

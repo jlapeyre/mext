@@ -8,7 +8,8 @@
    :version "6.5"
    :license "GPL2"
    :description "functions for symbolic work with piecewise functions"
-   :long-description "functions for symbolic work with piecewise functions")
+   :long-description "functions for symbolic work with piecewise functions"
+   :url "http://sourceforge.net/apps/mediawiki/piecewisefunc/index.php?title=Main_Page")
 
 
 
