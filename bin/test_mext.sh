@@ -88,9 +88,6 @@ perform_one_test () {
 
 ################################
 
-
-################################
-
 git archive -o ../../mext-test.tar.gz --prefix="mext/" HEAD
 
 for maxima in $maximas
@@ -98,6 +95,3 @@ do
     echo Building and testing mext for $maxima
     perform_one_test $maxima&
 done
-
-
-#perform_one_test $maxima
