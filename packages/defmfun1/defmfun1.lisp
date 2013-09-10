@@ -360,30 +360,35 @@ in a  mext package.")
   (let* ((emsg (rest err-mssg-spec)))
     (setf (gethash spec-name *arg-check-func-table*)
           `(lambda (e) ,body))
-    (cond ( (eq 'option arg-class)
-            (setf (gethash spec-name *option-arg-spec-to-english-table*)
-                  (or-comma-separated-english emsg))
-             (setf (gethash spec-name *option-arg-check-mssg-table*) (list (car err-mssg-spec) (rest err-mssg-spec))))
+    (cond ((eq 'option arg-class)
+           (setf (gethash spec-name *option-arg-spec-to-english-table*)
+                 (or-comma-separated-english emsg))
+           (setf (gethash spec-name *option-arg-check-mssg-table*) 
+                 (list (car err-mssg-spec) (rest err-mssg-spec))))
           ( (eq 'arg arg-class)
             (setf (gethash spec-name *arg-spec-to-english-table*)
                   (or-comma-separated-english emsg))
-            (setf (gethash spec-name *arg-check-mssg-table*) (list (car err-mssg-spec) (rest err-mssg-spec))))
+            (setf (gethash spec-name *arg-check-mssg-table*) 
+                  (list (car err-mssg-spec) (rest err-mssg-spec))))
           (t (merror "defmfun1::mk-arg-check: Unrecognized arg-class ~M" arg-class)))))
 
 ;; For tests that take additional argumens. eg (:int-range 2)
 (defun mk-arg-check2 (arg-class spec-name-and-args err-mssg-spec body)
   (let* ((emsg (rest err-mssg-spec)))
-    (let  ((spec-name (first spec-name-and-args))) ;; throw away the args, but we should use then for checking
+    ;; throw away the args, but we should use then for checking
+    (let  ((spec-name (first spec-name-and-args)))
            (setf (gethash spec-name *arg-check-func-table*)
                  body)
-           (cond ( (eq 'option arg-class)
+           (cond ((eq 'option arg-class)
                   (setf (gethash spec-name *option-arg-spec-to-english-table*)
                         (or-comma-separated-english emsg))
-                   (setf (gethash spec-name *option-arg-check-mssg-table*) (list (car err-mssg-spec) (rest err-mssg-spec))))
-                 ( (eq 'arg arg-class)
+                  (setf (gethash spec-name *option-arg-check-mssg-table*) 
+                        (list (car err-mssg-spec) (rest err-mssg-spec))))
+                 ((eq 'arg arg-class)
                   (setf (gethash spec-name *arg-spec-to-english-table*)
                         (or-comma-separated-english emsg))
-                   (setf (gethash spec-name *arg-check-mssg-table*) (list (car err-mssg-spec) (rest err-mssg-spec))))
+                  (setf (gethash spec-name *arg-check-mssg-table*) 
+                        (list (car err-mssg-spec) (rest err-mssg-spec))))
                  (t (maxima::merror "defmfun1::mk-arg-check: Unrecognized arg-class ~M" arg-class))))))
 
 ;; arg spec-name that is list is actually (name number-of-parameters-passed-to-check-func)
@@ -481,13 +486,15 @@ in a  mext package.")
                        specl-str))
               (call-str (format-call name call))
               (err-code (gethash spec-name *arg-check-err-code-table*)))
-         (setf maxima::$error_code err-code) ; ought to pass to merror1, but same as putting it in two calls below
-         (cond (call
-                (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
-                                               arg-list1 spstr  call-str) force-match match-val)
-                nil)
-               (t
-                (maxima::merror1 (format nil "~a ~? is ~a." pre-name (car espec)  arg-list1 spstr))))))))
+         ; ought to pass to merror1, but same as putting it in two calls below
+         (setf maxima::$error_code err-code) 
+         (cond 
+          (call
+           (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
+                                          arg-list1 spstr  call-str) force-match match-val)
+           nil)
+          (t
+           (maxima::merror1 (format nil "~a ~? is ~a." pre-name (car espec)  arg-list1 spstr))))))))
 
 ;;; signal-arg-error called by echeck-arg and check-and-error
 (mk-signal-error signal-arg-error *arg-check-mssg-table*)
@@ -783,20 +790,21 @@ in a  mext package.")
   "This function is also called within :max-doc."
   (let ((pw *print-error-integers-as-words*)
         (are-word (if terminal-verb-p " are" "")))
-    (cond ( restp
+    (cond (restp
            (if terminal-verb-p 
                (format nil "~a or more arguments are" (err-itostr nmin))
-               (format nil "~a or more arguments" (err-itostr nmin))))
-          ( (= nmin nmax)
+             (format nil "~a or more arguments" (err-itostr nmin))))
+          ((= nmin nmax)
            (if terminal-verb-p 
                (format nil "~a argument~p ~:[are~;is~]" (err-itostr nmin) (if (and pw (= nmin 0)) 1 nmin)
                        (or (= 1 nmin) (and pw (= 0 nmin))))
                (format nil "~a argument~p" (err-itostr nmin) nmin )))
-          ( (= 1 (- nmax nmin))
+          ((= 1 (- nmax nmin))
            (format nil "either ~d or ~d arguments~a" (err-itostr1 nmin) (err-itostr nmax) are-word))
-          ( t
+          (t
            (format nil "between ~d and ~d arguments~a" (err-itostr1 nmin) (err-itostr nmax) are-word)))))
 
+;; why does this look this way ??
 (defun compute-narg-error-code (restarg nargs nmin nmax restp)
   (declare (ignore restp restarg))
   (cond ((< nargs nmin)
@@ -812,6 +820,8 @@ in a  mext package.")
          (str-narg (format nil "called with ~d argument~p" (err-itostr nargs) nargs))
          (str-expected
           (format-nargs-expected nmin nmax restp t))
-         (err-code (compute-narg-error-code restarg nargs nmin nmax restp))); maybe restore this later; done!
-    (error-or-message name (format nil "~a ~a ~a; ~a expected.~%" (err-prefix sname) sname str-narg str-expected) 
+         ; maybe restore this later; done!
+         (err-code (compute-narg-error-code restarg nargs nmin nmax restp)))
+    (error-or-message name (format nil "~a ~a ~a; ~a expected.~%" 
+                                   (err-prefix sname) sname str-narg str-expected) 
                       force-match match-val err-code)))
