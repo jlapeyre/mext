@@ -267,7 +267,8 @@
               (maxima::merror1 "An error"))
             (pop txt1)
             (cond ((member item '(:code :codedot :codecomma)  :test #'equal)
-                   (let* ((ss (if (stringp s) s (format nil "~a" s))) ; was a bug when default-value a number
+                   ; was a bug when default-value a number
+                   (let* ((ss (if (stringp s) s (format nil "~a" s))) 
                           (delim (loop for char in '(#\# #\$ #\~ #\@ #\& #\- #\% \#^ \#?) do
                                        (when (not (find char ss)) (return char))))
                           (str (format nil "\\verb~a~a~a" delim ss delim)))
