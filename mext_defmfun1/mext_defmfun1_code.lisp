@@ -198,12 +198,20 @@ Setting it has no effect.")
 (maxdoc:mdefmvar $lisp_type (cl::lisp-implementation-type)
 "The name of the lisp implementation on which Maxima is running.")
 
-;; this is defined in mext-maxima-system.lisp
+;; These are defined in mext-maxima-system.lisp,
+;; but doc system says they are defined here. Could fix this.
 (max-doc:add-doc-entry 
  '( :name "lisp_type_symbol"
     :type "Function"
     :contents ("Returns a maxima symbol representing the lisp vendor. "
                "For example, gcl, sbcl, clisp, ...")))
+
+(max-doc:add-doc-entry 
+ '( :name "os_type_symbol"
+    :type "Function"
+    :contents ("Returns a maxima symbol representing the type of operating systm. "
+               "This is one of " :varcomma "win32" " " :varcomma "linux"
+               " or " :vardot "unknown")))
 
 #|
 

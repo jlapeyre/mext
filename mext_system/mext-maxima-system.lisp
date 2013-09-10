@@ -63,8 +63,6 @@ This was copied from maxima source init-cl.lisp.")
   #+cormanlisp (lisp-implementation-version)
   #+digitool   (subseq (lisp-implementation-version) 8))
 
-
-;; stolen from someone who stole from swank/slime
 (defun lisp-type-symbol ()
   #+cmu       'maxima::$cmu
   #+sbcl      'maxima::$sbcl
@@ -75,8 +73,19 @@ This was copied from maxima source init-cl.lisp.")
   #+allegro   'maxima::$allegro
 )
 
+(defun os-type ()
+  (cond ((string= maxima::*autoconf-win32* "true")
+         'maxima::$win32)
+        ((search "linux" maxima::*autoconf-host*)
+         'maxima::$linux)
+        (t
+         'maxima::$unknown)))         
+
 (defun maxima::$lisp_type_symbol ()
   (lisp-type-symbol))
+
+(defun maxima::$os_type_symbol ()
+  (os-type))
 
 ;; extensions of filenames created during building that we want to remove
 ;; (clean). defsystem does some of this, but not all.
