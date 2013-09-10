@@ -9,4 +9,3 @@ errcatch(require(["prime_pi"]));
 errcatch(require(["store"]));
 
 mext_test('loaded);
-
