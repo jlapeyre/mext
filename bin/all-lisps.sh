@@ -1,4 +1,7 @@
 #
+
+# Prefer test_mext.sh to this.
+
 # Use bash for now
 
 # Script for testing mext and packages under *nix lisp implementations.
