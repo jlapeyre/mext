@@ -9,13 +9,13 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO, option to report wall clock time, as well
 (defmfun1:set-hold-all '$timing)
 (defmfun1 ($timing :doc) (&rest exprs &opt ($print nil :bool) ($result t :bool)
                                 ($time $all (:member '($all $cpu $real))))
   :desc
   ( :mref "timing" " evaluates each of the " :argcomma "exprs" " and returns a list of "
-    " the total cpu time in seconds and real time in second used, together the result of the last expression."
+    " the total cpu time in seconds and real time in seconds used, together with the 
+      result of the last expression."
     " See also " :emrefdot "showtime")
   (let ((start-run  (get-internal-run-time))
         (start-real (get-internal-real-time)))
@@ -41,12 +41,13 @@
             (if $result last-result '$done))
         (let ((out-res '()))
           (when $result (push last-result out-res))
-          (cond ((eq $time '$all)
-                 (setf out-res (append (list elapsed-run-seconds elapsed-real-seconds) out-res)))
-                ((eq $time '$cpu)
-                 (push elapsed-run-seconds out-res))
-                ((eq $time '$real)
-                 (push elapsed-real-seconds out-res)))
+          (ecase $time 
+            ('$all
+             (setf out-res (append (list elapsed-run-seconds elapsed-real-seconds) out-res)))
+            ('$cpu
+             (push elapsed-run-seconds out-res))
+            ('$real
+             (push elapsed-real-seconds out-res)))
           (mk-mlist out-res))))))
 
 (add-call-desc '("timing" ("exprs") 
