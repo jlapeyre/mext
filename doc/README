@@ -21,11 +21,11 @@ to 'package'.)
 
 For installation instructions, see the files
 
-  INSTALL and INSTALL-windows.txt
+  doc/INSTALL and doc/INSTALL-windows.txt
 
 For a brief introduction to using mext, see
 
-   USAGE
+   doc/USAGE
 
 --------
 Features in Brief:
