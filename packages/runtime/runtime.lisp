@@ -32,12 +32,13 @@
            (/ (- (get-internal-real-time) start-real) to-sec)))
       (if $print
           (progn
-            (cond ((eq $time '$all)
-                   ($disp (format nil "user ~as    real ~as" elapsed-run-seconds elapsed-real-seconds)))
-                  ((eq $time '$cpu)
-                   ($disp (format nil "user ~as" elapsed-run-seconds)))
-                  ((eq $time '$real)
-                   ($disp (format nil "real ~as" elapsed-real-seconds))))
+            (ecase $time
+              ('$all
+               ($disp (format nil "user ~as    real ~as" elapsed-run-seconds elapsed-real-seconds)))
+              ('$cpu
+               ($disp (format nil "user ~as" elapsed-run-seconds)))
+              ('$real
+               ($disp (format nil "real ~as" elapsed-real-seconds))))
             (if $result last-result '$done))
         (let ((out-res '()))
           (when $result (push last-result out-res))
