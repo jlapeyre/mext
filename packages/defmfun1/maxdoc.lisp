@@ -127,15 +127,28 @@
       (setf (entry-call-desc-list entry)
             (push cd (entry-call-desc-list entry))))))
 
-(defun set-format-codes-table (code-name)
-  (cond ((string= "text" code-name)
-         (setf *format-codes-default* *format-codes-text*))
-        ((string= "texi" code-name)
-         (setf *format-codes-default* *format-codes-texi*))
-        ((string= "latex" code-name)
-         (setf *format-codes-default* *format-codes-latex*))
-        (t (maxima::merror1 (intl:gettext 
-           "max-doc:set-format-codes-table Unknown code name ~s.") code-name))))
+;; can't find info on efficiency of string= vs eql
+;; Hmmm. this is used nowhere in any case
+;; (defun set-format-codes-table (code-name)
+;;   (case code-name
+;;     ("text"
+;;      (setf *format-codes-default* *format-codes-text*))
+;;     ("texi"
+;;      (setf *format-codes-default* *format-codes-texi*))
+;;     ("latex"
+;;      (setf *format-codes-default* *format-codes-latex*))
+;;     (otherwise (maxima::merror1 (intl:gettext 
+;;            "max-doc:set-format-codes-table Unknown code name ~s.") code-name))))
+
+;; (defun set-format-codes-table (code-name)
+;;   (cond ((string= "text" code-name)
+;;          (setf *format-codes-default* *format-codes-text*))
+;;         ((string= "texi" code-name)
+;;          (setf *format-codes-default* *format-codes-texi*))
+;;         ((string= "latex" code-name)
+;;          (setf *format-codes-default* *format-codes-latex*))
+;;         (t (maxima::merror1 (intl:gettext 
+;;            "max-doc:set-format-codes-table Unknown code name ~s.") code-name))))
 
 ;; caret escape is not working ??
 ;; no, it assumes we are in math mode
