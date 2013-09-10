@@ -11,6 +11,7 @@
 *.log
 hide2/
 hide/
+hide_devel/
 logfiles/
 latextest/
 *.wxm
