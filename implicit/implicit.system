@@ -9,6 +9,7 @@
 
 (in-package :cl-user)
 
+;; tests fail if the code is compiled
 (mk:defsystem implicit
   :source-extension "mac"
   :language :mext-maxima
@@ -18,9 +19,9 @@
 
 (mk:defsystem load-implicit
   :source-extension "mac"
-  :load-only t    ; ecl fails to compile this. 5 other lisps don't report error
+  :load-only nil
   :components
-   ((:file "implicit")))
+  ((:file "implicit")))
 
 (mk:defsystem implicit-rtests
   :source-extension "mac"

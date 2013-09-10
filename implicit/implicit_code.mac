@@ -1,3 +1,9 @@
+/*
+
+  GJL 2013 -- quote functions called by map
+  so that functions can be compiled.
+  
+*/
 /*==========================
 X - list of variables
 F - one expression (d=1) or a list of expressions of the variables X, d:length(F)
@@ -24,11 +30,11 @@ imp_taylor(F,X,A,n):=block(
 		D:subst(map("=",X,A), genmatrix(lambda([i,j],diff(F[i],X[m-d+j])),d,d)),
 		if determinant(D)=0 then
 			error("Unable to compute: determinant(D)=0"),
-		F:rest(X,m-d)-transpose(invert(D).map(ratdisrep, taylor(subst(map("=",X,A+X),F),X,0,n) ))[1],
+		F:rest(X,m-d)-transpose(invert(D).map('ratdisrep, taylor(subst(map("=",X,A+X),F),X,0,n) ))[1],
 		df:makelist(0,d),
 		for k:1 thru n do 
-			df:map(ratdisrep, taylor(subst(map("=",rest(X,m-d),df),F),rest(X,-d),0,k) ),
-		map("=",rest(X,m-d)-rest(A,m-d),map(trunc,subst(map("=",X,X-A),df)))
+			df:map('ratdisrep, taylor(subst(map("=",rest(X,m-d),df),F),rest(X,-d),0,k) ),
+		map("=",rest(X,m-d)-rest(A,m-d),map('trunc,subst(map("=",X,X-A),df)))
 	) else (
 		if subst(map("=",X,A),F)#0 then
 			error("Unable to compute: ",'at(F,X=A),"#0"), 
@@ -116,7 +122,7 @@ imp_newton(F,X,A,n):=block(
         ),
         if length(L)=0 then d:minf else d:last(L)[1],
         for i:1 thru length(Q) while (D[i]>d and D[i]#0) do
-            for b in map(rhs,solve( sum(c[Q[i][j]]*m^(p[Q[i][j]][2]-p[Q[i][1]][2]),j,1,length(Q[i])) ,m)) do (
+            for b in map('rhs,solve( sum(c[Q[i][j]]*m^(p[Q[i][j]][2]-p[Q[i][1]][2]),j,1,length(Q[i])) ,m)) do (
                 P0:makelist(expand(sum(k!/(j!*(k-j)!)*b^(k-j)*X[1]^(D[i]*(k-j))*P[k+1],k,j,h)),j,0,h),
                 l:endcons([D[i],b],L),
                 if length(l)<n then S(l,P0) else r:endcons(X[2]-A[2]=trunc(lsum(t[2]*(X[1]-A[1])^t[1],t,l)),r)

@@ -1,24 +1,30 @@
+/* Test 1 */
 (display2d:false,kill(x,y,s,t),0);
-0;
+0$
 
+/* Test 2 */
 imp_taylor(x-asin(y),[x,y],[%pi/6,1/2],5);
 y-1/2 = sqrt(3)*(x-%pi/6)/2-(x-%pi/6)^2/4-(x-%pi/6)^3/(4*sqrt(3))
-                                  +(x-%pi/6)^4/48+(x-%pi/6)^5/(80*sqrt(3));
+                                  +(x-%pi/6)^4/48+(x-%pi/6)^5/(80*sqrt(3))$
 
-/* This fails
+/* Fails because of simplification or reordering or something */
+/* x Test 3 */
+/*
 imp_taylor(x+s*sin(x+t)-x*exp(x-s),[t,s,x],[%pi,1,0],3);
 x = -%e*(t-%pi)+(%e^2-2*%e)*(s-1)*(t-%pi)-%e^2*(t-%pi)^2
-               -((%e^4+6*%e^3+3*%e^2-%e)*(t-%pi)^3
-                +(24*%e^2-18*%e^3)*(s-1)*(t-%pi)^2
-                +(6*%e^3-18*%e^2+9*%e)*(s-1)^2*(t-%pi))
-                /6;
-*/
+                     -((%e^4+6*%e^3+3*%e^2-%e)*(t-%pi)^3
+                      +(24*%e^2-18*%e^3)*(s-1)*(t-%pi)^2
+                      +(6*%e^3-18*%e^2+9*%e)*(s-1)^2*(t-%pi))
+                      /6$
+*/                      
 
+/* Test 3 */
 imp_taylor([x[1]-log(y[1]),x[2]-exp(y[2])],[x[1],x[2],y[1],y[2]],[0,1,1,0],5);
 [y[1]-1 = x[1]+x[1]^2/2+x[1]^3/6+x[1]^4/24+x[1]^5/120,
-        y[2] = -1-(x[2]-1)^2/2+(x[2]-1)^3/3-(x[2]-1)^4/4+(x[2]-1)^5/5+x[2]];
+        y[2] = -1-(x[2]-1)^2/2+(x[2]-1)^3/3-(x[2]-1)^4/4+(x[2]-1)^5/5+x[2]]$
 
 
+/* Test 4 */
 imp_puiseux(x-y*exp(y),[x,y],[-%e^-1,-1],5);
 [y+1 = -2*%e*(x-%e^-1)/3+sqrt(2)*sqrt(%e)*a*sqrt(x-%e^-1)
                         +11*%e^(3/2)*a*(x-%e^-1)^(3/2)/(9*2^(3/2))
@@ -26,18 +32,23 @@ imp_puiseux(x-y*exp(y),[x,y],[-%e^-1,-1],5);
                         +889*%e^(5/2)*a*(x-%e^-1)^(5/2)/(135*2^(9/2)),
  a^2-1 = 0]$
 
-/* This fails
+/* This causes an error 
  imp_puiseux(y-2*sin(y/2)-sin(x)*(y^4+y^5)+cos(x)*(y^3-y^4),[x,y],[0,0],7);
 */
 
-/* This fails due to some kind of reordering
+/* This fails due to some kind of reordering. 
+   But it is computed correctly.
+ */
+/* xx Test  */
+/*
 imp_newton(x^2+y^2-1,[x,y],[1/2,sqrt(3)/2],5);
 [y-sqrt(3)/2 = -4*(x-1/2)^2/3^(3/2)-8*(x-1/2)^3/3^(5/2)
                                          -32*(x-1/2)^4/3^(7/2)
                                          -128*(x-1/2)^5/3^(9/2)
                                          -(x-1/2)/sqrt(3)]$
-*/
+*/                                         
 
+/* Test 7 */
 imp_newton(2*x^7-x^8-x^3*y+(4*x^2+x^3)*y^2+(x^3-x^4)*y^3-4*x*y^4+7*x^5*y^5+(1-x^2)*y^6+5*x^6*y^7+x^3*y^8,[x,y],[0,0],3);
 [y = 2*x^4-x^5+16*x^7,y = x/4-3*x^2/64-53*x^3/4096,
  y = -sqrt(2)*sqrt(x)-%i*x^(3/4)/2^(7/4)-x/16,

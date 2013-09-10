@@ -95,6 +95,7 @@ my @Rtests = qw (
  discrete_aex/rtests/rtest_discrete_aex.mac
  defmfun1/rtests/rtest_defmfun1.mac
  fourier_elim_mext/rtests/rtest_fourier_elim.mac
+ implicit/rtests/rtest_implicit.mac
  lists_aex/rtests/rtest_list.mac
  lists_aex/rtests/rtest_table.mac
  lists_aex/rtests/rtest_take.mac
