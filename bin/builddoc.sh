@@ -2,6 +2,8 @@
 
 # build latex and pdf from maxdoc documentation
 
+maxima="smaxima"
+
 filename=./thirdparty
 texfile=$filename.tex
 pdffile=$filename.pdf
@@ -13,7 +15,7 @@ outfile=$filename.out
 logfile=$filename.log
 
 rm $auxfile $tocfile $outfile $logfile
-smaxima -b "./builddoc.mac" && pdflatex $texfile && pdflatex $texfile
+$maxima -b "./builddoc.mac" && pdflatex $texfile && pdflatex $texfile
 
 rm $auxfile $tocfile $outfile $logfile $hauxfile $htocfile
 hevea $texfile && hevea $texfile
