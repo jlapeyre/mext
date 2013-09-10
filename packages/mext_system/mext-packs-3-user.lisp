@@ -1,5 +1,5 @@
 ;; This file is copied to the user's maxima directory and
-;; renamed: mext_core.lisp.  In fact, this message will be
+;; renamed: mext3.lisp.  In fact, this message will be
 ;; visible. It may be the first file loaded to get
 ;; both the mext system and core packages. See below.
 
