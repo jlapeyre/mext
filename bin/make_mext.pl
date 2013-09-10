@@ -120,7 +120,8 @@ sub make_package_mxt {
    :version "0.0.1"
    :license "GPL2+"
    :description "Functions for $pack."
-   :long-description "Functions for $pack.")
+   :long-description "Functions for $pack."
+   :url "http://website_for_$pack.com")
 EOFS
 }
 
