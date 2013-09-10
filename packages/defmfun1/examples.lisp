@@ -133,15 +133,17 @@
             ((null spec) (apply #'concatenate (cons 'string (nreverse strings))))
           (unless (symbolp key)
             (merror (intl:gettext "max-doc:format-code-text: Not a key ~a") key))
-          (cond ((eq key :text)
-                 (spush ,text-fmt))
-                ((eq key :ex)
-                 (when (stringp (first val)) (setf val (list val)))
-                 (spush ,ex-fmt)
-                 (incf n (length val)))
-                ((eq key :n)
-                 (setf n val))
-                (t (merror (intl:gettext "max-doc:format-code-text: Unrecognized key ~a") key))))))))
+          (case key
+            (:text
+             (spush ,text-fmt))
+            (:ex
+             (when (stringp (first val)) (setf val (list val)))
+             (spush ,ex-fmt)
+             (incf n (length val)))
+            (:n
+             (setf n val))
+            (otherwise 
+             (merror (intl:gettext "max-doc:format-code-text: Unrecognized key ~a") key))))))))
 
 (mk-format-code-text format-code-text
   (format nil "~a~%~%" (wrap-text :text (max-doc:format-doc-text val) :width 70 :indent 3))
