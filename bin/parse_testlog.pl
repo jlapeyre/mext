@@ -67,7 +67,9 @@ sub parse_test_log_file {
         [ qr/The following /, sub {print "\n"; print seprepend($_[1]->{running}); print seprepend(shift);}],
         [ qr/failed out of/, sub {print eprepend(shift)}],
         [ qr/an error/, sub {print eprepend(shift)}],
-        [ qr/Unable to find/, sub {print eprepend(shift)}],
+        [ sub{ my $c=shift; $c =~ qr/Unable to find/ and not $c =~ qr/prime_pi|store/ }
+          , sub {print eprepend(shift)}],
+#        [ qr/Unable to find/ , sub {print eprepend(shift)}],
         [ qr/Maxima encountered a Lisp error/,
           sub { 
               my $h = $_[1];
@@ -106,7 +108,13 @@ sub parse_file {
         foreach my $test (@$tests) {
             my $regex = $test->[0];
             my $code = $test->[1];
-            &$code($line,$data) if ($line =~ /$regex/);
+#            &$code($line,$data) if ($line =~ /$regex/); # this is ok, but redundat
+            if ( ref($regex) =~ /CODE/ ) {
+                &$code($line,$data) if &$regex($line);
+            }
+            else {
+                &$code($line,$data) if ($line =~ $regex);
+            }
         }
     }
 }
