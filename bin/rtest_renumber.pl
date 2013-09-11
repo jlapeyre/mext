@@ -156,24 +156,22 @@ sub rewrite_one_rtest {
     if ($Toplevel) {
         $rtest = catfile($Toplevel,$rtest);
     }
-    print "Rewriting `$rtest'.\n" unless $Quiet;
     if ( not -e $rtest ) {
         die "File `$rtest' does not exist";
     }
     my $count = 0;
     open my $IH, '<', $rtest or die
         "Can't open `$rtest' for reading";
-    my $backup = $rtest . '.back';
-    print "Copying `$rtest' to `$backup'.\n" if $Verbose;
-    if (not $Dry) {
-        copy($rtest,$backup) or die "Copy `$rtest' to `$backup' failed: $!";
-    }
     my $outstr = '';
+    my $origstr = '';
+    my $renumbered_flag = 0;
     print "Reading `$rtest'.\n" if $Verbose;
     while (<$IH>) {
-        if ( /\s*\/\*\s*Test\s*\d*\s*\*\/\s*/ ) {
+        $origstr .= $_;
+        if ( /\s*\/\*\s*Test\s*(\d*)\s*\*\/\s*/ ) {
+            my $old_number = $1;
             $count ++;
-            $Totalcount ++;
+            $renumbered_flag = 1 unless $old_number == $count;
             $outstr .= "/* Test $count */\n";
         }
         else {
@@ -181,12 +179,26 @@ sub rewrite_one_rtest {
         }
     }
     close($IH);
-    print "Writing `$rtest'.\n" if $Verbose;
-    if (not $Dry) {
-        open my $OH , '>', $rtest or die
-            "Can't open `$rtest' for writing";
-        print $OH $outstr or die "Writing line to file `$rtest' failed: $!";
-        close($OH);
+    # this is redundant, both checks work.
+    if ( ($origstr eq $outstr) or (not $renumbered_flag)) {
+        print "Not rewriting `$rtest'; no change.\n" unless $Quiet;
+        return;
+    }
+    else {
+        print "Rewriting `$rtest'.\n" unless $Quiet;
+        $Totalcount += $count;
+        my $backup = $rtest . '.back';
+        print "Copying `$rtest' to `$backup'.\n" if $Verbose;
+        if (not $Dry) {
+            copy($rtest,$backup) or die "Copy `$rtest' to `$backup' failed: $!";
+        }
+        print "Writing `$rtest'.\n" if $Verbose;
+        if (not $Dry) {
+            open my $OH , '>', $rtest or die
+                "Can't open `$rtest' for writing";
+            print $OH $outstr or die "Writing line to file `$rtest' failed: $!";
+            close($OH);
+        }
     }
 }
 
