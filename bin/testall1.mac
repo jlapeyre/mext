@@ -1,8 +1,8 @@
 mext_verbose:1;
 
-load(mext);
-require(["fourier_elim","test_defmfun1", "pw"]);
 load(mext3);
+require(["fourier_elim","test_defmfun1", "pw"]);
+mext_list_loaded();
 
 /* test surviving kill
 kill(all);
