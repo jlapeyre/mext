@@ -1,10 +1,12 @@
 mext_verbose:1;
+
+load(mext);
+require(["fourier_elim","test_defmfun1", "pw"]);
 load(mext3);
 
 /* test surviving kill
 kill(all);
 */
-require(["test_defmfun1", "pw"]);
 
 errcatch(require(["prime_pi"]));
 errcatch(require(["store"]));
