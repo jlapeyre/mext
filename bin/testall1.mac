@@ -6,8 +6,9 @@ require(["fourier_elim","test_defmfun1", "pw"]);
 kill(all);
 */
 
-errcatch(require(["prime_pi"]));
-errcatch(require(["store"]));
+if lisp_type_symbol() = 'sbcl then errcatch(require(["prime_pi"]));
+if lisp_type_symbol() # 'gcl then errcatch(require(["store"]));
+
 mext_list_loaded();
 
 mext_test('loaded);
