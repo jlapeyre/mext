@@ -78,6 +78,7 @@ sub parse_test_log_file {
         [ qr/No unexpected errors/ , sub { print prepend(shift); $no_unexpected_flag=1; }],
         [ qr/The following /, sub {print "\n"; print seprepend($_[1]->{running}); print seprepend(shift);}],
         [ qr/failed out of/, sub {print eprepend(shift); $failed_out_of_flag=1; }],
+        [ qr/Unrecoverable error/, sub {print eprepend(shift)}],
         [ qr/an error/, sub {print eprepend(shift)}],
         [ sub{ my $c=shift; $c =~ qr/Unable to find/ and not $c =~ qr/prime_pi|store/ }
           , sub {print eprepend(shift)}],
