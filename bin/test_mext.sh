@@ -14,23 +14,25 @@
 # Run this script from the top level like this:
 # ./bin/text_mext.sh
 
-# put the archive of the master branch of the git repo here
-tardist="../mext-test.tar.gz"
 # unpack and build and test here
 mext_test_top="../mext_test_top"
+# put the archive of the master branch of the git repo here
+tardist="$mext_test_top/mext-test.tar.gz"
+
 
 # build and test for these
-maximas="
- maxima-5.31.0-sbcl-1.1.11 
- maxima-5.31.0-gcl-2.6.7
- maxima-5.31.0-gcl-2.6.8
- maxima-5.31.0-gcl-2.6.9
- maxima-5.31.0-ccl-1.9 
- maxima-5.31.0-clisp-2.49 
- maxima-5.31.0-cmucl-20d 
- maxima-5.31.0-ecl-12.12.1
-"
-#maximas="smaxima gmaxima"
+ maximas="
+  maxima-5.31.0-sbcl-1.1.11 
+  maxima-5.31.0-gcl-2.6.7
+  maxima-5.31.0-gcl-2.6.8
+  maxima-5.31.0-gcl-2.6.9
+  maxima-5.31.0-ccl-1.9 
+  maxima-5.31.0-clisp-2.49 
+  maxima-5.31.0-cmucl-20d 
+  maxima-5.31.0-ecl-12.12.1
+ "
+
+#maximas="gmaxima"
 
 #################################################
 
@@ -71,29 +73,34 @@ perform_one_test () {
 
  echo Building mext_system for $thismaxima
 # cd ./mext_system; $thismaxima -b ibuild.mac &> ../logfiles/$thismaxima.mextsyslog; cd ..
- cd ./mext_system; $thismaxima -b ibuild.mac &> ../../$thismaxima.mextsyslog; cd ..
+ cd ./packages/mext_system; $thismaxima -b ibuild.mac &> ../../../$thismaxima.mextsyslog; cd ..
 
  echo Building mext packages for $thismaxima
 # $thismaxima -b $build_package_script &> logfiles/$thismaxima.mextlog
- $thismaxima -b $build_package_script &> ../$thismaxima.mextlog
+ $thismaxima -b ../bin/$build_package_script &> ../../$thismaxima.mextlog
 
+ cd ..
  echo Testing mext packages for $thismaxima
 # $thismaxima -b $test_package_script &> logfiles/$thismaxima.testlog
- $thismaxima -b $test_package_script &> ../$thismaxima.testlog
+ $thismaxima -b ./bin/$test_package_script &> ../$thismaxima.testlog
 
  echo Parsing build log for $thismaxima
 # ./parse_testlog.pl build logfiles/$thismaxima.mextlog
- ./parse_testlog.pl build ../$thismaxima.mextlog
+ ./bin/parse_testlog.pl build ../$thismaxima.mextsyslog
+
+ echo Parsing package build log for $thismaxima
+# ./parse_testlog.pl build logfiles/$thismaxima.mextlog
+ ./bin/parse_testlog.pl build ../$thismaxima.mextlog
 
  echo Parsing test log for $thismaxima
 # ./parse_testlog.pl test logfiles/$thismaxima.testlog
- ./parse_testlog.pl test ../$thismaxima.testlog
+ ./bin/parse_testlog.pl test ../$thismaxima.testlog
 
 }
 
 ################################
 
-git archive -o ../../mext-test.tar.gz --prefix="mext/" HEAD
+git archive -o $tardist --prefix="mext/" HEAD
 
 for maxima in $maximas
 do
