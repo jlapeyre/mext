@@ -9,13 +9,8 @@ These are instructions for installing the mext system,
 as well as software packaged for mext. Please
 also read INSTALL-windows.txt.
 
-There are several ways to install this software.
-The following way uses wxmaxima and has been
-tested with some combinations of maxima v5.25,
-v5.28, gcl/win32, ccl/win32, as well as
-six lisps under linux. The details here
-assume we are on win32. I have not had time to
-port this to mac OS X.
+In linux, you can install to your .maxima directory by running
+./install_mext.sh
 
 Currently only installation to the user maxima
 folder is supported. A separate subfolder is
@@ -23,15 +18,3 @@ created for each combination of maxima version and
 lisp implementation/version. So you can use
 different versions of maxima and implementations
 and versions of lisp in parallel.
-
-We use the word 'distribution' to mean a piece of
-third party software. This might also be called a
-package.  The code in the distribution might
-consist of one file, or of several files. Several,
-but not all of the packages from the maxima third
-party code site are packaged here.
-first. (See the note below.)  To install one
-distribution, click File-->Load Package and choose
-the folder named for the distribution you want to
-load. Click on the file 'ibuild.mac' in this
-folder to build and install the distribution.

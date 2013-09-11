@@ -23,9 +23,20 @@ For installation instructions, see the files
 
   doc/INSTALL and doc/INSTALL-windows.txt
 
+Zipped prebuilt installations for windows can be found at
+http://www.johnlapeyre.com/mext_windows/
+
+In linux, you can install to your .maxima directory by running
+./install_mext.sh maxima
+where maxima is the name of your maxima program.
+
 For a brief introduction to using mext, see
 
    doc/USAGE
+
+To remove the mext system and all pacakges, delete the files and
+the single folder in your home .maxima directory or maxima folder
+that begin with `mext'.
 
 --------
 Features in Brief:
