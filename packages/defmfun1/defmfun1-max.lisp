@@ -415,7 +415,7 @@
 
 (max-doc::see-also-group '( "unset_match_form" "set_match_form" "set_nowarn" "unset_nowarn" "attributes"))
 
-(add-doc-entry '(:name "hold_all" :type "Attribute"
+(max-doc:add-doc-entry '(:name "hold_all" :type "Attribute"
     :contents 
     ("A function with the attribute " :code "hold_all"
      " evaluates none of its arguments.")))
