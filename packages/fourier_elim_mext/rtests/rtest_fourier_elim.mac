@@ -5,10 +5,6 @@
 0$
 */
 
-/* Test  */
-(kill(x),0);
-0$
-
 /* Test 1 */
 fourier_elim([max(x,0) > 0],[x]);
 [0 < x]$
