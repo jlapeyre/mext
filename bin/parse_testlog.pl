@@ -20,6 +20,9 @@ parse_testlog.pl
 
 my $Logfile;
 
+#######################################
+
+# The following few routines format some output
 sub lfline {
     my ($line) = @_;
     $Logfile . ': ' . $line;
@@ -50,6 +53,8 @@ sub eprepend {
     $res;
 }
 
+#######################################
+
 # read log file and return ref to list of lines.
 sub read_log_file {
     my ($fname) = @_;
@@ -59,13 +64,20 @@ sub read_log_file {
     \@lines;
 }
 
+# Define the tests for interesting lines in the log file created by running
+# the test suite and parse the file.
+#
+# We want to supress warning about prime_pi and store, but really this should only
+# be for the lisps that can't build them.
 sub parse_test_log_file {
     my ($lines) = @_;
+    my $no_unexpected_flag = 0;
+    my $failed_out_of_flag = 0;
     my @tests = ( 
-        [ qr/^Running tests in/ , sub { $_[1]->{running} = $_[0] } ],
-        [ qr/No unexpected errors/ , sub { print prepend(shift);}],
+        [ qr/^Running tests in/ , sub { $_[1]->{running} = $_[0]; } ],
+        [ qr/No unexpected errors/ , sub { print prepend(shift); $no_unexpected_flag=1; }],
         [ qr/The following /, sub {print "\n"; print seprepend($_[1]->{running}); print seprepend(shift);}],
-        [ qr/failed out of/, sub {print eprepend(shift)}],
+        [ qr/failed out of/, sub {print eprepend(shift); $failed_out_of_flag=1; }],
         [ qr/an error/, sub {print eprepend(shift)}],
         [ sub{ my $c=shift; $c =~ qr/Unable to find/ and not $c =~ qr/prime_pi|store/ }
           , sub {print eprepend(shift)}],
@@ -79,8 +91,12 @@ sub parse_test_log_file {
           }]
         );
     parse_file($lines,\@tests);
+    print "*** $Logfile: Test suite aborted!\n" 
+        unless $no_unexpected_flag or $failed_out_of_flag;
 }
 
+# Define the tests for interesting lines in the log file created by building
+# the packages and parse the file.
 sub parse_build_log_file {
     my ($lines) = @_;
     my @tests = ( 
@@ -95,7 +111,8 @@ sub parse_build_log_file {
     parse_file($lines,\@tests);
 }
 
-
+# Parse a file for interesing lines. The tests for interesting lines
+# are in $tests
 sub parse_file {
     my ($lines,$tests) = @_;
     my $running;
