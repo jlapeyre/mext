@@ -1,0 +1,25 @@
+maxdoc_set_cur_sec("fvequations");
+
+maxdoc("imp_taylor", source_filename->"implicit_code.mac", package->"implicit",
+  [
+   code("imp_taylor(F,[x,y],[x0,y0],n)"), par(""),
+   "Return the Taylor series of the function ",codecomma("y(x)"), " defined explicity by ",
+   codecomma("F=0"), " to ", arg("n"), "th order about the point ",
+   codedot("[x0,y0]")]);
+
+maxdoc("imp_puiseux", source_filename->"implicit_code.mac", package->"implicit",
+  [
+   code("imp_puiseux(F,[x,y],[x0,y0],n)"), par(""),
+   "Return ", arg("n"), " terms in the Puiseux series of the function ",
+   codecomma("y(x)"), " defined explicity by ",
+   codecomma("F=0"), " about the point ",
+   codedot("[x0,y0]")]);
+
+maxdoc("imp_newton", source_filename->"implicit_code.mac", package->"implicit",
+  [
+   code("imp_puiseux(F,[x,y],[x0,y0],n)"), par(""),
+   "Return ", arg("n"), " terms in all branches of the Puiseux series of the function ",
+   codecomma("y(x)"), " defined explicity by ",
+   codecomma("F=0"), " about the point ",
+   codedot("[x0,y0]"),
+   " This function uses Newton's diagram method."]);
