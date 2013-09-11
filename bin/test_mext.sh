@@ -61,28 +61,33 @@ perform_one_test () {
  echo tar xzf $tardist -C $mext_test_dir
  tar xzf $tardist -C $mext_test_dir
 
+# if [ ! -e logfiles ]; then
+#     mkdir logfiles
+# fi
+
  cd $mext_test_dir/mext
- 
- if [ ! -e logfiles ]; then
-     mkdir logfiles
- fi
 
  echo Building mext in `pwd`
 
  echo Building mext_system for $thismaxima
- cd ./mext_system; $thismaxima -b ibuild.mac &> ../logfiles/$thismaxima.mextsyslog; cd ..
+# cd ./mext_system; $thismaxima -b ibuild.mac &> ../logfiles/$thismaxima.mextsyslog; cd ..
+ cd ./mext_system; $thismaxima -b ibuild.mac &> ../../$thismaxima.mextsyslog; cd ..
 
  echo Building mext packages for $thismaxima
- $thismaxima -b $build_package_script &> logfiles/$thismaxima.mextlog
+# $thismaxima -b $build_package_script &> logfiles/$thismaxima.mextlog
+ $thismaxima -b $build_package_script &> ../$thismaxima.mextlog
 
  echo Testing mext packages for $thismaxima
- $thismaxima -b $test_package_script &> logfiles/$thismaxima.testlog
+# $thismaxima -b $test_package_script &> logfiles/$thismaxima.testlog
+ $thismaxima -b $test_package_script &> ../$thismaxima.testlog
 
  echo Parsing build log for $thismaxima
- ./parse_testlog.pl build logfiles/$thismaxima.mextlog
+# ./parse_testlog.pl build logfiles/$thismaxima.mextlog
+ ./parse_testlog.pl build ../$thismaxima.mextlog
 
  echo Parsing test log for $thismaxima
- ./parse_testlog.pl test logfiles/$thismaxima.testlog
+# ./parse_testlog.pl test logfiles/$thismaxima.testlog
+ ./parse_testlog.pl test ../$thismaxima.testlog
 
 }
 
