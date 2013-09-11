@@ -2,13 +2,12 @@ mext_verbose:1;
 
 load(mext3);
 require(["fourier_elim","test_defmfun1", "pw"]);
-mext_list_loaded();
-
 /* test surviving kill
 kill(all);
 */
 
 errcatch(require(["prime_pi"]));
 errcatch(require(["store"]));
+mext_list_loaded();
 
 mext_test('loaded);
