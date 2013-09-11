@@ -12,4 +12,3 @@ script
 
 To make a template for a mext package
  ./bin/make_mext.pl newpackname
-
