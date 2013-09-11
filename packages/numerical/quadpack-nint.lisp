@@ -48,7 +48,7 @@
 	  (list '(mlist) result abserr neval ier))
         (error (c) (defmfun1-error-final '$qags (mquad-error c) :match)))))
 
-(defmfun-quad ($mquad_qagi :doc :match) (fun (var :or-symbol-subvar) (a :to-or-float-inf) (b :to-or-float-inf))
+(defmfun-quad ($mquad_qagi :doc :match) (fun (var :or-symbol-subvar) (a :to-or-float-minf) (b :to-or-float-inf))
   :desc ("This is an interface to qagi that is modified from " :emrefdot "quad_qagi")
   ;; Massage the limits a and b into what Quadpack QAGI wants.
   (flet ((fixup (low high)

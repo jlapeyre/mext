@@ -208,6 +208,8 @@
          (r-expr ($realpart expr))
          (i-expr ($imagpart expr)))
     (echeck-arg $nintegrate :or-symbol-subvar var)
+    (echeck-arg $nintegrate :to-or-float-minf  lo)
+    (echeck-arg $nintegrate :to-or-float-inf  hi)
     (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi singlist quad-ops more-opts)))
           (i-res (if (eq 0 i-expr) nil (nint::do-quad-pack i-expr var lo hi singlist quad-ops more-opts))))
       (when (consp i-res)

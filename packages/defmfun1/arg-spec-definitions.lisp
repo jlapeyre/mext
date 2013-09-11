@@ -57,9 +57,15 @@
                                           (every #'(lambda (x) (numberp x)) (cdr e))))
                      (:pp :to-float "an expression that can be converted to a float"
                           (let ((v (maxima::$float e))) (list (numberp v) v)))
-                     (:pp :to-or-float-inf "inf, minf, or an expression that can be converted to a float"
+                     (:pp :to-or-float-inf-minf "inf, minf, or an expression that can be converted to a float"
                           (let ((v (maxima::$float e))) 
                             (list (or (numberp v) (member v '(maxima::$inf maxima::$minf))) v)))
+                     (:pp :to-or-float-inf "inf or an expression that can be converted to a float"
+                          (let ((v (maxima::$float e))) 
+                            (list (or (numberp v) (eq v 'maxima::$inf)) v)))
+                     (:pp :to-or-float-minf "minf or an expression that can be converted to a float"
+                          (let ((v (maxima::$float e))) 
+                            (list (or (numberp v) (eq v 'maxima::$minf)) v)))
                      (:complex-number  "a complex number" (complex_number_p e)) ; from ellipt.lisp
                      (:non-neg-number "a non-negative number"
                       (and (numberp e) (>= e 0)))

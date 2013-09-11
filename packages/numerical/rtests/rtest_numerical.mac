@@ -13,6 +13,27 @@ kill(cec), cec(x,y,eps) := is(abs(realpart(first(x))-realpart(y))
       + abs(imagpart(first(x))-imagpart(y)) < eps), true)$
 true;
 
+/* Test */
+(errcatch(nintegrate(x,[x,a,b])), error_code);
+chk_to_or_float_minf$
+
+/* Test */
+(errcatch(nintegrate(x,[x,inf,b])), error_code);
+chk_to_or_float_minf$
+
+/* Test */
+(errcatch(nintegrate(x,[x,3,b])), error_code);
+chk_to_or_float_inf$
+
+/* Test */
+(errcatch(nintegrate(x,[x,3,minf])), error_code);
+chk_to_or_float_inf$
+
+
+/* Test */
+(errcatch(nintegrate(x,[3,1,2])), error_code);
+chk_or_symbol_subvar$
+
 /* Test 2 */
 cel(nintegrate([x,x^2,x^3], [x,0,1], info->false), [1/2,1/3,1/4], 1e-9);
 true$
