@@ -16,10 +16,10 @@ I<rtest_renumber.pl> - renumber the tests in an rtest_xxx.mac file.
 
 =head1 DESCRIPTION
 
-Creat template files for a mext package.
-Create a directory named newpackname and populate it with files
-for defining, building, and loading the mext package. The resulting
-files are templates and need to be edited
+Create template files for a mext package.  Create a directory named
+newpackname and populate it with files for defining, building, and
+loading the mext package. The resulting files are templates and need
+to be edited.
 
 =cut
 
