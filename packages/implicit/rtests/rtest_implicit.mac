@@ -32,7 +32,9 @@ imp_puiseux(x-y*exp(y),[x,y],[-%e^-1,-1],5);
                         +889*%e^(5/2)*a*(x-%e^-1)^(5/2)/(135*2^(9/2)),
  a^2-1 = 0]$
 
-/* This causes an error 
+/*
+ This causes an error: [x=0,y=0] is a singular point of F.
+ But, this is not correct.
  imp_puiseux(y-2*sin(y/2)-sin(x)*(y^4+y^5)+cos(x)*(y^3-y^4),[x,y],[0,0],7);
 */
 

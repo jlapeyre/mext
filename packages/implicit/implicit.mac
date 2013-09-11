@@ -1,2 +1,8 @@
+require("mext_defmfun1");
+
+dont_kill(imp_taylor, imp_puiseux, imp_newton);
+
 mext_provide( "implicit",
-  [ "implicit_code"]);
+  ["implicit_code",
+   "implicit_doc"]);
+ 

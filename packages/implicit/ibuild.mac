@@ -1,4 +1,5 @@
 load(mext);
+require("mext_defmfun1");
 load_in_subdir(["implicit","system"]);
 mext_dist_build();
 mext_dist_user_install();

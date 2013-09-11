@@ -9,13 +9,16 @@
 
 (in-package :cl-user)
 
-;; tests fail if the code is compiled
+;; tests fail if only compiled code is loaded.
+;; doing compile(imp_taylor) shows no subsequent
+;; increase in speed.
 (mk:defsystem implicit
   :source-extension "mac"
   :language :mext-maxima
   :load-only t
   :components
-   ((:file "implicit_code")))
+   ((:file "implicit_code")
+    (:file "implicit_doc" :load-only nil)))
 
 (mk:defsystem load-implicit
   :source-extension "mac"

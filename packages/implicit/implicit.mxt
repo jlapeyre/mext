@@ -5,7 +5,7 @@
    :name   "implicit"
    :author "Evgeniy Maevskiy"
    :maintainer "John Lapeyre"
-   :version ""
+   :version "0.1-0.1"
    :license ""
-   :description "Asymptotic expansion of implicit functions"
-   :long-description "Asymptotic expansion of implicit functions: Taylor, Puiseux and Newton")
+   :description "Series of implicit functions"
+   :long-description "Compute series expansions of implicit functions: Taylor and Puiseux.")

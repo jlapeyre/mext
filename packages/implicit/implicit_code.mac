@@ -1,8 +1,9 @@
 /*
 
-  GJL 2013 -- quote functions called by map
-  so that functions can be compiled.
-  
+  GJL 2013 -- quote functions called by map.
+  Other edits were made, so do a diff before updating this file
+  from upstream.
+
 */
 /*==========================
 X - list of variables
@@ -26,10 +27,10 @@ imp_taylor(F,X,A,n):=block(
 	if listp(F) then block(
 		[i,j,m:length(X),d:length(F)],
 		if subst(map("=",X,A),F)#makelist(0,d) then
-			error("Unable to compute: ",'at(F,X=A),"#",makelist(0,d)),
+			error("imp_taylor: Unable to compute: ",'at(F,X=A),"#",makelist(0,d)),
 		D:subst(map("=",X,A), genmatrix(lambda([i,j],diff(F[i],X[m-d+j])),d,d)),
 		if determinant(D)=0 then
-			error("Unable to compute: determinant(D)=0"),
+			error("imp_taylor: Unable to compute: determinant(D)=0"),
 		F:rest(X,m-d)-transpose(invert(D).map('ratdisrep, taylor(subst(map("=",X,A+X),F),X,0,n) ))[1],
 		df:makelist(0,d),
 		for k:1 thru n do 
@@ -37,10 +38,10 @@ imp_taylor(F,X,A,n):=block(
 		map("=",rest(X,m-d)-rest(A,m-d),map('trunc,subst(map("=",X,X-A),df)))
 	) else (
 		if subst(map("=",X,A),F)#0 then
-			error("Unable to compute: ",'at(F,X=A),"#0"), 
+			error("imp_taylor: Unable to compute: ",'at(F,X=A),"#0"), 
 		D:subst(map("=",X,A), diff(F,last(X))),
 		if D=0 then
-			error("Unable to compute: ",'at('diff(F,last(X)),X=A),"=0"),
+			error("imp_taylor: Unable to compute: ",'at('diff(F,last(X)),X=A),"=0"),
 		F:last(X)-1/D*ratdisrep(taylor(subst(map("=",X,A+X),F),X,0,n)),
 		df:0,
 		for k:1 thru n do 
@@ -73,10 +74,10 @@ imp_puiseux(F,X,A,n):=block(
     F0:subst(X[1]=A[1],F),
     while (D:subst(X[2]=A[2],F0)/p!)=0 do (F0:diff(F0,X[2]), p:p+1),
     if p=0 then
-        error("Unable to compute: ",'at(F,[X[1]=A[1],X[2]=A[2]]),"#0"),
+        error("imp_puiseux: Unable to compute: ",'at(F,[X[1]=A[1],X[2]=A[2]]),"#0"),
     F0:ratdisrep(taylor(X[2]^p-1/D*subst([X[1]=A[1]+X[1],X[2]=A[2]+X[2]],F),[X[1],0,n/p],[X[2],0,n])),
     if lopow(F0-subst(X[2]=0,F0),X[2])<p then
-        error("Unable to compute: ",[X[1]=A[1],X[2]=A[2]]," is a singular point of ",F),
+        error("imp_puiseux: Unable to compute: ",[X[1]=A[1],X[2]=A[2]]," is a singular point of ",F),
     df:0,
     for k:1 thru n do(
         ratdisrep(taylor(a*subst(X[2]=df,F0)^(1/p),X[1],0,k/p)),
@@ -130,8 +131,7 @@ imp_newton(F,X,A,n):=block(
     ),
     
     if subst([X[1]=A[1],X[2]=A[2]],F)#0 then
-        error("Unable to compute: ",'at(F,[X[1]=A[1],X[2]=A[2]]),"#0"),
-
+        error("imp_newton: Unable to compute: ",'at(F,[X[1]=A[1],X[2]=A[2]]),"#0"),
     F0:expand(subst([X[1]=A[1]+X[1],X[2]=A[2]+X[2]],F)),
     h:hipow(F0,X[2]),
     P:makelist(coeff(F0,X[2],i),i,0,h),
