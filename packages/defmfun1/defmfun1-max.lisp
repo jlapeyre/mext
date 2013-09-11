@@ -11,6 +11,7 @@
 
 (doc-system:set-source-file-name "defmfun1-max.lisp")
 (doc-system:set-source-package "maxima")
+(defmfun1:set-file-and-package "defmfun1-max.lisp" "defmfun1")
 
 ;;; "Define a function to be called from Maxima. Expands into a `defmfun' or `defmspec' macro.
 ;;;  Provides:
@@ -371,7 +372,7 @@
 
 (defmfun1 ($attributes_find :doc) ( &optional (attribute :or-string-symbol))
   :desc (
-"Return a list of all functions for which the attribute "
+ "Return a list of all functions for which the attribute "
  :arg "attribute" " is set."
  " Some attributes are " :varcomma "match_form" :varcomma "hold_all"
  " and " :vardot "nowarn" )
@@ -413,6 +414,11 @@
  is returned and no warning message is printed.")
 
 (max-doc::see-also-group '( "unset_match_form" "set_match_form" "set_nowarn" "unset_nowarn" "attributes"))
+
+(add-doc-entry '(:name "hold_all" :type "Attribute"
+    :contents 
+    ("A function with the attribute " :code "hold_all"
+     " evaluates none of its arguments.")))
 
 ;; copied from translation of maxima code
 ;; Use of Rule is just to be compatible with mixima.
