@@ -1,3 +1,4 @@
+mext_verbose:1;
 load(mext3);
 
 /* test surviving kill
