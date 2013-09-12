@@ -328,6 +328,11 @@
 ;          ,@(defmfun1::write-force-match-code have-match))
 ;        (return-from ,fname defmfun1-func-call))))
 
+; following two macros for use inside defmfun1-defined funcs
+; first writes a form at an exit point.
+; second return-from's  the block
+; if have-match is true (I suggest using :match for value), then
+; we respect runtime opt match->true or false
 (defmacro defmfun1-error-final (err-code mssg &optional have-match)
  "used at an exit point of a defmfun1 body. does not call return-from"
   `(progn (defmfun1::error-or-message defmfun1-func-name 
