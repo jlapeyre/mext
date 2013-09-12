@@ -268,19 +268,24 @@
  "nintegrate"
  '(:code-text
  (
-  :ex ("nintegrate([x,x^2,x^3], [x,0,1], info->false)" "[0.5,.3333333333333334,0.25]")
+  :text ("Compute a one-dimensional integral.")
   :ex ("nintegrate(sin(sin(x)), [x,0,2])" "[1.24706, 1.38451e-14, 21, no problems]")
-  :text ("Integrate over a semi-infinite interval with an internal singularity. The location of the singularity is
-supplied. This cannot be done with a single call to quadpack routines.")
-  :ex ("nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf], [1] )" "[1.72821, 1.87197e-10, 660, no problems]")
+  :text ("Integrate a list of integrands")
+  :ex ("nintegrate([x,x^2,x^3], [x,0,1], info->false)" "[0.5,.3333333333333334,0.25]")
+  :text ("Compute two- and three-dimensional integrals.")
+  :ex ("nintegrate(x*y, [x,0,1], [y,0,1], info->false)" "0.25")
+  :ex ("nintegrate(x*y*z, [x,0,1], [y,0,1], [z,0,1], info->false)" "0.125")
+  :text ("Integrate over a semi-infinite interval with an internal singularity. 
+     The location of the singularity is supplied. This cannot be done with a single call to quadpack routines.")
+  :ex ("nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf], points-> [1] )" "[1.72821, 1.87197e-10, 660, no problems]")
   :text ("If a list of possible singular points is not supplied, then they will be searched for using " :emrefdot "solve")
   :ex ("nintegrate(1/sqrt(abs(1-x))*exp(-x),[x,0,inf])" "[1.72821, 1.87197e-10, 660, no problems]")
-  :text ("In some cases, complex numbers are treated correctly. (The simplifier replaces " 
-       :code "cos(%i*x)" " with " :code "cosh(x)" " before the routine is called. So this works "
-       " with " :emref "quad_qags" " as well.)")
-  :ex ("nintegrate( cos(%i*x), [x,0,1])" "[1.1752, 1.30474e-14, 21, no problems]")
-  :ex ("sinh(1.0)" "1.1752")
-  :text ("But, the quadpack routines cannot handle the complex numbers in this example.")
+;  :text ("In some cases, complex numbers are treated correctly. (The simplifier replaces " 
+;       :code "cos(%i*x)" " with " :code "cosh(x)" " before the routine is called. So this works "
+;       " with " :emref "quad_qags" " as well.)")
+;  :ex ("nintegrate( cos(%i*x), [x,0,1])" "[1.1752, 1.30474e-14, 21, no problems]")
+;  :ex ("sinh(1.0)" "1.1752")
+  :text ("Four quadpack calls are made to compute this example.")
   :ex ("nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf])" "[.424436 %i + .690194, 4.988325e-9, 300, no problems]")
   :text ("Return quadpack error code rather than error text.")
   :ex ("nintegrate(sin(sin(x)), [x,0,2], words->false)" "[1.24706, 1.38451e-14, 21, 0]")
@@ -290,17 +295,17 @@ supplied. This cannot be done with a single call to quadpack routines.")
   :text ("Trying to do the integral with too few sub-intervals fails.")
   :ex ("nintegrate(1/(1+x^2), [x, 0, inf], subint -> 2, epsrel -> 1e-10)"
        "[1.5708, 2.57779e-10, 45, too many sub-intervals]")
-  :text ("This integral is not handled well. Giving limits of " :code "minf" " and " :code "inf" " fails.")
-  :ex ("nintegrate(exp(%i*x*x),[x,-200,200],subint->10000)"
-       "[1.25170114 %i + 1.25804682, 2.507635982e-8, 760578, no problems]")
-  :ex ("integrate(exp(%i*x*x),x,minf,inf)" "sqrt(%pi)*(%i/sqrt(2)+1/sqrt(2))")
-  :ex ("rectform(float(%))" "1.25331414*%i+1.25331414")
+;  :text ("This integral is not handled well. Giving limits of " :code "minf" " and " :code "inf" " fails.")
+;  :ex ("nintegrate(exp(%i*x*x),[x,-200,200],subint->10000)"
+;       "[1.25170114 %i + 1.25804682, 2.507635982e-8, 760578, no problems]")
+;  :ex ("integrate(exp(%i*x*x),x,minf,inf)" "sqrt(%pi)*(%i/sqrt(2)+1/sqrt(2))")
+;  :ex ("rectform(float(%))" "1.25331414*%i+1.25331414")
   :text "Return a list of calls made to quadpack."
   :ex ("nintegrate(1/sqrt(abs(1-x)) * exp(-x),[x,0,inf], calls->true)"
        "[1.72821,1.87197e-10,660, no problems,
  [quad_qagi(%e^-x/sqrt(abs(x-1)),x,1.0,inf,epsrel = 1.e-8,epsabs = 0,limit = 200),
   quad_qagp(%e^-x/sqrt(abs(x-1)),x,0,1.0,[],epsrel = 1.e-8,epsabs = 0,limit = 200)]]")
   :text ("Here we must supply the roots of " :code "sin(x)" " within the range of integration.")
-  :ex ("nintegrate(1/(sqrt(sin(x))),[x,0,10], [%pi,2*%pi,3*%pi])"
+  :ex ("nintegrate(1/(sqrt(sin(x))),[x,0,10], points -> [%pi,2*%pi,3*%pi])"
     "[10.48823021716687 - 6.769465521725385 %i, 9.597496930524585e-8, 1596, no problems]"))))
                                                                    
