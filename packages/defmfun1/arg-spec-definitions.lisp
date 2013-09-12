@@ -167,7 +167,18 @@
                      (:non-neg-number "a non-negative number"
                       (and (numberp e) (>= e 0)))
                      (:pp :to-float "an expression that can be converted to a float"
-                          (let ((v (maxima::$float e))) (list (numberp v) v)))))
+                          (let ((v (maxima::$float e))) (list (numberp v) v)))
+                     (:pp :to-float-listof "a list of expressions each of which can be converted to a float"
+                          (if (not (maxima::$listp e))
+                              (list nil nil)
+                            (let ((res '())
+                                  (v)
+                                  (badflag nil))
+                              (dolist (e1 (cdr e))
+                                (setf v (maxima::$float e1))
+                                (when (not (numberp v)) (setf badflag t))
+                                (push v res))
+                              (list (not badflag) (maxima::mk-mlist (nreverse res))))))))
 
 
 

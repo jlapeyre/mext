@@ -176,9 +176,10 @@
 (defmfun1:set-mext-package "numerical")
 
 (defmfun1 ($nintegrate :doc :match) 
-  ((expr :thread) (varspec :list) 
-   &optional (singlist :to-float-listof) 
-   &opt ($sing :bool t) ($calls (:member '(nil t $short))) ($words t :bool) ($info :bool t) 
+  ((expr :thread) 
+   &rest (varspec :list)
+   &opt ($points :to-float-listof) 
+   ($find_sing :bool t) ($calls (:member '(nil t $short))) ($words t :bool) ($info :bool t) 
    ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number) ($epsrel 1d-8 :non-neg-number))
            ; ($method "automatic" :string)) only doing automatic for now.
  :desc 
@@ -197,17 +198,17 @@
   "If the option " :opt "info" " is false, then only the result of the integration "
   "is returned." 
   :par ""
-  "If the option " :opt "sing" " is false, then " :mref "nintegrate" " will not search "
+  "If the option " :opt "find_sing" " is false, then " :mref "nintegrate" " will not search "
   "for internal singularities, but user supplied singularities will still be used."
   :par ""
   "This function is not well tested and may give incorrect results."
   :par ""
   "See the Maxima documentation for quadpack.")
-  (let* ((vp (rest varspec)) (var (first vp))
+  (let* ((vp (rest (car varspec))) (var (first vp))
          (lo (second vp)) (hi (third vp))
          (quad-ops (list (nint::mkopt $epsrel) (nint::mkopt $epsabs)
                          (nint::mkopt2 $limit $subint)))
-         (more-opts (list $sing))
+         (more-opts (list $find_sing))
          (r-expr ($realpart expr))
          (i-expr ($imagpart expr)))
     (echeck-arg $nintegrate :or-symbol-subvar var)
@@ -222,8 +223,8 @@
 ;     (error ()
 ;            (defmfun1-error-return '$nonnumeric_integrand $nintegrate 
 ;              "The integrand does not evaluate to a number")))
-    (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi singlist quad-ops more-opts)))
-          (i-res (if (eq 0 i-expr) nil (nint::do-quad-pack i-expr var lo hi singlist quad-ops more-opts))))
+    (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi $points quad-ops more-opts)))
+          (i-res (if (eq 0 i-expr) nil (nint::do-quad-pack i-expr var lo hi $points quad-ops more-opts))))
       (when (consp i-res)
         (setf (second i-res) `((mtimes) $%i ,(second i-res))))
       (let ((res (nint::combine-real-imag-results r-res i-res)))
