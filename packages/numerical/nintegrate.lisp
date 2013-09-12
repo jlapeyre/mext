@@ -112,7 +112,6 @@
      (let ((n (third r)))
        (when (maxima::$numberp n)
          (let ((nn (maxima::$float n)))
-;           (format t "GOT ROOT ~a~%" nn)
 ;           (when (not (numberp nn))
 ;             (error 'integrand-not-numeric))
            (when (not
@@ -163,8 +162,6 @@
                   (if (consp int3)
                       (nint::combine-quad-results int1 int2 int3)
                     (nint::combine-quad-results int1 int2))))
-;                      (nint::combine-quad-results (nint::combine-quad-results int1 int2) int3)
-;                    (nint::combine-quad-results int1 int2))))
                (t
                 (quad-call :qagp expr var lo hi quad-ops singlist))))
         ((and (not (eq 'maxima::$minf lo)) (not (eq 'maxima::$inf hi)))
@@ -239,8 +236,8 @@
               (t (setf res (butlast res))))
         (cond ((consp res)
                (cond ($info
-                       (when $words (setf (nth 4 res) (nth (nth 4 res) nint::*quad-error-codes*)))
-                       res)
+                      (when $words (setf (nth 4 res) (nth (nth 4 res) nint::*quad-error-codes*)))
+                      res)
                      (t (second res))))
               (t nil))))))
 

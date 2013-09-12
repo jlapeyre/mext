@@ -306,6 +306,11 @@ cec(nintegrate(1/(sqrt(sin(x))),[x,0,10], [%pi,2*%pi,3*%pi]),
      10.48823021716687 - 6.769465521725385 * %i, 1e-7)$
 true;   
 
+
+/* Test  */
+ce(nintegrate('nintegrate(x*y,[x,0,1],info->false),[y,0,1]), 1/4, 1e-10);
+true$
+
 /* Test 49 */
 /* Example in Mma docs supplies singular points. We don't need to do this.
    nintegrate(sqrt(log(x-7)),[x,0,20], [7,8]);
