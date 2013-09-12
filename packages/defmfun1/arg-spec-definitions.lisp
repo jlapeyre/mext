@@ -57,6 +57,17 @@
                                           (every #'(lambda (x) (numberp x)) (cdr e))))
                      (:pp :to-float "an expression that can be converted to a float"
                           (let ((v (maxima::$float e))) (list (numberp v) v)))
+                     (:pp :to-float-listof "a list of expressions each of which can be converted to a float"
+                          (if (not (maxima::$listp e))
+                              (list nil nil)
+                            (let ((res '())
+                                  (v)
+                                  (badflag nil))
+                              (dolist (e1 (cdr e))
+                                (setf v (maxima::$float e1))
+                                (when (not (numberp v)) (setf badflag t))
+                                (push v res))
+                              (list (not badflag) (maxima::mk-mlist (nreverse res))))))
                      (:pp :to-or-float-inf-minf "inf, minf, or an expression that can be converted to a float"
                           (let ((v (maxima::$float e))) 
                             (list (or (numberp v) (member v '(maxima::$inf maxima::$minf))) v)))
