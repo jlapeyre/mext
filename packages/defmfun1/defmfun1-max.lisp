@@ -299,35 +299,30 @@
 ;; will not be bound. If have-match is true then the match_form attribute
 ;; may be overridden.
 
-(ddefmacro echeck-pp-arg (fname test arg &optional (have-match nil))
+(ddefmacro echeck-arg (fname test arg &optional (have-match nil))
  "check arg <arg> with <test> and signal error with pretty message if check fails.
   for use within the body of a defmfun1 function."
  (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
         (force-match-code (defmfun1::write-force-match-code have-match))
         (sa1 `(defmfun1::signal-arg-error ',test (list ,arg)
                 defmfun1-func-name defmfun1-func-call-args ,@force-match-code))
-        (sa `(,sa1 (return-from ,fname (cons (list ',fname) ,args)))))
-;   (format t "EXAPNDING PREPROCCES~%")
+        (sa `(,sa1 (return-from ,fname defmfun1-func-call))))
    (if (gethash test defmfun1::*arg-check-preprocess-table*)
-;       (progn (format t "GOT PREPROCCES~%")
        `(let ((res ,fc))
-;          `(unless ,fc ,@sa))
           (if (not (first res))
-              (progn ,@sa))
-            (setf ,arg (second res))))
-     (progn
-;       (format t "GOT NO PREPROCCES~%")
-       (format t "~a~%" `(unless ,fc ,@sa))
-     `(unless ,fc ,@sa)))))
+              (progn ,@sa)
+           (setf ,arg (second res))))
+     `(unless ,fc ,@sa))))
 
- (ddefmacro echeck-arg (fname test arg &optional have-match)
-  "check arg <arg> with <test> and signal error with pretty message if check fails.
-   for use within the body of a defmfun1 function."
-   `(unless (funcall ,(defmfun1::get-check-func test) ,arg)
-      (progn
-        (defmfun1::signal-arg-error ',test (list ,arg) defmfun1-func-name defmfun1-func-call-args
-          ,@(defmfun1::write-force-match-code have-match))
-        (return-from ,fname defmfun1-func-call))))
+; old version without ability to 'preprocess'
+; (ddefmacro echeck-arg (fname test arg &optional have-match)
+;  "check arg <arg> with <test> and signal error with pretty message if check fails.
+;   for use within the body of a defmfun1 function."
+;   `(unless (funcall ,(defmfun1::get-check-func test) ,arg)
+;      (progn
+;        (defmfun1::signal-arg-error ',test (list ,arg) defmfun1-func-name defmfun1-func-call-args
+;          ,@(defmfun1::write-force-match-code have-match))
+;        (return-from ,fname defmfun1-func-call))))
 
 (defmacro defmfun1-error-final (err-code mssg &optional have-match)
  "used at an exit point of a defmfun1 body. does not call return-from"

@@ -197,10 +197,10 @@ This was copied from maxima source init-cl.lisp.")
 (unless (boundp 'maxima::$mext_verbose)
 (defparameter maxima::$mext_verbose 0))
 
-(defun mext-message (mssg)
+(defun mext-message (level mssg)
   (when (or (eq t maxima::$mext_verbose)  
             (and (numberp maxima::$mext_verbose)
-                 (> maxima::$mext_verbose 0)))
+                 (>= maxima::$mext_verbose level)))
     (format t "~a~%" mssg)))
 
 ;(defun mext-message (mssg)
@@ -575,7 +575,7 @@ This was copied from maxima source init-cl.lisp.")
           (let ((is-loaded (gethash pack-name *loaded-dist-table*)))
             (if (or (not is-loaded) force)
                 (let ((file (mext-file-search pack-name)))
-                  (if file (progn (mext-message (format nil "Require loading ~a" file))
+                  (if file (progn (mext-message 1 (format nil "Require loading ~a" file))
                                   (maxima::$load file) 'maxima::$done)
                     (progn
                       (setf maxima::$error_code 'maxima::$mext_package_loader_not_found) ; not defined yet
@@ -741,14 +741,17 @@ This was copied from maxima source init-cl.lisp.")
           (mext-maxima::ensure-list file)
           (when (and file (find #\. (car file)))
               (format t "load_files_in_subdir: warning: dot in filename that should have no extension.~%"))
-          (let ((nfile (length file)))
-            (cond ((= 1 nfile)
-             ($load (namestring (mext:fmake-pathname :name (first file) :directory new-dir))))
-                  ((= 2 nfile)
-            ($load (namestring (mext:fmake-pathname
-                                      :name (first file) :type (second file) :directory new-dir))))
-                  (t
-                   (merror "File specification ~a is neither a string nor a list of one or two strings.~%")))))))
+          (let* ((nfile (length file))
+                 (lfile
+                  (cond ((= 1 nfile)
+                         (namestring (mext:fmake-pathname :name (first file) :directory new-dir)))
+                        ((= 2 nfile)
+                         (namestring (mext:fmake-pathname
+                                       :name (first file) :type (second file) :directory new-dir)))
+                        (t
+                         (merror "File specification ~a is neither a string nor a list of one or two strings.~%")))))
+            (mext::mext-message 2 (format nil " loading ~a" lfile))
+            ($load lfile)))))
 
 ;; satisfy a mext_require call
 ;; We could use verbose or debugging option
