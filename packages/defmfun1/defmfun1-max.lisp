@@ -157,7 +157,7 @@
                              (t
                               (defmfun1-error-return '$defmfun1_invalid_opt_name ,name
                                 (format nil (intl:gettext "~a does not accept the option `~a'")
-                                        ($sconcat ',name) ($sconcat var))))))))))
+                                        ($sconcat ',name) ($sconcat var)) have-match))))))))
 ;                              (merror1 '$defmfun1_invalid_opt_name (intl:gettext "~a ~a does not accept the option `~a'.~%")
 ;                                         (defmfun1::err-prefix ',name) ($sconcat ',name) ($sconcat var) ))))))))
 
