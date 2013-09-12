@@ -310,28 +310,28 @@ cec(nintegrate(1/(sqrt(sin(x))),[x,0,10], points->[%pi,2*%pi,3*%pi]),
 true;   
 
 
-/* Test  */
+/* Test 49 */
 ce(nintegrate('nintegrate(x*y,[x,0,1],info->false),[y,0,1]), 1/4, 1e-10);
 true$
 
 /* Need both quotes here */
-/* Test  */
+/* Test 50 */
 ce(nintegrate('first('nintegrate(x*y,[x,0,1])),[y,0,1]),  1/4, 1e-10);
 true$
 
-/* Test  */
+/* Test 51 */
 ce(nintegrate(x*y,[x,0,1],[y,0,1]), 1/4, 1e-10);
 true$
 
-/* Test  */
+/* Test 52 */
 ce(nintegrate(x*y*z,[x,0,1],[y,0,1],[z,0,1]), 1/8, 1e-10);
 true$
 
-/* Test  */
+/* Test 53 */
 ce(nintegrate(x*1/(sqrt(y)),[x,0,1],[y,0,1]), 1, 1e-10);
 true$
 
-/* Test  */
+/* Test 54 */
 cec(nintegrate(x*1/(sqrt(y-1)),[x,0,1],[y,0,1]), -1 * %i, 1e-10);
 true$
 
@@ -341,7 +341,7 @@ cec(nintegrate(x*1/(sqrt(y-1)),[x,0,1],[y,0,2]), -1 * %i, 1e-10);
 true$
 */
 
-/* Test 49 */
+/* Test 55 */
 /* Example in Mma docs supplies singular points. We don't need to do this.
    nintegrate(sqrt(log(x-7)),[x,0,20], [7,8]);
    NIntegrate[Sqrt[Log[x - 7]], {x, 0, 20}, Exclusions -> {7, 8}]    
@@ -360,7 +360,7 @@ true;
   In fact quad_qawo(1, x, 1, 10^4, 1, cos) works well. Faster, with fewer intervals
   and no error. We could try to detect this somehow.
 */     
-/* Test 50 */
+/* Test 56 */
 cec(nintegrate(exp(%i*x),[x,1,10^4], subint -> 3000),rectform(float(integrate(exp(%i*x),x,1,10^4))),1e-12)$
 true;
 
@@ -375,7 +375,7 @@ true;
 
 */
 
-/* Test 51 */
+/* Test 57 */
 ce(nintegrate(1/sqrt(x) + cos(x), [x,0,5000], subint->1000),
    float(integrate(1/sqrt(x) + cos(x), x,0,5000)), 1e-12)$
 true; 
@@ -397,12 +397,12 @@ and then 1 to 5000.
  
 */
 
-/* Test 52 */
+/* Test 58 */
 ce(nintegrate(sin(x)/sqrt(x),[x,0,5000],subint->1000),rectform(float(integrate(sin(x)/sqrt(x),x,0,5000))),
     1e-7)$
 true;  
 
-/* Test 53 */
+/* Test 59 */
 kill(ce)$
 done;
 

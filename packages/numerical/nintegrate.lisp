@@ -187,11 +187,6 @@
   :arg "varspec" " as ["  :argcomma "var" :argcomma "lo" :arg "hi" "]."
   " For higher dimensional integrals, supply further " :argdot "varspecs"
   :par ""
-  :mref "nintegrate" 
-  " automatically chooses and combines " :emrefcomma "qags" :emrefcomma "qagp" 
-  " and " :emrefdot "qagi"  " Some support for complex numbers is implemented." 
-  " Some integrable singularities are found automatically. "
-  :par ""
   " If the option " :opt "call" " is true, then calls made to quadpack are "
   " also returned in a list. If " :opt "call" " is " :varcomma "short" " then only the "
   " name of the quadpack routine is included."
@@ -203,9 +198,8 @@
   "If the option " :opt "find_sing" " is false, then " :mref "nintegrate" " will not search "
   "for internal singularities, but user supplied singularities will still be used."
   :par ""
-  "This function is not well tested and may give incorrect results."
-  :par ""
-  "See the Maxima documentation for quadpack.")
+  "This function is not well tested and may give incorrect results.")
+
   (when varspecs
     ; can't handle some complex results, maybe need to do real and imag here already
     (let* ((call defmfun1-func-call)
@@ -264,6 +258,23 @@
 
 (max-doc:see-also "nintegrate" '("quad_qags" "quad_qagi" "quad_qagp"))
 
+(max-doc:implementation "nintegrate"
+ '(
+  :mref "nintegrate" 
+  " automatically chooses and combines " :emrefcomma "qags" :emrefcomma "qagp" 
+  " and " :emrefdot "qagi"  " " :emref "realpart" " and " :emref "imagpart"
+  " are used to get two real integrands, which are then integrated separately. " 
+  :emref "solve" " is
+  used to try to find singularities, and the results are either sent to "
+  :emrefcomma "qagp" " or used to call quadpack routines on intervals. Multi-dimensional
+  integrals are implemented simply by nesting calls to " :mrefcomma "nintegrate"
+  " and thus, are not efficient."
+  :par ""
+  "Things that could be added are: log, etc. singularities; to_poly_solve for
+   singularities; faster nesting for multi-dimensional integrals; better
+   routines for one and multi-dimensional integrals; symbolic manipulation of
+   integrand; use of remaining quadpack routines."))
+
 (examples:clear-add-example 
  "nintegrate"
  '(:code-text
@@ -285,8 +296,11 @@
 ;       " with " :emref "quad_qags" " as well.)")
 ;  :ex ("nintegrate( cos(%i*x), [x,0,1])" "[1.1752, 1.30474e-14, 21, no problems]")
 ;  :ex ("sinh(1.0)" "1.1752")
-  :text ("Four quadpack calls are made to compute this example.")
-  :ex ("nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf])" "[.424436 %i + .690194, 4.988325e-9, 300, no problems]")
+  :text ("Four quadpack calls are needed to compute this example.")
+;  :ex ("nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf])" "[.424436 %i + .690194, 4.988325e-9, 300, no problems]")
+  :ex ("nintegrate(1/sqrt(1-x)*exp(-x),[x,0,inf], calls->short)"
+       "[1.07616-.652049*%i,1.87197e-10,1026,\"no problems\",
+        [quad_qagi,quad_qagp,quad_qagi,quad_qagp]]")
   :text ("Return quadpack error code rather than error text.")
   :ex ("nintegrate(sin(sin(x)), [x,0,2], words->false)" "[1.24706, 1.38451e-14, 21, 0]")
   :text ("Request a relative error.")
@@ -307,5 +321,5 @@
   quad_qagp(%e^-x/sqrt(abs(x-1)),x,0,1.0,[],epsrel = 1.e-8,epsabs = 0,limit = 200)]]")
   :text ("Here we must supply the roots of " :code "sin(x)" " within the range of integration.")
   :ex ("nintegrate(1/(sqrt(sin(x))),[x,0,10], points -> [%pi,2*%pi,3*%pi])"
-    "[10.48823021716687 - 6.769465521725385 %i, 9.597496930524585e-8, 1596, no problems]"))))
+    "[10.4882-6.76947*%i,9.597497e-8,1596,\"no problems\"]"))))
                                                                    
