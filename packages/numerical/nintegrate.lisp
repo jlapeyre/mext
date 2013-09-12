@@ -176,8 +176,8 @@
 (defmfun1:set-mext-package "numerical")
 
 (defmfun1 ($nintegrate :doc :match) 
-  ((expr :thread) 
-   &rest (varspec :list)
+  ((expr :thread) (varspec :list)
+   &rest (varspecs :list)
    &opt ($points :to-float-listof) 
    ($find_sing :bool t) ($calls (:member '(nil t $short))) ($words t :bool) ($info :bool t) 
    ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number) ($epsrel 1d-8 :non-neg-number))
@@ -204,7 +204,23 @@
   "This function is not well tested and may give incorrect results."
   :par ""
   "See the Maxima documentation for quadpack.")
-  (let* ((vp (rest (car varspec))) (var (first vp))
+  (when varspecs
+    (let* ((call defmfun1-func-call)
+           (new-call)
+           (new-integrand)
+           (nvp (length varspecs))
+           (opts (nthcdr (+ 3 nvp) call))
+           (new-varspec (pop varspecs)))
+      (setf new-integrand (append (list '(%nintegrate) expr varspec) varspecs opts
+                                    (list (rule-opt '$info nil))))    ; remove fourth, yuck!
+      (setf new-call (append (list new-integrand new-varspec) opts))
+;      (format t "Orig ~a~%" call)
+;      (format t "opts ~a~%" defmfun1-opts)
+;      (format t "New integrand ~a~%" ($sconcat new-integrand))
+;      (format t "~a~%" ($sconcat new-call))
+;      (format t "~a~%" new-call)
+      (return-from $nintegrate (apply '$nintegrate new-call))))
+  (let* ((vp (rest varspec)) (var (first vp))
          (lo (second vp)) (hi (third vp))
          (quad-ops (list (nint::mkopt $epsrel) (nint::mkopt $epsabs)
                          (nint::mkopt2 $limit $subint)))
@@ -214,9 +230,10 @@
     (echeck-arg $nintegrate :or-symbol-subvar var)
     (echeck-arg $nintegrate :to-or-float-minf lo)
     (echeck-arg $nintegrate :to-or-float-inf  hi)
-    (when (and (not (numberp ($float expr))) (freeof var expr))
-      (defmfun1-error-return '$expr_freeof_var $nintegrate 
-        "The integrand is not a number and does not depend on the variable of integration" :match))
+; Following prevents some multi-dim integrals from working
+;    (when (and (not (numberp ($float expr))) (freeof var expr))
+;      (defmfun1-error-return '$expr_freeof_var $nintegrate 
+;        "The integrand is not a number and does not depend on the variable of integration" :match))
 ;    (handler-case
 ;     (let ((f (get-integrand expr var))))
 ;       (format t "Integrand ok~%"))

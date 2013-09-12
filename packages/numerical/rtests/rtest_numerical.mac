@@ -33,9 +33,12 @@ true;
 (errcatch(nintegrate(x,[3,1,2])), error_code);
 'chk_or_symbol_subvar$
 
-/* Test 7 */
+/* Can't use this with multidim integrals */
+/* xx Test  */
+/*
 (errcatch(nintegrate(x,[p,1,2])), error_code);
 'expr_freeof_var$
+*/
 
 /* Need this test */
 /* Test 7 */
@@ -310,6 +313,20 @@ true;
 /* Test  */
 ce(nintegrate('nintegrate(x*y,[x,0,1],info->false),[y,0,1]), 1/4, 1e-10);
 true$
+
+/* Need both quotes here */
+/* Test  */
+ce(nintegrate('first('nintegrate(x*y,[x,0,1])),[y,0,1]),  1/4, 1e-10);
+true$
+
+/* Test  */
+ce(nintegrate(x*y,[x,0,1],[y,0,1]), 1/4, 1e-10);
+true$
+
+/* Test  */
+ce(nintegrate(x*y*z,[x,0,1],[y,0,1],[z,0,1]), 1/8, 1e-10);
+true$
+
 
 /* Test 49 */
 /* Example in Mma docs supplies singular points. We don't need to do this.
