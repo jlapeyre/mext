@@ -458,23 +458,28 @@
        (setf (aref ar i) (,call-type f (aref are i))))
      a))
 
+; this is the definition of format1
+; There is a defmfun1 interface in mext_defmfun1
+;(defmfun format1 (e)
+;  (cond (($listp e) e)
+;	($inflag (specrepcheck e))
+;	(t (nformat e))))
 ;; Note: stuck format1 in here in order to pass rtests. There is
 ;; no way from within maxima to see that the expression is not
-;; what is printed. it is a reformatter or simplifier or some
-;; other monstrosity.
+;; what is printed.
 (defmfun1 ($imap :doc) (f (expr :non-atom) &opt ($compile t :bool))
-  :desc ("Maps functions of a single argument. I guess that " :emref "map" " handles more
-   types of input without error. But " :mref "imap" " can be much faster for some inputs."
-    " This is especially true if a lambda function is passed to imap, as it can be compiled.")
+  :desc 
+  ("Maps functions of a single argument. I guess that " :emref "map" " handles more
+   types of input without error. But " :mref "imap" " is much faster for many inputs."
+   " This is especially true if a lambda function is passed to imap, as it can be compiled.")
   (option-compile-lambda f)
   (let (($distribute_over nil))
     (if (aex-p expr)
         (if (functionp f) (max-list-imap-aex-call funcall) (max-list-imap-aex-call mfuncall))
       (if (and (symbolp f) (eq 'direct (get f 'call-mode)))
-          (progn ;;(format t "******* funcall~%")
-            (max-list-imap-call funcall))
-            (if (functionp f) (progn  ;; (format t "******* funcall~%")
-                                (format1 (max-list-imap-call funcall)))
+          (max-list-imap-call funcall)
+            (if (functionp f)
+                (format1 (max-list-imap-call funcall))
               (format1 (max-list-imap-call mfuncall)))))))
 
 (examples::clear-examples "imap")

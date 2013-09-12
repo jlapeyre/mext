@@ -34,7 +34,8 @@
 ;; defmfun1-func-name is the name of the function
 ;; defmfun1-func-call is the noun form of the function call
 ;; defmfun1-func-call-args is the same, but just args
-;; For efficiency, these should perhaps only be optionally saved, if requested.
+;; For efficiency, these should perhaps only be optionally saved, if requested
+;; !!! yes only if neccessary
 ;; Or better make a macro that only writes them if needed.
 ;; Also, we don't need all three of these. It could be rewritten.
 ;;

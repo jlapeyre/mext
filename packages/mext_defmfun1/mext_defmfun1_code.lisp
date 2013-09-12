@@ -307,6 +307,12 @@ This is from wxmaxima
   (mext::mext-compile-file input-file bin_file $tr_file))
   
 
+(defmfun1 ($format1 :doc) (expr)
+  (format1 expr))
+
+(defmfun1 ($nformat :doc) (expr)
+  (nformat expr))
+
 (max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear" 
                           "mext_list_package" "mext_find_package"))
 
