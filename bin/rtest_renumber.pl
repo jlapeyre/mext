@@ -171,7 +171,7 @@ sub rewrite_one_rtest {
         if ( /\s*\/\*\s*Test\s*(\d*)\s*\*\/\s*/ ) {
             my $old_number = $1;
             $count ++;
-            $renumbered_flag = 1 unless $old_number == $count;
+            $renumbered_flag = 1 unless $old_number and $old_number == $count;
             $outstr .= "/* Test $count */\n";
         }
         else {
