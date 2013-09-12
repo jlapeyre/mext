@@ -6,6 +6,11 @@
 # ./install_mext.sh maxima
 # where maxima is your maxima executable.
 #
+# Or:
+# ./install_mext.sh maxima level
+# where level is 0 through 5, with each level building more packages.
+# level 0 builds only mext.
+#
 # Some of the packages in the list below, particularly the
 # latter ones, may fail to build on some systems.
 
@@ -17,11 +22,24 @@ if [ $# -eq 0 ]
     maxima=maxima
 fi
 
+if [ $# -eq 2 ]
+  then
+    level=$2;
+  else
+    level=5;
+fi
+
 echo Building mext with $maxima
+echo Building through level $level;
 
 topdir=`pwd`
 
 cd ./packages/mext_system; $maxima -b ibuild.mac; cd ..
+
+if [ $level -eq 0 ]
+  then
+  exit;
+fi
 
 # We have to put the full pathname, or else maxima
 # can't find the files. Typing the command at the
@@ -31,26 +49,62 @@ build_one_package () {
  $maxima -b  $topdir/packages/$1/ibuild.mac
 }
 
-packages="
-defmfun1 maxdoc mext_defmfun1 runtime aex lists_aex
-discrete_aex numerical test_defmfun1
-alt_eigen
-pw
-circuits
-coma
-finance
-implicit
-to_poly_mext
-fourier_elim_mext
-tpsolve
-grobner_mext
-bernstein
-quicklisp
-store
-"
+packages1="defmfun1 maxdoc mext_defmfun1"
+
+packages2="
+test_defmfun1 runtime aex lists_aex
+discrete_aex numerical"
+
+packages3="
+alt_eigen to_poly_mext fourier_elim_mext to_poly_mext 
+tpsolve grobner_mext"
+
+packages4="
+pw circuits coma finance implicit bernstein"
+
+packages5="quicklisp store"
  
-for package in $packages
+for package in $packages1
 do
    build_one_package $package
 done
+if [ $level -eq 1 ]
+  then
+  exit;
+fi
 
+for package in $packages2
+do
+   build_one_package $package
+done
+if [ $level -eq 2 ]
+  then
+  exit;
+fi
+
+for package in $packages3
+do
+   build_one_package $package
+done
+if [ $level -eq 3 ]
+  then
+  exit;
+fi
+
+for package in $packages4
+do
+   build_one_package $package
+done
+if [ $level -eq 4 ]
+  then
+  exit;
+fi
+
+for package in $packages5
+do
+   build_one_package $package
+done
+if [ $level -eq 5 ]
+  then
+  exit;
+fi
