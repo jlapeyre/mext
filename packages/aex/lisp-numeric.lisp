@@ -4,9 +4,18 @@
 (defmfun1:set-mext-package "aex")
 (defmfun1:set-file-and-package "lisp-numeric.lisp" "aex")
 
-;;; Checking number of arguments appears not to work. Reviewing
-;;; this, I can't see what the advantage is of n_cos over ?cos,
-;;; especially since arg checking is broken.
+;;; These are faster in
+;;; timing(imap(n_cos,lrange(10^6)),0) than
+;;; ?cos. Maybe because ?cos is interpreted each time it is
+;;; called on the list. Same holds for map.
+;;; The following is even faster!
+;;; imap(lambda([x],n_cos(x)),lrange(10^6))
+;;; It appears these functions are not compiled! compiling on the command
+;;; line speeds them up!
+;;; Arg checking works somewhat.
+;;; 
+;;; This could be rewritten without using eval, and
+;;; the functions would probably be compiled
 
 (defmacro mk-numeric-lisp-function ( (lisp-name &optional (n 1)) )
   (let* ((max-name-string (concatenate 'string "$N_" (symbol-name lisp-name)))
@@ -27,11 +36,12 @@
          ,(if (eq n 'opt2)
               `(if y (,lisp-name x y) (,lisp-name x))
               `(,lisp-name ,@(cadr arg-code))))
-       (putprop ',max-name  '$float 'function-mode) ; what is this for ?
+       (putprop ',max-name  '$float 'function-mode) ; tells translator what arg type this takes.
        (max-doc::add-doc-entry (list  :name ,max-print-name
    :contents ,`(format nil "~a calls the lisp numeric function ~a. This function
-  accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). ~a
-  may be considerably faster in some code, particularly untranslated code." ,max-print-name ,($sconcat lisp-name) ,max-print-name))))))
+   accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). ~a
+   may be considerably faster in some code, particularly untranslated code." 
+   ,max-print-name ,($sconcat lisp-name) ,max-print-name))))))
 
 (loop for x in '((cl::cos) (cl::sin) (cl::tan) (cl::log opt2) (cl::sqrt) (cl::expt 2)
                  (cl::atan) (cl::acos) (cl::asin) (cl::exp) (cl::abs) (cl::sinh)

@@ -439,7 +439,7 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmacro max-list::imap-call ( call-type)
+(defmacro max-list-imap-call ( call-type)
 ;;  (when (eq 'direct (car call-type)) (setf call-type nil))
   `(let* ((head (car expr))
          (expr (cdr expr))
@@ -449,7 +449,7 @@
         ((null e) (cons head (nreverse res)))
       (push (,call-type f el) res))))
 
-(defmacro max-list::imap-aex-call (call-type)
+(defmacro max-list-imap-aex-call (call-type)
   `(let* ((a (aex-copy-new-n expr))
           (ar (aex-arr a))
           (are (aex-arr expr)))
@@ -458,19 +458,24 @@
        (setf (aref ar i) (,call-type f (aref are i))))
      a))
 
+;; Note: stuck format1 in here in order to pass rtests. There is
+;; no way from within maxima to see that the expression is not
+;; what is printed. it is a reformatter or simplifier or some
+;; other monstrosity.
 (defmfun1 ($imap :doc) (f (expr :non-atom) &opt ($compile t :bool))
   :desc ("Maps functions of a single argument. I guess that " :emref "map" " handles more
    types of input without error. But " :mref "imap" " can be much faster for some inputs."
     " This is especially true if a lambda function is passed to imap, as it can be compiled.")
   (option-compile-lambda f)
-  (if (aex-p expr)
-        (if (functionp f) (max-list::imap-aex-call funcall) (max-list::imap-aex-call mfuncall))
-        (if (and (symbolp f) (eq 'direct (get f 'call-mode)))
-            (progn ;;(format t "******* funcall~%")
-              (max-list::imap-call funcall))
+  (let (($distribute_over nil))
+    (if (aex-p expr)
+        (if (functionp f) (max-list-imap-aex-call funcall) (max-list-imap-aex-call mfuncall))
+      (if (and (symbolp f) (eq 'direct (get f 'call-mode)))
+          (progn ;;(format t "******* funcall~%")
+            (max-list-imap-call funcall))
             (if (functionp f) (progn  ;; (format t "******* funcall~%")
-                                (max-list::imap-call funcall))
-                (max-list::imap-call mfuncall)))))
+                                (format1 (max-list-imap-call funcall)))
+              (format1 (max-list-imap-call mfuncall)))))))
 
 (examples::clear-examples "imap")
 (examples::add-example "imap"

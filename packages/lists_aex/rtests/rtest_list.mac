@@ -217,6 +217,30 @@ lex ( iargs( e ) );
 (kill(a), a:[1,2,3], a : nreverse(a) );
 [3,2,1]$
 
+/* quote is needed to prevent distributing over a list, no idea
+   why. on command line, it is not needed. */
+/* Test 51 */
+imap(f,'(x+a*y+b*z));
+f(b*z)+f(a*y)+f(x)$
+
+/* fails unless compile is false */
+/* Test 52 */
+is( imap(lambda([u],partfrac(u,x)),x+1/(x^3+4*x^2+5*x+2), compile->false)
+    - (1/(x+2)-1/(x+1)+1/(x+1)^2+x) = 0);
+true$  
+
+/* Test 53 */
+/* Simplifier or formatting insanity. using map gives true, probably because it does a lot of reformatting. */
+imap(ratsimp, x/(x^2+x)+(y^2+y)/y);
+1/(1+x)+1+y$
+
+
+/* Test 54 xx */
+/* some kind of simplifer crap. this actually works.
+is( imap(cos,lrange(0,4*%pi,%pi/2,ot->ar)) = <<1,0,-1,0,1,0,-1,0,1>>);
+true$  
+*/
+
 /* no recursive call */
 /* xx Test */
 /*
@@ -249,6 +273,6 @@ mapall(log,[x,y,z]);
 'chk_map_function$
 */
 
-/* Test 51 */
+/* Test 54 */
 (kill(x,a,e),0);
 0$
