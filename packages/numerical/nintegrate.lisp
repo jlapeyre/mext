@@ -97,18 +97,24 @@
 ;; TODO:
 ;; use to_poly_solve to get zeroes of sin, cos, between limits
 ;; look for logs and solve for arg = 0.
-(maxima::ddefun list-fp-singularities (expr lo hi)
+;; If float(root) is not a float, then the integrand is bad.
+;; We need to signal an error that is handled in nintegrate itself which
+;; can give a proper defmfun1 error.
+(maxima::ddefun list-fp-singularities (expr var lo hi)
  "Try to return a Maxima list of floating point numbers representing
  the singularities between `lo' and `hi' (excluding these endpoints)
  in `expr'. This, of course, can't be done in general.  This routine
  just calls `solve' and has some bugs. If no satisfying numbers are
  found, return `nil'."
- (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1))))
+ (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1) ,var)))
        (nroots))
    (dolist (r (cdr roots))
      (let ((n (third r)))
        (when (maxima::$numberp n)
          (let ((nn (maxima::$float n)))
+;           (format t "GOT ROOT ~a~%" nn)
+;           (when (not (numberp nn))
+;             (error 'integrand-not-numeric))
            (when (not
                   (or (and (maxima::$numberp hi) (> 1e-10 (- hi nn)))
                       (and (maxima::$numberp lo) (> 1e-10 (- nn lo)))))
@@ -121,7 +127,7 @@
 (defun do-quad-pack (expr var lo hi singlist quad-ops more-opts &aux sing)
   (setf sing (first more-opts))
   (when (and sing (not singlist))
-    (setf singlist (list-fp-singularities expr lo hi)))
+    (setf singlist (list-fp-singularities expr var lo hi)))
   (cond ((and singlist (> (length singlist) 1))
          (cond ((and (eq 'maxima::$minf lo) (not (eq 'maxima::$inf hi)))
                 (let* ((nsinglist (cdr singlist))
@@ -210,6 +216,15 @@
     (echeck-arg $nintegrate :or-symbol-subvar var)
     (echeck-arg $nintegrate :to-or-float-minf  lo)
     (echeck-arg $nintegrate :to-or-float-inf  hi)
+    (when (freeof var expr)
+      (defmfun1-error-return '$expr_freeof_var $nintegrate 
+        "The integrand does not contain the variable of integration"))
+;    (handler-case
+;     (let ((f (get-integrand expr var))))
+;       (format t "Integrand ok~%"))
+;     (error ()
+;            (defmfun1-error-return '$nonnumeric_integrand $nintegrate 
+;              "The integrand does not evaluate to a number")))
     (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi singlist quad-ops more-opts)))
           (i-res (if (eq 0 i-expr) nil (nint::do-quad-pack i-expr var lo hi singlist quad-ops more-opts))))
       (when (consp i-res)

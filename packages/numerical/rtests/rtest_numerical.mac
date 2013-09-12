@@ -34,6 +34,10 @@ chk_to_or_float_inf$
 (errcatch(nintegrate(x,[3,1,2])), error_code);
 chk_or_symbol_subvar$
 
+/* Test */
+(errcatch(nintegrate(x,[p,1,2])), error_code);
+expr_freeof_var$
+
 /* Test 2 */
 cel(nintegrate([x,x^2,x^3], [x,0,1], info->false), [1/2,1/3,1/4], 1e-9);
 true$
