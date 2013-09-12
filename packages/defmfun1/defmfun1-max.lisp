@@ -50,6 +50,7 @@
    (defmfun1-func-name ',name) ; save this name for echeck-arg macro below. Wasteful as most funcs never use it.
    (defmfun1-func-call (cons (list ',name) ,args)) ; the input form
    (defmfun1-func-call-args ,args)
+;   (defmfun1-opts) don't need these yet, but maybe later
    ,@(loop for n in all-args collect ; write default bindings for req and &optional
            (if (null (car n))
                (merror1 '$defmfun1_null_arg_name (intl:gettext "defmfun1: null argument name in definition of ~a.
@@ -251,6 +252,7 @@
                (,@(if (eq defun-type 'defmspec ) `(block ,name)  `(progn)) ; make a block for return-from
                 ,@(defmfun1-write-threading name args arg-directives)
         ; write-opt-assignments first so have-match in effect during write-assignments
+        ;        (setf defmfun1-opts ,opt-args) these have lost the Rule, don't need them yet
                 ,@(defmfun1-write-opt-assignments name args opt-args opt supplied-p-hash reqo-spec have-match)
                 ,(defmfun1-write-assignments name args reqo restarg nargs ; assign required args
                    supplied-p-hash reqo-spec pp-spec-h have-match count-args)
