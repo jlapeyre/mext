@@ -154,8 +154,12 @@
                                              (push
                                               (defmfun1::check-and-error-option tst name opt-name opt-var args have-match)
                                               res))) res1))
-                             (t (merror1 '$defmfun1_invalid_opt_name (intl:gettext "~a ~a does not accept the option `~a'.~%")
-                                         (defmfun1::err-prefix ',name) ($sconcat ',name) ($sconcat var) ))))))))
+                             (t
+                              (defmfun1-error-return '$defmfun1_invalid_opt_name ,name
+                                (format nil (intl:gettext "~a does not accept the option `~a'")
+                                        ($sconcat ',name) ($sconcat var))))))))))
+;                              (merror1 '$defmfun1_invalid_opt_name (intl:gettext "~a ~a does not accept the option `~a'.~%")
+;                                         (defmfun1::err-prefix ',name) ($sconcat ',name) ($sconcat var) ))))))))
 
 (defun defmfun1-write-rest-assignments (name args rest reqo-spec have-match)
   (if rest
