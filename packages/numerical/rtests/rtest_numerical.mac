@@ -13,35 +13,51 @@ kill(cec), cec(x,y,eps) := is(abs(realpart(first(x))-realpart(y))
       + abs(imagpart(first(x))-imagpart(y)) < eps), true)$
 true;
 
-/* Test */
-(errcatch(nintegrate(x,[x,a,b])), error_code);
-chk_to_or_float_minf$
-
-/* Test */
-(errcatch(nintegrate(x,[x,inf,b])), error_code);
-chk_to_or_float_minf$
-
-/* Test */
-(errcatch(nintegrate(x,[x,3,b])), error_code);
-chk_to_or_float_inf$
-
-/* Test */
-(errcatch(nintegrate(x,[x,3,minf])), error_code);
-chk_to_or_float_inf$
-
-
-/* Test */
-(errcatch(nintegrate(x,[3,1,2])), error_code);
-chk_or_symbol_subvar$
-
-/* Test */
-(errcatch(nintegrate(x,[p,1,2])), error_code);
-expr_freeof_var$
-
 /* Test 2 */
-cel(nintegrate([x,x^2,x^3], [x,0,1], info->false), [1/2,1/3,1/4], 1e-9);
+(errcatch(nintegrate(x,[x,a,b])), error_code);
+'chk_to_or_float_minf$
+
+/* Test 3 */
+(errcatch(nintegrate(x,[x,inf,b])), error_code);
+'chk_to_or_float_minf$
+
+/* Test 4 */
+(errcatch(nintegrate(x,[x,3,b])), error_code);
+'chk_to_or_float_inf$
+
+/* Test 5 */
+(errcatch(nintegrate(x,[x,3,minf])), error_code);
+'chk_to_or_float_inf$
+
+/* Test 6 */
+(errcatch(nintegrate(x,[3,1,2])), error_code);
+'chk_or_symbol_subvar$
+
+/* Test 7 */
+(errcatch(nintegrate(x,[p,1,2])), error_code);
+'expr_freeof_var$
+
+/* Need this test */
+/* Test 7 */
+ce(nintegrate(3,[p,1,2]), 3, 1e-10);
 true$
 
+/* Test 8 */
+(errcatch(nintegrate(x,[x,1,3],[a])), error_code);
+'chk_to_float_listof$
+
+/* Test 9 */
+(errcatch(nintegrate(x,[x,1,3],3)), error_code);
+'chk_to_float_listof$
+
+/* Test 10 */
+ce(nintegrate(x,[x,1,3],[%e]), 4, 1e-9);
+true$
+
+/* Test 11 */
+cel(nintegrate([x,x^2,x^3], [x,0,1], info->false), [1/2,1/3,1/4], 1e-9);
+true$
+  
 /*
  Calls qags, because singularities are not found. We need to look
  for zeroes of log.
@@ -56,73 +72,73 @@ true$
  (-108 + 4*Log[2] + 77*Log[7] + 80*Log[8])/4
 
 */
-/* Test 3 */
+/* Test 12 */
 ce(nintegrate(x^3*log(abs((x^2-1)*(x^2-2))),[x,0,3]),
  (-108 + 4*log(2) + 77*log(7) + 80*log(8))/4 , 1d-7)$
 true;
 
 /* Calls qagp */
-/* Test 4 */
+/* Test 13 */
 ce(nintegrate(x^3*log(abs((x^2-1)*(x^2-2))),[x,0,3],[1,sqrt(2)]),52.7407483, 1d-7)$
 true;
 
-/* Test 5 */
+/* Test 14 */
 ce(nintegrate(x^2*exp(-4*x), [x, 0, inf]),0.03125, 1d-10)$
 true;
 
-/* Test 6 */
+/* Test 15 */
 ce(nintegrate(sin(sin(x)), [x, 0, 2]), 1.247056058, 1d-8)$
 true;
 
-/* Test 7 */
+/* Test 16 */
 ce(nintegrate(exp(exp(-x)), [x, 0, 5]), 6.31115283, 1e-8)$
 true;
 
-/* Test 8 */
+/* Test 17 */
 ce(nintegrate(x^x, [x, 1, 5]),1241.03328404, 1e-8)$
 true;
 
-/* Test 9 */
+/* Test 18 */
 ce(nintegrate(1/(1+x^2), [x, 0, inf]), 1.570796326794897, 1d-9)$
 true;
 
-/* Test 10 */
+/* Test 19 */
 /* No single quadpack routine will do this. */
 ce(nintegrate(1/sqrt(abs(1-x)) * exp(-x),[x,0,inf], [1] ), 1.728208345998, 1d-9)$
 true;
 
-/* Test 11 */
+/* Test 20 */
 /* Test that singularties are found and are included or not depending on limits. */
 /* include x=1 */
 ce(nintegrate(1/sqrt(abs(1-x)) * exp(-x),[x,0,inf]), 1.728208345998, 1d-9)$
 true;
 
-/* Test 12 */
+/* Test 21 */
 /* Find, but don't use x=1 */
 ce(nintegrate(1/sqrt(abs(1-x)) * exp(x),[x,minf,0]),0.757872156141312, 1e-7)$
 true;
 
-/* Test 13 */
+/* Test 22 */
 /* Find and use x=-1 */
 ce(nintegrate(1/sqrt(abs(1+x)) * exp(x),[x,minf,0]),1.728208345998552, 1e-7)$
 true;
 
-/* Test 14 */
+/* Test 23 */
 /* Find, but don't use x=-1 */
 ce(nintegrate(1/sqrt(abs(1+x)) * exp(-x),[x,0,inf]),0.757872156141312, 1e-7)$
 true;
 
-/* Test 15 */
+/* Test 24 */
 /* Two singularities. outside of region */
 ce(nintegrate( 1/((x-3)*(x-6)) , [x,4,5]), -2*log(2)/3, 1e-10)$
 true;
 
-/* Test 16 */
+/* Test 25 */
 /* The simplifier removes %i before the routine is called */
 ce(nintegrate( cos(%i * x), [x,0,1]), sinh(1.0), 1d-11)$
 true;
 
-/* Test 17 */
+/* Test 26 */
 /* The routine does two real integrals for this example. */
 cec(nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf]), .4244363835020222 * %i + .6901942235215709, 1e-8)$
 true;
@@ -134,40 +150,40 @@ true;
   integrate( %i * exp(%i*x)/(1/2 + exp(%i*x)), x,0,2*%pi) --> 0
   
 */
-/* Test 18 */
+/* Test 27 */
 cec(nintegrate( %i * exp(%i*x)/(1/2 + exp(%i*x)), [x,0,2*%pi]), %i * 2 * %pi, 1e-8)$
 true;
 
-/* Test 19 */
+/* Test 28 */
 /* Singularity at end point */
 ce(nintegrate(x^(1/2)*log(1/x), [x, 0, 1]), 4/9, 1e-12)$
 true;
 
-/* Test 20 */
+/* Test 29 */
 ce(nintegrate(1/sqrt(x), [x,0,1]),2,1e-10)$
 true;
 
-/* Test 21 */
+/* Test 30 */
 ce(nintegrate(1/sqrt(1-x), [x,0,1]),2,1e-10)$
 true;
 
-/* Test 22 */
+/* Test 31 */
 ce(nintegrate(1/x^(1/3), [x,0,1]),1.5, 1e-10)$
 true;
 
-/* Test 23 */
+/* Test 32 */
 ce(nintegrate(1/(1-x)^(1/3), [x,0,1]),1.5, 1e-10)$
 true;
 
-/* Test 24 */
+/* Test 33 */
 ce(nintegrate(1/x^(1/5), [x,0,1]),1.25, 1e-10)$
 true;
 
-/* Test 25 */
+/* Test 34 */
 ce(nintegrate(1/(1-x)^(1/5), [x,0,1]),1.25, 1e-10)$
 true;
 
-/* Test 26 */
+/* Test 35 */
 ce(nintegrate(1/x^(4/5), [x,0,1]),5, 1e-10)$
 true;
 
@@ -192,7 +208,7 @@ true;
 (%o2)                                  0
 
 */
-/* Test 27 */
+/* Test 36 */
 cec(nintegrate(1/(1-x)^(1/3), [x,0,2]), 9/4 + %i*(-3*sqrt(3))/4, 1e-10)$
 true;
 
@@ -223,7 +239,7 @@ true;
 
  We compare nintegrate to the exact Mma output.
 */
-/* Test 28 */
+/* Test 37 */
 cec(nintegrate(1/(1-x)^(1/3) * exp(-x), [x,0,inf]),
   rectform(float(-(sqrt(3)*imagpart(gamma_incomplete(2/3, -1)))/(2*%e) +
   realpart(gamma_incomplete(2/3, -1))/(2*%e) +
@@ -236,44 +252,44 @@ true$
  Find two singularities, split the integral at one of them, and pass
  the other to qagp. two of each of these for complex and real part.
 */
-/* Test 29 */
+/* Test 38 */
 cec(nintegrate(1/((1-x)*(2-x))^(1/3) * exp(-x), [x,0,inf]),
   .9232162627329499-.5571602118093695*%i, 1e-10);
 true$
 
-/* Test 30 */
+/* Test 39 */
 ce(nintegrate(airy_ai(10*log(x)),[x,0,1]), .06392250187680061, 1e-9)$
 true;
 
-/* Test 31 */
+/* Test 40 */
 ce(nintegrate(sin(10^3*sqrt(x)),[x,0,1]),-.001123104393500761, 1e-10)$
 true;
 
-/* Test 32 */
+/* Test 41 */
 ce(nintegrate(log(x),[x,0,1]), -1, 1e-12)$
 true;
 
-/* Test 33 */
+/* Test 42 */
 cec(nintegrate(log(log(x)),[x,0,1]), %pi * %i - .5772156649015613, 1e-10)$
 true;
 
-/* Test 34 */
+/* Test 43 */
 cec(nintegrate(sqrt(log(x)),[x,0,1]), sqrt(%pi)*%i/2, 1e-8)$
 true;
 
-/* Test 35 */
+/* Test 44 */
 ce(nintegrate(log(x)^2,[x,0,1]), 2, 1e-13)$
 true;
 
-/* Test 36 */
+/* Test 45 */
 ce(nintegrate(1/(sqrt(1-x)*x^(1/5)),[x,0,1]), beta(1/2,4/5), 1e-8)$
 true;
 
-/* Test 37 */
+/* Test 46 */
 ce(nintegrate(1/(sqrt(1-x)*x^(4/5)),[x,0,1]), beta(1/5,1/2), 1e-8)$
 true;
 
-/* Test 38 */
+/* Test 47 */
 ce(nintegrate(log(2*x)/sqrt(1-x),[x,0,1]), 6 * log(2) - 4, 1e-8)$
 true;
 
@@ -285,12 +301,12 @@ true;
   But, with to_poly_solve and a little more work, we could compute these
   roots automatically.
 */
-/* Test 39 */
+/* Test 48 */
 cec(nintegrate(1/(sqrt(sin(x))),[x,0,10], [%pi,2*%pi,3*%pi]),
      10.48823021716687 - 6.769465521725385 * %i, 1e-7)$
 true;   
 
-/* Test 40 */
+/* Test 49 */
 /* Example in Mma docs supplies singular points. We don't need to do this.
    nintegrate(sqrt(log(x-7)),[x,0,20], [7,8]);
    NIntegrate[Sqrt[Log[x - 7]], {x, 0, 20}, Exclusions -> {7, 8}]    
@@ -309,7 +325,7 @@ true;
   In fact quad_qawo(1, x, 1, 10^4, 1, cos) works well. Faster, with fewer intervals
   and no error. We could try to detect this somehow.
 */     
-/* Test 41 */
+/* Test 50 */
 cec(nintegrate(exp(%i*x),[x,1,10^4], subint -> 3000),rectform(float(integrate(exp(%i*x),x,1,10^4))),1e-12)$
 true;
 
@@ -324,7 +340,7 @@ true;
 
 */
 
-/* Test 42 */
+/* Test 51 */
 ce(nintegrate(1/sqrt(x) + cos(x), [x,0,5000], subint->1000),
    float(integrate(1/sqrt(x) + cos(x), x,0,5000)), 1e-12)$
 true; 
@@ -346,12 +362,12 @@ and then 1 to 5000.
  
 */
 
-/* Test 43 */
+/* Test 52 */
 ce(nintegrate(sin(x)/sqrt(x),[x,0,5000],subint->1000),rectform(float(integrate(sin(x)/sqrt(x),x,0,5000))),
     1e-7)$
 true;  
 
-/* Test 44 */
+/* Test 53 */
 kill(ce)$
 done;
 

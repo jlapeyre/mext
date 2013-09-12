@@ -178,12 +178,12 @@
 (max-doc:set-cur-sec 'max-doc::numerical-fandv)
 (defmfun1:set-mext-package "numerical")
 
-(defmfun1 ($nintegrate :doc) ((expr :thread) (varspec :list) &optional (singlist :list) &opt 
-          ($sing :bool t)
-          ($calls (:member '(nil t $short))) ($words t :bool) 
-          ($info :bool t) ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number)
-          ($epsrel 1d-8 :non-neg-number)
-          ) ; ($method "automatic" :string)) only doing automatic for now.
+(defmfun1 ($nintegrate :doc :match) 
+  ((expr :thread) (varspec :list) 
+   &optional (singlist :to-float-listof) 
+   &opt ($sing :bool t) ($calls (:member '(nil t $short))) ($words t :bool) ($info :bool t) 
+   ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number) ($epsrel 1d-8 :non-neg-number))
+           ; ($method "automatic" :string)) only doing automatic for now.
  :desc 
  ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
   :arg "varspec" " as ["  :argcomma "var" :argcomma "lo" :arg "hi" "]."
@@ -216,9 +216,9 @@
     (echeck-arg $nintegrate :or-symbol-subvar var)
     (echeck-arg $nintegrate :to-or-float-minf lo)
     (echeck-arg $nintegrate :to-or-float-inf  hi)
-    (when (freeof var expr)
+    (when (and (not (numberp ($float expr))) (freeof var expr))
       (defmfun1-error-return '$expr_freeof_var $nintegrate 
-        "The integrand does not contain the variable of integration"))
+        "The integrand is not a number and does not depend on the variable of integration" :match))
 ;    (handler-case
 ;     (let ((f (get-integrand expr var))))
 ;       (format t "Integrand ok~%"))
