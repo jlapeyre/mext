@@ -214,8 +214,8 @@
          (r-expr ($realpart expr))
          (i-expr ($imagpart expr)))
     (echeck-arg $nintegrate :or-symbol-subvar var)
-    (echeck-arg $nintegrate :to-or-float-minf  lo)
-    (echeck-arg $nintegrate :to-or-float-inf  hi)
+    (echeck-pp-arg $nintegrate :to-or-float-minf  lo)
+    (echeck-pp-arg $nintegrate :to-or-float-inf  hi)
     (when (freeof var expr)
       (defmfun1-error-return '$expr_freeof_var $nintegrate 
         "The integrand does not contain the variable of integration"))
