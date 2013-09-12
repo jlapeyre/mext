@@ -185,7 +185,9 @@
  :desc 
  ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
   :arg "varspec" " as ["  :argcomma "var" :argcomma "lo" :arg "hi" "]."
-  " Only one-dimensional integrals are implemented. " :mref "nintegrate" 
+  " For higher dimensional integrals, supply further " :argdot "varspecs"
+  :par ""
+  :mref "nintegrate" 
   " automatically chooses and combines " :emrefcomma "qags" :emrefcomma "qagp" 
   " and " :emrefdot "qagi"  " Some support for complex numbers is implemented." 
   " Some integrable singularities are found automatically. "
@@ -205,6 +207,7 @@
   :par ""
   "See the Maxima documentation for quadpack.")
   (when varspecs
+    ; can't handle some complex results, maybe need to do real and imag here already
     (let* ((call defmfun1-func-call)
            (new-call)
            (new-integrand)
@@ -212,7 +215,7 @@
            (opts (nthcdr (+ 3 nvp) call))
            (new-varspec (pop varspecs)))
       (setf new-integrand (append (list '(%nintegrate) expr varspec) varspecs opts
-                                    (list (rule-opt '$info nil))))    ; remove fourth, yuck!
+                                    (list (rule-opt '$info nil))))
       (setf new-call (append (list new-integrand new-varspec) opts))
 ;      (format t "Orig ~a~%" call)
 ;      (format t "opts ~a~%" defmfun1-opts)

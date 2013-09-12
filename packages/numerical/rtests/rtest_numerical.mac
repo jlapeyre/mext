@@ -327,6 +327,19 @@ true$
 ce(nintegrate(x*y*z,[x,0,1],[y,0,1],[z,0,1]), 1/8, 1e-10);
 true$
 
+/* Test  */
+ce(nintegrate(x*1/(sqrt(y)),[x,0,1],[y,0,1]), 1, 1e-10);
+true$
+
+/* Test  */
+cec(nintegrate(x*1/(sqrt(y-1)),[x,0,1],[y,0,1]), -1 * %i, 1e-10);
+true$
+
+/* xxx Test  */
+/* Fails just because we don't have the logic yet
+cec(nintegrate(x*1/(sqrt(y-1)),[x,0,1],[y,0,2]), -1 * %i, 1e-10);
+true$
+*/
 
 /* Test 49 */
 /* Example in Mma docs supplies singular points. We don't need to do this.
