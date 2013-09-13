@@ -110,6 +110,7 @@ my @Rtests = qw (
  lists_aex/rtests/rtest_take.mac
  maxdoc/rtests/rtest_maxdoc.mac
  mext_defmfun1/rtests/rtest_mext_defmfun1.mac
+ mext_defmfun1/rtests/rtest_predicates.mac
  mext_system/rtests/rtest_load_in_subdir.mac
  numerical/rtests/rtest_mquad.mac
  numerical/rtests/rtest_numerical.mac
