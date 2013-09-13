@@ -23,6 +23,12 @@
 ;;; might not be worth much. Maybe more clever rewriting, or better numerical
 ;;; routines are needed.
 
+;;; $trigreduce and $changevar
+;;; e : 'integrate(cos(x^2),x,0,1);
+;;; changevar(e,x^2-y,y,x);
+;;; -('integrate(cos(y)/sqrt(y),y,0,1))/2
+;;;
+
 ;;; Note what happens to sqrt(x). We do this before trying to integrate!
 ;;; (%i58) rectform(sqrt(x));
 ;;;              atan2(0, x)                     atan2(0, x)
@@ -36,7 +42,6 @@
 ;;;            (defun integrator
 ;;; csimp.lisp: (defun partition
 ;;;             (defun islinear
-;;; $trigreduce
 
 ;;; (partition $e '$x 1), removes a constant factor from $e,
 ;;; returns a list (thefactor expression-with-factor-removed)
@@ -205,17 +210,11 @@
     (let* ((call defmfun1-func-call)
            (new-call)
            (new-integrand)
-           (nvp (length varspecs))
-           (opts (nthcdr (+ 3 nvp) call))
+           (opts (nthcdr (+ 3 (length varspecs)) call))
            (new-varspec (pop varspecs)))
       (setf new-integrand (append (list '(%nintegrate) expr varspec) varspecs opts
                                     (list (rule-opt '$info nil))))
       (setf new-call (append (list new-integrand new-varspec) opts))
-;      (format t "Orig ~a~%" call)
-;      (format t "opts ~a~%" defmfun1-opts)
-;      (format t "New integrand ~a~%" ($sconcat new-integrand))
-;      (format t "~a~%" ($sconcat new-call))
-;      (format t "~a~%" new-call)
       (return-from $nintegrate (apply '$nintegrate new-call))))
   (let* ((vp (rest varspec)) (var (first vp))
          (lo (second vp)) (hi (third vp))
@@ -228,9 +227,9 @@
     (echeck-arg $nintegrate :to-or-float-minf lo)
     (echeck-arg $nintegrate :to-or-float-inf  hi)
 ; Following prevents some multi-dim integrals from working
-;    (when (and (not (numberp ($float expr))) (freeof var expr))
-;      (defmfun1-error-return '$expr_freeof_var $nintegrate 
-;        "The integrand is not a number and does not depend on the variable of integration" :match))
+    (when (and (not (numberp ($float expr))) (freeof var expr))
+      (defmfun1-error-return '$expr_freeof_var $nintegrate 
+        "The integrand is not a number and does not depend on the variable of integration" :match))
 ;    (handler-case
 ;     (let ((f (get-integrand expr var))))
 ;       (format t "Integrand ok~%"))
