@@ -302,6 +302,14 @@ true$
 ipart(e1,3,2,2,1);
 a$
 
+/* Test 50 */
+(e : [1,2,3,4],  ipart(e,1) : 7, e);
+[7,2,3,4]$
+
+/* Test 50 */
+(ipart(e,-1) : 7, e);
+[7,2,3,7]$
+
 /* Test 51 */
 /* push to end of aex is as efficient as pushing to lisp adjustable array */
 ( e : << f(a,b,c) >>, aex_unshift(z,e), is( e = <<f(a,b,c,z)>>) );

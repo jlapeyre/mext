@@ -225,6 +225,7 @@ refers to the head."
 
 ;; is used
 ;; this is faster, why were we doing the above ?
+;; Note, use as lvalue is implemented in aex/mset.lisp
 (defmfun $ipart (e &rest inds)
   (i-part e inds))
 
@@ -276,6 +277,7 @@ refers to the head."
  <e> is a mixed representation expression. i-part-set is
   call by mset or msetq."
   (let ((i (car inds)))
+    (when (< i 0) (setf i (f+ (ilength e) i 1)))
 ;;    (declare (fixnum i))
     (if (null (cdr inds))
         (if (aex-p e) ($aexs e i val)

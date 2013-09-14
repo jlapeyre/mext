@@ -1,5 +1,6 @@
 ;; modified for ipart(var,ind1,ind2,...) : val;
 
+;; Search for ipart below to find changes from stock Maxima
 ;; This should be documented
 
 (in-package :maxima)
