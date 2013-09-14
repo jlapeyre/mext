@@ -12,16 +12,10 @@
 ;;; * use assume(x>lo, x<hi) etc. when searching for roots.
 ;;; * use to_poly_solve
 ;;; * use quad_qawo, etc. See notes in rtests.
-;;; * implement, or interface with gsl cquad
+;;; * implement, or interface with gsl cquad. Not sure what it is worth
 ;;; * find some code for adaptive meshes for multi-dimensional
 ;;;   I think some of this is written in plain fortran.
 ;;; Everything else.
-
-;;; I rewrite/split integrals manually and use appropriate quadpack
-;;; routines. This is often not enough. It seems that using pattern matching
-;;; to rewrite integrals for quadpack (oscillatory, and log/power, etc.)
-;;; might not be worth much. Maybe more clever rewriting, or better numerical
-;;; routines are needed.
 
 ;;; $trigreduce and $changevar
 ;;; e : 'integrate(cos(x^2),x,0,1);
@@ -29,15 +23,9 @@
 ;;; -('integrate(cos(y)/sqrt(y),y,0,1))/2
 ;;;
 
-;;; Note what happens to sqrt(x). We do this before trying to integrate!
-;;; (%i58) rectform(sqrt(x));
-;;;              atan2(0, x)                     atan2(0, x)
-;;;(%o58) %i sin(-----------) sqrt(abs(x)) + cos(-----------) sqrt(abs(x))
-;;;                   2                               2
-
-;;; Maybe the code in sin.lisp and defint.lisp can be used to analyze
+;;; maybe the code in sin.lisp and defint.lisp can be used to analyze
 ;;; the integrands.
-;;; Possibly of interest:
+;;; possibly of interest:
 ;;; sin.lisp:  (defun scep
 ;;;            (defun integrator
 ;;; csimp.lisp: (defun partition
@@ -49,13 +37,13 @@
 
 (in-package :nintegrate)
 
-;; This should be moved to a more general location
-;; This makes a an option expression that is common in Maxima:
+;; this should be moved to a more general location
+;; this makes a an option expression that is common in maxima:
 ;; e.g. epsrel=1e-5
 (defmacro mkopt (opt)
   `(list '(maxima::mequal maxima::simp) ',opt ,opt))
 
-;; If our option is named differently than option in
+;; if our option is named differently than option in
 ;; lower-level function.
 (defmacro mkopt2 (opt val)
   `(list '(maxima::mequal maxima::simp) ',opt ,val))
@@ -70,8 +58,8 @@
 ;; fifth element is largest of fifth elements (better would be a list of all)
 ;; sixth is appending of all sixth elements (which are lists of calls to quadpack)
 (defun combine-quad-results ( &rest res)
- "Add the results of integrating over two intervals. Make an attempt
-  to write reasonable information fields. Really Should do sqrt of sqs of errors."
+ "add the results of integrating over two intervals. make an attempt
+  to write reasonable information fields. really should do sqrt of sqs of errors."
  (let* ((vals (apply #'+ (mapcar #'second res)))
         (errs (apply #'+ (mapcar #'third res)))
         (nit (apply #'+ (mapcar #'fourth res)))
@@ -99,17 +87,17 @@
          (call-form (cons (list (car call-list) 'maxima::simp) (cdr call-list))))
     (append (apply 'maxima::mfuncall call-list) (list (maxima::make-mlist-simp call-form)))))
 
-;; TODO:
+;; todo:
 ;; use to_poly_solve to get zeroes of sin, cos, between limits
 ;; look for logs and solve for arg = 0.
-;; If float(root) is not a float, then the integrand is bad.
-;; We need to signal an error that is handled in nintegrate itself which
+;; if float(root) is not a float, then the integrand is bad.
+;; we need to signal an error that is handled in nintegrate itself which
 ;; can give a proper defmfun1 error.
 (maxima::ddefun list-fp-singularities (expr var lo hi)
- "Try to return a Maxima list of floating point numbers representing
+ "try to return a maxima list of floating point numbers representing
  the singularities between `lo' and `hi' (excluding these endpoints)
- in `expr'. This, of course, can't be done in general.  This routine
- just calls `solve' and has some bugs. If no satisfying numbers are
+ in `expr'. this, of course, can't be done in general.  this routine
+ just calls `solve' and has some bugs. if no satisfying numbers are
  found, return `nil'."
  (let ((roots (apply 'maxima::mfuncall `(maxima::$solve ((maxima::mexpt maxima::simp) ,expr -1) ,var)))
        (nroots))
@@ -127,7 +115,7 @@
        (maxima::mk-mlist (sort nroots  #'<))
      nil)))
 
-;; To reiterate: this could use refactoring!
+;; to reiterate: this could use refactoring!
 (defun do-quad-pack (expr var lo hi singlist quad-ops more-opts &aux sing)
   (setf sing (first more-opts))
   (when (and sing (not singlist))
@@ -188,22 +176,22 @@
    ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number) ($epsrel 1d-8 :non-neg-number))
            ; ($method "automatic" :string)) only doing automatic for now.
  :desc 
- ("Numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
+ ("numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
   :arg "varspec" " as ["  :argcomma "var" :argcomma "lo" :arg "hi" "]."
-  " For higher dimensional integrals, supply further " :argdot "varspecs"
+  " for higher dimensional integrals, supply further " :argdot "varspecs"
   :par ""
-  " If the option " :opt "call" " is true, then calls made to quadpack are "
-  " also returned in a list. If " :opt "call" " is " :varcomma "short" " then only the "
+  " if the option " :opt "call" " is true, then calls made to quadpack are "
+  " also returned in a list. if " :opt "call" " is " :varcomma "short" " then only the "
   " name of the quadpack routine is included."
   :par ""
-  "By default, information on the integration is returned with the results. "
-  "If the option " :opt "info" " is false, then only the result of the integration "
+  "by default, information on the integration is returned with the results. "
+  "if the option " :opt "info" " is false, then only the result of the integration "
   "is returned." 
   :par ""
-  "If the option " :opt "find_sing" " is false, then " :mref "nintegrate" " will not search "
+  "if the option " :opt "find_sing" " is false, then " :mref "nintegrate" " will not search "
   "for internal singularities, but user supplied singularities will still be used."
   :par ""
-  "This function is not well tested and may give incorrect results.")
+  "this function is not well tested and may give incorrect results.")
 
   (when varspecs
     ; can't handle some complex results, maybe need to do real and imag here already
@@ -216,7 +204,7 @@
                                     (list (rule-opt '$info nil))))
       (setf new-call (append (list new-integrand new-varspec) opts))
       (return-from $nintegrate (apply '$nintegrate new-call))))
-  (let* ((vp (rest varspec)) (var (first vp))
+  (let* ((vp (rest varspec)) (var (first vp)) ; multi dimensional integrals
          (lo (second vp)) (hi (third vp))
          (quad-ops (list (nint::mkopt $epsrel) (nint::mkopt $epsabs)
                          (nint::mkopt2 $limit $subint)))
@@ -226,10 +214,10 @@
     (echeck-arg $nintegrate :or-symbol-subvar var)
     (echeck-arg $nintegrate :to-or-float-minf lo)
     (echeck-arg $nintegrate :to-or-float-inf  hi)
-; Following prevents some multi-dim integrals from working
+; following may prevent some multi-dim integrals from working
     (when (and (not (numberp ($float expr))) (freeof var expr))
       (defmfun1-error-return '$expr_freeof_var $nintegrate 
-        "The integrand is not a number and does not depend on the variable of integration" :match))
+        "the integrand is not a number and does not depend on the variable of integration" :match))
 ;    (handler-case
 ;     (let ((f (get-integrand expr var))))
 ;       (format t "Integrand ok~%"))
@@ -321,4 +309,3 @@
   :text ("Here we must supply the roots of " :code "sin(x)" " within the range of integration.")
   :ex ("nintegrate(1/(sqrt(sin(x))),[x,0,10], points -> [%pi,2*%pi,3*%pi])"
     "[10.4882-6.76947*%i,9.597497e-8,1596,\"no problems\"]"))))
-                                                                   
