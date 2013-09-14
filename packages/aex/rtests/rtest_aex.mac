@@ -302,78 +302,83 @@ true$
 ipart(e1,3,2,2,1);
 a$
 
-/* Test 50 */
+/* Test 51 */
 (e : [1,2,3,4],  ipart(e,1) : 7, e);
 [7,2,3,4]$
 
-/* Test 50 */
+/* Test 52 */
 (ipart(e,-1) : 7, e);
 [7,2,3,7]$
 
-/* Test 51 */
+/* Test 53 */
+(e : <<1,2,3,4>>,  ipart(e,-1) : 7,
+   is(e = <<1,2,3,7>>));
+true$
+
+/* Test 54 */
 /* push to end of aex is as efficient as pushing to lisp adjustable array */
 ( e : << f(a,b,c) >>, aex_unshift(z,e), is( e = <<f(a,b,c,z)>>) );
 true$
 
-/* Test 52 */
+/* Test 55 */
 aex_shift(e);
 z$
 
-/* Test 53 */
+/* Test 56 */
 is( e = <<f(a,b,c)>>);
 true$
 
-/* Test 54 */
+/* Test 57 */
 is(ipart([1,2],0)="[");
 true$
 
-/* Test 55 */
+/* Test 58 */
 is(ipart(<<[1,2]>>,0)="[");
 true$
 
-/* Test 56 */
+/* Test 59 */
 is ( ipart(a<b,0) = "<");
 true$
 
-/* Test 57 */
+/* Test 60 */
 is ( ipart( << a<b >> ,0) = "<");
 true$
 
-/* Test 58 */
+/* Test 61 */
 (e : [[[[c,c],[c,c]],[[c,c],[c,c]]],[[[c,c],[c,c]],[[c,c],[c,c]]]],0);
 0$
 
-/* Test 59 */
+/* Test 62 */
 /* convert just top level */
 is( raex(e) = << [[[[c,c],[c,c]],[[c,c],[c,c]]],[[[c,c],[c,c]],[[c,c],[c,c]]]] >>);
 true$
 
-/* Test 60 */
+/* Test 63 */
 is( raex(e,1) = raex(e) );
 true$
 
-/* Test 61 */
+/* Test 64 */
 is( raex(e,'inf) = faex(e) );
 true$
 
-/* Test 62 */
+/* Test 65 */
 /* only convert level 2 */
 (e1 : raex(e,[2]), aex_p(e1));
 false$
 
-/* Test 63 */
+/* Test 66 */
 aex_p( ipart(e1,1) );
 true$
 
-/* Test 64 */
+/* Test 67 */
 aex_p( ipart(e1,1,1) );
 false$
 
-/* Test 65 */
+/* Test 68 */
 aex_p( ipart(e1,1,1,1) );
 false$
 
-/* Test 66 */
+/* Test 69 */
 /*
    similar function exists for conversion to ml.
    begin by converting to aex at all levels.
@@ -381,20 +386,20 @@ false$
 ( e1 : faex(e), e2 : rlex(e1,[2]), aex_p(e2));
 true$
 
-/* Test 67 */
+/* Test 70 */
 aex_p( ipart(e2,1) );
 false$
 
-/* Test 68 */
+/* Test 71 */
 aex_p( ipart(e2,1,1) );
 true$
 
-/* Test 69 */
+/* Test 72 */
 /* fix error thrown. replace by better test later */
 (a : aex([1,2,[3,4]]),faex(a),0);
 0;
 
-/* Test 70 */
+/* Test 73 */
 kill(e,e1,a);
 done$
 
