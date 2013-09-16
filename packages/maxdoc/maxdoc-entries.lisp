@@ -9,7 +9,10 @@
 ;; describe because the objects are part of the documentation system,
 ;; which is not yet working when they are defined
 
-(use-package :max-doc)
+;; Why is this necessary ?
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (use-package :max-doc))
+
 (max-doc::set-cur-sec 'max-doc::options)
 (defmfun1:set-file-and-package "maxdoc-entries.lisp" "maxdoc")
 

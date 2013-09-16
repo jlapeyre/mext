@@ -622,6 +622,13 @@ This was copied from maxima source init-cl.lisp.")
        (mk:oos2 distname :load)
        (setf make::*load-source-if-no-binary* nil))
 
+; this operation does not exist
+;(mk-mext-all-operation $mext_dist_compile_and_load mext-maxima::*systems-to-load*
+;       (setf mk::*bother-user-if-no-binary* nil)
+;       (setf make::*load-source-if-no-binary* t)
+;       (mk:oos2 distname :compile-and-load)
+;       (setf make::*load-source-if-no-binary* nil))
+
 (mk-mext-all-operation $mext_dist_clean mext-maxima::*systems-to-clean*
      (mk:oos2 distname :mext-clean-lisp-compilation)
      (mk:oos2 distname :mext-clean-intermediate))
@@ -676,10 +683,14 @@ This was copied from maxima source init-cl.lisp.")
   ($mext_dist_user_install_remaining distnames)
   ($mext_dist_user_install_source distnames))
 
+;; Added enough eval-when's etc to the packages,
+;; to now compile before load. I hope this
+;; means that lisp files are not loaded
+;; unnecessarily.
 (defmfun $mext_dist_build (&optional distnames)
   ($mext_dist_clean distnames)
-  ($mext_dist_load distnames)
-  ($mext_dist_compile distnames))
+  ($mext_dist_compile distnames)
+  ($mext_dist_load distnames))
 
 (defmfun $mext_dist_user_all (&optional distnames)
   ($mext_dist_build distnames)

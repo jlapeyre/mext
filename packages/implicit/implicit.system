@@ -12,13 +12,17 @@
 ;; tests fail if only compiled code is loaded.
 ;; doing compile(imp_taylor) shows no subsequent
 ;; increase in speed.
+;;
+;; Must load implicit_doc before compiling, or it breaks.
+;; So for now, don't compile it. We need to add a mechanism
+;; to mext to allow loading mac first, then compiling
 (mk:defsystem implicit
   :source-extension "mac"
   :language :mext-maxima
   :load-only t
   :components
    ((:file "implicit_code")
-    (:file "implicit_doc" :load-only nil)))
+    (:file "implicit_doc" :load-only t)))
 
 (mk:defsystem load-implicit
   :source-extension "mac"

@@ -10,9 +10,12 @@
 
 (use-package :gjl.lisp-util :maxima)
 (use-package :maxima-dev-doc)
-(import 'maxima::ddefun)
-(import 'maxima::ddefvar)
-(import 'maxima::ddefparameter)
+
+;; should be a cleaner way of doing this
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (import 'maxima::ddefun)
+  (import 'maxima::ddefvar)
+  (import 'maxima::ddefparameter))
 
 (defvar *mext-package* nil)
 

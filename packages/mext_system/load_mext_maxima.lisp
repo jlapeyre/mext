@@ -29,7 +29,7 @@
        "pathname-library" "mext-maxima-system" "dontkill" "compile" "mext-component-operations")
         do
         (let ((file-path (make-pathname :directory dir :name file :type "lisp")))
-                         (format t " load_mext Loading ~a~%" file-path)
+                         (format t " load_mext: Loading ~a~%" file-path)
                          (load file-path))))
 
 (defvar mext-maxima::*dist-name* "mext_system")

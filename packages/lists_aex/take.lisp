@@ -1,10 +1,15 @@
-(if (find-package :maxima-take ) t (defpackage :maxima-take (:use :common-lisp )))
+;(eval-when (:compile-toplevel :load-toplevel :execute)
+;  (if (find-package :maxima-take ) t (defpackage :maxima-take 
+;                                       (:use :common-lisp :gjl.lisp-util :max-doc))))
+
 (in-package :maxima-take)
 (mext:mext-optimize)
-;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
 
-(use-package :gjl.lisp-util)
-(use-package :max-doc)
+;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+;(eval-when (:compile-toplevel :load-toplevel :execute)
+;  (use-package :gjl.lisp-util)
+;  (use-package :max-doc))
+
 (set-cur-sec 'max-doc::lists-fandv)
 (defmfun1:set-file-and-package "take.lisp" "lists_aex")
 

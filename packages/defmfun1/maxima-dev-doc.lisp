@@ -21,8 +21,9 @@
 (defparameter *source-file-name* "")
 (defparameter *source-package* "")
 
-(defun minv (e)
-  (maxima::maybe-invert-string-case (format nil "~a" e)))
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defun minv (e)
+    (maxima::maybe-invert-string-case (format nil "~a" e))))
 
 #|  moved to doc-system
 (defun set-source-file-name (s)
@@ -136,6 +137,7 @@
 (mk-ddefun defmacro maxima::ddefmacro)
 (mk-ddefun maxima::defmfun maxima::ddefmfun)
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defmacro maxima::ddefvar (name &body body)
   (let* ((maybe-docstring (car (last body)))
          (docstring (if (stringp maybe-docstring) maybe-docstring 
@@ -144,7 +146,7 @@
          (name-str (minv name)))
     `(progn (setf (gethash ,name-str *developer-doc-hash*)
                   (new-make-doc-var-item ,name-str ,docstring 'defvar))
-            (defvar ,name ,@body))))
+            (defvar ,name ,@body)))))
 
 (defmacro maxima::ddefparameter (name &body body)
   (let* ((maybe-docstring (car (last body)))

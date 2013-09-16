@@ -17,7 +17,8 @@
   :components
    (
     (:file "to_poly_solve_setup" :load-only t)
-    (:file "dontkill" :load-only t) ; dont't kill has to be loaded first to avoid
+    (:file "dontkill" :load-only t) ; This comment obsolete
+                                    ; dont't kill has to be loaded first to avoid
                                     ; incorrect syntax: %AND is not a prefix operator
     (:file "to_poly_solve_extra" :source-extension "lisp" :load-only nil)
     (:file "dont_compile1" :load-only t)

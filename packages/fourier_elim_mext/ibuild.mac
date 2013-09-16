@@ -1,4 +1,5 @@
 load(mext);
+require("to_poly"); /* definitely  required to build */
 load_in_subdir(["fourier_elim","system"]);
 mext_dist_clean();
 mext_dist_build();

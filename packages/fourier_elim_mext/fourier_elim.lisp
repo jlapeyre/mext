@@ -8,8 +8,8 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 |#
 
-
-($load '$polynomialp)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  ($load '$polynomialp))
 
 ;; GJL -- load the mext package
 ;; (if (not ($get '$to_poly '$version)) ($load '$to_poly))

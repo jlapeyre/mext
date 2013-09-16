@@ -10,9 +10,11 @@
 (mk:defsystem numerical
   :source-extension "lisp"
   :components
-   ((:file "nintegrate")
-    (:file "quadpack-nint")
-    (:file "numerical-packages" :load-only t)))
+   ((:file "numerical-packages" :load-only t)
+    (:file "nintegrate")
+    (:file "quadpack-nint")))
+
+
 
 ;; neither compile nor load when building
 (mk:defsystem load-numerical

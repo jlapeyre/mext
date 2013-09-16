@@ -1,6 +1,6 @@
-(if (find-package :nintegrate ) t  
-  (defpackage :nintegrate (:use common-lisp :gjl.lisp-util)
-    (:nicknames :nint)))
+;(if (find-package :nintegrate ) t  
+;  (defpackage :nintegrate (:use common-lisp :gjl.lisp-util)
+;    (:nicknames :nint)))
 
 (defmfun1:set-file-and-package "nintegrate.lisp" "numerical")
 

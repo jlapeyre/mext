@@ -46,6 +46,7 @@
 ;; supplied-p-hash -- 
 ;; rest -- a list containing the name of the rest arg (or nil)
 ;; count-args -- a flag specifying whether the function is to verify the number of args.
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest count-args)
   `(,@(when count-args `((,nargs 0))) ; count args passed when calling
    (defmfun1-func-name ',name) ; save this name for echeck-arg macro below. Wasteful as most funcs never use it.
@@ -58,7 +59,7 @@
  Did you omit a pair of parens?~%") name)
           (if (listp (car n)) `,(cons (cadar n) (cdr n)) (if (length1p n) `,(car n) `,n))))
    ,@(loop for n in (get-hash-keys supplied-p-hash) collect `,(gethash n supplied-p-hash))
-   ,@(when rest (cdr rest)))) ; binding for &rest arg
+   ,@(when rest (cdr rest))))) ; binding for &rest arg
 
 ;; Threading, or distributing, over lists of arguments. This is similar
 ;; to stock maxima distributing over bags. But presently, stock maxima
@@ -80,6 +81,7 @@
 ;; the loop, which is probably not desireable.
 ;; After checking threading with string_reverse, I see that threading is
 ;; very fast, so I won't be implementing another scheme soon.
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun defmfun1-write-threading (name args arg-directives)
   (let ((arg-d (append (getf arg-directives :req ) (getf arg-directives :optional )))
                        (thread-forms '()) (i 0) )
@@ -95,7 +97,7 @@
                          (apply ',name newargs))))))))
               thread-forms))
       (incf i))
-    (nreverse thread-forms)))
+    (nreverse thread-forms))))
 
 ;; name -- name of function (a symbol)
 ;; args -- a symbol (via gensym) that contains a list of *all* args(parameters) passed at run time
@@ -106,6 +108,7 @@
 ;; pp-spec -- hash
 ;; have-match -- flag for :match specified with function name in defmfun1 definition.
 ;; count-args -- a flag specifying whether the function is to verify the number of args.
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun defmfun1-write-assignments (name args reqo restarg nargs 
                                         supplied-p-hash reqo-spec pp-spec-h
                                         have-match count-args)
@@ -123,7 +126,7 @@
               (push (defmfun1::check-and-error tst targ name args have-match) res))
             (dolist (pp (gethash targ pp-spec-h))
                (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
-   out))
+   out)))
 
 ;; name -- name of function (a symbol)
 ;; args -- a symbol (via gensym) that contains a list of *all* args(parameters) passed at run time
@@ -133,6 +136,7 @@
 ;; supplied-p-hash -- hash
 ;; reqo-spec -- hash
 ;; have-match -- flag for :match specified with function name in defmfun1 definition.
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec have-match)
   "Write code to set option variables to supplied values."
   (when opt `((dolist (ospec ,opt-args) 
@@ -159,10 +163,11 @@
                              (t
                               (defmfun1-error-return '$defmfun1_invalid_opt_name ,name
                                 (format nil (intl:gettext "~a does not accept the option `~a'")
-                                        ($sconcat ',name) ($sconcat var)) ,have-match))))))))
+                                        ($sconcat ',name) ($sconcat var)) ,have-match)))))))))
 ;                              (merror1 '$defmfun1_invalid_opt_name (intl:gettext "~a ~a does not accept the option `~a'.~%")
 ;                                         (defmfun1::err-prefix ',name) ($sconcat ',name) ($sconcat var) ))))))))
 
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun defmfun1-write-rest-assignments (name args rest reqo-spec have-match)
   (if rest
       (let ((res)
@@ -173,7 +178,7 @@
                       ,(defmfun1::check-and-error tst 'a name args have-match))
                   ,rest-name)  res))
         (nreverse res))
-      nil))
+      nil)))
 
 ;; NOTE: We moved set-default-options, save-lambda-list-etc, into the expansion part of
 ;; the macro. Thus, the documentation is generated, and is available, at run-time.

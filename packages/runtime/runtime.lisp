@@ -9,6 +9,11 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; This is somehow not gc'ing intermediate results.
+;; Because we switched to compile before load ??
+;; apparently not.
+;; Also not gc'ing well the final result if it is thrown
+;; away. Not sure why
 (defmfun1:set-hold-all '$timing)
 (defmfun1 ($timing :doc) (&rest exprs &opt ($print nil :bool) ($result t :bool)
                                 ($time $all (:member '($all $cpu $real))))
@@ -21,11 +26,19 @@
         (start-real (get-internal-real-time)))
     (let* ((to-sec (float internal-time-units-per-second))
            (last-result
-           (eval
-            `(let ((body ',exprs) each-result)
-               (dolist (v body)
-                 (setq each-result (meval* v)))
-               each-result)))
+            (eval
+             `(let ((body ',exprs))
+                (dolist (v body)
+                  (meval* v)))))
+;  removing the following junk seems to help with
+;  gc'ing. tested with
+;  kill(labels);timing(lrange(10^7),0) repeatedly
+;  but it is still possible to crash by doing
+;  repeatedly with sbcl
+;            `(let ((body ',exprs) each-result)
+;               (dolist (v body)
+;                 (setq each-result (meval* v)))
+;               each-result)))
           (elapsed-run-seconds
            (/ (- (get-internal-run-time) start-run) to-sec))
           (elapsed-real-seconds
@@ -33,21 +46,21 @@
       (if $print
           (progn
             (ecase $time
-              ('$all
+              ($all
                ($disp (format nil "user ~as    real ~as" elapsed-run-seconds elapsed-real-seconds)))
-              ('$cpu
+              ($cpu
                ($disp (format nil "user ~as" elapsed-run-seconds)))
-              ('$real
+              ($real
                ($disp (format nil "real ~as" elapsed-real-seconds))))
             (if $result last-result '$done))
         (let ((out-res '()))
           (when $result (push last-result out-res))
           (ecase $time 
-            ('$all
+            ($all
              (setf out-res (append (list elapsed-run-seconds elapsed-real-seconds) out-res)))
-            ('$cpu
+            ($cpu
              (push elapsed-run-seconds out-res))
-            ('$real
+            ($real
              (push elapsed-real-seconds out-res)))
           (mk-mlist out-res))))))
 
