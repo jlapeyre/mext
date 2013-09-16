@@ -212,7 +212,8 @@ This was copied from maxima source init-cl.lisp.")
   (fmake-pathname :name distname :type "mxt" :directory *dist-dir*))
 
 (defun create-distribution (name &rest body-form)
-  "Define a distribution. This is called at the top of a .mxt file."
+  "Define a distribution. This is called at the top of a defsystem .system file.
+   But, it is not a defsystem command, by rather in the :mext package."
   (setf *distname* name)
   (setf *dist-dir* (fpathname-directory (fload-pathname)))
   (let ((mxtfile (find-mext-description name)))
