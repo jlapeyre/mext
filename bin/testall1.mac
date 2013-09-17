@@ -3,9 +3,7 @@ mext_verbose:1;
 load(mext3);
 require(["fourier_elim","test_defmfun1", "pw"]);
 
-/*
 require(["lapack"]);
-*/
 
 /* test surviving kill
 kill(all);
