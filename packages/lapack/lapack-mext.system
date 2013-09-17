@@ -1,0 +1,33 @@
+(in-package :mext-maxima)
+
+(create-distribution "lapack"
+  :loader "load-lapack"
+  :install-only "lapack-rtests")
+
+;; :compile-only t does not do what we want
+;; we need to change mext system code to do this properly
+;; the problem is compiling and loading lapack takes a long
+;; time. no reason to load it first, then compile.
+(mk:defsystem lapack
+  :source-extension "lisp"
+  :components
+  ((:file "lapack-package" :load-only t)
+   (:file "blas_all" )
+   (:file "lapack_all" )
+   (:file "eigensys")
+   (:file "dgesv")
+   (:file "dgeqrf")
+   (:file "dgemm")
+   (:file "lapack_code" :source-extension "mac"
+          :language :mext-maxima :load-only t)))
+
+(mk:defsystem load-lapack
+  :source-extension "mac"
+  :components
+   ((:file "lapack")))
+
+(mk:defsystem lapack-rtests
+  :source-extension "mac"
+  :source-pathname "rtests"
+  :components
+    ((:file "rtest_dgeqrf")))

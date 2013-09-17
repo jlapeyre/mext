@@ -63,6 +63,8 @@ packages4="
 pw circuits coma finance implicit bernstein"
 
 packages5="quicklisp store"
+
+packages6="lapack"
  
 for package in $packages1
 do
@@ -105,6 +107,15 @@ do
    build_one_package $package
 done
 if [ $level -eq 5 ]
+  then
+  exit;
+fi
+
+for package in $packages6
+do
+   build_one_package $package
+done
+if [ $level -eq 6 ]
   then
   exit;
 fi

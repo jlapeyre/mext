@@ -1,0 +1,13 @@
+/* require("defmfun1");
+require("maxdoc"); */
+
+mext_provide("lapack",
+  [
+   "lapack-package",
+   "blas_all",
+   "lapack_all",
+   "eigensys",
+   "dgesv",
+   "dgeqrf",
+   "dgemm",
+   "lapack_code"]);
