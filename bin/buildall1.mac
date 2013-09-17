@@ -22,7 +22,9 @@ build_several([ "quicklisp", "store" ]);
 /* Examples from contrib and share */
 build_several(["bernstein", "grobner_mext"]);
 
+/*
 build_several([ "lapack" ]);
+*/
 
 /* Uncomment this if you have prime_pi package in a subdir of the parent dir */
 
