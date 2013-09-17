@@ -6,8 +6,16 @@
 ;;; (at your option) any later version.
 
 (in-package :maxima-dev-doc)
-(mext:mext-optimize)
+;(mext:mext-optimize)
 ;(declaim (optimize (speed 3) (space 0) (safety 0) (debug 0)))
+
+;; eval-when marked with 'for gcl' were attempts to fix compilation with
+;; gcl. Did not work. All other lisps can compile this without loading.
+;; For now, we give up on gcl, and in mext_system, we load all files first
+;; before compiling, but only for gcl
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defun minv (e)
+    (maxima::maybe-invert-string-case (format nil "~a" e))))
 
 (defstruct (doc-item)
   (name nil)
@@ -20,10 +28,6 @@
 (defvar *developer-doc-hash* (make-hash-table :test 'equal))
 (defparameter *source-file-name* "")
 (defparameter *source-package* "")
-
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (defun minv (e)
-    (maxima::maybe-invert-string-case (format nil "~a" e))))
 
 #|  moved to doc-system
 (defun set-source-file-name (s)
@@ -49,11 +53,12 @@
                  :package (doc-system:get-source-package)
                  :source-file (doc-system:get-source-file-name)))
 
-
 (defun add-item (name-str protocol docstring)
   (setf (gethash name-str *developer-doc-hash*)
         (new-make-doc-item name-str protocol docstring)))
 
+; for gcl
+;(eval-when (:compile-toplevel :load-toplevel :execute)
 (defun mk-ddefun-form (defname name args protocol docstring body)
   "Helper function for mk-ddefun."
   (let ((name-str (minv name)))
@@ -62,7 +67,10 @@
             (,defname ,name ,args
               ,docstring
               ,@body))))
+;)
 
+; for gcl
+;(eval-when (:compile-toplevel :load-toplevel :execute)
 (defmacro mk-ddefun (deftype defname)
   `(defmacro ,defname (name args &body body)
      (let* ((protocol (format nil "~a ~a ~a"  ',(minv deftype) (minv name) (mapcar #'minv args)))
@@ -71,6 +79,7 @@
                                     (setf body (cdr body)) s))
                          "")))
        (mk-ddefun-form ',deftype name args protocol docstring body))))
+;)
 
 
 
@@ -137,24 +146,28 @@
 (mk-ddefun defmacro maxima::ddefmacro)
 (mk-ddefun maxima::defmfun maxima::ddefmfun)
 
+; neccessary ?
 (eval-when (:compile-toplevel :load-toplevel :execute)
-(defmacro maxima::ddefvar (name &body body)
-  (let* ((maybe-docstring (car (last body)))
-         (docstring (if (stringp maybe-docstring) maybe-docstring 
-;;                        (progn (setf body (butlast body)) maybe-docstring) ; hmm maybe don't strip it out
+  (defmacro maxima::ddefvar (name &body body)
+    (let* ((maybe-docstring (car (last body)))
+           (docstring (if (stringp maybe-docstring) maybe-docstring 
+                        ;;                        (progn (setf body (butlast body)) maybe-docstring) ; hmm maybe don't strip it out
                         "You wrote ddefvar, but no docstring... should be an error."))
-         (name-str (minv name)))
-    `(progn (setf (gethash ,name-str *developer-doc-hash*)
-                  (new-make-doc-var-item ,name-str ,docstring 'defvar))
-            (defvar ,name ,@body)))))
+           (name-str (minv name)))
+      `(progn (setf (gethash ,name-str *developer-doc-hash*)
+                    (new-make-doc-var-item ,name-str ,docstring 'defvar))
+              (defvar ,name ,@body)))))
 
+; for gcl
+;(eval-when (:compile-toplevel :load-toplevel :execute)
 (defmacro maxima::ddefparameter (name &body body)
   (let* ((maybe-docstring (car (last body)))
          (docstring (if (stringp maybe-docstring) maybe-docstring 
-;;                        (progn (setf body (butlast body)) maybe-docstring) ; hmm maybe don't strip it out
-                        "You wrote ddefparameter, but no docstring... should be an error."))
+                      ;;                        (progn (setf body (butlast body)) maybe-docstring) ; hmm maybe don't strip it out
+                      "You wrote ddefparameter, but no docstring... should be an error."))
          (name-str (minv name)))
     `(progn (setf (gethash ,name-str *developer-doc-hash*)
                   (new-make-doc-var-item ,name-str ,docstring 'defparameter))
             (defparameter ,name ,@body))))
+;)
   

@@ -687,10 +687,16 @@ This was copied from maxima source init-cl.lisp.")
 ;; to now compile before load. I hope this
 ;; means that lisp files are not loaded
 ;; unnecessarily.
-(defmfun $mext_dist_build (&optional distnames)
+#-gcl (defmfun $mext_dist_build (&optional distnames)
   ($mext_dist_clean distnames)
   ($mext_dist_compile distnames)
   ($mext_dist_load distnames))
+
+;; eval-when s don't do the trick with gcl. we must load first.
+#+gcl (defmfun $mext_dist_build (&optional distnames)
+  ($mext_dist_clean distnames)
+  ($mext_dist_load distnames)
+  ($mext_dist_compile distnames))
 
 (defmfun $mext_dist_user_all (&optional distnames)
   ($mext_dist_build distnames)
