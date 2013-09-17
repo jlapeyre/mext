@@ -19,10 +19,10 @@ build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "test_defmfun1",
 build_several(["alt_eigen", "to_poly_mext", "fourier_elim_mext", "tpsolve" ]);
 build_several([ "quicklisp", "store" ]);
 
-build_several([ "lapack" ]);
-
 /* Examples from contrib and share */
 build_several(["bernstein", "grobner_mext"]);
+
+build_several([ "lapack" ]);
 
 /* Uncomment this if you have prime_pi package in a subdir of the parent dir */
 
