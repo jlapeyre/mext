@@ -18,7 +18,10 @@ build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "test_defmfun1",
                 "runtime", "aex", "lists_aex", "discrete_aex", "numerical" ]);
 build_several(["alt_eigen", "to_poly_mext", "fourier_elim_mext", "tpsolve" ]);
 build_several([ "quicklisp", "store" ]);
+
+/*
 build_several([ "lapack" ]);
+*/
 
 /* Examples from contrib and share */
 build_several(["bernstein", "grobner_mext"]);
