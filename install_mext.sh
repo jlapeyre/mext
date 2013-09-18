@@ -8,9 +8,10 @@
 #
 # Or:
 # ./install_mext.sh maxima level
-# where level is 0 through 5, with each level building more packages.
-# level 0 builds only mext.
-#
+# where level is 0 through 6, with each level building more packages.
+# level 0 builds only mext. If level is not supplied, then
+# packages through level 5 are built. 
+# 
 # Some of the packages in the list below, particularly the
 # latter ones, may fail to build on some systems.
 

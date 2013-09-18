@@ -28,7 +28,8 @@ http://www.johnlapeyre.com/mext_windows/
 
 In linux, you can install to your .maxima directory by running
 ./install_mext.sh maxima
-where maxima is the name of your maxima program.
+where maxima is the name of your maxima program. Read the comments
+at the top of the file install_mext.sh
 
 For a brief introduction to using mext, see
 
