@@ -23,7 +23,7 @@
 
 (mk:defsystem load-lapack
   :source-extension "mac"
-  :components
+  :components1
    ((:file "lapack")))
 
 (mk:defsystem lapack-rtests
