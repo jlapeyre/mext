@@ -10,6 +10,7 @@ mext_provide(
   "maxdoc",
   "maxdoc-markup-keys",
   "maxdoc-sections",
+  "aex-base",
   "defmfun1-max",
   "examples",
   "misc-util",

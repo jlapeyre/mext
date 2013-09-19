@@ -18,6 +18,8 @@
 ; need to integrate this with mext somehow.
 ($put '$aex_package 0.1 '$version)
 
+#|
+
 (defvar *aex-core-dummy-vector* (make-array 0)
   "This is only here so that we can automatically check the type.")
 
@@ -30,6 +32,12 @@
 
 (defun aex-op (e)
   (getop (car (aex-head e))))
+
+;; is used
+(defun aex-make-n-head (n &key (adjustable t)  (head '(mlist simp)))
+  (make-aex :head head :arr (make-array n :adjustable adjustable)
+              :adjustable adjustable))
+|#
 
 ;; Define a macro for defining functions that takes the options:
 ;; output representation and adjustability.
@@ -187,9 +195,10 @@ refers to the head."
                                  "b : aex_shift(a)"
                                  "a")))
 
+;; moved to aex-base.lisp
 ;; this is used
-(defun aex-length (e)
-  (length (aex-arr e)))
+;;(defun aex-length (e)
+;;  (length (aex-arr e)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; get and set  parts of nested structures
@@ -443,11 +452,6 @@ refers to the head."
   "Same as $copy_aex_type, but to be called from lisp."
   (make-aex :head (aex-head ein) :arr (copy-array-type (aex-arr ein))
             :adjustable (aex-adjustable ein)))
-
-;; is used
-(defun aex-make-n-head (n &key (adjustable t)  (head '(mlist simp)))
-  (make-aex :head head :arr (make-array n :adjustable adjustable)
-              :adjustable adjustable))
 
 ;; is used
 (defun aex-copy-new-n (e &optional (n (length (aex-arr e))) )

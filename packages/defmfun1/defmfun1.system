@@ -21,6 +21,7 @@
     (:file "maxdoc")
     (:file "maxdoc-markup-keys")
     (:file "maxdoc-sections")
+    (:file "aex-base")
     (:file "defmfun1-max")
     (:file "examples")
     (:file "misc-util")

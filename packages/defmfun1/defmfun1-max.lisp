@@ -64,7 +64,8 @@
 ;; Threading, or distributing, over lists of arguments. This is similar
 ;; to stock maxima distributing over bags. But presently, stock maxima
 ;; either threads over all or none of the arguments. Here, we allow
-;; threading over only specified arguments, which is useful.
+;; threading over only specified arguments, which is useful. We
+;; also allow threading over aex (vector) representation.
 ;; We could look at efficiency:
 ;; for instance return before we enter the block (defmspec, defmfun)
 ;; IMPORTANT: functions using thread like this cannot put opts before
@@ -94,7 +95,17 @@
                        (cons '(mlist) (loop :for ith-arg-1 :in (cdr ith-arg) :collect
                          (progn                                            
                            (setf (nth ,i newargs) ith-arg-1)                                    
-                           (apply ',name newargs))))))))
+                           (apply ',name newargs)))))))
+                 (when (and (aex-p ith-arg) (eq (car (aex-head ith-arg)) 'mlist))
+                   (let* ((newargs (copy-list ,args))
+                          (n (aex-length ith-arg))
+                          (retvec (aex-make-n-head n))
+                          (retarr (aex-arr retvec))
+                          (argarr (aex-arr ith-arg)))
+                     (dotimes (j n)
+                       (setf (nth ,i newargs) (aref argarr j))
+                       (setf (aref retarr j) (apply ',name newargs)))
+                     (return-from ,name retvec))))
               thread-forms))
       (incf i))
     (nreverse thread-forms))))
