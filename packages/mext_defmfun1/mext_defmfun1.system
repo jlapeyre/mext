@@ -6,12 +6,11 @@
   :loader "load-mext_defmfun1"
   :install-only "mext_defmfun1-rtests")
 
-;(in-package :cl-user)
-
 (mk:defsystem mext_defmfun1
   :source-extension "lisp"
   :components
-   ((:file "mext_defmfun1_code")))
+   ((:file "mext_defmfun1_code")
+    (:file "misc")))
 
 ;; neither compile nor load when building
 (mk:defsystem load-mext_defmfun1

@@ -306,32 +306,6 @@ This is from wxmaxima
          "it will be written in the same directory as the ouput (binary) file.")
   (mext::mext-compile-file input-file bin_file $tr_file))
 
-(defmfun1 ($format1 :doc) (expr)
-  :desc ("This calls the lisp function format1. It is mostly for testing code.")
-  (format1 expr))
-
-(defmfun1 ($nformat :doc) (expr)
-  :desc ("This calls the lisp function nformat. It is mostly for testing code.")
-  (nformat expr))
-
-(defmfun1 ($zerop :doc) (x)
-  :desc 
-  ("Returns " :code "true" " if " :arg "x" 
-   " represents the number zero, otherwise, " :codedot "false"
-   " This does not try to manipulate " :arg "x" " to determine
-    if it can be reduced to the number zero.")
-  (cond ((numberp x) (zerop x))
-        (($bfloatp x) (zerop (cadr x)))
-;        (($ratp x) (equal 0 (cadr x)))
-        (($ratp x) (zerop (cadr x))) ; when would this fail ?
-        (t nil)))
-
-;; This is from RJF
-;; zerop(x):=if bfloatp(x) then ?zerop(?cadr (x))
-;;            else if ?numberp(x) then ?zerop(x)
-;;            else if ratp(x) then ?equal(0, ?cadr (x))
-;;            else false;
-
 (max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear" 
                           "mext_list_package" "mext_find_package"))
 
