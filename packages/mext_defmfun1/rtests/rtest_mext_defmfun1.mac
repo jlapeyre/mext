@@ -16,7 +16,7 @@ true$
 
 /* Test 5 */
 mext_test(mext_defmfun1,list->true);
-["rtest_predicates", "rtest_mext_defmfun1"]$
+["rtest_misc", "rtest_mext_defmfun1"]$
 
 /* Test 6 */
 is(length(mext_list())>0);

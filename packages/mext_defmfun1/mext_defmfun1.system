@@ -23,4 +23,4 @@
   :source-pathname "rtests"
   :components
     ((:file "rtest_mext_defmfun1")
-     (:file "rtest_predicates")))
+     (:file "rtest_misc")))
