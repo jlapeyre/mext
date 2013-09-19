@@ -93,8 +93,8 @@
                      (return-from ,name 
                        (cons '(mlist) (loop :for ith-arg-1 :in (cdr ith-arg) :collect
                          (progn                                            
-                         (setf (nth ,i newargs) ith-arg-1)                                    
-                         (apply ',name newargs))))))))
+                           (setf (nth ,i newargs) ith-arg-1)                                    
+                           (apply ',name newargs))))))))
               thread-forms))
       (incf i))
     (nreverse thread-forms))))
