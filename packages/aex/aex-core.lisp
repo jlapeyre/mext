@@ -20,6 +20,8 @@
 
 #|
 
+Moved to defmfun1/aex-core.lisp 
+
 (defvar *aex-core-dummy-vector* (make-array 0)
   "This is only here so that we can automatically check the type.")
 
