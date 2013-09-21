@@ -185,7 +185,7 @@
             (rest-name (caadr rest)))
         (dolist (tst (gethash rest-name reqo-spec))
           (push `(mapc
-                  #'(lambda (a)
+                  #'(lambda (a) (incf ,nargs)
                       ,(defmfun1::check-and-error tst 'a name args nargs have-match))
                   ,rest-name)  res))
         (nreverse res))
@@ -322,13 +322,16 @@
 ;; will not be bound. If have-match is true then the match_form attribute
 ;; may be overridden.
 
+;; In signal-arg-error below, we put arg `nil', which represents
+;; that we don't know the argument position. check-and-error sends nargs
+;; instead of nil
 (ddefmacro echeck-arg (fname test arg &optional (have-match nil))
  "check arg <arg> with <test> and signal error with pretty message if check fails.
   for use within the body of a defmfun1 function."
  (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
         (force-match-code (defmfun1::write-force-match-code have-match))
         (sa1 `(defmfun1::signal-arg-error ',test (list ,arg)
-                defmfun1-func-name defmfun1-func-call-args ,@force-match-code))
+                defmfun1-func-name defmfun1-func-call-args nil ,@force-match-code))
         (sa `(,sa1 (return-from ,fname defmfun1-func-call))))
    (if (gethash test defmfun1::*arg-check-preprocess-table*)
        `(let ((res ,fc))

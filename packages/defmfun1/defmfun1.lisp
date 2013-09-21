@@ -276,7 +276,7 @@ in a  mext package.")
 (defun check-and-error (test arg fname args nargs have-match)
   (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
          (force-match-code (write-force-match-code have-match))
-         (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',fname ,args ,@force-match-code))
+         (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',fname ,args ,nargs ,@force-match-code))
          (sa `(,sa1 (return-from ,fname (cons (list ',fname) ,args))))) ; construct and return input form.
     (if (gethash test *arg-check-preprocess-table*)
         `(let ((res ,fc))
@@ -293,11 +293,13 @@ in a  mext package.")
 ;; normal arg with an option (very easy to do). All you get is a cryptic error at runtime.
 ;; This needs to be fixed.
 ;; check-and-error-option is called by defmfun1-write-opt-assignments.
+;; Currently, we send arg `nil' to signal-option-arg-error. It could give
+;; the position of the argument, like nargs.
 (defun check-and-error-option (tst fname opt-name opt-var args have-match)
   (let* ((fc `(funcall ,(defmfun1::get-check-func (car tst)) maxima::val))
         (force-match-code (write-force-match-code have-match))
         (sc `((defmfun1::signal-option-arg-error
-                ',(car tst) (list maxima::val ',opt-name) ',fname ,args ,@force-match-code)
+                ',(car tst) (list maxima::val ',opt-name) ',fname ,args nil ,@force-match-code)
               (return-from ,fname (cons (list ',fname) ,args)))))
   (if (gethash (car tst) *opt-check-preprocess-table*)
       `(let ((res ,fc))
@@ -475,7 +477,7 @@ in a  mext package.")
    in a defmfun1 expansion. If not, the list of call args is lost. But, I
    suppose we could preserve them in a lexical variable. Call this with
    call nil to get the second message."
-  `(defun ,name (spec-name arg-list name call force-match match-val)
+  `(defun ,name (spec-name arg-list name call nargs force-match match-val)
      (let ((spec-args (if (listp spec-name) (rest spec-name) nil))) ; s.a. (:int-range 1 3)
        (when (listp spec-name) (setf spec-name (car spec-name)))
        (let* ((espec (gethash spec-name ,hash))
@@ -493,8 +495,11 @@ in a  mext package.")
          (setf maxima::$error_code err-code) 
          (cond 
           (call
-           (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
-                                          arg-list1 spstr  call-str) force-match match-val)
+           (if nargs
+               (error-or-message name (format nil "~a ~? at position ~a is ~a in ~a.~%" pre-name (car espec)
+                                          arg-list1 nargs spstr  call-str) force-match match-val)
+               (error-or-message name (format nil "~a ~? is ~a in ~a.~%" pre-name (car espec)
+                                          arg-list1 spstr call-str) force-match match-val))
            nil)
           (t
            (maxima::merror1 (format nil "~a ~? is ~a." pre-name (car espec)  arg-list1 spstr))))))))
