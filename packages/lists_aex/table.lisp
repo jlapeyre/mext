@@ -133,7 +133,10 @@
      ((= n 1) (table-number-iterator expr iterators (meval (first next-iterator))))
 
      ;; empty iterator [] or iterator too long
-     (t (merror1 "table: Iterator must be a Maxima list of length between 1 and 4.")))))
+     (t 
+      (throw 'table-error 
+             (list 'table-error
+                   '$iter_length "Iterator must be a list of length between 1 and 4."))))))
 
 ;; Simplest, fastest iteration (no value bound):
 ;; handles iterations like table(a, [100]);
@@ -144,7 +147,11 @@
   (unless (integerp num)
     (if (realp num)
       (setf num (truncate num))
-      (merror1 "table: ~M is not a number." num)))
+      (throw 'table-error
+             (list 'table-error
+                   '$iter_sing_num
+                   (format nil "single-element iterator ~a is not a number" ($sconcat num))))))
+;      (merror1 "table: ~M is not a number." num)))
 
   ;; calculation, ans holds the resulting maxima list
     (let ((ans '()))
@@ -273,7 +280,10 @@
 ;; var-value-list is a 'lisp lisp': '(1 2 3 4) for the above cases
 (defun table-list-iterator (expr iterators var var-value-list)
   ;; error checks
-  (unless ($symbolp var) (merror1 "table: ~M is not a symbol." var))
+  (unless ($symbolp var)
+    (throw 'table-error
+           (list 'table-error '$iter_not_sym (format nil "iterator ~a is not a symbol" var))))
+;           (merror1 "table: ~M is not a symbol." var))
 
   ;; mbinding should throw an error if the `var' is a protected
   ;; symbol like $%pi or $%e
@@ -306,9 +316,12 @@
 (defmfun-ae ($table) ( expr (iterator1 :list) &rest (iterators :list) )
   (push iterator1 iterators)
   (let ((res
-         (table-general-iterator expr (mapcar #'cdr iterators))))
-    (if (eq o-type '$ml) res ; convert to depth of table
-        ($raex res (length iterators)))))
+         (catch 'table-error 
+           (table-general-iterator expr (mapcar #'cdr iterators)))))
+    (if (eq (car res) 'table-error)
+        (defmfun1-error-final (second res) (third res))
+      (if (eq o-type '$ml) res ; convert to depth of table
+        ($raex res (length iterators))))))
 
 (max-doc:see-also "table" '("makelist" "lrange" "constant_list"))
 (max-doc:author "table" "Ziga Lenarcic")
