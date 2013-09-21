@@ -16,7 +16,7 @@ true$
 
 /* Test 5 */
 mext_test(mext_basic,list->true);
-["rtest_misc", "rtest_mext_basic"]$
+["rtest_mext_basic" ,"rtest_misc"]$
 
 /* Test 6 */
 is(length(mext_list())>0);
