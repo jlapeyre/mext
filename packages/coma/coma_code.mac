@@ -336,7 +336,7 @@ block(
   [res,polyfactor:false,liste,ratprint:false],
   res:map(lambda([ff],
   block (
-    liste:chop(allroots(%i*expand(denom(ff)))),
+    liste:coma_chop(allroots(%i*expand(denom(ff)))),
     map(lambda([u],part(u,2)),liste))
   ), ratsimp(flatten([f]))),
   if listp(f) then res else res[1]
@@ -350,7 +350,7 @@ block(
   [res,polyfactor:false,liste,ratprint:false],
   res:map(lambda([ff],
   block (
-    liste:chop(allroots(%i*expand(num(ff)))),
+    liste:coma_chop(allroots(%i*expand(num(ff)))),
     map(lambda([u],part(u,2)),liste))
   ), ratsimp(flatten([f]))),
   if listp(f) then res else res[1]
@@ -894,9 +894,9 @@ list_option_exists(o,l) :=
 set_option(o,l) ::= buildq([o,l],l:endcons(o,delete_option(first(o),l)))$
 
 /* ----------------------------------------------------------------------- */
-/* chop - setting very small numbers to 0                                  */
+/* coma_chop - setting very small numbers to 0                                  */
 /* ----------------------------------------------------------------------- */
-chop(f) :=
+coma_chop(f) :=
 block([epsilon:1.0e-10],
   fullmap(lambda([u], if numberp(u) and cabs(u)<epsilon then 0 else u),f))$
 
