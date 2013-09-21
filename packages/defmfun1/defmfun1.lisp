@@ -273,7 +273,7 @@ in a  mext package.")
 ;; is `preprocessed' in some way. So we check for this.
 ;; check-and-error is called by: defmfun1-write-assignments, 
 ;; defmfun1-write-rest-assignments, 
-(defun check-and-error (test arg fname args have-match)
+(defun check-and-error (test arg fname args nargs have-match)
   (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
          (force-match-code (write-force-match-code have-match))
          (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',fname ,args ,@force-match-code))
@@ -375,7 +375,7 @@ in a  mext package.")
                   (list (car err-mssg-spec) (rest err-mssg-spec))))
           (t (merror "defmfun1::mk-arg-check: Unrecognized arg-class ~M" arg-class)))))
 
-;; For tests that take additional argumens. eg (:int-range 2)
+;; For tests that take additional arguments. eg (:int-range 2)
 (defun mk-arg-check2 (arg-class spec-name-and-args err-mssg-spec body)
   (let* ((emsg (rest err-mssg-spec)))
     ;; throw away the args, but we should use then for checking

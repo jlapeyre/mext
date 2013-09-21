@@ -134,7 +134,7 @@
             (push `(setf ,targ (pop ,restarg)) res)
             (when (gethash targ supplied-p-hash) (push `(setf ,(gethash targ supplied-p-hash) t) res))
             (dolist (tst (gethash targ reqo-spec))
-              (push (defmfun1::check-and-error tst targ name args have-match) res))
+              (push (defmfun1::check-and-error tst targ name args nargs have-match) res))
             (dolist (pp (gethash targ pp-spec-h))
                (push `(setf ,targ (funcall ,(defmfun1::get-pp-func pp) ,targ)) res)))
    out)))
@@ -179,14 +179,14 @@
 ;                                         (defmfun1::err-prefix ',name) ($sconcat ',name) ($sconcat var) ))))))))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-(defun defmfun1-write-rest-assignments (name args rest reqo-spec have-match)
+(defun defmfun1-write-rest-assignments (name args rest reqo-spec nargs have-match)
   (if rest
       (let ((res)
             (rest-name (caadr rest)))
         (dolist (tst (gethash rest-name reqo-spec))
           (push `(mapc
                   #'(lambda (a)
-                      ,(defmfun1::check-and-error tst 'a name args have-match))
+                      ,(defmfun1::check-and-error tst 'a name args nargs have-match))
                   ,rest-name)  res))
         (nreverse res))
       nil)))
@@ -279,7 +279,7 @@
                 ,@(when (and (null rest) count-args)
                     `((if ,restarg ,(defmfun1::narg-error-or-message 
                                       name args restarg nargs nreq nreqo rest have-match))))
-                ,@(defmfun1-write-rest-assignments name args rest reqo-spec have-match)
+                ,@(defmfun1-write-rest-assignments name args rest reqo-spec nargs have-match)
                 ,@body)))))))))
 
 ;; Not using this
