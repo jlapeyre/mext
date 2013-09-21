@@ -37,9 +37,9 @@
                 (setq each-result (meval* v)))
                each-result)))
          (elapsed-run-seconds
-          (/ (- (get-internal-run-time) start-run) to-sec))
+          (quotient (float (- (get-internal-run-time) start-run)) to-sec))
          (elapsed-real-seconds
-          (/ (- (get-internal-real-time) start-real) to-sec)))
+          (quotient (float (- (get-internal-real-time) start-real)) to-sec)))
     (if $print
         (progn
           (ecase $time
