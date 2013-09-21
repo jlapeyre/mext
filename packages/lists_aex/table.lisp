@@ -161,6 +161,8 @@
   (unless ($symbolp var) (merror1 "table: ~M is not a symbol." var))
   (cond
     ((and (typep var-start 'fixnum)  (typep var-step 'fixnum))
+     (unless (numberp var-end)
+       (merror1 "table: ~M is not a number." var-end))
      (if (> var-step 0)
          (table-step-iterator-lisp-numbers-fixnum-pos expr iterators var var-start var-end var-step)
          (table-step-iterator-lisp-numbers-fixnum-neg expr iterators var var-start var-end var-step)))
