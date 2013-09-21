@@ -1,4 +1,0 @@
-require("maxdoc");
-
-mext_provide("mext_defmfun1",
-  ["mext_defmfun1_code", "misc"]);

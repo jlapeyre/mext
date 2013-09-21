@@ -13,7 +13,7 @@ For installing, see
   
 (%i2) mext_list_loaded();
 (%o2) [aex, alt_eigen, defmfun1, discrete_aex, fourier_elim, grobner, 
-lists_aex, maxdoc, mext_defmfun1, mext_system, numerical, runtime, to_poly, 
+lists_aex, maxdoc, mext_basic, mext_system, numerical, runtime, to_poly, 
 tpsolve]
 
  See all available mext packages.
@@ -21,7 +21,7 @@ tpsolve]
 (%i3) mext_list();
 (%o3) [aex, alt_eigen, bernstein, circuits, coma, defmfun1, discrete, 
 discrete_aex, fourier_elim, grobner, implicit, lists_aex, maxdoc, 
-mext_defmfun1, mext_system, nelder_mead, numerical, pw, runtime, 
+mext_basic, mext_system, nelder_mead, numerical, pw, runtime, 
 test_defmfun1, to_poly, tpsolve]
 
  If you want to load another package, use require(packagename).

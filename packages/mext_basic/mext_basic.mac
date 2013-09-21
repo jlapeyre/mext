@@ -1,0 +1,4 @@
+require("maxdoc");
+
+mext_provide("mext_basic",
+  ["mext_basic_code", "misc"]);

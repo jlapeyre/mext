@@ -11,7 +11,7 @@ kill(all);
 */
 
 /*
-our_test_list : [mext_system,mext_defmfun1,aex,lists_aex,discrete_aex,alt_eigen];
+our_test_list : [mext_system,mext_basic,aex,lists_aex,discrete_aex,alt_eigen];
 */
 
 /* our_test_list : [mext_system,aex,lists_aex,discrete_aex]; */

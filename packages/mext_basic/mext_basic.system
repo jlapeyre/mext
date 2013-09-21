@@ -1,0 +1,26 @@
+;;-*- Mode: Lisp -*-
+;; System definition file for building and installing mext_basic
+(in-package :mext-maxima)
+
+(create-distribution "mext_basic"
+  :loader "load-mext_basic"
+  :install-only "mext_basic-rtests")
+
+(mk:defsystem mext_basic
+  :source-extension "lisp"
+  :components
+   ((:file "mext_basic_code")
+    (:file "misc")))
+
+;; neither compile nor load when building
+(mk:defsystem load-mext_basic
+  :source-extension "mac"
+  :components
+   ((:file "mext_basic")))
+  
+(mk:defsystem mext_basic-rtests
+  :source-extension "mac"
+  :source-pathname "rtests"
+  :components
+    ((:file "rtest_mext_basic")
+     (:file "rtest_misc")))

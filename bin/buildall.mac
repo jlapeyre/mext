@@ -17,7 +17,7 @@ build_several (package_list) :=
 */
 
 build_several( [
-            "defmfun1", "maxdoc", "mext_defmfun1", "aex",
+            "defmfun1", "maxdoc", "mext_basic", "aex",
             "lists_aex", "discrete_aex", "numerical" ]);
 
 /* Following are third party packages adapted to mext */

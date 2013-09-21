@@ -1,7 +1,7 @@
 load(mext);
 require("defmfun1");
 require("maxdoc");
-load_in_subdir(["mext_defmfun1","system"]);
+load_in_subdir(["mext_basic","system"]);
 mext_dist_clean();
 mext_dist_build();
 mext_dist_user_install();

@@ -22,7 +22,7 @@ build_several (package_list) :=
 
 /* build_several([  "maxdoc" ]); */
 
-build_several([ "defmfun1", "maxdoc", "mext_defmfun1", "test_defmfun1", "runtime", "aex",
+build_several([ "defmfun1", "maxdoc", "mext_basic", "test_defmfun1", "runtime", "aex",
                 "lists_aex", "discrete_aex", "numerical", "alt_eigen", "grobner_mext",
                 "to_poly_mext", "fourier_elim_mext", "tpsolve" ]);
 

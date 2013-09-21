@@ -50,7 +50,7 @@ build_one_package () {
  $maxima -b  $topdir/packages/$1/ibuild.mac
 }
 
-packages1="defmfun1 maxdoc mext_defmfun1"
+packages1="defmfun1 maxdoc mext_basic"
 
 packages2="
 test_defmfun1 runtime aex lists_aex

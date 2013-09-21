@@ -1,5 +1,0 @@
-Many of the functions here are already defined in
-mext-maxima-system.lisp. They are redefined here
-to take advantage of defmfun1. This is because
-defmfun1 depends on mext_system.
-

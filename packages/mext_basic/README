@@ -1,0 +1,9 @@
+Many of the functions here are already defined in
+mext-maxima-system.lisp, which provides the bare minimum
+of the mext system.
+
+They are redefined here to take advantage of defmfun1 and maxdoc, 
+which depends on, and can only be build after, the mext_system.
+
+The defmfun1 definitions allow sophisitcated argument checking,
+threading, documentation, etc.
