@@ -507,7 +507,7 @@ This was copied from maxima source init-cl.lisp.")
                           (setf testdir-list (cons 
                                               (if (eq list-only t)
                                                   pnfile (namestring file)) testdir-list)))))))
-      (if list-only (maxima::mk-mlist testdir-list)
+      (if list-only (maxima::$sort (maxima::mk-mlist testdir-list))
         (progn
           (setf maxima::$testsuite_files (maxima::mk-mlist testdir-list))
           (maxima::$run_testsuite))))))
