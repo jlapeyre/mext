@@ -672,7 +672,7 @@ in a  mext package.")
 
 (defun make-arg-spec-hash (specs)
   "Collect argument (parameter) check specification into a hash keyed by parameter name.
-   This hash is build during expansion of a defmfun1 and it is checked when writing the code
+   This hash is built during expansion of a defmfun1 and it is checked when writing the code
    that does assignment."
   (let ((h (make-hash-table)))
     (dolist (e specs)
