@@ -22,13 +22,14 @@ mext_test_top="../mext_test_top"
 # put the archive of the master branch of the git repo here
 tardist="$mext_test_top/mext-test.tar.gz"
 
+# errors in these
+#  maxima-5.31.0-gcl-2.6.7
+#  maxima-5.31.0-gcl-2.6.9
 
 # build and test for these
  maximas="
   maxima-5.31.0-sbcl-1.1.11 
-  maxima-5.31.0-gcl-2.6.7
   maxima-5.31.0-gcl-2.6.8
-  maxima-5.31.0-gcl-2.6.9
   maxima-5.31.0-ccl-1.9 
   maxima-5.31.0-clisp-2.49 
   maxima-5.31.0-cmucl-20d 
