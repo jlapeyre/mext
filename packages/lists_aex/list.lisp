@@ -108,9 +108,14 @@
                                         :adjustable adj-type)
              (max-list::num-range imin imax incr)))
         (t (setf d ($float (meval `((mtimes) ((mplus) ,imax ((mtimes) ,imin -1)) ((mexpt) ,incr -1)))))
-           (if (not (numberp d)) (maxima::merror1 (format nil "lrange: ~a is not a number. The ratio of ~
+           (if (not (numberp d))
+               (defmfun1-error-return '$lrange_invalid_inc
+                        $lrange (format nil "lrange: ~a is not a number. The ratio of ~
                          the difference~%    between the second and first argument to ~
-                                          third argument must be a number." ($sconcat d)))
+                                          third argument must be a number" ($sconcat d)))
+; (maxima::merror1 (format nil "lrange: ~a is not a number. The ratio of ~
+;                         the difference~%    between the second and first argument to ~
+;                                          third argument must be a number." ($sconcat d)))
                (progn (setf d (floor d))
                       (if (eq o-type '$ar)
                           (let ((oar (make-array (1+ d) :adjustable adj-type :fill-pointer adj-type)))

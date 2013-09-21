@@ -241,7 +241,8 @@ in a  mext package.")
    but do not signal an error if match_form is set."
   (when err-code (setf maxima::$error_code err-code)); dont pass to merror1
   (cond ((or (and force-match match-val) (and (not force-match) (is-match-form name)))
-         (unless (is-nowarn name) (format t (concatenate 'string "Warning: " mssg)))
+;         (unless (is-nowarn name) (format t (concatenate 'string "Warning: " mssg)))
+         (unless (is-nowarn name) (format t "Warning: ~a~%" mssg))
          t)  ; return true here so that the calling function knows not to exit. Umm not sure its used.
         (t
          (maxima::merror1 mssg)
