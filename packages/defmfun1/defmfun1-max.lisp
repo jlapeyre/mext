@@ -280,7 +280,8 @@
                     `((if ,restarg ,(defmfun1::narg-error-or-message 
                                       name args restarg nargs nreq nreqo rest have-match))))
                 ,@(defmfun1-write-rest-assignments name args rest reqo-spec nargs have-match)
-                ,@body)))))))))
+                ,@body))))
+       (defmfun1::set-attribute ',name '$match_form))))))
 
 ;; Not using this
 ;; (defmacro dcheck-arg (spec-name arg)

@@ -1,20 +1,22 @@
-/* Test 1 */
+/* xx Test  */
+/* disable for the moment
 first(attributes('table))$
 'hold_all;
+*/
 
-/* Test 2 */
+/* Test 1 */
 table(0,[3]);
 [0,0,0]$
 
-/* Test 3 */
+/* Test 2 */
 table(i,[i,3]);
 [1,2,3]$
 
-/* Test 4 */
+/* Test 3 */
 table( x^y, [x,1,2], [y,1,2]);
 [[1,1],[2,4]]$
 
-/* Test 5 */
+/* Test 4 */
 table(sin(x),[x,0,2*%pi,%pi/4]);
 [0,1/sqrt(2),1,1/sqrt(2),0,-1/sqrt(2),-1,-1/sqrt(2),0]$
 

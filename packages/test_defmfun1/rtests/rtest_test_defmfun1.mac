@@ -1,3 +1,8 @@
+/*
+   These tests must be revised. They
+   are not always checking for proper behavior.
+*/   
+
 /* dtest1 must take no arguments */
 
 /* Test 1 */

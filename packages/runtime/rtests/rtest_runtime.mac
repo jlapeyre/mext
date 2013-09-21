@@ -1,6 +1,6 @@
 /* Test 1 */
 attributes(timing);
-['hold_all]$
+['match_form, 'hold_all]$
 
 /* Test 2 */
 numberp(first(timing()));

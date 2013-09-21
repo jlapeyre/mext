@@ -18,7 +18,7 @@ foptions('foptions);
 
 /* Test 5 */
 attributes('foptions);
-[]$
+['match_form]$
 
 /* Test 6 */
 /* Once again, this should give an error */
