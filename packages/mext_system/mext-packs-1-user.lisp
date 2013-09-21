@@ -14,7 +14,7 @@
 (when (not (find-package :mext-maxima-load))
   ($load "mext_load.lisp"))
 
-(loop :for mext-package :in '( "mext_defmfun1" ) :do 
+(loop :for mext-package :in '( "mext_basic" ) :do 
       ($require mext-package))
 
 

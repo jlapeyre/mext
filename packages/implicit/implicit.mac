@@ -1,4 +1,4 @@
-require("mext_defmfun1");
+require("mext_basic");
 
 dont_kill(imp_taylor, imp_puiseux, imp_newton);
 

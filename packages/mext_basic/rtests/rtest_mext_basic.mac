@@ -15,8 +15,8 @@ listp(dirstack());
 true$
 
 /* Test 5 */
-mext_test(mext_defmfun1,list->true);
-["rtest_misc", "rtest_mext_defmfun1"]$
+mext_test(mext_basic,list->true);
+["rtest_misc", "rtest_mext_basic"]$
 
 /* Test 6 */
 is(length(mext_list())>0);
@@ -27,7 +27,7 @@ mext_info('mext_system);
 done$
 
 /* Test 8 */
-require(mext_defmfun1);
+require(mext_basic);
 done$
 
 /* Test 9 */
@@ -73,14 +73,14 @@ true$
 
 /* Test 16 */
 mext_find_package('mext_test);
-["mext_defmfun1"]$
+["mext_basic"]$
 
 /* Test 17 */
 mext_find_package('mext_test,file->true);
-[["mext_defmfun1","mext_defmfun1_code.lisp"]]$
+[["mext_basic","mext_basic_code.lisp"]]$
 
 /* Test 18 */
 mext_find_package('mext_test, 'attributes, file->true);
-[[["mext_defmfun1","mext_defmfun1_code.lisp"]],
+[[["mext_basic","mext_basic_code.lisp"]],
         [["defmfun1","defmfun1-max.lisp"]]]$
 

@@ -1,4 +1,4 @@
-require("mext_defmfun1");
+require("mext_basic");
 
 mext_provide( "alt_eigen",
   [ "alt_eigen_code",

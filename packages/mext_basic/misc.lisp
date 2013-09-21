@@ -1,7 +1,7 @@
 (in-package :maxima)
 
 (max-doc:set-cur-sec 'max-doc::runtime-fandv)
-(defmfun1:set-file-and-package "misc.lisp" "mext_defmfun1")
+(defmfun1:set-file-and-package "misc.lisp" "mext_basic")
 
 (defmfun1 ($format1 :doc) (expr)
   :desc ("This calls the lisp function format1. It is mostly for testing code.")

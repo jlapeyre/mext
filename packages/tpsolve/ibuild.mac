@@ -1,5 +1,5 @@
 load(mext);
-require("mext_defmfun1");
+require("mext_basic");
 require("to_poly");
 load_in_subdir(["tpsolve","system"]);
 mext_dist_clean();

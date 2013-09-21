@@ -4,7 +4,7 @@
 ;;; in mext-maxima-system.lisp.
 
 (max-doc:set-cur-sec 'max-doc::runtime-fandv)
-(defmfun1:set-file-and-package "mext_defmfun1_code.lisp" "mext_defmfun1")
+(defmfun1:set-file-and-package "mext_basic_code.lisp" "mext_basic")
 
 (maxdoc:mdefmvar $homedir (namestring mext::*homedir-pathname*)
  "The user's home directory.")
@@ -64,7 +64,7 @@
    " directory or file extension parts. If the option " :opt "list" " is " :emrefcomma "true"
    " then the tests are not performed, but a list of the rtest files is returned. If "
    :opt "list" " is " :varcomma "long" " then the full pathnames of the rtest files are listed. "
-   " Note: if the package " :mref "mext_defmfun1" " is not loaded, then only a rudimentary "
+   " Note: if the package " :mref "mext_basic" " is not loaded, then only a rudimentary "
    " version of " :mrefcomma "mext_test" " which does not accept options, is available.")
   (apply #'mext::mext-test (cons $list dists))))
 

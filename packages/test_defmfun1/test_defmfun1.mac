@@ -1,4 +1,4 @@
-require("mext_defmfun1");
+require("mext_basic");
 mext_provide("test_defmfun1",
   [ "test1" ]);
 

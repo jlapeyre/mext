@@ -1,5 +1,5 @@
-/* require(["mext_defmfun1","tpsolve"]); */
+/* require(["mext_basic","tpsolve"]); */
 /* Not yet using tpsolve */
-require(["mext_defmfun1"]);
+require(["mext_basic"]);
 mext_provide("numerical",
   [ "numerical-packages", "nintegrate", "quadpack-nint" ]);

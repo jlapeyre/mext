@@ -388,7 +388,7 @@
 ;; defmvar is defined in src/commac.lisp
 ;; TODO: checking for, or handling number of args should be improved.
 ;; TODO: rewrite so that the eval is not neccessary.
-;;       It is needed for $homedir in mext_defmfun1/mext_defmfun1_code.lisp.
+;;       It is needed for $homedir in mext_basic/mext_basic_code.lisp.
 ;; Where does the unwanted newline come from  when printing the error message (inside `~m') ?
 (defmacro mdefmvar (var &body val-and-doc)
   (let ( (length-val-and-doc (length val-and-doc))

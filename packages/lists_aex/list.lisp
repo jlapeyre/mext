@@ -459,7 +459,7 @@
      a))
 
 ; this is the definition of format1
-; There is a defmfun1 interface in mext_defmfun1
+; There is a defmfun1 interface in mext_basic
 ;(defmfun format1 (e)
 ;  (cond (($listp e) e)
 ;	($inflag (specrepcheck e))

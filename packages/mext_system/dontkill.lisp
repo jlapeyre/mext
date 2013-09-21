@@ -1,7 +1,7 @@
 (in-package :mext-maxima)
 
 ;;; Setup tables and functions for protecting symbols from `kill'.
-;;; An interface function for maxima is in mext_defmfun1.
+;;; An interface function for maxima is in mext_basic.
 
 (defvar *dont-kill-share-table* 
   (make-hash-table :test 'equal)
