@@ -66,11 +66,20 @@ effect on numbering the tests.
 
 =item B<-d> | B<--dir> 
 
-Prepend the directory B<dir> to each filename 
+Prepend the directory B<dir> to the pathname of each rtest.
+For example, the rtest files listed in this script
+are given like
+
+ packname/rtests/rtest_packname.mac
+
+So, to renumber all tests from the top-level of mext, type
+
+ ./bin/rtest_renumber.pl -d packages
 
 =item B<--dry>
 
-Dry run, do not write any files.
+Dry run. No files are written, copied, or changed. But all
+messages are printed as if they were changed.
 
 =item B<-q> | B<--quiet> 
 
@@ -96,6 +105,9 @@ John Lapeyre
 
 =cut
 
+# To find some files that are not prepared for numbering:
+# grep -L  '/\* Test'  packages/*/rtests/*.mac
+
 my @Rtests = qw (
  aex/rtests/rtest_aex.mac
  aex/rtests/rtest_afuncs.mac
@@ -109,8 +121,8 @@ my @Rtests = qw (
  lists_aex/rtests/rtest_table.mac
  lists_aex/rtests/rtest_take.mac
  maxdoc/rtests/rtest_maxdoc.mac
- mext_defmfun1/rtests/rtest_mext_defmfun1.mac
- mext_defmfun1/rtests/rtest_predicates.mac
+ mext_basic/rtests/rtest_mext_basic.mac
+ mext_basic/rtests/rtest_misc.mac
  mext_system/rtests/rtest_load_in_subdir.mac
  numerical/rtests/rtest_mquad.mac
  numerical/rtests/rtest_numerical.mac
@@ -136,7 +148,7 @@ GetOptions ("quiet|q" => \$Quiet,
             "man" => \$Man,
             "dir|d=s" => \$Toplevel,
             "dry" => \$Dry)
- or die("rtest_renumber: Error in command line arguments: $!");
+ or die("*** rtest_renumber: Error in command line arguments: $!");
 
 pod2usage( -verbose => 2 ) if $Man;
 pod2usage( -verbose => 1 ) if $Help;
@@ -158,11 +170,11 @@ sub rewrite_one_rtest {
         $rtest = catfile($Toplevel,$rtest);
     }
     if ( not -e $rtest ) {
-        die "File `$rtest' does not exist";
+        die "*** File `$rtest' does not exist.";
     }
     my $count = 0;
     open my $IH, '<', $rtest or die
-        "Can't open `$rtest' for reading";
+        "*** Can't open `$rtest' for reading: $!";
     my $outstr = '';
     my $origstr = '';
     my $renumbered_flag = 0;
@@ -191,13 +203,13 @@ sub rewrite_one_rtest {
         my $backup = $rtest . '.back';
         print "Copying `$rtest' to `$backup'.\n" if $Verbose;
         if (not $Dry) {
-            copy($rtest,$backup) or die "Copy `$rtest' to `$backup' failed: $!";
+            copy($rtest,$backup) or die "*** Copy `$rtest' to `$backup' failed: $!";
         }
         print "Writing `$rtest'.\n" if $Verbose;
         if (not $Dry) {
             open my $OH , '>', $rtest or die
-                "Can't open `$rtest' for writing";
-            print $OH $outstr or die "Writing line to file `$rtest' failed: $!";
+                "*** Can't open `$rtest' for writing";
+            print $OH $outstr or die "*** Writing line to file `$rtest' failed: $!";
             close($OH);
         }
     }
