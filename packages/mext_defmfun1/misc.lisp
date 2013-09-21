@@ -35,3 +35,34 @@
     the option " :optdot "eps")
   (if (and (numberp x) (<= (abs x) $eps)) 0
     x))
+
+;; iparse_string and ieval_string are the same as stock maxima,
+;; but they get defmfun1 error checking and threading.
+
+;; copied from eval_string.lisp, because we would need to autoload that
+;; somehow. Note that this function will not give correct behavior on
+;; all input.
+(defun mext::ensure-terminator (s)
+  (cond
+    ((or (search "$" s :test #'char-equal) (search ";" s :test #'char-equal))
+     s)
+    (t
+      (concatenate 'string s "$"))))
+
+(defmfun1 ($iparse_string :doc) ((string :string :thread))
+  :desc
+  ("Slightly enhanced version of " :emrefdot "parse_string")
+  (declare (special *mread-prompt*))
+  (with-input-from-string
+    (ss (mext::ensure-terminator string))
+    (third (let ((*mread-prompt*)) (mread ss)))))
+
+(defmfun1 ($ieval_string :doc) ((string :string :thread))
+  :desc
+  ("Slightly enhanced version of " :emrefdot "eval_string")
+  (meval ($iparse_string string)))
+
+(defmfun1 ($string_length :doc) ((string :string :thread))
+  :desc
+  ("Returns the number of characters in " :argdot "string")
+  (length string))
