@@ -1,1 +1,11 @@
 Finish fixing non-local exits in table.lisp
+
+
+These fail to give what we want.
+
+table(<<i,j>>,[i,3],[j,3], ot->ar);
+
+table(aex([i,j]),[i,3],[j,3], ot->ar);
+
+This does work, the grind is just to be sure.
+grind(faex(table([i,j],[i,3],[j,3], ot->ar)));
