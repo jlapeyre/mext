@@ -1,5 +1,9 @@
 (in-package :maxima)
 
+;;; There is a small amount of support for aex
+;;; in defmfun1-max.lisp. So we define a few things
+;;; here rather than in packge aex.
+
 (mext:mext-optimize)
 (use-package :gjl.lisp-util)
 (use-package :max-doc)
