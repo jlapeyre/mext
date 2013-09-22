@@ -388,9 +388,25 @@ refers to the head."
           (setf ,ein ($lex ,ein ))))
 
 ;; is used
+;; not sure why these are defined here. Existing functions were not
+;; adequate ?
+;; These should be moved or not used or something!!
+;; probably to save a function call or two ???
+(defun lbfloatp (x)
+  (eq (caar x) 'bigfloat))
+
+;; is used
+(defun lratp (x)
+  (eq (caar x) 'mrat))
+
+;; is used
+(defun lspecrepp (x)
+  (or (lbfloatp x) (lratp x)))
+
+;; is used
 (defmfun-aeo ($aex :doc) (&optional x )
   (cond ((null x) (make-aex))
-        ((and (listp x) (not ($lspecrepp x)))
+        ((and (listp x) (not (lspecrepp x)))
           (make-aex :head (car x) :adjustable adj-type
                                 :arr (aex-copy-to-vector (cdr x) (if adj-type
                    (make-array (length (cdr x)) :adjustable t :fill-pointer t)
@@ -407,7 +423,7 @@ refers to the head."
 (defun aex-to  (x &key (adjustable t) (element-type t))
 ;;  (format t "elements ~a~%"  element-type)
   (cond 
-    ((and (listp x) (not ($lspecrepp x)))
+    ((and (listp x) (not (lspecrepp x)))
      (make-aex :head (car x) :adjustable adjustable
         :arr (aex-copy-to-vector (cdr x)
             (if adjustable
@@ -420,7 +436,7 @@ refers to the head."
 ;; just for convenience
 (defmfun-aeo-adj-false $aex_adj_false (&optional x )
   (cond ((null x) (make-aex))
-        ((and (listp x) (not ($lspecrepp x)))
+        ((and (listp x) (not (lspecrepp x)))
           (make-aex :head (car x) :adjustable adj-type
                                 :arr (aex-copy-to-vector (cdr x) (if adj-type
                    (make-array (length (cdr x)) :adjustable t :fill-pointer t)
@@ -430,6 +446,7 @@ refers to the head."
 ;; copy list to a vector.
 ;; use this because initializing array with intial contents is so slow in gcl
 ;; assume 'to' is a sequence already large enough to hold 'from'
+;; Maybe gcl has fixed this and we can use it optionally
 (defun aex-copy-to-vector (from to)
   (when (listp from)
       (do* ( (e from (cdr e))
@@ -440,8 +457,13 @@ refers to the head."
         (setf (elt to i) x))))
 
 ;; is used
-(defmfun1 ($aex_new :doc) ((n :non-neg-int) &optional (head mlist))
-  (aex-make-n-head n :head `(,head simp)))
+(defmfun1 ($aex_new :doc) ((n :non-neg-int) &optional (head mlist)
+                           &opt ($type t) ($init nil init-supplied-p ))
+  :desc
+  ("makes a new aex object. The default op is list. Default type is any (true).
+    Default initial element is the lisp default.")
+  (aex-make-n-head n :head `(,head simp) :element-type $type
+                   :initial-element $init :supply-init-element init-supplied-p ))
 
 ;; is used. 
 (defmfun1 ($copy_aex_type :doc) ((ein :aex))
@@ -735,20 +757,6 @@ refers to the head."
 (defmfun $aex_adj_p (x)
   (aex-adjustable x))
 ;;  (adjustable-array-p (aex-arr x)))
-
-;; not sure why these are defined here. Existing functions were not
-;; adequate ?
-;; is used
-(defun $lbfloatp (x)
-  (eq (caar x) 'bigfloat))
-
-;; is used
-(defun $lratp (x)
-  (eq (caar x) 'mrat))
-
-;; is used
-(defun $lspecrepp (x)
-  (or ($lbfloatp x) ($lratp x)))
 
 ;; is used
 (defun op-a (e)
