@@ -109,7 +109,6 @@
           x (msize-list (cdr x) nil r))
     (cons (+ (car l) (car x)) (cons l (cdr x)))))
 
-
 (defun msize-function-aex (x l r op)
   (let* ((head (caar x)))
     (cond ((not (symbolp head)))
