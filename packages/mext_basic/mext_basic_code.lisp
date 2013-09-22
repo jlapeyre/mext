@@ -196,7 +196,7 @@ Setting it has no effect.")
 "The lisp version number of the lisp implementation on which Maxima is running.")
 
 (maxdoc:mdefmvar $lisp_type (cl::lisp-implementation-type)
-"The name of the lisp implementation on which Maxima is running.")
+"The name of the lisp implementation, as a string, on which Maxima is running.")
 
 ;; These are defined in mext-maxima-system.lisp,
 ;; but doc system says they are defined here. Could fix this.
