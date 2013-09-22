@@ -19,7 +19,7 @@
   (loop for file in (list  #+openmcl 
       "defsystem" "operate-on-system2"
       "gjl-lisp-util" "gjl-maxima-util" "pathname-library" 
-      "mext-maxima-system" "dontkill"
+      "mext-maxima-system" "dontkill" "fix-tex"
       "mext-component-operations" "compile") do
     (load-one file mext-maxima-load::*binary-ext*))
 ;  #-gcl (load-one "quicklisp" mext-maxima-load::*binary-ext*)
