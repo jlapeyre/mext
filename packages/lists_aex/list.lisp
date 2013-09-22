@@ -68,7 +68,7 @@
            (if (< n 0) (setf n 0))
            (setf n (floor n incr))
            (if (= 0 n)
-               (setf oar (make-array 0 :adjustable adj-type :fill-pointer adj-type))
+               (setf oar (make-array 0 :adjustable adj-type :element-type t :fill-pointer adj-type))
              (setf oar (make-array (+ n 1) :element-type t :adjustable adj-type :fill-pointer adj-type)))
            (cond ( (<= n 0) oar)
                  (t (let ( (val imin) )
@@ -103,7 +103,7 @@
 
 (defmfun-ae $lrange ((arg1 :thread) &optional (imax :thread) (incr 1 :not-zero :thread)  &aux (imin 1) d lst)
   (if (null imax) (setf imax arg1) (setf imin arg1)) ; different number of args changes semantics
-  (cond ( (and (numberp imin) (numberp imax) (numberp incr))
+  (cond ((and (numberp imin) (numberp imax) (numberp incr))
          (if (eq o-type '$ar) (make-aex :head '(mlist simp) :arr (max-list::ar-num-range adj-type imin imax incr)
                                         :adjustable adj-type)
              (max-list::num-range imin imax incr)))
