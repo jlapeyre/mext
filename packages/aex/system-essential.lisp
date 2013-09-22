@@ -50,19 +50,6 @@
            t)))
     nil))
 
-;; not used
-;; whats this ?
-(defmfun-ae-in $apply_a (fun arg)
-  (aesimp-in-to-ml-1 arg)
-  (unless ($listp arg)
-    (merror1 (intl:gettext "apply: second argument must be a list; found: ~M") arg))
-  (let ( (oexpr
-          (let ((fun-opr (getopr fun)))
-            (autoldchk fun-opr)
-            (mapply1 fun-opr (cdr arg) fun `(($apply) ,fun ,arg)))))
-    (aesimp-out-1 oexpr)))
-
-
 ;;;  It appears that msize-atom must be changed, but not msize.
 
 (mext::no-warning
@@ -158,6 +145,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
+
+;; not used
+;; whats this ?
+(defmfun-ae-in $apply_a (fun arg)
+  (aesimp-in-to-ml-1 arg)
+  (unless ($listp arg)
+    (merror1 (intl:gettext "apply: second argument must be a list; found: ~M") arg))
+  (let ( (oexpr
+          (let ((fun-opr (getopr fun)))
+            (autoldchk fun-opr)
+            (mapply1 fun-opr (cdr arg) fun `(($apply) ,fun ,arg)))))
+    (aesimp-out-1 oexpr)))
 
 #|
 (defun msize (x l r lop rop) 
