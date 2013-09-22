@@ -680,26 +680,27 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;; aelistp
+;;; ilistp
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Does this really belong here ?
-(add-doc-entry '("aelistp"
-               :contents ( "Returns true if " :arg "e" " is a list, either ml or ar representation.")))
-(defmfun $aelistp (e)
+
+(defmfun1 ($ilistp :doc) (e)
+  :desc
+  ("Returns true if " :arg "e" " is a list, either lisp list or array representation.")
          (or (and (aex-p e)
                   (eq (car (aex-head e)) 'mlist))
              (and (not (atom e))
                   (not (atom (car e)))
                   (eq (caar e) 'mlist))))
 
-(examples::clear-examples "aelistp")
-(examples::add-example "aelistp"
+(examples::clear-examples "ilistp")
+(examples::add-example "ilistp"
                        '( 
                           :vars "[x,y]"         
-                          :code ("aelistp([1,2,3])" "aelistp( aex([1,2,3]))" "aelistp(3)" "aelistp(x)"
-                                 "x:lrange(10),aelistp(x)" "aelistp(%%f(y))" "aelistp( aex( %%f(y) ))")))
+                          :code ("ilistp([1,2,3])" "ilistp( aex([1,2,3]))" "ilistp(3)" "ilistp(x)"
+                                 "x:lrange(10),ilistp(x)" "ilistp(%%f(y))" "ilistp( aex( %%f(y) ))")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
