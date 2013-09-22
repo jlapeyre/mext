@@ -102,10 +102,20 @@
          (the #-ecl (values t) #+ecl t (funcall msize-fun x1 l r))))
       (t (msize-function-aex x1 l r nil)))))
 
+;; Using << >> instead of < >, allows us to copy output
+;; and use it as input.
 (defun msize-matchfix-aex (x l r)
   (let* ((ssym (strsym (caar x)))
-         (sleft (cons #\< (car ssym)))
-         (sright (append (cdr ssym) (list #\>))))
+
+; single < >
+;         (sleft (cons #\< (car ssym)))
+;         (sright (append (cdr ssym) (list #\>))))
+
+; double << >>
+         (sleft (cons #\< (cons #\< (car ssym))))
+         (sright (append (cdr ssym) (list #\> #\>))))
+
+
     (setq l (nreconc l sleft)
           l (cons (length l) l)
           r (append sright r)
@@ -121,8 +131,15 @@
           ((and (get head 'noun) (not (member head (cdr $aliases) :test #'eq))
                 (not (get head 'reversealias)))
            (setq l (cons #\' l))))
-    (setq l (msize (if op (getop head) head) l (list #\< ) 'mparen 'mparen)
-          r (msize-list (cdr x) nil (cons #\> r)))
+
+; single < >
+;    (setq l (msize (if op (getop head) head) l (list #\< ) 'mparen 'mparen)
+;          r (msize-list (cdr x) nil (cons #\> r)))
+
+;; double << >>
+    (setq l (msize (if op (getop head) head) l (list #\< #\< ) 'mparen 'mparen)
+          r (msize-list (cdr x) nil (cons #\> (cons #\> r))))
+
     (cons (+ (car l) (car r)) (cons l (cdr r)))))
 
 #| don't mess with apply now
@@ -138,6 +155,8 @@
 |#
 
 ;;; Code below can probably be removed
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
 
 #|
@@ -156,6 +175,7 @@
 
 #|
 
+;; Not used now
 (defun msize-good-kinda (x l r lop rop)
   (let ( ( aef (if (aex-p x) t nil)))
     (setf x (aex-lex x))
@@ -186,7 +206,8 @@
 
 (defvar *aex-msize-char* #\~)
 
-;; for now, we just convert aex to lex and there is no visual difference
+;; 
+;; If we use this function, then we just convert aex to lex and there is no visual difference
 (defun msize-just-convert-aex (x l r lop rop)
   (setf x (aex-lex x))
   (setq x (nformat x))
