@@ -40,9 +40,11 @@
 (def-num-range-type num-range-int fixnum)
 (def-num-range-type num-range-float float)
 
-(defun ar-num-range (adj-type imin imax incr )
+(defun ar-num-range (adj-type element-type imin imax incr )
   (if (and (typep imin 'fixnum) (typep imax 'fixnum) (typep incr 'fixnum))
-      (ar-num-range-int adj-type imin imax incr)
+      (if (eq element-type 'maxima::$fixnum)
+          (ar-num-range-int-fixnum adj-type imin imax incr)
+        (ar-num-range-int adj-type imin imax incr))
     (ar-num-range-float adj-type imin imax incr)))
 
 ;; acl gives error on svref as well. just remove it.
@@ -54,7 +56,7 @@
 ;; is not 1 then division is causing n to take rational value and
 ;; floor does not fix this.  Tried a fix, which is apparantly working
 ;; using floor with 2 arguments
-(defmacro def-num-range-ar-type ( name type )
+(defmacro def-num-range-ar-type ( name type element-type )
   (dbind (dec1 dec2)
          (if (eq type 'fixnum) '( ((declare (fixnum imin imax incr n))) ((declare (fixnum val))))
            '( nil nil ))
@@ -68,8 +70,8 @@
            (if (< n 0) (setf n 0))
            (setf n (floor n incr))
            (if (= 0 n)
-               (setf oar (make-array 0 :adjustable adj-type :element-type t :fill-pointer adj-type))
-             (setf oar (make-array (+ n 1) :element-type t :adjustable adj-type :fill-pointer adj-type)))
+               (setf oar (make-array 0 :adjustable adj-type :element-type ,element-type :fill-pointer adj-type))
+             (setf oar (make-array (+ n 1) :element-type ,element-type :adjustable adj-type :fill-pointer adj-type)))
            (cond ( (<= n 0) oar)
                  (t (let ( (val imin) )
                       ,@dec2
@@ -79,8 +81,10 @@
                             (setf val (+ val incr))))))
            oar))))
 
-(def-num-range-ar-type ar-num-range-int fixnum )
-(def-num-range-ar-type ar-num-range-float float )
+(def-num-range-ar-type ar-num-range-int fixnum t)
+(def-num-range-ar-type ar-num-range-float float t)
+(def-num-range-ar-type ar-num-range-int-fixnum fixnum 'fixnum)
+(def-num-range-ar-type ar-num-range-float-flonum float 'flonum)
 
 (max-doc::add-doc-entry '( :name "lrange" :type "Function"
                        :see-also ("makelist" "table" "constant_list")
@@ -101,10 +105,23 @@
 (in-package :maxima)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmfun-ae $lrange ((arg1 :thread) &optional (imax :thread) (incr 1 :not-zero :thread)  &aux (imin 1) d lst)
+;; A bug. &aux comes between the options!
+;; (%i9) :lisp (macroexpand-1 '(defmfun-ae $lrange ((arg1 :thread) &optional (imax :thread) (incr 1 :not-zero :thread) &opt ($et t) &aux (imin 1) d lst)))
+
+;; (DEFMFUN1 $LRANGE
+;;     ((ARG1 THREAD) &OPTIONAL (IMAX THREAD) (INCR 1 NOT-ZERO THREAD) &OPT
+;;      ($ET T) &AUX (IMIN 1) D LST (($OT O-TYPE) $ML O-TYPE-P OUT-REP)
+;;      (($ADJ ADJ-TYPE) T ADJ-TYPE-P BOOL))
+;;   (DECLARE (IGNORABLE ADJ-TYPE-P O-TYPE-P ADJ-TYPE)))
+
+
+
+(defmfun-ae $lrange ((arg1 :thread) &optional (imax :thread) (incr 1 :not-zero :thread)
+                     &aux (imin 1) d lst  &opt ($et t))
   (if (null imax) (setf imax arg1) (setf imin arg1)) ; different number of args changes semantics
   (cond ((and (numberp imin) (numberp imax) (numberp incr))
-         (if (eq o-type '$ar) (make-aex :head '(mlist simp) :arr (max-list::ar-num-range adj-type imin imax incr)
+         (if (eq o-type '$ar) (make-aex :head '(mlist simp) 
+                                        :arr (max-list::ar-num-range adj-type $et imin imax incr)
                                         :adjustable adj-type)
              (max-list::num-range imin imax incr)))
         (t (setf d ($float (meval `((mtimes) ((mplus) ,imax ((mtimes) ,imin -1)) ((mexpt) ,incr -1)))))
