@@ -19,6 +19,11 @@
 ;  but it is still possible to crash by doing
 ;  repeatedly with sbcl
 ; This seems ok: for i:1 thru 20 do timing(lrange(3*10^6),0,print->true);
+;; 
+;; Moved computation of end-run , elapsed-run-seconds etc. outside
+;; of binding forms in let statement. It was neater before and
+;; avoided all setf's. But, the times in some cases come out wrong.
+;; For the same reason, we replaced / with quotient and used (float.
 (defmfun1:set-hold-all '$timing)
 (defmfun1 ($timing :doc) (&rest exprs &opt ($print nil :bool) ($result t :bool)
                                 ($time $all (:member '($all $cpu $real))))
@@ -29,17 +34,23 @@
     " See also " :emrefdot "showtime")
   (let* ((start-run  (get-internal-run-time))
          (start-real (get-internal-real-time))
+         (end-run)
+         (end-real)
+         (elapsed-run-seconds)
+         (elapsed-real-seconds)
          (to-sec (float internal-time-units-per-second))
          (last-result
           (eval
            `(let ((body ',exprs) each-result)
               (dolist (v body)
                 (setq each-result (meval* v)))
-               each-result)))
-         (elapsed-run-seconds
-          (quotient (float (- (get-internal-run-time) start-run)) to-sec))
-         (elapsed-real-seconds
-          (quotient (float (- (get-internal-real-time) start-real)) to-sec)))
+               each-result))))
+    (setf end-run  (get-internal-run-time))
+    (setf end-real (get-internal-real-time))
+    (setf elapsed-run-seconds
+     (quotient (float (- end-run start-run)) to-sec))
+    (setf elapsed-real-seconds
+     (quotient (float (- end-real start-real)) to-sec))
     (if $print
         (progn
           (ecase $time
