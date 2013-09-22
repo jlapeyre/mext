@@ -1,0 +1,6 @@
+If you add a lisp file, add the name to:
+
+1) mext.system
+2) load_mext_maxima1.lisp
+3) load_mext_maxima.lisp
+
