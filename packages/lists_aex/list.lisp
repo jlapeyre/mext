@@ -307,7 +307,7 @@
       (push (,call-type f  (car res)) res))
     (defmfun-final-to-ae (mk-mlist (nreverse res)))))
 
-(defmfun-ae ($nest_list :doc)  ((f :thread) x (n :non-neg-int :thread) &opt ($compile t :bool))
+(defmfun-ae ($nest_list :doc)  ((f :map-function :thread) x (n :non-neg-int :thread) &opt ($compile t :bool))
   (option-compile-lambda f)
   (if (functionp f) (max-list::nest-list-call funcall) (max-list::nest-list-call mfuncall)))
 
