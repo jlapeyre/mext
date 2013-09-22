@@ -416,7 +416,7 @@
 
 (defmfun1 ($attributes :doc) ((name :or-string-symbol) )
   :desc ("Returns a list of the `attributes' of function " :argdot "name")
-  (mk-mlist (defmfun1::get-attributes name)))
+  ($sort (mk-mlist (defmfun1::get-attributes name))))
 
 (defmfun1 ($attributes_find :doc) ( &optional (attribute :or-string-symbol))
   :desc (
