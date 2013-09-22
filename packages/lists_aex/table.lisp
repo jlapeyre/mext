@@ -86,6 +86,10 @@
 (max-doc:set-cur-sec 'max-doc::lists-fandv)
 (defmfun1:set-file-and-package "table.lisp" "lists_aex")
 
+(defmacro table-non-local-exit (&body body)
+  `(throw 'table-error
+          (list 'table-error ,@body)))
+
 ;; ITERATING FUNCTIONS for $table
 ;;
 ;; table-general-iterator:
@@ -134,9 +138,8 @@
 
      ;; empty iterator [] or iterator too long
      (t 
-      (throw 'table-error 
-             (list 'table-error
-                   '$iter_length "Iterator must be a list of length between 1 and 4."))))))
+      (table-non-local-exit
+                '$iter_length "Iterator must be a list of length between 1 and 4")))))
 
 ;; Simplest, fastest iteration (no value bound):
 ;; handles iterations like table(a, [100]);
@@ -147,12 +150,8 @@
   (unless (integerp num)
     (if (realp num)
       (setf num (truncate num))
-      (throw 'table-error
-             (list 'table-error
-                   '$iter_sing_num
-                   (format nil "single-element iterator ~a is not a number" ($sconcat num))))))
-;      (merror1 "table: ~M is not a number." num)))
-
+      (table-non-local-exit  '$iter_sing_num
+       (format nil "single-element iterator ~a is not a number" ($sconcat num)))))
   ;; calculation, ans holds the resulting maxima list
     (let ((ans '()))
       (if (null iterators)
@@ -160,7 +159,7 @@
         (dotimes (i num) (push (meval expr) ans))
         ;; there are more iterators, call table-general-iterator
         (dotimes (i num) (push (table-general-iterator expr iterators) ans)))
-      ;; reurn Maxima list
+      ;; return Maxima list
       `((mlist simp) ,@(nreverse ans))))
 
 ;; return mlist, iterates over one variable with step
@@ -281,10 +280,8 @@
 (defun table-list-iterator (expr iterators var var-value-list)
   ;; error checks
   (unless ($symbolp var)
-    (throw 'table-error
-           (list 'table-error '$iter_not_sym (format nil "iterator ~a is not a symbol" var))))
-;           (merror1 "table: ~M is not a symbol." var))
-
+    (table-non-local-exit
+     '$iter_not_sym (format nil "iterator ~a is not a symbol" var)))
   ;; mbinding should throw an error if the `var' is a protected
   ;; symbol like $%pi or $%e
   (mbinding ((list var) (list (car var-value-list)))
