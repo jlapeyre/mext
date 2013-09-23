@@ -9,6 +9,8 @@
   '$done)
 
 (defmfun1 ($quicklisp_apropos :doc) ( (term :string) )
-  :desc ("Search quicklisp for lisp `systems' (packages) matching " :arg "term" ".")
+  :desc 
+  ("Search quicklisp for lisp `systems' (packages) matching " :argdot "term"
+  " The empty string returns all avaliable systems.")
   (format t "~s~%" (quicklisp-client:system-apropos term))
   '$done)
