@@ -1,3 +1,6 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 (in-package :mk )
 
 ;;; component operation definitions for defsystem to support

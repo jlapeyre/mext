@@ -1,5 +1,8 @@
 ;;; -*- Mode: LISP; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 ;;; This file contains the bulk of the code for the mext package,
 ;;; which manages third party Maxima packages.
 

@@ -1,9 +1,9 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; cl-fad. Portable pathname library, modified for our purpose,
 ;; mostly by supporting gcl.
-
-;;; Copyright (c) 2012  John Lapeyre. All rights reserved.
-;;;
 
 ;;; This software includes code from the cl-fad package
 

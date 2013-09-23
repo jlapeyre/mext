@@ -1,3 +1,6 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 (in-package :mext-maxima)
 
 ;;; Setup tables and functions for protecting symbols from `kill'.

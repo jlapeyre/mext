@@ -1,3 +1,6 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Modified maxima core functions. These can
 ;; potentially break maxima, but test suite passes till now.

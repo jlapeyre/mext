@@ -1,5 +1,7 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 ;;;  Argument specifications for functions defined via defmfun1.
-;;;  Copyright (2012) John Lapeyre. Licensed under GPL, v3 or greater.
 
 (if (find-package :defmfun1 ) t (defpackage :defmfun1 (:use :common-lisp :gjl.lisp-util )))
 (in-package :defmfun1)

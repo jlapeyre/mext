@@ -1,7 +1,8 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 ;;;  defmfun1 is a function definition macro for relatively high-level maxima
 ;;;  functions.
-;;;  Copyright (C) (2012) John Lapeyre. Licensed under GPL, v3 or greater. See the file
-;;;  `LICENSE' in this directory.
 
 (in-package :maxima)
 (use-package :gjl.lisp-util)

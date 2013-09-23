@@ -1,3 +1,6 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 (if (find-package :partition-list ) t (defpackage :partition-list (:use :common-lisp )))
 (in-package :partition-list)
 (mext:mext-optimize)

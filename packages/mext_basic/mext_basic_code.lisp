@@ -1,3 +1,6 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 (in-package :maxima)
 
 ;;; Functions that are marked `redefined' were defined previously without defmfun1

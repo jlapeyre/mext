@@ -1,3 +1,6 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 ;;; Register max-doc sections here.
 ;;; To be clear: These are not the standard maxima info documentation sections,
 ;;; but rather a separate database. We also modified the documentation printing

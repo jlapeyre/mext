@@ -1,5 +1,7 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 ;;;  Database of examples for maxima. 
-;;;  Copyright (2012) John Lapeyre. Licensed under GPL, v3 or greater.
 
 (in-package :examples)
 (mext:mext-optimize)

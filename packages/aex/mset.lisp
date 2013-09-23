@@ -1,3 +1,6 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 ;; modified for ipart(var,ind1,ind2,...) : val;
 
 ;; Search for ipart below to find changes from stock Maxima

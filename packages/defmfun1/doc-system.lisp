@@ -1,8 +1,9 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 ;;;  doc-system manages distinct documentation databases and integrates them with
 ;;;  maxima online help.
 ;;;  functions.
-;;;  Copyright (C) (2012) John Lapeyre. Licensed under GPL, v3 or greater. See the file
-;;;  `LICENSE' in this directory.
 
 (in-package :doc-system)
 (mext:mext-optimize)

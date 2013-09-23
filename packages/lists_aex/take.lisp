@@ -1,3 +1,6 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 ;(eval-when (:compile-toplevel :load-toplevel :execute)
 ;  (if (find-package :maxima-take ) t (defpackage :maxima-take 
 ;                                       (:use :common-lisp :gjl.lisp-util :max-doc))))

@@ -1,3 +1,6 @@
+;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  `LICENSE' in this directory.
+
 (in-package :max-list)
 (declaim (optimize (compilation-speed 0) (speed 3) (space 0) (safety 0) #-gcl (debug 0)))
 ;(mext:mext-optimize)
