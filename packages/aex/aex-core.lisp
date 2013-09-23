@@ -638,7 +638,9 @@ refers to the head."
 
 (mext:add-to-dont-kill "<<" ">>")
 
-;; not sure if this is used
+;; Yes, this is used when display2d:true
+;; This converts the expression to normal maxima
+;; expression and just puts a tilde in front
 (defmfun $print_aex (x strm depth)
   "This only marks the outermost expression with a tilde."
 ;;  (declare (ignore depth)) ;  eh ccl doesn't like this
