@@ -63,10 +63,14 @@
   ("Returns the " :arg "n" "th mersenne prime.")
   (get-mersenne-prime-by-rank n))
 
+(max-doc::oeis "mersenne_prime" "A000668")
+
 (defmfun1 ($perfect_number :doc) ((n :thread (:int-range 1 48)))
   :desc
   ("Returns the " :arg "n" "th perfect number.")
   (get-perfect-number-by-rank n))
+
+(max-doc::oeis "perfect_number" "A000396")
 
 (defmfun1 ($mersenne_exponent :doc) ((n :thread (:int-range 1 48)))
   :desc

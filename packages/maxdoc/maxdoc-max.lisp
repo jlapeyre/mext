@@ -166,14 +166,22 @@
  (defmfun1:record-mext-package docitems packagename source-filename)
  '$done)
 
-;; (defmfun1 ($oeis :doc) ( (n :string) )
-;;   "Search for a maxima function corresponding to the online encyclopedia
-;;  of integer sequences OEIS number <n>."
-;;   (gethash n max-doc::*max-doc-oeis-hashtable*))
+;; why was this removed ?
+(defmfun1 ($oeis :doc) ((n :string :thread))
+   :desc
+   ("Search for a maxima function corresponding to the online encyclopedia
+    of integer sequences OEIS number " :argdot "n" " If called with the
+    empty string, then a list of all functions returning an oeis sequence
+    is returned. Functions are only found if their package is loaded.")
+   (if (string= "" n)
+       (mk-mlist
+        (loop :for key :being :the :hash-keys :of max-doc::*max-doc-oeis-hashtable*
+              :collect (gethash key max-doc::*max-doc-oeis-hashtable*)))
+     (gethash n max-doc::*max-doc-oeis-hashtable*)))
 
-;; (examples::clear-examples "oeis")
-;; (examples::add-example "oeis"
-;;                        '( :code ( "oeis(\"A000108\")")))
+;(examples::clear-examples "oeis")
+; (examples::add-example "oeis"
+;                     '( :code ( "oeis(\"A000108\")")))
 
 ;;(defmfun1 $set_doc_section ((s :string))
 ;;                            nil)

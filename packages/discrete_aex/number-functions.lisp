@@ -219,6 +219,9 @@
           (setf prod (* prod (expt k (floor (/ n k))))))
     prod))
 
+(max-doc::oeis "oeis_A092143" "A092143")
+
+
 (defun divisor-function-1 (n)
  "divisor function with x=1."
   (let* ( (factors (cdr ($ifactors n))) (prod 1) (r (length factors)) )
