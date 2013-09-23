@@ -7,10 +7,14 @@
   :loader "load-runtime"
   :install-only "runtime-rtests")
 
+;; use load-only t becaues the two functions
+;; fail to work properly if only compiled and then
+;; loaded once. Maybe because of the eval...
+;; Don't know.
 (mk:defsystem runtime
   :source-extension "lisp"
   :components
-   ((:file "runtime")))
+   ((:file "runtime" :load-only t)))
 
 ;; neither compile nor load when building
 (mk:defsystem load-runtime
