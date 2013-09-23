@@ -125,6 +125,19 @@
    "higher than the current working directory.")
   (mext::updir n)))
 
+;; redefined
+(mext::no-warning
+(defmfun1 ($truename :doc) ((filespec :string))
+  (namestring (truename filespec))))
+
+(mext::no-warning
+(defmfun1 ($probe_file :doc) ((filespec :string))
+  (let ((res (probe-file filespec)))
+    (if res (namestring res) nil))))
+
+(mext::no-warning
+(defmfun1 ($mkdir :doc) ((filespec :string) &optional (mode "0770"))
+  (mext::mkdir filespec mode)))
 
 (defmfun1:set-hold-all '$dont_kill)
 (defmfun1 ($dont_kill :doc) (&rest item)
