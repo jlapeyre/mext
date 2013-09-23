@@ -1,4 +1,6 @@
 require("lists_aex");
 mext_provide("discrete_aex",
   [ "combinatorics",
-    "number-functions"]);
+    "number-functions",
+    "mersenne-perfect-data",
+    "mersenne-comp"]);

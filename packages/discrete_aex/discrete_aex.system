@@ -11,7 +11,9 @@
   :source-extension "lisp"
   :components
    ((:file "combinatorics")
-    (:file "number-functions")))
+    (:file "number-functions")
+    (:file "mersenne-perfect-data")
+    (:file "mersenne-comp")))
 
 ;; neither compile nor load when building
 (mk:defsystem load-discrete_aex
