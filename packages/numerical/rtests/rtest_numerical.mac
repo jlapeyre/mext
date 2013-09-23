@@ -336,7 +336,7 @@ true$
 /* We need the option real, because the imaginary part causes
    and error. We nee more logic to catch this.
 */   
-/* Test */
+/* Test 56 */
 ce(nintegrate(4*exp(-x*x)*exp(-y*y), [x,0,inf], [y,0,inf], real->true), %pi, 1e-10);
 true$
 
@@ -346,7 +346,7 @@ cec(nintegrate(x*1/(sqrt(y-1)),[x,0,1],[y,0,2]), -1 * %i, 1e-10);
 true$
 */
 
-/* Test 56 */
+/* Test 57 */
 /* Example in Mma docs supplies singular points. We don't need to do this.
    nintegrate(sqrt(log(x-7)),[x,0,20], [7,8]);
    NIntegrate[Sqrt[Log[x - 7]], {x, 0, 20}, Exclusions -> {7, 8}]    
@@ -365,7 +365,7 @@ true;
   In fact quad_qawo(1, x, 1, 10^4, 1, cos) works well. Faster, with fewer intervals
   and no error. We could try to detect this somehow.
 */     
-/* Test 57 */
+/* Test 58 */
 cec(nintegrate(exp(%i*x),[x,1,10^4], subint -> 3000),rectform(float(integrate(exp(%i*x),x,1,10^4))),1e-12)$
 true;
 
@@ -380,7 +380,7 @@ true;
 
 */
 
-/* Test 58 */
+/* Test 59 */
 ce(nintegrate(1/sqrt(x) + cos(x), [x,0,5000], subint->1000),
    float(integrate(1/sqrt(x) + cos(x), x,0,5000)), 1e-12)$
 true; 
@@ -402,12 +402,12 @@ and then 1 to 5000.
  
 */
 
-/* Test 59 */
+/* Test 60 */
 ce(nintegrate(sin(x)/sqrt(x),[x,0,5000],subint->1000),rectform(float(integrate(sin(x)/sqrt(x),x,0,5000))),
     1e-7)$
 true;  
 
-/* Test 60 */
+/* Test 61 */
 kill(ce)$
 done;
 
