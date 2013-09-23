@@ -58,19 +58,20 @@
       (let ((perf1 (generate-perfect-number p)))
         (setf (gethash p *perfect-numbers*) perf1)))))
 
-(defmfun1 ($mersenne_by_rank :doc) ((n :thread (:int-range 1 48)))
+(defmfun1 ($mersenne_prime :doc) ((n :thread (:int-range 1 48)))
   :desc
   ("Returns the " :arg "n" "th mersenne prime.")
   (get-mersenne-prime-by-rank n))
 
-(defmfun1 ($perfect_number_by_rank :doc) ((n :thread (:int-range 1 48)))
+(defmfun1 ($perfect_number :doc) ((n :thread (:int-range 1 48)))
   :desc
   ("Returns the " :arg "n" "th perfect number.")
   (get-perfect-number-by-rank n))
 
 (defmfun1 ($mersenne_exponent :doc) ((n :thread (:int-range 1 48)))
   :desc
-  ("Returns the exponent " :code "p" " for the " :arg "n" "th mersenne prime.")
+  ("Returns the exponent " :math "p_n" " for the " :arg "n" "th mersenne prime "
+  :tmath ("2^{p_n}-1" "2^(p_n - 1)") ".")
   (get-mersenne-exponent-by-rank n))
 
 (defmfun1 ($mersenne_numdig :doc) ((n :thread (:int-range 1 48)))
