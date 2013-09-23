@@ -1,4 +1,5 @@
 (in-package :maxima)
+;; is optimization breaking this ?? No
 (mext:mext-optimize)
 (max-doc:set-cur-sec 'max-doc::runtime-fandv)
 (defmfun1:set-file-and-package "timing.lisp" "runtime")
@@ -24,6 +25,9 @@
 ;; of binding forms in let statement. It was neater before and
 ;; avoided all setf's. But, the times in some cases come out wrong.
 ;; For the same reason, we replaced / with quotient and used (float.
+;; I think / vs. quotient had nothing to do with it. The function seems to suceed
+;; and fail sometimes without changing the code. Depends on what else
+;; is loaded, or some other state, or ....
 (defmfun1:set-hold-all '$timing)
 (defmfun1 ($timing :doc) (&rest exprs &opt ($print nil :bool) ($result t :bool)
                                 ($time $all (:member '($all $cpu $real))))
@@ -48,9 +52,9 @@
     (setf end-run  (get-internal-run-time))
     (setf end-real (get-internal-real-time))
     (setf elapsed-run-seconds
-     (quotient (float (- end-run start-run)) to-sec))
+     (/ (float (- end-run start-run)) to-sec))
     (setf elapsed-real-seconds
-     (quotient (float (- end-real start-real)) to-sec))
+     (/ (float (- end-real start-real)) to-sec))
     (if $print
         (progn
           (ecase $time
