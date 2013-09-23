@@ -2,6 +2,8 @@
 ;; Modified maxima core functions. These can
 ;; potentially break maxima, but test suite passes till now.
 
+;;; The formatting code is modified/modelled on code in grind.lisp
+
 (in-package :maxima)
 (mext:mext-optimize)
 
