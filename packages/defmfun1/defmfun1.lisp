@@ -488,7 +488,7 @@ in a  mext package.")
               (pre-name (err-prefix name))
               (spstr (if spec-args
                          (progn 
-                           (format t "~a~%" spec-args)
+;                           (format t "~a~%" spec-args) ; was for debugging
                            (format-arg-spec-params specl-str spec-args))
                        specl-str))
               (call-str (format-call name call))
