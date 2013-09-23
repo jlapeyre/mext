@@ -61,7 +61,7 @@ alt_eigen to_poly_mext fourier_elim_mext to_poly_mext
 tpsolve grobner_mext"
 
 packages4="
-pw circuits coma finance implicit bernstein"
+pw circuits coma finance implicit bernstein nelder_mead"
 
 packages5="quicklisp store"
 
