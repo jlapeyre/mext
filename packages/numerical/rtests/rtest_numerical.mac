@@ -333,6 +333,13 @@ true$
 cec(nintegrate(x*1/(sqrt(y-1)),[x,0,1],[y,0,1]), -1 * %i, 1e-10);
 true$
 
+/* We need the option real, because the imaginary part causes
+   and error. We nee more logic to catch this.
+*/   
+/* Test */
+ce(nintegrate(4*exp(-x*x)*exp(-y*y), [x,0,inf], [y,0,inf], real->true), %pi, 1e-10);
+true$
+
 /* xxx Test  */
 /* Fails just because we don't have the logic yet
 cec(nintegrate(x*1/(sqrt(y-1)),[x,0,1],[y,0,2]), -1 * %i, 1e-10);

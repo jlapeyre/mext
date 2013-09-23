@@ -171,9 +171,11 @@
 (defmfun1 ($nintegrate :doc :match) 
   ((expr :thread) (varspec :list)
    &rest (varspecs :list)
-   &opt ($points :to-float-listof) 
+   &opt 
+   ($real :bool nil)
    ($find_sing :bool t) ($calls (:member '(nil t $short))) ($words t :bool) ($info :bool t) 
-   ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number) ($epsrel 1d-8 :non-neg-number))
+   ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number) ($epsrel 1d-8 :non-neg-number)
+        ($points :to-float-listof))
            ; ($method "automatic" :string)) only doing automatic for now.
  :desc 
  ("numerically integrate " :arg "expr" ", with the variable and limits supplied in the list "
@@ -190,6 +192,8 @@
   :par ""
   "if the option " :opt "find_sing" " is false, then " :mref "nintegrate" " will not search "
   "for internal singularities, but user supplied singularities will still be used."
+  " If an error occurs, it may be possible to get a result by giving a value " :code "true"
+  " for option " :optcomma "real" " to force only integration of the real part."
   :par ""
   "this function is not well tested and may give incorrect results.")
 
@@ -225,7 +229,8 @@
 ;            (defmfun1-error-return '$nonnumeric_integrand $nintegrate 
 ;              "The integrand does not evaluate to a number")))
     (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi $points quad-ops more-opts)))
-          (i-res (if (eq 0 i-expr) nil (nint::do-quad-pack i-expr var lo hi $points quad-ops more-opts))))
+          (i-res (if (or $real (eq 0 i-expr))
+                     nil (nint::do-quad-pack i-expr var lo hi $points quad-ops more-opts))))
       (when (consp i-res)
         (setf (second i-res) `((mtimes) $%i ,(second i-res))))
       (let ((res (nint::combine-real-imag-results r-res i-res)))
