@@ -1,6 +1,6 @@
 load(mext);
 
-if  member(lispname, ["gcl", "ecl", "cmucl"]) then
+if  member(lispname, ["gcl", "ecl"]) then
   print("The maxima package store does not work under ", lispname,".")
   else (
     require("maxdoc"),

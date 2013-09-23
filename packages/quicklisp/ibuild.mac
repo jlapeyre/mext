@@ -1,6 +1,6 @@
 load(mext);
 
-if  member(lispname, ["gcl", "cmucl"]) then
+if  member(lispname, ["gcl"]) then
   print("The maxima package quicklisp does not work under ", lispname,".")
   else (
     require("maxdoc"),
