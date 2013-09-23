@@ -36,7 +36,7 @@
 (defun get-mersenne-date-by-rank (n)
   (elt *mersenne-numbers-full-date* (1- n)))
 
-n(defun get-mersenne-discoverer-by-rank (n)
+(defun get-mersenne-discoverer-by-rank (n)
   (elt *mersenne-numbers-full-discoverer* (1- n)))
 
 (defun get-mersenne-method-by-rank (n)
