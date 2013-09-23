@@ -1,5 +1,7 @@
 ;; These hacks allow the tex() command and imaxima to print
 ;; more objects that otherwise give an error.
+;; It also allows aex to be printed via wxmaxima
+;; It prevents similar errors in texmacs.
 
 ;; GJL -- copied from imaxima.lisp by
 ;; Jesper Harder, Yasuaki Honda
@@ -61,3 +63,31 @@
 	   (setq sym-name (subseq sym-name 1))
 	   (concatenate 'string "\\verb|   " (verb-quote sym-name) "|"))
 	  (t (concatenate 'string "\\verb|" (verb-quote sym-name) "|"))))))
+
+;; This allows aex structures to be printed in wxmaxima
+(mext::no-warning
+(defun wxxml-atom (x l r &aux tmp-x)
+  (append l
+          (list (cond ((numberp x) (wxxmlnumformat x))
+                      ((and (symbolp x) (get x 'wxxmlword)))
+                      ((and (symbolp x) (get x 'reversealias))
+                       (wxxml-stripdollar (get x 'reversealias)))
+		      ((stringp x)
+		       (setq tmp-x (wxxml-fix-string x))
+		       (if (and (boundp '$stringdisp) $stringdisp)
+			   (setq tmp-x (format nil "\"~a\"" tmp-x)))
+		       (concatenate 'string "<st>" tmp-x "</st>"))
+		      ((arrayp x)
+		       (format nil "<v>Lisp array [~{~a~^,~}]</v>"
+			       (array-dimensions x)))
+		      ((streamp x)
+		       (format nil "<v>Stream [~A]</v>"
+			       (stream-element-type x)))
+		      ((member (type-of x) '(GRAPH DIGRAPH AEX))
+		       (format nil "<v>~a</v>" x))
+                      ((typep x 'structure-object)
+		       (format nil "<v>Structure [~A]</v>" (type-of x)))
+		      ((hash-table-p x)
+		       (format nil "<v>HashTable</v>"))
+                      (t (wxxml-stripdollar x))))
+	  r)))
