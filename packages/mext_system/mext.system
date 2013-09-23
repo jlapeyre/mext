@@ -59,7 +59,7 @@
     (:file "mext-component-operations")
     (:file "mext-maxima-system")
     (:file "dontkill")
-    (:file "fix-tex.lisp")))
+    (:file "fix-tex")))
 
 (mk:defsystem mext-inst-loader
   :source-extension "lisp"
