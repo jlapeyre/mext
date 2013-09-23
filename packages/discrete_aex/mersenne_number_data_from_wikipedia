@@ -1,0 +1,50 @@
+# Cut an paste from wikipedia page on Mersenne numbers
+# Mon Sep 23 15:14:43 CEST 2013
+1 	2 	3 	1 	c. 430 BC 	Ancient Greek mathematicians[15] 	
+2 	3 	7 	1 	c. 430 BC 	Ancient Greek mathematicians[15] 	
+3 	5 	31 	2 	c. 300 BC 	Ancient Greek mathematicians[16] 	
+4 	7 	127 	3 	c. 300 BC 	Ancient Greek mathematicians[16] 	
+5 	13 	8191 	4 	1456 	Anonymous[17][18] 	Trial division
+6 	17 	131071 	6 	1588[19] 	Pietro Cataldi 	Trial division[20]
+7 	19 	524287 	6 	1588 	Pietro Cataldi 	Trial division[21]
+8 	31 	2147483647 	10 	1772 	Leonhard Euler[22][23] 	Enhanced trial division[24]
+9 	61 	2305843009213693951 	19 	1883 November[25] 	I. M. Pervushin 	Lucas sequences
+10 	89 	618970019…449562111 	27 	1911 June[26] 	R. E. Powers 	Lucas sequences
+11 	107 	162259276…010288127 	33 	1914 June 1[27][28][29] 	R. E. Powers[30] 	Lucas sequences
+12 	127 	170141183…884105727 	39 	1876 January 10[31] 	Édouard Lucas 	Lucas sequences
+13 	521 	686479766…115057151 	157 	1952 January 30[32] 	Raphael M. Robinson 	LLT / SWAC
+14 	607 	531137992…031728127 	183 	1952 January 30[32] 	Raphael M. Robinson 	LLT / SWAC
+15 	1,279 	104079321…168729087 	386 	1952 June 25[33] 	Raphael M. Robinson 	LLT / SWAC
+16 	2,203 	147597991…697771007 	664 	1952 October 7[34] 	Raphael M. Robinson 	LLT / SWAC
+17 	2,281 	446087557…132836351 	687 	1952 October 9[34] 	Raphael M. Robinson 	LLT / SWAC
+18 	3,217 	259117086…909315071 	969 	1957 September 8[35] 	Hans Riesel 	LLT / BESK
+19 	4,253 	190797007…350484991 	1,281 	1961 November 3[36][37] 	Alexander Hurwitz 	LLT / IBM 7090
+20 	4,423 	285542542…608580607 	1,332 	1961 November 3[36][37] 	Alexander Hurwitz 	LLT / IBM 7090
+21 	9,689 	478220278…225754111 	2,917 	1963 May 11[38] 	Donald B. Gillies 	LLT / ILLIAC II
+22 	9,941 	346088282…789463551 	2,993 	1963 May 16[38] 	Donald B. Gillies 	LLT / ILLIAC II
+23 	11,213 	281411201…696392191 	3,376 	1963 June 2[38] 	Donald B. Gillies 	LLT / ILLIAC II
+24 	19,937 	431542479…968041471 	6,002 	1971 March 4[39] 	Bryant Tuckerman 	LLT / IBM 360/91
+25 	21,701 	448679166…511882751 	6,533 	1978 October 30[40] 	Landon Curt Noll & Laura Nickel 	LLT / CDC Cyber 174
+26 	23,209 	402874115…779264511 	6,987 	1979 February 9[41] 	Landon Curt Noll 	LLT / CDC Cyber 174
+27 	44,497 	854509824…011228671 	13,395 	1979 April 8[42][43] 	Harry Lewis Nelson & David Slowinski 	LLT / Cray 1
+28 	86,243 	536927995…433438207 	25,962 	1982 September 25 	David Slowinski 	LLT / Cray 1
+29 	110,503 	521928313…465515007 	33,265 	1988 January 29[44][45] 	Walter Colquitt & Luke Welsh 	LLT / NEC SX-2[46]
+30 	132,049 	512740276…730061311 	39,751 	1983 September 19[47] 	David Slowinski 	LLT / Cray X-MP
+31 	216,091 	746093103…815528447 	65,050 	1985 September 1[48][49] 	David Slowinski 	LLT / Cray X-MP/24
+32 	756,839 	174135906…544677887 	227,832 	1992 February 17 	David Slowinski & Paul Gage 	LLT / Maple on Harwell Lab Cray-2[50]
+33 	859,433 	129498125…500142591 	258,716 	1994 January 4[51][52][53] 	David Slowinski & Paul Gage 	LLT / Cray C90
+34 	1,257,787 	412245773…089366527 	378,632 	1996 September 3[54] 	David Slowinski & Paul Gage[55] 	LLT / Cray T94
+35 	1,398,269 	814717564…451315711 	420,921 	1996 November 13 	GIMPS / Joel Armengaud[56] 	LLT / Prime95 on 90 MHz Pentium PC
+36 	2,976,221 	623340076…729201151 	895,932 	1997 August 24 	GIMPS / Gordon Spence[57] 	LLT / Prime95 on 100 MHz Pentium PC
+37 	3,021,377 	127411683…024694271 	909,526 	1998 January 27 	GIMPS / Roland Clarkson[58] 	LLT / Prime95 on 200 MHz Pentium PC
+38 	6,972,593 	437075744…924193791 	2,098,960 	1999 June 1 	GIMPS / Nayan Hajratwala[59] 	LLT / Prime95 on 350 MHz Pentium II IBM Aptiva
+39 	13,466,917 	924947738…256259071 	4,053,946 	2001 November 14 	GIMPS / Michael Cameron[60] 	LLT / Prime95 on 800 MHz Athlon T-Bird
+40 	20,996,011 	125976895…855682047 	6,320,430 	2003 November 17 	GIMPS / Michael Shafer[61] 	LLT / Prime95 on 2 GHz Dell Dimension
+41 	24,036,583 	299410429…733969407 	7,235,733 	2004 May 15 	GIMPS / Josh Findley[62] 	LLT / Prime95 on 2.4 GHz Pentium 4 PC
+42 	25,964,951 	122164630…577077247 	7,816,230 	2005 February 18 	GIMPS / Martin Nowak[63] 	LLT / Prime95 on 2.4 GHz Pentium 4 PC
+43[*] 	30,402,457 	315416475…652943871 	9,152,052 	2005 December 15 	GIMPS / Curtis Cooper & Steven Boone[64] 	LLT / Prime95 on 2 GHz Pentium 4 PC
+44[*] 	32,582,657 	124575026…053967871 	9,808,358 	2006 September 4 	GIMPS / Curtis Cooper & Steven Boone[65] 	LLT / Prime95 on 3 GHz Pentium 4 PC
+45[*] 	37,156,667 	202254406…308220927 	11,185,272 	2008 September 6 	GIMPS / Hans-Michael Elvenich[66] 	LLT / Prime95 on 2.83 GHz Core 2 Duo PC
+46[*] 	42,643,801 	169873516…562314751 	12,837,064 	2009 April 12[***] 	GIMPS / Odd M. Strindmo[67] 	LLT / Prime95 on 3 GHz Core 2 PC
+47[*] 	43,112,609 	316470269…697152511 	12,978,189 	2008 August 23 	GIMPS / Edson Smith[66] 	LLT / Prime95 on Dell Optiplex 745
+48[**] 	57,885,161 	581887266…724285951 	17,425,170 	2013 January 25 	GIMPS / Curtis Cooper[2] 	LLT / Prime95 on 3 GHz Core 2 Duo PC[68]
