@@ -197,7 +197,7 @@
       (defmfun-final-to-ae (mk-mlist bres)))))
 
 ;; value of n 0 is default just because defmfun1 needs a val.
-(defmfun-ae ($tuples :doc) ( (list-or-lists :non-atom-list ) &optional (n 0 n-supplied-p :non-neg-int)  )
+(defmfun-ae ($tuples :doc) ( (list-or-lists :non-mapatom-list ) &optional (n 0 n-supplied-p :non-neg-int)  )
   (declare (fixnum n))
   (if n-supplied-p
       (let* ((head  (pop list-or-lists))
@@ -378,7 +378,7 @@
         ((or (null e) (not (,call-type test el))) (cons head (nreverse res)))
       (push el res))))
 
-(defmfun-ae ($take_while :doc) (( expr :non-atom-list) (test :thread)  &opt ($compile t :bool))
+(defmfun-ae ($take_while :doc) (( expr :non-mapatom-list) (test :thread)  &opt ($compile t :bool))
   (option-compile-lambda test)
   (defmfun-final-to-ae
       (if (functionp test) (max-list::take-while funcall) (max-list::take-while mfuncall))))
@@ -402,7 +402,7 @@
          (el (car e) (car e)))
         ((or (null e) (not (,call-type test el))) (cons head (copy-list e))))))
 
-(defmfun-ae ($drop_while :doc) (( expr :non-atom-list) (test :thread) &opt ($compile t :bool)  )
+(defmfun-ae ($drop_while :doc) (( expr :non-mapatom-list) (test :thread) &opt ($compile t :bool)  )
   (option-compile-lambda test)
   (defmfun-final-to-ae
       (if (functionp test) (max-list::drop-while funcall) (max-list::drop-while mfuncall))))
@@ -429,7 +429,7 @@
       (declare (fixnum count))
       (incf count))))
 
-(defmfun1 ($length_while :doc) (( expr :non-atom-list) (test :thread) &opt ($compile t :bool)  )
+(defmfun1 ($length_while :doc) (( expr :non-mapatom-list) (test :thread) &opt ($compile t :bool)  )
   :desc ("Computes the length of " :arg "expr" " while " :arg "test" " is true.")
   (option-compile-lambda test)
   (if (functionp test) (max-list::length-while funcall) (max-list::length-while mfuncall)))
@@ -449,7 +449,7 @@
           (el (car e) (car e)))
         ((or (null e) (not (,call-type test el))) (null e)))))
 
-(defmfun1 ($every1 :doc) (( expr :non-atom-list) (test :thread) &opt ($compile t :bool)  )
+(defmfun1 ($every1 :doc) (( expr :non-mapatom-list) (test :thread) &opt ($compile t :bool)  )
   (option-compile-lambda test)
   (if (functionp test) (max-list::every1 funcall) (max-list::every1 mfuncall)))
 
@@ -492,7 +492,7 @@
 ;; Note: stuck format1 in here in order to pass rtests. There is
 ;; no way from within maxima to see that the expression is not
 ;; what is printed.
-(defmfun1 ($imap :doc) (f (expr :non-atom) &opt ($compile t :bool))
+(defmfun1 ($imap :doc) (f (expr :non-mapatom) &opt ($compile t :bool))
   :desc 
   ("Maps functions of a single argument. I guess that " :emref "map" " handles more
    types of input without error. But " :mref "imap" " is much faster for many inputs."
@@ -623,7 +623,7 @@
       (setf res (,call-type f res (car v1)))
       (when ar-p (setf res ($aex res))))))
 
-(defmfun-ae $fold ( (f :thread) x (v :non-atom) &opt ($compile t :bool))
+(defmfun-ae $fold ( (f :thread) x (v :non-mapatom) &opt ($compile t :bool))
   (option-compile-lambda f)
   (setf v (cdr v))
   (let ((ar-p (if (eq o-type '$ar) t)))
@@ -649,7 +649,7 @@
         ((null v1) (defmfun-final-to-ae (mk-mlist (nreverse res-all))))
       (push (setf res (defmfun-final-to-ae (,call-type f res (car v1)))) res-all))))
 
-(defmfun-ae $fold_list ((f :thread) x (v :non-atom)  &opt ($compile t :bool))
+(defmfun-ae $fold_list ((f :thread) x (v :non-mapatom)  &opt ($compile t :bool))
   (option-compile-lambda f)
   (setf v (cdr v))
   (if (length1p v) x
@@ -680,7 +680,7 @@
            (when (,call-type test el) (push el res))))))
          
 
-(defmfun-ae ($select :doc) (( expr :non-atom-list) (test :thread)
+(defmfun-ae ($select :doc) (( expr :non-mapatom-list) (test :thread)
                             &optional (n 0 supplied-n-p :pos-int) &opt ($compile t :bool))
   :desc (
   "Returns a list of all elements of " :arg "expr" 
@@ -728,7 +728,7 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmfun1  ($nreverse :doc)((e :non-atom))
+(defmfun1  ($nreverse :doc)((e :non-mapatom))
   :desc ("Destructively reverse the arguments of expression " :argdot "e" 
     " This is more efficient than using reverse.")
   (if-aex e
@@ -751,7 +751,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; This does not recognize lambda functions unless compile is t
-(defmfun1 ($count :doc) ( (expr :non-atom-ae-list) (item :thread)  &opt ($compile t :bool))
+(defmfun1 ($count :doc) ( (expr :non-mapatom-ae-list) (item :thread)  &opt ($compile t :bool))
   :desc 
   ("Counts the number of items in " :arg "expr" " matching " :argdot "item" 
    " If " :arg "item" " is a lambda function then " :arg "compile" " must be true.")

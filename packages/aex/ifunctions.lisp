@@ -6,7 +6,7 @@
 (max-doc:set-cur-sec 'max-doc::aex-fandv)
 (defmfun1:set-file-and-package "ifunctions.lisp" "aex")
 
-(defmfun-ae ($iapply :doc)  ( (fun :map-function)  (arg :non-atom :ensure-lex))
+(defmfun-ae ($iapply :doc)  ( (fun :map-function)  (arg :non-mapatom :ensure-lex))
   :desc ( :mref "iapply" " is like maxima " :emref "apply" ", but it supports aex lists. "
   :arg "arg" " is converted to an ml if it is an aex expression. By default, output is ml 
  regardless of the input representation.")
@@ -25,7 +25,7 @@
                        '( :code "iapply(%%ff,lrange(4), [ot->ar] )"))
 
 
-(defmfun-ae ($ireverse :doc) ( (e :non-atom) )
+(defmfun-ae ($ireverse :doc) ( (e :non-mapatom) )
  "ireverse is like maxima reverse, but is works on both aex and list
   objects. ireverse is tries to be identical to maxima reverse for a non-aex argument."
   (defmfun-final-to-ae
@@ -44,7 +44,7 @@
                        '( :code "ireverse(lrange(4, [ot->ar]) )")
                        '( :code "ireverse(lrange(4, [ot->ar]), [ot->ml] )"))
 
-;;(defmfun1 ($icons :doc) (x (e :non-atom-list))
+;;(defmfun1 ($icons :doc) (x (e :non-mapatom-list))
 (defmfun $icons (x e)
 ;  :desc ( "This is like maxima " :mref "cons" ", but less general, and much, much faster.
 ;   It is suitable at a minimum, for pushing a number or list or string onto

@@ -203,7 +203,7 @@
       (take-do-array e v)
       (take-do-list e v)))
 
-(maxima::defmfun1 (maxima::$take :doc) ((e :non-atom)  &rest (v :seq-spec))
+(maxima::defmfun1 (maxima::$take :doc) ((e :non-mapatom)  &rest (v :seq-spec))
   :desc ( :arg "e" " can have mixed lex and aex expressions on different levels. "
    "If more sequence specifications are given, they apply to sucessively deeper levels in "
     :argdot "e")

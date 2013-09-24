@@ -29,7 +29,7 @@
 (maxdoc:implementation "cmplength" "cmplength is implemented with defmfun1, which slows
   things down a bit. So be cautious using it in a tight loop.")
 
-(defmfun1 ($length_eq :doc) ( (e :or-string-non-atom) (n 0 :non-neg-int)) ; 0 to quiet compiler
+(defmfun1 ($length_eq :doc) ( (e :or-string-non-mapatom) (n 0 :non-neg-int)) ; 0 to quiet compiler
   :desc ("Returns true if " :arg "e" " is of length " :argcomma "n" 
   " false otherwise. This implementation traverses no more
  elements of " :arg "e" " than necessary to return the result.")
@@ -46,7 +46,7 @@
 (maxdoc:implementation "length_eq" "length_eq is implemented with defmfun1, which slows
   things down a bit. So be cautious using it in a tight loop.")
   
-(defmfun1 ($length1p :doc) ( (e :or-string-non-atom))
+(defmfun1 ($length1p :doc) ( (e :or-string-non-mapatom))
   :desc ("Returns true if " :arg "e" " is of length 1, false otherwise. This implementation traverse no more
  elements of " :arg "e" " than necessary to return the result.")
   (cond ((listp e)
@@ -59,7 +59,7 @@
 (maxdoc:implementation "length1p" "length1p is implemented with defmfun1, which slows
   things down a bit. So be cautious using it in a tight loop.")
 
-(defmfun1 ($length0p :doc) ( (e :or-string-non-atom))
+(defmfun1 ($length0p :doc) ( (e :or-string-non-mapatom))
   "Returns true if <e> is of length 0, false otherwise. This implementation traverse no more
   elements of <e> than necessary to return the result."
   (cond ((listp e)

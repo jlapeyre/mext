@@ -22,7 +22,7 @@
 ;; the code in $random that checks for argument type and bounds etc. with each call.
 ;; This is, however slower, I suppose because of allocating memory.
 
-(defmfun-ae ($ae_random_permutation :doc) ( (a :non-atom)  )
+(defmfun-ae ($ae_random_permutation :doc) ( (a :non-mapatom)  )
   :desc ("returns " :var "a" " with subexpressions permuted randomly.")
   (let* ( (a1 (aex-cp a)) ; aex-cp is like aex_cp, but no arg checks , etc.
           (n (aex-length a1)))

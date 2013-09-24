@@ -264,7 +264,7 @@ refers to the head."
   (if (aex-p e) (length (aex-arr e)) (length (cdr e))))
 
 ;; is used
-(defmfun1 ($ilength :doc)  ((e :or-non-atom-subvar))
+(defmfun1 ($ilength :doc)  ((e :or-non-mapatom-subvar))
  :desc ("Returns the length of the expression " :argdot "e" " This is like maxima "
  :emref "length" ", but here, " :arg "e" " can be either an aex or a lex.")
   (if (aex-p e) (length (aex-arr e))
@@ -644,7 +644,7 @@ refers to the head."
 
 ;; is used
 ;; same as redefinition of $op, which we have disabled
-(defmfun1 ($aeop :doc) ( (expr :non-atom) )
+(defmfun1 ($aeop :doc) ( (expr :non-mapatom) )
  :desc (  "op function for aex. returns op if " :arg "e" " is not an aex.")
   (if-aex expr (aex-op expr)
             ($part expr 0)))
@@ -659,7 +659,7 @@ refers to the head."
   (make-aex :head h :arr args ))
 
 ;; is used
-(defmfun-aeo ($aex_cp :doc) ( (e :non-atom)  &optional head)
+(defmfun-aeo ($aex_cp :doc) ( (e :non-mapatom)  &optional head)
   (when (and head (atom head)) (setf head (list head 'msimp)))
   (cond ((aex-p e)
          (make-aex :head (if head head (aex-head e)) :arr (gjl::copy-array (aex-arr e))
@@ -768,14 +768,14 @@ refers to the head."
 
 ;; Moved these from elsewhere.
 ;; is used in rtests
-(defmfun1 ($iop :doc) ((expr :or-non-atom-subvar))
+(defmfun1 ($iop :doc) ((expr :or-non-mapatom-subvar))
   :desc ("returns the main operator of the expression " :arg "expr"
   ", which may be either a lex or aex expression. This works like `op', but is more general.")
   (if-aex expr (getop (car (aex-head expr)))
             ($part expr 0)))
 
 ;; is used in rtests
-(defmfun-ae ($iargs :doc) ((e :or-non-atom-subvar))
+(defmfun-ae ($iargs :doc) ((e :or-non-mapatom-subvar))
   :desc 
   ("returns a list of the arguments of " :argcomma "e"
    " which may be either a lex or aex expression. This works "

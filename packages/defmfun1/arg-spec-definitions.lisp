@@ -125,22 +125,22 @@
                                           (every #'(lambda (x) (symbolp x)) (cdr e))))
                      (:or-string-symbol-list ("a string" "a symbol" "a list")
                                              (or (stringp e) (symbolp e) (maxima::$listp e)))
-                     (:or-string-non-atom  ("a string" "non-atomic")
+                     (:or-string-non-mapatom  ("a string" "non-mapatomic")
                       (or (stringp e) (not (maxima::$mapatom e))))
                      (:or-symbol-subvar ("a symbol" "a subscripted variable")
                        (or (symbolp e) (maxima::$subvarp e)))
-                     (:non-atom "non-atomic"
+                     (:non-mapatom "non-mapatomic"
                                 (not (maxima::$mapatom e)))
-                     (:non-atom-list "non-atomic and represented by a lisp list"
+                     (:non-mapatom-list "non-mapatomic and represented by a lisp list"
                                 (and (not (maxima::$mapatom e)) (listp e)))
-                     (:non-atom-ae-list "non-atomic and either aex or represented by a lisp list"
+                     (:non-mapatom-ae-list "non-mapatomic and either aex or represented by a lisp list"
                                 (and (not (maxima::$mapatom e)) (or (maxima::aex-p e) (listp e))))
                      (:or-pos-int-string ("a string" "a positive integer")
                                              (or (stringp e) (and (integerp e) (> e 0))))
 ; should compare following to $atom
-                     (:or-non-atom-subvar  ("a subscripted variable" "non-atomic")
+                     (:or-non-mapatom-subvar  ("a subscripted variable" "non-mapatomic")
                       (or (not (maxima::$mapatom e)) (maxima::$subvarp e)))
-                     (:or-non-atom-subvar-string   ("a string" "a subscripted variable" "non-atomic")
+                     (:or-non-mapatom-subvar-string   ("a string" "a subscripted variable" "non-mapatomic")
                       (or (stringp e) (not (maxima::$mapatom e)) (maxima::$subvarp e)))
                      (:aex "an array-representation expression"
                       (maxima::aex-p e))
