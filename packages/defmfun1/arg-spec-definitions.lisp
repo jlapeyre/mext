@@ -137,6 +137,7 @@
                                 (and (not (maxima::$mapatom e)) (or (maxima::aex-p e) (listp e))))
                      (:or-pos-int-string ("a string" "a positive integer")
                                              (or (stringp e) (and (integerp e) (> e 0))))
+; should compare following to $atom
                      (:or-non-atom-subvar  ("a subscripted variable" "non-atomic")
                       (or (not (maxima::$mapatom e)) (maxima::$subvarp e)))
                      (:or-non-atom-subvar-string   ("a string" "a subscripted variable" "non-atomic")
