@@ -86,6 +86,9 @@
             (if (consp et) (car et) et)))))
 
 ;; constantp seems a bit buggy
+;; it seems to obvious that numbers and strings are constants.
+;; we are interested in maxima constant symbols. maybe this
+;; is not the right way.
 (defun type-of-constant-p (e)
   (let ((res 
          (and (not (or (numberp e) (stringp e))) (mfuncall '$errcatch 
@@ -98,6 +101,7 @@
                    `($ratp ,e))))
     (if (consp res) (cadr res) res)))
 
+;; should we report lisp's type-of for strings ?
 (defun info-type-of (e type info-flag &optional already-lisp-type)
   (if info-flag
       (let ((res '()))
@@ -105,7 +109,8 @@
           (push '$constant res))
         (when (type-of-rat-p e)
           (push '$mrat res))
-        (when (and (not (stringp e)) (atom e))
+;        (when (and (not (stringp e)) (atom e))
+        (when (atom e)
           (when (not already-lisp-type)
             (let ((lt (lisp-type-of e)))
               (when (not (eq lt '$symbol))
@@ -130,7 +135,9 @@
  " it may be better called `what-is-this?'."
  :par ""
  "If the option " :opt "info" " is true, then more information is returned on "
- "properties and the underlying maxima and lisp representations.")
+ "properties and the underlying maxima and lisp representations."
+ " Lisp types are returned with " :code "lisp_" " prepended to the lisp symbol
+ representing the type.")
  (cond ((aex-p e)
         (if info (make-mlist-simp (aex-op e) '$aex)
           (aex-op e)))
@@ -151,8 +158,15 @@
         (cond (($bfloatp e) '$bfloat)
               ((stringp e) (info-type-of e '$string info))
               (($integerp e) (info-type-of e '$integer info))
+;; rat(2) is both integerp and numberp
+;; intopois(2) is neither
+;; in fact, I can't find any maxima function to tell whether a number
+;; is in pois representation.
+;              (($numberp e) (info-type-of e '$number info))
               ((atom e)
                (info-type-of e (lisp-type-of e) info t))
+              ((eq (caar e) 'mpois)
+               '$mpois)
               (t
                (let ((res ($op e)))
                  (if (and info (not (eq (caar e) res)))
@@ -177,5 +191,3 @@
                        '( :pretext "type_of returns the type of the lisp struct corresponding to a maxima object."
                             :code-res ( ("load(graphs)$" nil)
                                         ("type_of(new_graph())" "  graph"))))
-
-

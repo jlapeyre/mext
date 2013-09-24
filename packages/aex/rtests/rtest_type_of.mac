@@ -143,6 +143,10 @@ type_of('a+'b);
 type_of('a+'b,info->true);
 '["+",mplus]$
 
+/* Test  */
+type_of(intopois(2));
+'mpois$
+
 /* Test 33 */
 (kill(%%res%%), 0);
 0$
