@@ -218,10 +218,14 @@ refers to the head."
 ;;          (declare (fixnum i)) why remove this ?
 ;; f+ is a maxima function or macro that uses the fixnum, I believe
           (when (< i 0) (setf i (f+ (ilength e) i 1)))
-          (let ( (opart
+          (let ((opart
                   (cond ((aex-p e) (aexg-int e i))
                         ((consp e)  (nth i e ))
-                        (t (merror1 "ipart: Can't find part of ~a~%" ($sconcat e))))))
+                        (t 
+                         (throw 'ipart-error
+                                (list 'ipart-error
+                                      (format nil "Can't find part ~a of ~a" i ($sconcat e))))))))
+;                         (merror1 "ipart: Can't find part ~a of ~a~%" i ($sconcat e))))))
                 (if (null (cdr inds)) (if (= 0 i) (getop (car opart)) opart)
                     (i-part opart (cdr inds))))))
 
@@ -233,8 +237,12 @@ refers to the head."
 ;; is used
 ;; this is faster, why were we doing the above ?
 ;; Note, use as lvalue is implemented in aex/mset.lisp
-(defmfun $ipart (e &rest inds)
-  (i-part e inds))
+(defmfun1 $ipart (e &rest inds)
+  (let ((res (catch 'ipart-error
+               (i-part e inds))))
+    (if (and (consp res) (eq (car res) 'ipart-error))
+        (defmfun1-error-final '$no_part (second res))
+      res)))
 
 (add-doc-entry "ipart" )
 (add-call-desc '("ipart" ("e" "ind1" "ind2" "..." )
