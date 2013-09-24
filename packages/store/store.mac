@@ -1,6 +1,6 @@
 require("maxdoc");
 require("quicklisp");
-quicklisp_load("cl-store");
+quickload("cl-store");
 
 mext_provide("store",
   [ "store-packages",

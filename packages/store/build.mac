@@ -8,7 +8,7 @@ if  member(lispname, ["gcl", "ecl", "cmucl" ]) then
   else (
     mext_require("maxdoc"),
     require("quicklisp"),
-    quicklisp_load("cl-store"),
+    quickload("cl-store"),
     load_in_subdir(["store","system"]),
     mext_dist_clean(),
     mext_dist_build());

@@ -1577,8 +1577,8 @@ the indexes in the header accordingly."
 (defvar *maxima-after-initial-setup-message*
   (with-output-to-string (*standard-output*)
     (format t "~&~%  ==== quicklisp installed ====~%~%")
-    (format t "    To load a system from maxima, use: quicklisp_load(\"system-name\");~%~%")
-    (format t "    To find systems from maxima, use: quicklisp_apropos(\"term\");~%~%")
+    (format t "    To load a system from maxima, use: quickload(\"system-name\");~%~%")
+    (format t "    To find systems from maxima, use: quicklisp_search(\"term\");~%~%")
     (format t "    For more information, see http://www.quicklisp.org/beta/~%~%")))
 
 (defun initial-install ()

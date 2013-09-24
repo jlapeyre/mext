@@ -5,7 +5,7 @@ if  member(lispname, ["gcl", "ecl"]) then
   else (
     require("maxdoc"),
     require("quicklisp"),
-    quicklisp_load("cl-store"),
+    quickload("cl-store"),
     load_in_subdir(["store","system"]),
     mext_dist_clean(),
     mext_dist_build(),

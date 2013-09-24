@@ -37,7 +37,7 @@
 ;; installed. Then we load asdf explicitly, then setup
 (defmfun1 ($quicklisp_install :doc) ()
   "Download and install quicklisp from the internet. This is usually done automatically as the
- final step of building and installing the maxima interface to quicklisp."
+  final step of building and installing the maxima interface to quicklisp."
   #-gcl
   (quicklisp-quickstart:install)
   #-gcl (max-ql::quicklisp-start)
