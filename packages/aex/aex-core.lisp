@@ -210,8 +210,13 @@ refers to the head."
           (merror1 "ipart: part ~a does not exist~%" ,n)
           (aref (aex-arr ,e) (1- ,n)))))
 
-;; is used
-(ddefun i-part (e inds)
+;; incredibly strange. at least with sbcl, if
+;; we test (consp e)  before doing (elt , then
+;; out of bounds index returns nil rather than causing an
+;; error. I don't understand. So we can't distinguish the
+;; two cases.
+;; Is this a bug in sbcl ? What is this????
+(defun i-part (e inds)
     "ipart returns the part of <e> specified by the list <inds>.
     <e> is a mixed representation expression."
         (let ((i (first inds)))
@@ -219,30 +224,32 @@ refers to the head."
 ;; f+ is a maxima function or macro that uses the fixnum, I believe
           (when (< i 0) (setf i (f+ (ilength e) i 1)))
           (let ((opart
-                  (cond ((aex-p e) (aexg-int e i))
-                        ((consp e)  (nth i e ))
-                        (t 
-                         (throw 'ipart-error
-                                (list 'ipart-error
-                                      (format nil "Can't find part ~a of ~a" i ($sconcat e))))))))
-;                         (merror1 "ipart: Can't find part ~a of ~a~%" i ($sconcat e))))))
-                (if (null (cdr inds)) (if (= 0 i) (getop (car opart)) opart)
-                    (i-part opart (cdr inds))))))
-
-;(defmspec $ipart2 (x)
-;  (setf x (cdr x))
-;  (dbind (e &rest inds) x
-;         (i-part (meval e) (mapcar #'meval  inds))))
+                 (cond ((aex-p e) (aexg-int e i))
+                       (t
+                        (handler-case
+                         (elt e i)
+                         (error (c)
+                                (throw 'ipart-error
+                                       (list 'ipart-error
+                                             (format nil "Index ~a into ~a out of range" i ($sconcat e))))))))))
+;                       (t 
+;                        (throw 'ipart-error
+;                               (list 'ipart-error
+;                                     (format nil "Can't find part ~a of ~a" i ($sconcat e))))))))
+                                        ;                         (merror1 "ipart: Can't find part ~a of ~a~%" i ($sconcat e))))))
+            (if (null (cdr inds)) (if (= 0 i) (getop (car opart)) opart)
+              (i-part opart (cdr inds))))))
 
 ;; is used
-;; this is faster, why were we doing the above ?
 ;; Note, use as lvalue is implemented in aex/mset.lisp
+
 (defmfun1 $ipart (e &rest inds)
   (let ((res (catch 'ipart-error
                (i-part e inds))))
     (if (and (consp res) (eq (car res) 'ipart-error))
-        (defmfun1-error-final '$no_part (second res))
+         (defmfun1-error-final '$no_part (second res))
       res)))
+
 
 (add-doc-entry "ipart" )
 (add-call-desc '("ipart" ("e" "ind1" "ind2" "..." )
