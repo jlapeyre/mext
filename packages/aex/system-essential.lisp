@@ -13,6 +13,10 @@
 (defmfun1:set-file-and-package "system-essential.lisp" "aex")
 
 ;; [1,2] not alike <<1,2>>, but it probably should be
+
+;; src/simp.lisp
+;; last synced with maxima source between 5.31.0 and 5.31.1
+;; Sept 2013
 (mext::no-warning
 (defmfun alike1 (x y)
   (cond ((eq x y))
@@ -20,7 +24,7 @@
      (cond
        ((arrayp x)
 	(and (arrayp y) (lisp-array-alike1 x y)))
-       ( (aex-p x)              ;  NEW FOR AEX
+       ((aex-p x)              ;  NEW FOR AEX
          (and (aex-p y) (aex-alike1 x y)))  ;  NEW FOR AEX
 
     ;; NOT SURE IF WE WANT TO ENABLE COMPARISON OF MAXIMA ARRAYS
@@ -32,13 +36,19 @@
 
        (t (equal x y))))
 	((atom y) nil)
-	(t (and (not (atom (car x)))
-		(not (atom (car y)))
-		(eq (caar x) (caar y))
-		(eq (memqarr (cdar x)) (memqarr (cdar y)))
-		(alike (cdr x) (cdr y)))))))
+	((and
+	  (not (atom (car x)))
+	  (not (atom (car y)))
+	  (eq (caar x) (caar y)))
+         (cond
+	  ((eq (caar x) 'mrat)
+	   ;; Punt back to LIKE, which handles CREs.
+	   (like x y))
+	  (t (and
+	      (eq (memqarr (cdar x)) (memqarr (cdar y)))
+	      (alike (cdr x) (cdr y)))))))))
 
-
+;; original code
 (defun aex-alike1 (x y)
   ( if (equal (car (aex-head x)) (car (aex-head y)))
       (let ( (nx (length (aex-arr x)))
@@ -57,6 +67,8 @@
 
 ;;;  It appears that msize-atom must be changed, but not msize.
 
+;; src/grind.lisp
+;; last checked August 2013
 (mext::no-warning
 (defun msize-atom (x l r)
   (prog (y)
@@ -73,7 +85,8 @@
                  (not (and (member x $aliases :test #'eq) (get x 'noun))))
             (setq y (exploden (stripdollar y))))
 ;;  Following two lines disappeared between 5.28 and 5.30, and aliaslist was removed
-;;  Here we check for it, for compatibility with 5.28. We can remove it later.
+;;  Here we add the line again and check for existence
+;;  of function aliaslist, for compatibility with 5.28. We can remove it later.
            ((and (boundp 'aliaslist) (setq y (rassoc x aliaslist :test #'eq)))
             (return (msize (car y) l r lop rop)))
            ((null (setq y (exploden x))))
@@ -85,6 +98,7 @@
            (t (setq y (cons #\? (slash y)))))
      (return (msz y l r)))))
 
+;; original code
 (defun msize-aex (x l r)
   (let ((x1 (aex-lex x)))
     (cond
@@ -132,18 +146,6 @@
           r (msize-list (cdr x) nil (cons #\> (cons #\> r))))
 
     (cons (+ (car l) (car r)) (cons l (cdr r)))))
-
-#| don't mess with apply now
-(defaesimp $apply (fun arg)
-  (aesimp-in-to-ml arg)
-  (unless ($listp arg)
-    (merror1 (intl:gettext "apply: second argument must be a list; found: ~M") arg))
-  (let ( (oexpr
-          (let ((fun-opr (getopr fun)))
-            (autoldchk fun-opr)
-            (mapply1 fun-opr (cdr arg) fun `(($apply) ,fun ,arg)))))
-    (aesimp-out oexpr)))
-|#
 
 ;;; Code below can probably be removed
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ;
@@ -300,4 +302,17 @@
            ((aex-p x) (return (msize (aex-lex x) l r)))
            (t (setq y (cons #\? (slash y)))))
      (return (msz y l r))))
+|#
+
+
+#| don't mess with apply now
+(defaesimp $apply (fun arg)
+  (aesimp-in-to-ml arg)
+  (unless ($listp arg)
+    (merror1 (intl:gettext "apply: second argument must be a list; found: ~M") arg))
+  (let ( (oexpr
+          (let ((fun-opr (getopr fun)))
+            (autoldchk fun-opr)
+            (mapply1 fun-opr (cdr arg) fun `(($apply) ,fun ,arg)))))
+    (aesimp-out oexpr)))
 |#
