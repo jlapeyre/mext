@@ -94,22 +94,22 @@ select(lrange(10^4),perfect_p);
 aliquot_sequence(100,100);
 [100, 117, 65, 19, 1, 0]$
 
-/* Test */
+/* Test 23 */
 is(tofloat(1.0)=1.0);
 true$
 
-/* Test */
+/* Test 24 */
 is(tofloat(1)=1.0);
 true$
 
-/* Test */
+/* Test 25 */
 is(bfloatp(tofloat(1,20)));
 true$
 
-/* Test */
+/* Test 26 */
 is(bfloatp(tofloat(1.0,20)));
 false$
 
-/* Test 23 */
+/* Test 27 */
 kill(a,num);
 done;

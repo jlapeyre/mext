@@ -400,22 +400,22 @@ true$
 0;
 
 /* Test that grind output can be used as input */
-/* Test  */
+/* Test 73 */
 (a : faex([ff(xx),gg(1,ff(2))]),
   is (eval_string(sconcat(a)) = a));
 true$
 
-/* Test  */
+/* Test 74 */
 (a : [ff(xx),gg(1,<<ff(2)>>)],
   is (eval_string(sconcat(a)) = a));
 true$
 
-/* Test  */
+/* Test 75 */
 (a : <<[ff(xx),gg(1,ff(2))]>>,
   is (eval_string(sconcat(a)) = a));
 true$
 
 
-/* Test 73 */
+/* Test 76 */
 kill(e,e1,a);
 done$
