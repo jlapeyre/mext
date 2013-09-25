@@ -153,11 +153,11 @@ type_of({1},info->true);
 
 /* Test 35 */
 type_of('a+'b);
-'mplus$
+'plus$
 
 /* Test 36 */
 type_of('a+'b,info->true);
-'mplus$
+'plus$
 
 /* Test 37 */
 type_of(intopois(2));
