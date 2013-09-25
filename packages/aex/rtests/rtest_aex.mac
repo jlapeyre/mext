@@ -399,8 +399,23 @@ true$
 (a : aex([1,2,[3,4]]),faex(a),0);
 0;
 
+/* Test that grind output can be used as input */
+/* Test  */
+(a : faex([ff(xx),gg(1,ff(2))]),
+  is (eval_string(sconcat(a)) = a));
+true$
+
+/* Test  */
+(a : [ff(xx),gg(1,<<ff(2)>>)],
+  is (eval_string(sconcat(a)) = a));
+true$
+
+/* Test  */
+(a : <<[ff(xx),gg(1,ff(2))]>>,
+  is (eval_string(sconcat(a)) = a));
+true$
+
 
 /* Test 73 */
 kill(e,e1,a);
 done$
-
