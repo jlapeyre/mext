@@ -236,7 +236,6 @@ refers to the head."
 ;                        (throw 'ipart-error
 ;                               (list 'ipart-error
 ;                                     (format nil "Can't find part ~a of ~a" i ($sconcat e))))))))
-                                        ;                         (merror1 "ipart: Can't find part ~a of ~a~%" i ($sconcat e))))))
             (if (null (cdr inds)) (if (= 0 i) (getop (car opart)) opart)
               (i-part opart (cdr inds))))))
 
