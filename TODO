@@ -1,3 +1,22 @@
+defmfun1 auto documentation does not give the default value of
+optional variables. It should!
+
+--------------------------------------------------------------------
+
+Spurious warning because of unevaluated arguments in table.
+
+(%i7) table(integer_length(100!, n), [n, 2, 20]);
+Warning: integer_length: Argument 'n' at position 2 is not an integer greater than one in integer_length(933262154439441526816992388562667004907159682 ... .
+
+(%o7) [525,332,263,227,204,187,175,166,158,152,147,142,138,135,132,129,126,124,122]
+
+Can be avoided like this. but that does not solve the bug.
+
+(%i9) integer_length(100!, lrange(2,20));
+(%o9) [525,332,263,227,204,187,175,166,158,152,147,142,138,135,132,129,126,124,122]
+
+--------------------------------------------------------------------
+
 Mon Sep  2 21:24:42 CEST 2013
 loading mext_core is pretty fast, but could be super-fast.
 I think the problem is that documents are extracted and
