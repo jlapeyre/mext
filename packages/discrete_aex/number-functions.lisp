@@ -324,6 +324,38 @@
 ;; This is now done by default for all functions.
 (defmfun1::set-match-form '( $aliquot_sum $divisor_function $divisor_summatory ))
 
+;; also should use unwind-protect to reset value of fpprec
+;; the code that prints bfloats knows how many digits to print.
+;; this should be easily accessible to the user.
+;; eg via type_of
+;;
+;; we if result is already a float and if so, do
+;; not promote to bigfloat. This avoids:
+;; (%i101) tofloat(1.1,30);
+;; (%o101)                1.10000000000000008881784197001b0
+;; which is not what the user wants.
+;; but, we are not able to catch the following:
+;; (%i109) tofloat(%e*1.1,30);
+;; (%o109)                2.99011001130495000032824208852b0
+;; (%i110) tofloat(%e*11/10,30);
+;; (%o110)                2.99011001130494975889631621849b0
+;; We should scan the expression for the lowest precision object
+;; as an approximation of which precision we can use.
+(defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec res)
+  :desc
+  ("This function does not change the printed precision, " :codedot "fpprintprec")
+  (setf old-fpprec $fpprec)
+  (mset '$fpprec n)
+  (setf res
+        (if (and (> n 15) (not (floatp expr)))
+            ($bfloat expr) ($float expr)))
+  (mset '$fpprec old-fpprec)
+  res)
+
+(add-call-desc 
+ '("tofloat" ("expr") ("returns a floating point value for " :argdot "expr"))
+ '("tofloat" ("expr" "n") ("returns a floating point value to " :arg "n" "-digit precision for " :argdot "expr")))
+
 (max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" 
                            "divisor_summatory" "perfect_p" "abundant_p"))
 
