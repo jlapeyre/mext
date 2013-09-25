@@ -108,7 +108,7 @@
         (when (type-of-constant-p e)
           (push '$constant res))
         (when (type-of-rat-p e)
-          (push '$mrat res))
+          (push (maxima-op-to-sym 'mrat) res))
 ;        (when (and (not (stringp e)) (atom e))
         (when (atom e)
           (when (not already-lisp-type)
@@ -116,7 +116,7 @@
               (when (not (eq lt '$symbol))
                 (push (lisp-type-of e) res)))))
         (if res
-            (mk-mlist (cons type res))
+            (cons type res)
           type))
     type))
 
@@ -126,6 +126,33 @@
 ;;; perhaps be separate.
 ;;; eg fixnum, aex, mrat, are representations,
 ;;; 'constant is a property
+
+(defun poisp (e)
+  (and (consp e) (eq (caar e) 'mpois)))
+
+(defmfun1 ($poisp :doc) (e)
+  :desc
+  ("returns " :var "true" " if " :arg "e" " is in Poisson encoding, and "
+   :varcomma "false" " otherwise.")
+  (and (consp e) (eq (caar e) 'mpois)))
+
+(defmfun1 ($rationalp :doc) (e)
+  :desc
+  ("returns " :var "true" " if " :arg "e" " is (encoded as) a rational number, and "
+   :varcomma "false" " otherwise."
+   " Rational number encoding is distinct from canonical ration encoding (CRE).")
+  (and (consp e) (eq (caar e) 'rat)))
+
+(defun maxima-op-to-sym (h)
+  (cond 
+   ((eq h 'mlist) '$list)
+   ((eq h 'mplus) '$plus)
+   ((eq h 'mtimes) '$times)
+   ((eq h 'mexpt) '$expt)
+   ((eq h 'rat)   '$ratio)
+   ((eq h 'mrat)  '$cre)
+   ((eq h 'mpois)  '$pois)
+   (t (lisp-sym-to-max h))))
 
 (defmfun1 ($type_of :doc) (e &opt (($info info) nil :bool))
  :desc 
@@ -138,51 +165,61 @@
  "properties and the underlying maxima and lisp representations."
  " Lisp types are returned with " :code "lisp_" " prepended to the lisp symbol
  representing the type.")
- (cond ((aex-p e)
-        (if info (make-mlist-simp (aex-op e) '$aex)
-          (aex-op e)))
-       ; this misses ratp strings
-       #+(or sbcl ecl) ((stringp e)
-                        (info-type-of e '$string info))
-;        (cond ((symbolp e)
-;               (if (and ($constantp e) info)
-;                   (make-mlist-simp '$symbol '$constant)
-;                 '$symbol))
-;              (t (lisp-type-of e))))
-;        (cond ((symbolp e)
-;               (if (and ($constantp e) info)
-;                   (make-mlist-simp '$symbol '$constant)
-;                 '$symbol))
-;              (t (lisp-type-of e))))
-       (($mapatom e)
-        (cond (($bfloatp e) '$bfloat)
-              ((stringp e) (info-type-of e '$string info))
-              ((floatp e) (info-type-of e '$float info))
-              (($integerp e) (info-type-of e '$integer info))
-;; rat(2) is both integerp and numberp
-;; intopois(2) is neither
-;; in fact, I can't find any maxima function to tell whether a number
-;; is in pois representation.
-;              (($numberp e) (info-type-of e '$number info))
-              ((atom e)
-               (info-type-of e (lisp-type-of e) info t))
-              ((eq (caar e) 'mpois)
-               '$mpois)
-              (t
-               (let ((res ($op e)))
-                 (if (and info (not (eq (caar e) res)))
-                     (make-mlist-simp res (lisp-sym-to-max (caar e)))
-                   ($op e))))))
-       ((atom e)
-        (info-type-of e (lisp-type-of e) info))
-       (($ratp e)
-        '$mrat)
-       (t
-        (let (( res ($op e)))
-          (if (and info (not (eq (caar e) res)))
-              (make-mlist-simp res (lisp-sym-to-max (caar e)))
-            ($op e))))))
 
+ (let* ((add-info '())
+        (e (cond ((poisp e) 
+                  (push (maxima-op-to-sym 'mpois) add-info)
+                  ($outofpois e))
+                 (($ratp e) 
+                  (push (maxima-op-to-sym 'mrat) add-info)
+                  ($ratdisrep e))
+                 ((aex-p e)
+                  (push '$aex add-info)
+                  ($lex e))
+                 (t e)))
+        (type-res
+         (cond ((aex-p e) ; should never happen
+               (if info (make-mlist-simp (aex-op e) '$aex)
+                 (aex-op e)))
+                                        ; this misses ratp strings
+              #+(or sbcl ecl) ((stringp e)
+                               (info-type-of e '$string info))
+              (($mapatom e)
+               (cond (($bfloatp e) '$bfloat)
+                     ((stringp e) (info-type-of e '$string info))
+                     ((floatp e) (info-type-of e '$float info))
+                     (($integerp e) (info-type-of e '$integer info))
+                     ;; rat(2) is both integerp and numberp
+                     ;; intopois(2) is neither
+                     ;; in fact, I can't find any maxima function to tell whether a number
+                     ;; is in pois representation.
+                                        ;              (($numberp e) (info-type-of e '$number info))
+                     ((atom e)
+                      (info-type-of e (lisp-type-of e) info t))
+                      ; following should never happen
+                     ((eq (caar e) 'mpois)
+                      '$mpois)
+                     (t
+                      (let* ((the-op ($op e))
+                             (real-op (caar e)))
+                        (if (not (eq the-op real-op)) (maxima-op-to-sym real-op) the-op)))))
+              ((atom e)
+               (info-type-of e (lisp-type-of e) info))
+              ; following should never happen
+              (($ratp e) (info-type-of ($ratdisrep e) (maxima-op-to-sym (caar e)) info))
+              (t
+               (let* ((the-op ($op e))
+                      (real-op (caar e)))
+                 (if (not (eq the-op real-op)) (maxima-op-to-sym real-op) the-op))))))
+   (if (consp type-res)
+       (progn
+         (when add-info
+           (setf type-res (cons (car type-res) (append add-info (cdr type-res)))))
+         (mk-mlist type-res))
+     (if (and info add-info)
+         (mk-mlist (cons type-res add-info))
+       type-res))))
+       
 (examples::clear-examples "type_of")
 (examples::add-example "type_of" 
                        '( :code ("type_of(1)" "type_of(1, info->true)" "type_of(1.0)" 
@@ -192,3 +229,23 @@
                        '( :pretext "type_of returns the type of the lisp struct corresponding to a maxima object."
                             :code-res ( ("load(graphs)$" nil)
                                         ("type_of(new_graph())" "  graph"))))
+
+
+(defmfun1 ($lratio :doc) ((expr :thread))
+  :desc
+  ("Convert " :arg "expr" " to a lisp rational type."
+   "Compare this to " :emrefcomma "rationalize" " which converts "
+   "expressions to maxima rational types... Yes it is confusing.")
+  (let ((re ($rationalize expr)))
+    (if (and (consp re) (eq (caar re) 'rat))
+        (/ (second re) (third re))
+      re)))
+  
+(defmfun1 ($lcomplex :doc) ((expr :thread))
+  :desc
+  ("Convert a maxima  complex number " :arg "expr" " to a lisp complex number.")
+  (let ((rp ($realpart expr))
+        (ip ($imagpart expr)))
+    (if (and (numberp rp) (numberp ip))
+        (complex rp ip)
+      expr)))

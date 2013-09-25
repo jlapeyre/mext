@@ -76,77 +76,104 @@ type_of(1b10);
 'bfloat$
 
 /* Test 16 */
+type_of(1/4);
+'ratio$
+
+/* Test 17 */
+type_of(-1/4);
+'ratio$
+
+/* Test 18 */
+type_of(rat(1/4),info->true);
+'[ratio,cre]$
+
+/* Test 19 */
+type_of(intopois(1/4),info->true);
+'[ratio,pois]$
+
+/* Test 20 */
 type_of("cat");
 'string$
 
-/* Test 17 */
+/* Test 21 */
 type_of('b);
 'symbol$
 
-/* Test 18 */
+/* Test 22 */
 type_of([]);
-"["$
+'list$
 
-/* Test 19 */
+/* Test 23 */
 type_of(%%fg(x));
 '%%fg$
 
-/* Test 20 */
+/* Test 24 */
 type_of(%%fg(x), info->true);
 '%%fg$
 
-/* Test 21 */
+/* Test 25 */
 type_of(%e);
 'symbol$
 
-/* Test 22 */
+/* Test 26 */
 type_of(%e,info->true);
 ['symbol, 'constant]$
 
-/* Test 23 */
+/* Test 27 */
 type_of('aabb,info->true);
 'symbol$
 
-/* Test 24 */
+/* Test 28 */
 type_of(%i,info->true);
 ['symbol, 'constant]$
 
-/* Test 25 */
+/* Test 29 */
 type_of(<<1,2>>);
-"["$
+'list$
 
-/* Test 26 */
+/* Test 30 */
 type_of( <<1,2>>, info->true);
-["[",'aex]$
+['list,'aex]$
 
-/* Test 27 */
+/* Test 31 */
 type_of(rat(1))$
 'integer$
 
-/* Test 28 */
+/* Test 32 */
 type_of(rat(1),info->true)$
-'[integer,mrat,constant]$
+'[integer,cre,lisp_bit]$
 
-/* Test 29 */
+/* Test 33 */
 type_of({1})$
 'set;
 
-/* Test 30 */
+/* Test 34 */
 type_of({1},info->true);
 'set;
 
-/* Test 31 */
+/* Test 35 */
 type_of('a+'b);
-"+"$
+'mplus$
 
-/* Test 32 */
+/* Test 36 */
 type_of('a+'b,info->true);
-'["+",mplus]$
+'mplus$
 
-/* Test 33 */
+/* Test 37 */
 type_of(intopois(2));
-'mpois$
+'integer;
 
-/* Test 34 */
+/* Test 38 */
+type_of(intopois(2),info->true);
+'[integer, pois,lisp_integer]$
+
+/* Don't know if we should descend into representations.
+  The following probably is not useful, but who knows ? */
+/* Test 39 */
+type_of(<<intopois(f(1,2))>>,info->true);
+'[pois,aex]$
+
+
+/* Test 40 */
 (kill(%%res%%), 0);
 0$

@@ -1,3 +1,6 @@
+in src/float.lisp,
+fpround cannot accept a lisp ratio. This could be fixed
+--------------------------------------------------------------------
 defmfun1 auto documentation does not give the default value of
 optional variables. It should!
 
