@@ -399,6 +399,7 @@ true$
 (a : aex([1,2,[3,4]]),faex(a),0);
 0;
 
+
 /* Test 73 */
 kill(e,e1,a);
 done$

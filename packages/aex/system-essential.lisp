@@ -98,8 +98,23 @@
            (t (setq y (cons #\? (slash y)))))
      (return (msz y l r)))))
 
-;; original code
+;; We want output to be usable as input.
+;; Much simpler than before. None of the other msize-xxx-aex code
+;; is needed.
 (defun msize-aex (x l r)
+  (let* ((x1 (aex-lex x))
+         (res1 (msize x1 (list (list 2 #\< #\<)) (list (list 2 #\> #\>)) lop rop))
+         (res (cons 3 (append  l (list res1) r))))
+    res))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; unused
+;; I think everything can be done here, without calling the other
+;; functions. just modify this code.
+;; original code
+(defun msize-aex-old (x l r)
   (let ((x1 (aex-lex x)))
     (cond
       ((safe-get (caar x1) 'grind)
@@ -108,26 +123,22 @@
          (the #-ecl (values t) #+ecl t (funcall msize-fun x1 l r))))
       (t (msize-function-aex x1 l r nil)))))
 
+;; unused
+;; **** We should use something like this for all aex expressions
+;; i.e. Don't use the function code.
 ;; Using << >> instead of < >, allows us to copy output
 ;; and use it as input.
 (defun msize-matchfix-aex (x l r)
   (let* ((ssym (strsym (caar x)))
-
-; single < >
-;         (sleft (cons #\< (car ssym)))
-;         (sright (append (cdr ssym) (list #\>))))
-
-; double << >>
          (sleft (cons #\< (cons #\< (car ssym))))
          (sright (append (cdr ssym) (list #\> #\>))))
-
-
     (setq l (nreconc l sleft)
           l (cons (length l) l)
           r (append sright r)
           x (msize-list (cdr x) nil r))
     (cons (+ (car l) (car x)) (cons l (cdr x)))))
 
+;; unused
 (defun msize-function-aex (x l r op)
   (let* ((head (caar x)))
     (cond ((not (symbolp head)))
@@ -136,15 +147,17 @@
           ((and (get head 'noun) (not (member head (cdr $aliases) :test #'eq))
                 (not (get head 'reversealias)))
            (setq l (cons #\' l))))
-
-; single < >
-;    (setq l (msize (if op (getop head) head) l (list #\< ) 'mparen 'mparen)
-;          r (msize-list (cdr x) nil (cons #\> r)))
-
-;; double << >>
-    (setq l (msize (if op (getop head) head) l (list #\< #\< ) 'mparen 'mparen)
-          r (msize-list (cdr x) nil (cons #\> (cons #\> r))))
-
+      (setq l (msize (if op (getop head) head) l (list #\( )  'mparen 'mparen)
+            r (msize-list (cdr x) nil (append (list #\) #\> #\>) r)))
+      (setq l  ; not efficient, I'm afraid.
+            (append (list (+ 2 (first l)) (second l))
+                    (list #\< #\< ) (nthcdr 2 l)))
+;  old code: <<f(1,2,3)>> prints as  f<<1,2,3>>.
+;    (setq l (msize (if op (getop head) head) l (list #\< #\< ) 'mparen 'mparen)
+;          r (msize-list (cdr x) nil (cons #\> (cons #\> r))))
+;    (format t "head: ~s~%" head)
+;    (format t "left: ~s~%" l)
+;    (format t "right: ~s~%" r)
     (cons (+ (car l) (car r)) (cons l (cdr r)))))
 
 ;;; Code below can probably be removed
