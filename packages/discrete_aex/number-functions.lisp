@@ -71,9 +71,19 @@
    "cmucl-20d error, gcl-2.6.(7,8,9) 0.09s, allegro-8.2 = 23s, "
    "Mma-3.0 = 5s, Mma-8 = 0.04s."))
    
-; ccl-1.7-r15184M = 65s, sbcl-1.0.52.0.debian = 1.5s,
-; gcl-2.6.7 = 0.11s, Mma-8 = 0.04s.
-; The base is limited to 36 only because we call write-to-string."))
+(defmfun1 ($integer_length :doc) ((n :non-neg-int :thread) &optional (base 10 :gt-1-int :thread))
+  :desc
+  ("Returns the number of digits in the integer " :argdot "n"
+   " This function miscounts by 1 for some very large numbers (with millions of digits).
+   For instance, the 39th, 47th, and 48th Mersenne primes.")
+  (if (= 0 n) 1
+    (1+ (floor (log n base)))))
+
+(add-call-desc  
+ '( "integer_length" ("n")
+    ("returns the number of digits in the base 10 representation of the integer " :argdot "n"))
+ '( "integer_length" ("n" "base")
+    ("returns the number of digits in the base " :arg "base" " representation of the integer " :argdot "n")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -311,6 +321,7 @@
  '( :pretext "Aspiring numbers are those which are not perfect, but terminate with a repeating perfect number."
     :code "imap(lambda([x],aliquot_sequence(x,100)),[25, 95, 119, 143, 417, 445, 565, 608, 650, 652, 675, 685])"))
 
+;; This is now done by default for all functions.
 (defmfun1::set-match-form '( $aliquot_sum $divisor_function $divisor_summatory ))
 
 (max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" 

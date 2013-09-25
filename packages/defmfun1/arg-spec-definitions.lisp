@@ -86,6 +86,8 @@
                       (and (integerp e) (>= e 0)))
                      (:pos-int "a positive integer"
                          (and (integerp e) (> e 0)))
+                     (:gt-1-int "an integer greater than one"
+                         (and (integerp e) (> e 1)))
                      (:pos-int-or-listof ("a positive integer" "a list of positive integers")
                                          (or (and (integerp e) (> e 0))
                                              (and (maxima::$listp e)
