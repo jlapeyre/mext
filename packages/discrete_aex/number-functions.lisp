@@ -341,17 +341,20 @@
 ;; (%o110)                2.99011001130494975889631621849b0
 ;; We should scan the expression for the lowest precision object
 ;; as an approximation of which precision we can use.
-(defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec res)
+(defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec old-numer res)
   :desc
   ("This function does not change the printed precision, " :codedot "fpprintprec")
   (setf old-fpprec $fpprec)
+  (setf old-numer  $numer)
   (mset '$fpprec n)
+  (mset '$numer t)
   (setf res
         (if (and (> n 15) (not (floatp expr)))
             ($bfloat expr) ($float expr)))
   (when (not (or (floatp res) ($bfloatp res)))
     (setf res ($rectform res)))
   (mset '$fpprec old-fpprec)
+  (mset '$numer old-numer)
   res)
 
 (add-call-desc 
