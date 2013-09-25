@@ -52,16 +52,16 @@ type_of(2);
 true$
 
 /* Test 10 */
-%%test_float%%(type_of(1.0));
-true$
+type_of(1.0);
+'float$
 
 /* Test 11 */
-%%test_float%%(type_of(0.0));
-true$
+type_of(0.0);
+'float$
 
 /* Test 12 */
-%%test_float%%(type_of(-1.0));
-true$
+type_of(-1.0);
+'float$
 
 /* Test 13 */
 type_of(-1);

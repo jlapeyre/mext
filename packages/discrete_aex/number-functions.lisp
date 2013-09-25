@@ -349,6 +349,8 @@
   (setf res
         (if (and (> n 15) (not (floatp expr)))
             ($bfloat expr) ($float expr)))
+  (when (not (or (floatp res) ($bfloatp res)))
+    (setf res ($rectform res)))
   (mset '$fpprec old-fpprec)
   res)
 
