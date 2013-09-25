@@ -354,7 +354,7 @@
 
 (add-call-desc 
  '("tofloat" ("expr") ("returns a floating point value for " :argdot "expr"))
- '("tofloat" ("expr" "n") ("returns a floating point value to " :arg "n" "-digit precision for " :argdot "expr")))
+ '("tofloat" ("expr" "n") ("tries to return a floating point value to " :arg "n" "-digit precision for " :argdot "expr")))
 
 (max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" 
                            "divisor_summatory" "perfect_p" "abundant_p"))
