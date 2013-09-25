@@ -1,0 +1,58 @@
+require(tpsolve) causes stock maxima rtest_numth to exit with an
+error. Loding stock to_poly_solve does not. This is probably because
+stock to_poly_solve can be killed.
+
+Here it is:
+(%i8) s;
+(%o8) x^4+4*x^3+8*x^2+8*x+7
+(%i10) sr : rat(s);
+(%o10) x^4+4*x^3+8*x^2+8*x+7
+(%i11) :lisp $sr
+((MRAT SIMP ($X $TO_POLY_SOLVE) (X1145 TO_POLY_SOLVE1146))
+ (X1145 4 1 3 4 2 8 1 8 0 7) . 1)
+
+s does not have the junk in it. but converting to rat does.
+This happens after require(tpsolve). Just loading stock
+to_poly_solve does not do this.
+
+Don't know why. I tried non compiling any code (not even lisp) in
+tpsolve. This did not help.
+
+Also rat(zz) does not put the junk if rtest_numth is not
+run. After it is run, the junk goes in every time rat
+is called.
+
+Has to do with aliases and
+printvarlist and varlist in rat3e.lisp
+
+After the bug is triggered. kill(all) removes the
+varlist, but printvarlist() always puts to_poly_solve
+back in. very strange.
+
+Calling the body of printvarlist from lisp does not cause
+the bug. calling printvarlist does. Hmmm. it's like
+a variable was captured.
+
+(%i1) :lisp (cons '(mlist) (copy-tree varlist)))
+((MLIST))
+(%i1) printvarlist();
+  0: ($PRINTVARLIST)
+  0: $PRINTVARLIST returned ((MLIST) $TO_POLY_SOLVE)
+(%o1)                              [%solve]
+
+Redefining printvarlist does not stop the bug
+ :lisp (defmfun $printvarlist () (cons '(mlist) (copy-tree varlist)))
+
+Defining printvarlist2 causes the bug as well.
+
+Not making a copy also triggers the bug
+:lisp (defmfun $printvarlist3 () (cons '(mlist) varlist))
+
+Running this triggers bug
+:lisp (defun $printvarlist4 () (cons '(mlist) varlist))
+
+running triggers bug
+ :lisp (defun $printvarlist5 () (length varlist))
+
+still bug
+:lisp (defun $printvarlist5 () (length maxima::varlist))
