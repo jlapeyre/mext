@@ -70,7 +70,11 @@
    "ecl-12.12.1 0.09s, sbcl-1.1.11 0.5s, clisp-2.49 9s, ccl-1.9 62s, "
    "cmucl-20d error, gcl-2.6.(7,8,9) 0.09s, allegro-8.2 = 23s, "
    "Mma-3.0 = 5s, Mma-8 = 0.04s."))
-   
+
+#|
+
+This makes too many mistakes
+ 
 (defmfun1 ($integer_length :doc) ((n :non-neg-int :thread) &optional (base 10 :gt-1-int :thread))
   :desc
   ("Returns the number of digits in the integer " :argdot "n"
@@ -85,6 +89,8 @@
     ("returns the number of digits in the base 10 representation of the integer " :argdot "n"))
  '( "integer_length" ("n" "base")
     ("returns the number of digits in the base " :arg "base" " representation of the integer " :argdot "n")))
+
+|#
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
