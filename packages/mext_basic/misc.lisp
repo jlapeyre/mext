@@ -32,11 +32,11 @@
 ;;            else if ratp(x) then ?equal(0, ?cadr (x))
 ;;            else false;
 
-(defmfun1 ($chop :doc) ((x :thread) &opt ($eps 1e-16 :non-neg-number))
+(defmfun1 ($chop :doc) ((x :thread) &optional (eps 1e-10 :to-non-neg-float))
   :desc
   ("Return " :code "0" " if " :arg "x" " is closer to zero than
-    the option " :optdot "eps")
-  (if (and (numberp x) (<= (abs x) $eps)) 0
+    the optional argument " :argdot "eps")
+  (if (and (numberp x) (<= (abs x) eps)) 0
     x))
 
 ;; iparse_string and ieval_string are the same as stock maxima,
