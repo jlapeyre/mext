@@ -250,6 +250,20 @@
         (complex rp ip)
       expr)))
 
+(defmfun1 ($mcomplex :doc) ((cnum :lisp-number :thread))
+  :desc
+  ("Convert a lisp complex number " :arg "cnum" " to a maxima complex number.")
+  (let ((rp (realpart cnum))
+        (ip (imagpart cnum)))
+    (meval `((mplus simp) ,rp ((mtimes simp) $%i ,ip)))))
+
+(defmfun1 ($meval :doc) (expr)
+  :desc
+  ("Evaluates the expression " :argdot "expr"
+   " This runs the maxima evaluator " :code "meval"
+   " once. This is after a suggestion by S. Macrakis")
+  (meval expr))
+
 ;; Note, the following is almost the same as this
 ;; cpow2(x,n):=cabs(x)^n*exp(%i*carg(x)*n)
 ;; But, the former is can be used in more situations.
