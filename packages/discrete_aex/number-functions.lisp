@@ -25,12 +25,12 @@
   (when (stringp digits)
       (if (and (numberp base) (echeck-arg $from_digits :radix base))
           (return-from $from_digits (parse-integer digits :radix base))
-          (setf digits (cons nil (loop for c across digits collect (digit-char-p c)) ))))
+          (setf digits (cons nil (loop :for c :across digits :collect (digit-char-p c)) ))))
     (pop digits)
     (if (and (numberp base) (echeck-arg $from_digits :radix base))
         (from-digits3 digits base)
         (let ((n (length digits)) (sum 0))
-          (loop for i fixnum from (1- n) downto 0 do
+          (loop :for i fixnum :from (1- n) :downto 0 :do
                (setf sum (add sum  (mul `((mexpt simp) ,base ,i) (pop digits)))))
           (meval sum))))
 
@@ -47,7 +47,7 @@
 (defmfun-ae ($integer_digits :doc) ((n :integer) &optional (base :radix 10) (len :non-neg-int nil))
   (setf n (abs n))
   (let* ((str (write-to-string n :base base))
-         (digits (loop for c across str collect (digit-char-p c base)))
+         (digits (loop :for c :across str :collect (digit-char-p c base)))
          (n (length str)))
     (defmfun-final-to-ae
       (mk-mlist
@@ -74,12 +74,13 @@
 (defmfun1 ($integer_length :doc) ((n :non-neg-int :thread) &optional (base 10 :gt-1-int :thread))
   :desc
   ("Returns the number of digits in the integer " :argdot "n"
-   " This function miscounts by 1 for some very large numbers (with millions of digits).
-   For instance, the 39th, 47th, and 48th Mersenne primes.")
+   " This function is not yet reliable. It miscounts by 1 for some numbers.")
+;   " This function miscounts by 1 for some very large numbers (with millions of digits).
+;   For instance, the 39th, 47th, and 48th Mersenne primes.")
   (if (= 0 n) 1
     (1+ (floor (log n base)))))
 
-(add-call-desc  
+(add-call-desc
  '( "integer_length" ("n")
     ("returns the number of digits in the base 10 representation of the integer " :argdot "n"))
  '( "integer_length" ("n" "base")
@@ -133,7 +134,7 @@
             (incf c (sbit a j))
             (setf (sbit a j) 0))
           (incf p)
-          (loop  until (= 1 (sbit a p)) do (incf p)))
+          (loop  :until (= 1 (sbit a p)) :do (incf p)))
         (- n c))))
 
 
@@ -157,7 +158,7 @@
             (incf c (sbit a j))
             (setf (sbit a j) 0))
           (incf p)
-          (loop  until (= 1 (sbit a p)) do (incf p)))
+          (loop :until (= 1 (sbit a p)) :do (incf p)))
         (f- n c))))
 
 (max-doc:implementation "prime_pi_soe" "This is not the most efficient way to compute primes.");
@@ -175,12 +176,12 @@
   (let ((sieve (make-array (1+ maximum) :element-type 'bit
                            :initial-element 0)))
     (defmfun-final-to-ae (mk-mlist
-          (loop for candidate from 2 to maximum
+          (loop :for candidate :from 2 :to maximum
              when (zerop (bit sieve candidate))
              if (>= candidate minimum) collect candidate end
-             and do (loop for composite from (expt candidate 2) 
-                       to maximum by candidate
-                       do (setf (bit sieve composite) 1)))))))
+             and do (loop :for composite :from (expt candidate 2) 
+                       :to maximum :by candidate
+                       :do (setf (bit sieve composite) 1)))))))
 
 (add-call-desc '( "primes1" ("max") ("returns a list of the primes less than or equal to " :arg "max" "."))
                '( "primes1" ("min" "max") ("returns a list of the primes between " :arg "min" " and "
@@ -211,7 +212,7 @@
    :math "D(x)" " is the sum of " :tmath ("\\sigma_0(n)" "sigma_0(n)") 
    " over " :tmath ("n \\le x" "n <= x") ".")
   (let ((sum 0) (u (floor (sqrt x))) (nx (floor x)))
-                    (loop for i from 1 to u do
+                    (loop :for i :from 1 :to u :do
                           (setf sum (+ sum (floor (/ nx i)))))
                     (- (* 2 sum) (* u u))))
 
@@ -225,7 +226,7 @@
   :desc ("Returns the cumulative product of all divisors of integers from 1 to "
          :argdot "n")
   (let ((prod 1))
-    (loop for k from 1 to n do
+    (loop :for k :from 1 :to n :do
           (setf prod (* prod (expt k (floor (/ n k))))))
     prod))
 
@@ -308,7 +309,7 @@
    " elements (counting from zero) in the aliquot sequence whose first term is " :argdot "k" 
    " The sequence is truncated at an element if it is zero or repeats the previous element.")
   (let ( (seq (list k)) (cur k) (last 0) )
-    (loop for i from 0 to n until (or (= 0 cur) (= cur last)) do
+    (loop :for i :from 0 :to n :until (or (= 0 cur) (= cur last)) :do
           (setf last cur)
           (setf cur (- (divisor-function-1 cur) cur))
           (setf seq (cons cur seq)))
