@@ -94,18 +94,28 @@ This makes too many mistakes
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; need to finish adding dot and grouping options
 (defmfun1 ($integer_string :doc) ((n :integer :thread) &optional 
-                                  (base :or-radix-string 10 :thread) (pad :pos-int :thread))
-  (let ((fmt 
+                                  (base :or-radix-string-symbol 10 :thread) 
+                                  (pad :pos-int :thread)
+                                  &opt ($sep nil (:member '(t $comma $dot))))
+  :desc
+  ("The option " :opt "comma" " returns a string with commas.")
+  (let* ((base (if (symbolp base) ($sconcat base) base))
+         (fmt 
          (cond ((equal base "roman")
                 (echeck-arg $integer_string :roman-integer n)
                 "~@R")
                ((equal base "ordinal") "~:R")
                ((equal base "cardinal") "~R")
-               ((stringp base) ; allow match_form here!
+               ((stringp base)
                 (merror1 "integer_string: base ~s is not a radix or one of \"roman\", \"cardinal\", or \"ordinal\"" base))
                (pad
                 (format nil "~~~a,~a,'0R" base pad))
+               ((member $sep '(t $comma))
+                (format nil "~~~a:R" base))
+;               ((eq $sep '$dot)
+;                (format nil "~~~a:R" base))
                (t (format nil "~~~aR" base)))))
     (format nil fmt n)))
 

@@ -126,6 +126,9 @@
                              (and (integerp e) (> e 1) (< e 37)))
                      (:or-radix-string ("a valid radix (an integer between 2 and 36)" "a string")
                              (or (stringp e) (and (integerp e) (> e 1) (< e 37))))
+                     (:or-radix-string-symbol 
+                      ("a valid radix (an integer between 2 and 36)" "a string" "a symbol")
+                             (or (stringp e) (symbolp e) (and (integerp e) (> e 1) (< e 37))))
 ;; This was present in *opt-spec-definitions*, but not here. This caused an error only when looking
 ;; up the english description. This situation still needs to be fixed!
                      (:symbol "a symbol" (symbolp e))
