@@ -89,6 +89,8 @@
                                             (let* ((type (type-of e))
                                                    (type1 (if (consp type) (car type) type)))
                                               (eq type1 'complex)))
+                     (:lisp-maxima-number "a lisp or maxima number"
+                                          (or (numberp e) (maxima::$numberp e)))
 ;; Where is this used ? it will fail with some valid input
 ;; have uses of this.
 ;                     (:non-neg-number "a non-negative number"

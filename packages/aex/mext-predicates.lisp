@@ -230,10 +230,9 @@
                             :code-res ( ("load(graphs)$" nil)
                                         ("type_of(new_graph())" "  graph"))))
 
-
 (defmfun1 ($lratio :doc) ((expr :thread))
   :desc
-  ("Convert " :arg "expr" " to a lisp rational type."
+  ("Return " :arg "expr" " converted to lisp rational type."
    "Compare this to " :emrefcomma "rationalize" " which converts "
    "expressions to maxima rational types... Yes it is confusing.")
   (let ((re ($rationalize expr)))
@@ -243,19 +242,28 @@
   
 (defmfun1 ($lcomplex :doc) ((expr :thread))
   :desc
-  ("Convert a maxima  complex number " :arg "expr" " to a lisp complex number.")
+  ("Return  maxima complex number " :arg "expr" " converted to a lisp complex number.")
   (let ((rp ($realpart expr))
         (ip ($imagpart expr)))
     (if (and (numberp rp) (numberp ip))
         (complex rp ip)
       expr)))
 
-(defmfun1 ($mcomplex :doc) ((cnum :lisp-number :thread))
+(defmfun1 ($mcomplex :doc) ((cnum :lisp-maxima-number :thread))
   :desc
-  ("Convert a lisp complex number " :arg "cnum" " to a maxima complex number.")
-  (let ((rp (realpart cnum))
-        (ip (imagpart cnum)))
+  ("Return lisp complex number " :arg "cnum" " converted to a maxima complex number.")
+  (let ((rp) (ip))
+    (if (complexp cnum)
+        (setf rp (realpart cnum) ip (imagpart cnum))
+      (setf rp ($realpart cnum) ip ($imagpart cnum)))
     (meval `((mplus simp) ,rp ((mtimes simp) $%i ,ip)))))
+
+(defmfun1 ($mratio :doc) ((expr :thread))
+  :desc
+  ("Convert " :arg "expr" " from lisp rational to maxima rational type.")
+  (if (and (rationalp expr) (not (= 1 (denominator expr))))
+     (meval `((rat simp) ,(numerator expr) ,(denominator expr)))
+    ($rationalize expr)))
 
 (defmfun1 ($meval :doc) (expr)
   :desc
