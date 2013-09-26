@@ -366,13 +366,15 @@ This makes too many mistakes
   (setf old-numer  $numer)
   (mset '$fpprec n)
   (mset '$numer t)
-  (setf res
-        (if (and (> n 15) (not (floatp expr)))
-            ($bfloat expr) ($float expr)))
-  (when (not (or (floatp res) ($bfloatp res)))
-    (setf res ($rectform res)))
+  (unwind-protect
+      (progn
+        (setf res
+              (if (and (> n 15) (not (floatp expr)))
+                  ($bfloat expr) ($float expr)))
+        (when (not (or (floatp res) ($bfloatp res)))
+          (setf res ($rectform res))))
   (mset '$fpprec old-fpprec)
-  (mset '$numer old-numer)
+  (mset '$numer old-numer))
   res)
 
 (add-call-desc 
