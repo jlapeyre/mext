@@ -108,7 +108,8 @@ This makes too many mistakes
                 "~@R")
                ((equal base "ordinal") "~:R")
                ((equal base "cardinal") "~R")
-               ((stringp base)
+               ((stringp base) 
+      ; following error needs to be fixed for defmfun1
                 (merror1 "integer_string: base ~s is not a radix or one of \"roman\", \"cardinal\", or \"ordinal\"" base))
                (pad
                 (format nil "~~~a,~a,'0R" base pad))
