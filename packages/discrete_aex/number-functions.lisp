@@ -98,7 +98,7 @@ This makes too many mistakes
 (defmfun1 ($integer_string :doc) ((n :integer :thread) &optional 
                                   (base :or-radix-string-symbol 10 :thread) 
                                   (pad :pos-int :thread)
-                                  &opt ($sep nil (:member '(t $comma $dot))))
+                                  &opt ($sep nil (:member '(t nil $comma $dot))))
   :desc
   ("The option " :opt "comma" " returns a string with commas.")
   (let* ((base (if (symbolp base) ($sconcat base) base))
