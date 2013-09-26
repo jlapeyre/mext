@@ -70,6 +70,19 @@ if (lisp_type_symbol() = 'gcl) then 0 else chop(1e-17);
 is(chop(1e-9) > 0);
 true$
 
+/* Test  */
+is(chop(1e-9,1e-8) > 0);
+false$
+
+/* Test allowing maxima ratio
+   But, if we want to chop bigfloats,
+   maybe we'll have a problem
+*/   
+/* Test  */
+is(chop(1e-9,1/10^8) > 0);
+false$
+
+
 /* Test 19 */
 if (lisp_type_symbol() = 'gcl) then 0 else chop(-1e-17);
 0$
