@@ -24,3 +24,11 @@
 
 (defprop |$Rule| msize-infix grind)
 (defprop |$Rule| (#\- #\>) strsym)
+;(def-lbp |$Rule| 80.) These do nothing
+;(def-rbp |$Rule| 80.)
+; These allow things like
+; eps->1/10
+; should be lower than = as well
+; = has lbp rbp 80
+(def-lbp |$->| 79.)
+(def-rbp |$->| 79.)

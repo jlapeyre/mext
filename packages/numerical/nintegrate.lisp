@@ -174,7 +174,7 @@
    &opt 
    ($real :bool nil)
    ($find_sing :bool t) ($calls (:member '(nil t $short))) ($words t :bool) ($info :bool t) 
-   ($subint 200 :non-neg-int) ($epsabs 0 :non-neg-number) ($epsrel 1d-8 :non-neg-number)
+   ($subint 200 :non-neg-int) ($epsabs 0 :to-non-neg-float) ($epsrel 1d-8 :to-non-neg-float)
         ($points :to-float-listof))
            ; ($method "automatic" :string)) only doing automatic for now.
  :desc 

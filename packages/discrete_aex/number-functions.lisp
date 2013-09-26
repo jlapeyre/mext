@@ -202,7 +202,7 @@
                           :code "catalan_number(n)"))
 
 
-(defmfun1 ($divisor_summatory :doc) ((x :non-neg-number :thread) )
+(defmfun1 ($divisor_summatory :doc) ((x :to-non-neg-float :thread) )
   :desc 
   ("Returns the divisor summatory function "
    :math "D(x)" " for " :argdot "x"  " The " :mref "divisor_function" " " 

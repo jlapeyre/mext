@@ -28,11 +28,11 @@
 
 (defvar *arg-spec-definitions* `(
                      (:function "a function"
-                                (not (numberp e))) ; a bit fuzzy what this would mean
+                                (not (maxima::$numberp e))) ; a bit fuzzy what this would mean
                      ; a bit more precise about what we mean.
                      ; borrowed from badfunchk
                      (:map-function "a map-able function" 
-                         (not (or (numberp e) 
+                         (not (or (maxima::$numberp e) 
                                   (member e '(t nil maxima::$%e maxima::$%pi maxima::$%i) :test #'eq))))
                      (:string  "a string" (stringp e))
                      (:string-or-listof ("a string" "a list of strings")
@@ -53,10 +53,12 @@
                                          (or (integerp e)
                                              (and (maxima::$listp e)
                                                   (every #'integerp (cdr e)))))
-                     (:number "a number" (numberp e))
+;; These are only lisp numbers! Eg. Not maxima ratios or bfloats!
+;; where is this used ?
+                     (:number "a number" (maxima::$numberp e))
                      (:number-listof ("a list of numbers")
                                      (and (maxima::$listp e)
-                                          (every #'(lambda (x) (numberp x)) (cdr e))))
+                                          (every #'(lambda (x) (maxima::$numberp x)) (cdr e))))
                      (:pp :to-float "an expression that can be converted to a float"
                           (let ((v (maxima::$float e))) (list (numberp v) v)))
                      (:pp :to-float-listof "a list of expressions each of which can be converted to a float"
@@ -79,9 +81,18 @@
                      (:pp :to-or-float-minf "minf or an expression that can be converted to a float"
                           (let ((v (maxima::$float e))) 
                             (list (or (numberp v) (eq v 'maxima::$minf)) v)))
+                     (:pp :to-non-neg-float "an expression that can be converted to a non-negative float"
+                          (let ((v (maxima::$float e))) (list (and (numberp v) (> v 0)) v)))
                      (:complex-number  "a complex number" (complex_number_p e)) ; from ellipt.lisp
-                     (:non-neg-number "a non-negative number"
-                      (and (numberp e) (>= e 0)))
+;; following is not used yet
+                     (:lisp-complex-number  "a lisp complex number" 
+                                            (let* ((type (type-of e))
+                                                   (type1 (if (consp type) (car type) type)))
+                                              (eq type1 'complex)))
+;; Where is this used ? it will fail with some valid input
+;; have uses of this.
+;                     (:non-neg-number "a non-negative number"
+;                      (and (numberp e) (>= e 0)))
                      (:non-neg-int "a non-negative integer"
                       (and (integerp e) (>= e 0)))
                      (:pos-int "a positive integer"
@@ -169,10 +180,12 @@
                       arg-member-check)
                      ((:int-gte 1) "an integer greater than or equal to ~a"
                        int-gte-check)
-                     (:non-neg-number "a non-negative number"
-                      (and (numberp e) (>= e 0)))
+;                     (:non-neg-number "a non-negative number"
+;                      (and (numberp e) (>= e 0)))
                      (:pp :to-float "an expression that can be converted to a float"
                           (let ((v (maxima::$float e))) (list (numberp v) v)))
+                     (:pp :to-non-neg-float "an expression that can be converted to a non-negative float"
+                          (let ((v (maxima::$float e))) (list (and (numberp v) (> v 0)) v)))
                      (:pp :to-float-listof "a list of expressions each of which can be converted to a float"
                           (if (not (maxima::$listp e))
                               (list nil nil)
