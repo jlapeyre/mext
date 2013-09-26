@@ -1,5 +1,5 @@
 load(mext);
-require("maxdoc");
+require("discrete_aex");
 load_in_subdir(["numerical","system"]);
 mext_dist_clean();
 mext_dist_build();

@@ -242,10 +242,10 @@ true;
 */
 /* Test 38 */
 cec(nintegrate(1/(1-x)^(1/3) * exp(-x), [x,0,inf]),
-  rectform(float(-(sqrt(3)*imagpart(gamma_incomplete(2/3, -1)))/(2*%e) +
+  tofloat(-(sqrt(3)*imagpart(gamma_incomplete(2/3, -1)))/(2*%e) +
   realpart(gamma_incomplete(2/3, -1))/(2*%e) +
   %i*(-((sqrt(3)*gamma(2/3))/%e) + imagpart(gamma_incomplete(2/3,
- -1))/(2*%e) + (sqrt(3)*realpart(gamma_incomplete(2/3, -1)))/(2*%e)))),
+ -1))/(2*%e) + (sqrt(3)*realpart(gamma_incomplete(2/3, -1)))/(2*%e))),
   1e-10);
 true$
 
@@ -352,7 +352,7 @@ true$
    NIntegrate[Sqrt[Log[x - 7]], {x, 0, 20}, Exclusions -> {7, 8}]    
 */   
 cec(nintegrate(sqrt(log(x-7)),[x,0,20], epsrel->1e-10),
-   rectform(float(rectform(integrate(sqrt(log(x-7)),x,0,20)))), 1e-10)$
+   tofloat(integrate(sqrt(log(x-7)),x,0,20)), 1e-10)$
 true;
 
 /*
@@ -366,7 +366,7 @@ true;
   and no error. We could try to detect this somehow.
 */     
 /* Test 58 */
-cec(nintegrate(exp(%i*x),[x,1,10^4], subint -> 3000),rectform(float(integrate(exp(%i*x),x,1,10^4))),1e-12)$
+cec(nintegrate(exp(%i*x),[x,1,10^4], subint -> 3000),tofloat(integrate(exp(%i*x),x,1,10^4)),1e-12)$
 true;
 
 /* This is ok, but slow
@@ -403,7 +403,7 @@ and then 1 to 5000.
 */
 
 /* Test 60 */
-ce(nintegrate(sin(x)/sqrt(x),[x,0,5000],subint->1000),rectform(float(integrate(sin(x)/sqrt(x),x,0,5000))),
+ce(nintegrate(sin(x)/sqrt(x),[x,0,5000],subint->1000),tofloat(integrate(sin(x)/sqrt(x),x,0,5000)),
     1e-7)$
 true;  
 

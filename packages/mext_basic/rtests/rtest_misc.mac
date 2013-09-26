@@ -70,7 +70,7 @@ if (lisp_type_symbol() = 'gcl) then 0 else chop(1e-17);
 is(chop(1e-9) > 0);
 true$
 
-/* Test  */
+/* Test 19 */
 is(chop(1e-9,1e-8) > 0);
 false$
 
@@ -78,11 +78,11 @@ false$
    But, if we want to chop bigfloats,
    maybe we'll have a problem
 */   
-/* Test  */
+/* Test 20 */
 is(chop(1e-9,1/10^8) > 0);
 false$
 
 
-/* Test 19 */
+/* Test 21 */
 if (lisp_type_symbol() = 'gcl) then 0 else chop(-1e-17);
 0$

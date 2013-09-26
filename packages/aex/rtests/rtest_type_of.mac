@@ -139,45 +139,45 @@ type_of( <<1,2>>, info->true);
 type_of(rat(1))$
 'integer$
 
-/* Test  */
+/* Test 32 */
 first(type_of(rat(1),info->true))$
 'integer;
 
-/* Test  */
+/* Test 33 */
 second(type_of(rat(1),info->true))$
 'cre;
 
-/* Test 33 */
+/* Test 34 */
 type_of({1})$
 'set;
 
-/* Test 34 */
+/* Test 35 */
 type_of({1},info->true);
 'set;
 
-/* Test 35 */
+/* Test 36 */
 type_of('a+'b);
 'plus$
 
-/* Test 36 */
+/* Test 37 */
 type_of('a+'b,info->true);
 'plus$
 
-/* Test 37 */
+/* Test 38 */
 type_of(intopois(2));
 'integer;
 
-/* Test 38 */
+/* Test 39 */
 second(type_of(intopois(2),info->true));
 'pois$
 
 /* Don't know if we should descend into representations.
   The following probably is not useful, but who knows ? */
-/* Test 39 */
+/* Test 40 */
 type_of(<<intopois(f(1,2))>>,info->true);
 '[pois,aex]$
 
 
-/* Test 40 */
+/* Test 41 */
 (kill(%%res%%), 0);
 0$
