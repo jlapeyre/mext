@@ -342,7 +342,6 @@ This makes too many mistakes
 ;; This is now done by default for all functions.
 (defmfun1::set-match-form '( $aliquot_sum $divisor_function $divisor_summatory ))
 
-;; also should use unwind-protect to reset value of fpprec
 ;; the code that prints bfloats knows how many digits to print.
 ;; this should be easily accessible to the user.
 ;; eg via type_of
@@ -359,6 +358,8 @@ This makes too many mistakes
 ;; (%o110)                2.99011001130494975889631621849b0
 ;; We should scan the expression for the lowest precision object
 ;; as an approximation of which precision we can use.
+;; Also, we can increase the precision of a bigfloat.
+;; this should not be allowed, I think
 (defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec old-numer res)
   :desc
   ("This function does not change the printed precision, " :codedot "fpprintprec")
