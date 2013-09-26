@@ -139,9 +139,13 @@ type_of( <<1,2>>, info->true);
 type_of(rat(1))$
 'integer$
 
-/* Test 32 */
-type_of(rat(1),info->true)$
-'[integer,cre,lisp_bit]$
+/* Test  */
+first(type_of(rat(1),info->true))$
+'integer;
+
+/* Test  */
+second(type_of(rat(1),info->true))$
+'cre;
 
 /* Test 33 */
 type_of({1})$
@@ -164,8 +168,8 @@ type_of(intopois(2));
 'integer;
 
 /* Test 38 */
-type_of(intopois(2),info->true);
-'[integer, pois,lisp_integer]$
+second(type_of(intopois(2),info->true));
+'pois$
 
 /* Don't know if we should descend into representations.
   The following probably is not useful, but who knows ? */
