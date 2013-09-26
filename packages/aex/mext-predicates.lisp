@@ -249,3 +249,31 @@
     (if (and (numberp rp) (numberp ip))
         (complex rp ip)
       expr)))
+
+;; Note, the following is almost the same as this
+;; cpow2(x,n):=cabs(x)^n*exp(%i*carg(x)*n)
+;; But, the former is can be used in more situations.
+;; It works somehow better with the simplifier.
+;; It looks like the maxima version is more useful
+;; In fact, this should not be enabled until it
+;; works better.
+
+#|
+
+(defmfun1 ($cpow :doc) (x pow)
+  :desc
+  ("Returns " :arg "x" " raised to the " :arg "pow"
+   " power. This tries to assume complex domain and range.")
+  (let ((aas (absarg x))) ; ($%emode nil)) do we want this or not ?
+    (mul (powers (car aas) pow)
+                (powers '$%e (mul '$%i (cdr aas) pow)))))
+
+|#
+
+; modeled on polar form
+;(defmfun $polarform (xx)
+;  (cond ((and (not (atom xx)) (member (caar xx) '(mequal mlist $matrix) :test #'eq))
+;	 (cons (car xx) (mapcar #'$polarform (cdr xx))))
+;	(t
+;	 (let ((aas (absarg xx)) ($%emode nil))
+;	   (mul (car aas) (powers '$%e (mul '$%i (cdr aas))))))))
