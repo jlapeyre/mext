@@ -94,34 +94,37 @@ This makes too many mistakes
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; need to finish adding dot and grouping options
-(defmfun1 ($integer_string :doc) ((n :integer :thread) &optional 
-                                  (base :or-radix-string-symbol 10 :thread) 
-                                  (pad :pos-int :thread)
-                                  &opt ($sep nil (:member '(t nil $comma $dot))))
+(defmfun1 ($integer_string :doc)
+  ((n :integer :thread) &optional (base :or-radix-string-symbol 10 :thread) 
+;   (pad 0 :non-neg-int :thread)   
+   &opt ($sep nil) ($group 3 :pos-int) ($width 0 :non-neg-int) ($padchar "0" :string) ($lc nil :bool))
   :desc
-  ("The option " :opt "sep" " returns a string with commas.")
+  ("The option " :opt "sep" " returns a string with commas."
+   "The option " :opt "lc" " prints any alphbetic characters in lower case.")
+  (when (symbolp base) (setf base ($sconcat base)))
+  (when (member base '("roman" "roman_old") :test #'equal)
+    (echeck-arg $integer_string :roman-integer n))
   (let* ((base (if (symbolp base) ($sconcat base) base))
          (fmt 
-         (cond ((equal base "roman")
-                (echeck-arg $integer_string :roman-integer n)
-                "~@R")
-               ((equal base "roman_old")
-                (echeck-arg $integer_string :roman-integer n)
-                "~:@R")
-               ((equal base "ordinal") "~:R")
-               ((equal base "cardinal") "~R")
-               ((stringp base) 
-      ; following error needs to be fixed for defmfun1
-                (merror1 "integer_string: base ~s is not a radix or one of \"roman\", \"cardinal\", or \"ordinal\"" base))
-               (pad
-                (format nil "~~~a,~a,'0R" base pad))
-               ((member $sep '(t $comma))
-                (format nil "~~~a:R" base))
-;               ((eq $sep '$dot)
-;                (format nil "~~~a:R" base))
-               (t (format nil "~~~aR" base)))))
-    (format nil fmt n)))
+          (cond
+           ((equal base "roman") "~@R")
+           ((equal base "roman_old") "~:@R")
+           ((equal base "ordinal") "~:R")
+           ((equal base "cardinal") "~R")
+           ((stringp base)
+            (defmfun1-error-return '$chk_number_base $integer_string
+              (format nil "integer_string: base ~s is not a radix or one of roman, cardinal, or ordinal" base)))
+           ($sep
+            (let ((sc
+                   (cond ((eq $sep '$comma) "',")
+                         ((eq $sep '$dot) "'.")
+                         (t ""))))
+              (format nil "~~~a,~a,'~a,~a,~a:R" base $width $padchar sc $group)))
+           (t 
+            (format nil "~~~a,~a,'~aR" base $width $padchar))))
+         (str (format nil fmt n)))
+    (if $lc
+        (string-downcase str) str)))
 
 (add-call-desc  '( "integer_string" ("n")
                  ("returns a string containing the decimal digits of the integer " :arg "n" "."))
@@ -129,7 +132,7 @@ This makes too many mistakes
                  ("returns a string containing the base " :arg "base" " digits of the integer " :arg "n" "."))
                '( "integer_string" ("n" "base" "pad")
                  ("pads the string on the left with 0's so that the length of the string is " :arg "pad"  "."))
-               '( "integer_string" ("n" ("lit" "\"roman\""))
+               '( "integer_string" ("n" "roman")
                  ("returns a string containing the roman-numeral form of the integer " :arg "n" "."))
                '( "integer_string" ("n" ("lit" "\"roman_old\""))
                  ("returns a string containing the old-style roman-numeral form of the integer " :arg "n" "."))
