@@ -100,7 +100,7 @@ This makes too many mistakes
                                   (pad :pos-int :thread)
                                   &opt ($sep nil (:member '(t nil $comma $dot))))
   :desc
-  ("The option " :opt "comma" " returns a string with commas.")
+  ("The option " :opt "sep" " returns a string with commas.")
   (let* ((base (if (symbolp base) ($sconcat base) base))
          (fmt 
          (cond ((equal base "roman")
