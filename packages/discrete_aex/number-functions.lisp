@@ -97,7 +97,9 @@ This makes too many mistakes
 (defmfun1 ($integer_string :doc)
   ((n :integer :thread) &optional (base :or-radix-string-symbol 10 :thread) 
 ;   (pad 0 :non-neg-int :thread)   
-   &opt ($sep nil) ($group 3 :pos-int) ($width 0 :non-neg-int) ($padchar "0" :string) ($lc nil :bool))
+   &opt ($sep nil) ($group 3 :pos-int) 
+   ($width 0 :non-neg-int) 
+   ($padchar "0" :string) ($lc nil :bool))
   :desc
   ("The option " :opt "sep" " returns a string with commas."
    "The option " :opt "lc" " prints any alphbetic characters in lower case.")
