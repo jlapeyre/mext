@@ -72,6 +72,9 @@
 
 (maxdoc:see-also-group '( "length0p" "cmplength" "length_eq" "length1p"))
 
+;; convert lisp symbol to maxima
+;;  - --> _
+;; prepend $LISP_
 (defun lisp-lisp-sym-to-max (s)
  "This certainly exists somewhere in the maxima source."
   (intern (concatenate 'string "$LISP_"
@@ -232,7 +235,7 @@
 
 (defmfun1 ($lratio :doc) ((expr :thread))
   :desc
-  ("Return " :arg "expr" " converted to lisp rational type."
+  ("Return " :arg "expr" " converted, if possible, to lisp rational type."
    "Compare this to " :emrefcomma "rationalize" " which converts "
    "expressions to maxima rational types... Yes it is confusing.")
   (let ((re ($rationalize expr)))
