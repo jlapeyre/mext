@@ -13,6 +13,12 @@ kill(cec), cec(x,y,eps) := is(abs(realpart(first(x))-realpart(y))
       + abs(imagpart(first(x))-imagpart(y)) < eps), true)$
 true;
 
+/*
+  All these error catches are not doing what they look like.
+  nintegrate returns the unevaluated form, but does set
+  the error code.
+*/
+
 /* Test 2 */
 (errcatch(nintegrate(x,[x,a,b])), error_code);
 'chk_to_or_float_minf$
@@ -419,9 +425,15 @@ true$
  ce(nintegrate(%fg%,[x,0,1]), 1/2, 1e-9));
 true$
 
+/*
+ The following does not kill ce cec. Don't know why.
+*/
+
 /* Test 62 */
-kill(ce,%fg%)$
-done;
+/*(kill(ce,cec,cel,%fg%),kill(ce,cec,cel,%fg%),
+kill(ce),kill(cec),*/
+(remfunction(ce,cec,cel,%fg%),0)$
+0;
 
 /*
 
