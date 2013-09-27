@@ -218,16 +218,20 @@
     (echeck-arg $nintegrate :or-symbol-subvar var)
     (echeck-arg $nintegrate :to-or-float-minf lo)
     (echeck-arg $nintegrate :to-or-float-inf  hi)
-; following may prevent some multi-dim integrals from working
-    (when (and (not (numberp ($float expr))) (freeof var expr))
+
+; Following disallows integrate(f,[x,0,1]), when f is a function.
+    (when (and (not (numberp ($float expr))) (freeof var expr)
+               (not (fboundp expr)) (not (mfboundp expr)))
       (defmfun1-error-return '$expr_freeof_var $nintegrate 
-        "the integrand is not a number and does not depend on the variable of integration" :match))
+        "the integrand is not a number or a function and does not depend on the variable of integration" :match))
+
 ;    (handler-case
 ;     (let ((f (get-integrand expr var))))
 ;       (format t "Integrand ok~%"))
 ;     (error ()
 ;            (defmfun1-error-return '$nonnumeric_integrand $nintegrate 
 ;              "The integrand does not evaluate to a number")))
+
     (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi $points quad-ops more-opts)))
           (i-res (if (or $real (eq 0 i-expr))
                      nil (nint::do-quad-pack i-expr var lo hi $points quad-ops more-opts))))
