@@ -264,6 +264,28 @@
                           :vars "[n]"
                           :code "catalan_number(n)"))
 
+;; The declarations here don't help with sbcl
+(defun divisors-mext (l)
+  (if (equal l '(1 1)) (setq l nil))
+  (do ((ans (list 1 ))
+       (l l (cddr l)))
+      ((null l) (sort ans #'<))
+    (do ((u ans)
+	 (factor (car l))
+	 (mult (cadr l) (1- mult)))
+	((zerop mult))
+      (declare (integer mult factor))
+      (setq u (mapcar #'(lambda (q) (declare (integer q factor)) 
+                          (* (the integer factor) (the integer q))) u))
+      (setq ans (nconc ans u)))))
+
+(defmfun1 ($idivisors :doc) ((n :pos-int :thread))
+  :desc
+  ("Lists the divisors of the integer " :argdot "n"
+   " This is similar to " :emrefcomma "divisors"
+   " but it is faster and returns a list and is not
+   a simplfying function.")
+  (mk-mlist (divisors-mext (cfactorw n))))
 
 (defmfun1 ($divisor_summatory :doc) ((x :to-non-neg-float :thread) )
   :desc 
@@ -324,7 +346,7 @@
   (cond ((= 0 x) (divisor-function-0 n) ) ; These are for efficiency, but I think
         ((= 1 x) (divisor-function-1 n) ) ; the advantage is negligible.
         (t
-          (let* ( (factors (cdr ($ifactors n))) (prod 1) (r (length factors)) )
+          (let* ((factors (cdr ($ifactors n))) (prod 1) (r (length factors)))
             (dotimes (i r)
               (let ((multiplicity (third (car factors))) (prime (second (car factors))))
                 (setf factors (cdr factors))
