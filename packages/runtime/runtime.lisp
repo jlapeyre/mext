@@ -28,20 +28,11 @@
 ;  repeatedly with sbcl
 ; This seems ok: for i:1 thru 20 do timing(lrange(3*10^6),0,print->true);
 ;; 
-;; NOTE, we can restore the old, neater code. It had nothing to do
-;; with the failure of this function. Instead it should be loaded
-;; before compiling. Solution now is simply not to compile it.
-;; Moved computation of end-run , elapsed-run-seconds etc. outside
-;; of binding forms in let statement. It was neater before and
-;; avoided all setf's. But, the times in some cases come out wrong.
-;; For the same reason, we replaced / with quotient and used (float.
-;; I think / vs. quotient had nothing to do with it. The function seems to suceed
-;; and fail sometimes without changing the code. Depends on what else
-;; is loaded, or some other state, or ....
-(defmfun1:set-hold-all '$timing)
-
-;; Trying eval-when to fix this, but it does not help.
 (eval-when (:compile-toplevel :load-toplevel :execute)
+  (defmfun1:set-hold-all '$timing))
+
+;; The code could be clean up, shortened. It is longer because
+;; of debugging.
 (defmfun1 ($timing :doc) (&rest exprs &opt ($print nil :bool) ($result t :bool)
                                 ($time $all (:member '($all $cpu $real))))
   :desc
@@ -87,7 +78,7 @@
            (push elapsed-run-seconds out-res))
           ($real
            (push elapsed-real-seconds out-res)))
-        (mk-mlist out-res))))))
+        (mk-mlist out-res)))))
 
 (add-call-desc '("timing" ("exprs") 
                  ("evaluates each of the expressions " :arg "exprs" 
@@ -114,7 +105,9 @@
 
 (max-doc::set-cur-sec 'max-doc::strings-fandv)
 
-(defmfun1:set-hold-all '$with_output_to_string)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defmfun1:set-hold-all '$with_output_to_string))
+
 (defmfun1 ($with_output_to_string :doc) (&rest exprs)
   :desc
   ("Evaluates " :argcomma "expr_1" " " :argcomma "expr_2" " " :argcomma "expr_3" :dots ""

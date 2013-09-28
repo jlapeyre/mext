@@ -313,7 +313,9 @@
 ;; representation directly, but conversion from ml to ar should be
 ;; O(number of elements)
 
-(defmfun1:set-hold-all '$table)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defmfun1:set-hold-all '$table))
+
 (max-doc:add-doc-entry '( :name "table" :type "Function"))
 (defmfun-ae ($table) ( expr (iterator1 :list) &rest (iterators :list) )
   (push iterator1 iterators)

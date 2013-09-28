@@ -139,7 +139,8 @@
 (defmfun1 ($mkdir :doc) ((filespec :string) &optional (mode "0770"))
   (mext::mkdir filespec mode)))
 
-(defmfun1:set-hold-all '$dont_kill)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defmfun1:set-hold-all '$dont_kill))
 (defmfun1 ($dont_kill :doc) (&rest item)
   :desc ("Add the " :arg "item" "s to the list of symbols that are not killed
           by " :codedot "kill(all)" " This facility is part of the maxima core,
@@ -148,8 +149,8 @@
   (apply #'mext::add-to-dont-kill item)
   '$done)
 
-
-(defmfun1:set-hold-all '$allow_kill)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defmfun1:set-hold-all '$allow_kill))
 (defmfun1 ($allow_kill :doc) (&rest items)
   :desc ("Remove " :arg "item" "s from the list of symbols that are not killed
           by " :codedot "kill(all)" " This facility is part of the maxima core,

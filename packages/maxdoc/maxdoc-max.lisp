@@ -92,7 +92,9 @@
          (list (keywordify (caar x)) (do-maxdoc (cadr x))))
         (t (merror (format nil "do-maxdoc: bad argument ~a " x)))))
 
-(defmfun1:set-hold-all '$maxdoc)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defmfun1:set-hold-all '$maxdoc))
+
 (defmfun1 ($maxdoc :doc) ((name :string) docs &opt ($source_filename nil :string)
                           ($package nil :string))
   :desc ("Add maxdoc documentation entry for item " :arg "name"
@@ -105,7 +107,8 @@
 ;; Note that this works for some, but not all examples. The
 ;; code-text slot in an example uses a different syntax that
 ;; is not parsed correctly by `do-maxdoc'.
-(defmfun1:set-hold-all '$maxdoc_examples)
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defmfun1:set-hold-all '$maxdoc_examples))
 (defmfun1 ($maxdoc_examples :doc) ((name :string) &rest examples)
  :desc ("Add maxdoc examples entry for item " :arg "name"
         " specified by " :argdot "examples")
