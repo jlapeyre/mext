@@ -51,7 +51,7 @@
          (n (length str)))
     (defmfun-final-to-ae
       (mk-mlist
-       (if (and len (> len n)) (append (make-list (- len n) :initial-element 0) digits)
+       (if (and len (> len n)) (nconc (make-list (- len n) :initial-element 0) digits)
          digits)))))
 
 (add-call-desc '( "integer_digits" ("n")
@@ -265,6 +265,8 @@
                           :code "catalan_number(n)"))
 
 ;; The declarations here don't help with sbcl
+;; This was taken from factor.lisp with
+;; unnecessary things removed.
 (defun divisors-mext (l)
   (if (equal l '(1 1)) (setq l nil))
   (do ((ans (list 1 ))
