@@ -71,10 +71,20 @@
    "cmucl-20d error, gcl-2.6.(7,8,9) 0.09s, allegro-8.2 = 23s, "
    "Mma-3.0 = 5s, Mma-8 = 0.04s."))
 
+
+
+;; This makes too many mistakes
+;; For binary, of course, we can use integer-length 
+;; gmp library has no function to do this exactly. 
+;; It returns the number
+;; of digits or one more than the exact answer.
+;; That much is easy to do.
+;; We can use big floats to compute logs, but we need fpprec
+;; to be as large as the number of decimal digits.
+;; This does not work for eg mersenne primes.
+
 #|
 
-This makes too many mistakes
- 
 (defmfun1 ($integer_length :doc) ((n :non-neg-int :thread) &optional (base 10 :gt-1-int :thread))
   :desc
   ("Returns the number of digits in the integer " :argdot "n"
@@ -83,6 +93,11 @@ This makes too many mistakes
 ;   For instance, the 39th, 47th, and 48th Mersenne primes.")
   (if (= 0 n) 1
     (1+ (floor (log n base)))))
+
+|#
+
+
+#|
 
 (add-call-desc
  '( "integer_length" ("n")
@@ -125,8 +140,8 @@ This makes too many mistakes
            (t 
             (format nil "~~~a,~a,'~aR" base $width $padchar))))
          (str (format nil fmt n)))
-    (if $lc
-        (string-downcase str) str)))
+    (when $lc (nstring-downcase str))
+    str))
 
 (add-call-desc  '( "integer_string" ("n")
                  ("returns a string containing the decimal digits of the integer " :arg "n" "."))
@@ -147,7 +162,7 @@ This makes too many mistakes
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defmfun1 $prime_pi_soe1 ((n :non-neg-int))
+(defmfun1 ($prime_pi_soe1 :doc) ((n :non-neg-int))
   :desc ("The prime counting function. The algorithm is the sieve of Eratosthenes.
    Internally an array of " :var "n" " bits is used.")
   (if (= 0 n) 0
@@ -164,12 +179,14 @@ This makes too many mistakes
           (loop  :until (= 1 (sbit a p)) :do (incf p)))
         (- n c))))
 
-
-;; all of this fixnum business saves 10 or 15 percent in speed.
+;; all of this fixnum business makes this run twice as
+;; fast in sbcl. No difference in gcl.
 ;; dunno which are the important ones.
-(defmfun1 ($prime_pi_soe :doc)  ((n :non-neg-int))
-  :desc ("The prime counting function. The algorithm is the sieve of Eratosthenes.
-   Internally an array of " :var "n" " bits is used.")
+(defmfun1 ($prime_pi_soe2 :doc)  ((n :non-neg-int))
+  :desc 
+  ("The prime counting function. The algorithm is the sieve of Eratosthenes.
+   Internally an array of " :arg "n" " bits is used. This function only
+   works when " :arg "n" " is smaller than the largest fixnum.")
   (if (= 0 n) 0
       (let ((a (make-array (+ n 1) :element-type 'bit :initial-element 1 :adjustable nil ))
             (c 1)
@@ -188,15 +205,14 @@ This makes too many mistakes
           (loop :until (= 1 (sbit a p)) :do (incf p)))
         (f- n c))))
 
-(max-doc:implementation "prime_pi_soe" "This is not the most efficient way to compute primes.");
-
-(max-doc:see-also "prime_pi_soe" '("prime_pi" "next_prime" "prev_prime"))
+(max-doc:implementation "prime_pi_soe2" "This is not the most efficient way to compute primes.");
+(max-doc:see-also "prime_pi_soe1" '("prime_pi" "next_prime" "prev_prime"))
 
 ;; copied from rosetta code, and modified a bit. This could also have been
 ;; done as above.
 (defmfun-ae ($primes1 :doc) ((n1 :non-neg-int) &optional (n2 :non-neg-int) &aux (minimum 1) maximum)
-  "The algorithm is the sieve of Eratosthenes. This is not an
- efficient algorithm."
+  :desc
+   ("The algorithm is the sieve of Eratosthenes. This is not an efficient algorithm.")
   (if n2
       (progn  (setf maximum n2) (setf minimum n1))
       (setf maximum n1))
@@ -210,10 +226,29 @@ This makes too many mistakes
                        :to maximum :by candidate
                        :do (setf (bit sieve composite) 1)))))))
 
+
+(defmfun-ae ($primes2 :doc) ((n1 :non-neg-int) &optional (n2 :non-neg-int) &aux (minimum 1) maximum)
+  :desc
+   ("The algorithm is the sieve of Eratosthenes. This is not an efficient algorithm."
+   " This function only works when " :arg "n" " is smaller than the largest fixnum.")
+  (if n2
+      (progn  (setf maximum n2) (setf minimum n1))
+      (setf maximum n1))
+  (let ((sieve (make-array (1+ maximum) :element-type 'bit
+                           :initial-element 0)))
+    (let ((minimum minimum) (maximum maximum))
+      (declare (fixnum minimum maximum))
+      (defmfun-final-to-ae (mk-mlist
+          (loop :for candidate fixnum :from 2 :to maximum
+             when (zerop (bit sieve candidate))
+             if (>= candidate minimum) collect candidate end
+             and do (loop :for composite fixnum :from (expt candidate 2) 
+                       :to maximum :by candidate
+                       :do (setf (bit sieve composite) 1))))))))
+
 (add-call-desc '( "primes1" ("max") ("returns a list of the primes less than or equal to " :arg "max" "."))
                '( "primes1" ("min" "max") ("returns a list of the primes between " :arg "min" " and "
                                            :arg "max" ".")))
-
 
 (defmfun1 ($catalan_number :doc) ((n :thread))
  :desc ("Returns the " :var "n" "th catalan number.")
@@ -286,9 +321,9 @@ This makes too many mistakes
          ". If " :arg "x" " is omitted it takes the default value "
   :math "0" ". Currently, complex values for x are not supported. After writing this, I noticed that
   the function is implemented in the maxima core and is callled " :emref "divsum" ".")
-  (cond ( (= 0 x) (divisor-function-0 n) ) ; These are for efficiency, but I think
-        ( (= 1 x) (divisor-function-1 n) ) ; the advantage is negligible.
-        ( t
+  (cond ((= 0 x) (divisor-function-0 n) ) ; These are for efficiency, but I think
+        ((= 1 x) (divisor-function-1 n) ) ; the advantage is negligible.
+        (t
           (let* ( (factors (cdr ($ifactors n))) (prod 1) (r (length factors)) )
             (dotimes (i r)
               (let ((multiplicity (third (car factors))) (prime (second (car factors))))
