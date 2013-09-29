@@ -435,7 +435,9 @@
   (setf old-fpprec $fpprec)
   (setf old-numer  $numer)
   (mset '$fpprec n)
-  (mset '$numer t)
+  (mset '$numer nil) ; true seems to hurt more than help
+;  numer t causes tofloat to fail on the following
+; block([domain:'complex], integrate(1/(1-x)^(1/3) * exp(-x), x,0,inf));
   (unwind-protect
       (progn
         (setf res
