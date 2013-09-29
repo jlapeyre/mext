@@ -264,9 +264,22 @@
                           :vars "[n]"
                           :code "catalan_number(n)"))
 
-;; The declarations here don't help with sbcl
+
 ;; This was taken from factor.lisp with
 ;; unnecessary things removed.
+(defun divisors-mext-new (l)
+  (if (equal l '(1 1)) (setq l nil))
+  (do ((ans (list 1 ))
+       (l l (cddr l)))
+      ((null l) (sort ans #'<))
+    (do ((u ans)
+	 (factor (car l))
+	 (mult (cadr l) (1- mult)))
+	((zerop mult))
+      (setq u (mapcar #'(lambda (q) (* factor q)) u))
+      (setq ans (nconc ans u)))))
+
+;; The declarations don't help with sbcl
 (defun divisors-mext (l)
   (if (equal l '(1 1)) (setq l nil))
   (do ((ans (list 1 ))
@@ -287,7 +300,7 @@
    " This is similar to " :emrefcomma "divisors"
    " but it is faster and returns a list and is not
    a simplfying function.")
-  (mk-mlist (divisors-mext (cfactorw n))))
+  (mk-mlist (divisors-mext-new (cfactorw n))))
 
 (defmfun1 ($divisor_summatory :doc) ((x :to-non-neg-float :thread) )
   :desc 
@@ -429,29 +442,65 @@
 ;; as an approximation of which precision we can use.
 ;; Also, we can increase the precision of a bigfloat.
 ;; this should not be allowed, I think
-(defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec old-numer res)
+
+;; MAKE THIS WORK!!!
+;; tofloat(tofloat(-3*(-1)^(2/3)/2));
+
+(defun do-one-tofloat (expr n)
+  (if (and (> n 15) (not (floatp expr)))
+      ($bfloat expr) ($float expr)))
+
+(defun tofloat-float-p (expr)
+  (or (floatp expr) ($bfloatp expr)))
+
+;; predicate for float or bfloat
+(defun tofloat-complex-float-p (expr)
+  (or (tofloat-float-p expr)
+      (and (consp expr) (equalp ($op expr) "+")
+           (= (length expr) 3)
+           (tofloat-float-p (cadr expr))
+           (consp (third expr))
+           (equalp ($op (third expr)) "*")
+           (tofloat-float-p (second (caddr expr))))))
+
+;; We don't use the two preceding predicates because
+;; we would need to map them over
+;; the expression tree.
+;; instead we just use brute force
+;; and apply the minimum required to convert
+;; the most stubborn expression we have encountered.
+;; float and bfloat map over trees
+(defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec old-numer)
   :desc
   ("This function does not change the printed precision, " :codedot "fpprintprec")
   (setf old-fpprec $fpprec)
   (setf old-numer  $numer)
   (mset '$fpprec n)
   (mset '$numer nil) ; true seems to hurt more than help
-;  numer t causes tofloat to fail on the following
-; block([domain:'complex], integrate(1/(1-x)^(1/3) * exp(-x), x,0,inf));
+;;  numer t causes tofloat to fail on the following
+;; block([domain:'complex], integrate(1/(1-x)^(1/3) * exp(-x), x,0,inf));
+;; The possible second do-one-tofloat is needed for some expressions
+;; when domain:complex.
+;; Note: each of float(), bfloat(), rectform() map over
+;; trees.
   (unwind-protect
       (progn
-        (setf res
-              (if (and (> n 15) (not (floatp expr)))
-                  ($bfloat expr) ($float expr)))
-        (when (not (or (floatp res) ($bfloatp res)))
-          (setf res ($rectform res))))
+        (setf expr (do-one-tofloat expr n))
+        (setf expr ($rectform expr))
+        (setf expr (do-one-tofloat expr n)))
+;        (when (not (tofloat-complex-float-p expr))
+;          (setf expr ($rectform expr))
+;          (when (not (tofloat-complex-float-p expr))
+;            (setf expr (do-one-tofloat expr n)))))
   (mset '$fpprec old-fpprec)
   (mset '$numer old-numer))
-  res)
+  expr)
 
 (add-call-desc 
- '("tofloat" ("expr") ("returns a floating point value for " :argdot "expr"))
- '("tofloat" ("expr" "n") ("tries to return a floating point value to " :arg "n" "-digit precision for " :argdot "expr")))
+ '("tofloat" ("expr") ("tries to convert numbers in ":arg "expr" " to floating point."))
+ '("tofloat" ("expr") ("tries to convert numbers in ":arg "expr" " to floating point "
+   "with " :arg "n" "-digit precision.")))
+; '("tofloat" ("expr" "n") ("tries to return a floating point value to " :arg "n" "-digit precision for " :argdot "expr")))
 
 (max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" 
                            "divisor_summatory" "perfect_p" "abundant_p"))
