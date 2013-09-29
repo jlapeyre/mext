@@ -446,9 +446,25 @@
 ;; MAKE THIS WORK!!!
 ;; tofloat(tofloat(-3*(-1)^(2/3)/2));
 
-(defun do-one-tofloat (expr n)
-  (if (and (> n 15) (not (floatp expr)))
-      ($bfloat expr) ($float expr)))
+;; If a number is too big convert to double float
+;; try bfloat. We hope that was the problem.
+(defun do-one-tofloat (expr n &optional bfloat-flag)
+  (if (or bfloat-flag (and (> n 15) (not (floatp expr))))
+      (list t ($bfloat expr))
+    (handler-case
+     (list nil ($float expr))
+     (error ()
+            (list t ($bfloat expr))))))
+
+;; (defun do-one-tofloat (expr n)
+;;   (if (and (> n 15) (not (floatp expr)))
+;;       ($bfloat expr)
+;;     (let ((res
+;;            (cdr (mfuncall '$errcatch
+;;                  ($float expr)))))
+;;       (if (consp res) res
+;;         ($bfloat expr)))))
+
 
 (defun tofloat-float-p (expr)
   (or (floatp expr) ($bfloatp expr)))
@@ -470,7 +486,7 @@
 ;; and apply the minimum required to convert
 ;; the most stubborn expression we have encountered.
 ;; float and bfloat map over trees
-(defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec old-numer)
+(defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec old-numer bfloat-flag)
   :desc
   ("This function does not change the printed precision, " :codedot "fpprintprec")
   (setf old-fpprec $fpprec)
@@ -484,23 +500,23 @@
 ;; Note: each of float(), bfloat(), rectform() map over
 ;; trees.
   (unwind-protect
-      (progn
-        (setf expr (do-one-tofloat expr n))
-        (setf expr ($rectform expr))
-        (setf expr (do-one-tofloat expr n)))
+      (progn 
+             (let ((res (do-one-tofloat expr n)))
+               (setf bfloat-flag (car res) expr (second res)))
+             (setf expr ($rectform expr))
+             (setf expr (second (do-one-tofloat expr n bfloat-flag))))
 ;        (when (not (tofloat-complex-float-p expr))
 ;          (setf expr ($rectform expr))
 ;          (when (not (tofloat-complex-float-p expr))
 ;            (setf expr (do-one-tofloat expr n)))))
-  (mset '$fpprec old-fpprec)
-  (mset '$numer old-numer))
-  expr)
+    (progn
+      (mset '$fpprec old-fpprec)
+      (mset '$numer old-numer))))
 
 (add-call-desc 
  '("tofloat" ("expr") ("tries to convert numbers in ":arg "expr" " to floating point."))
- '("tofloat" ("expr") ("tries to convert numbers in ":arg "expr" " to floating point "
+ '("tofloat" ("expr" "n") ("tries to convert numbers in ":arg "expr" " to floating point "
    "with " :arg "n" "-digit precision.")))
-; '("tofloat" ("expr" "n") ("tries to return a floating point value to " :arg "n" "-digit precision for " :argdot "expr")))
 
 (max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" 
                            "divisor_summatory" "perfect_p" "abundant_p"))

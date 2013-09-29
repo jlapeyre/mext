@@ -138,6 +138,15 @@ tofloat(%i);
 tofloat(%%%xyz%%%);
 '%%%xyz%%%$
 
+/*
+   Automatically try bfloat if float fails.
+   This is not fine grained, since we are letting
+   float and bfloat walk the trees.
+*/
 /* Test 31 */
+bfloatp(tofloat(10^500,10));
+true$
+
+/* Test 32 */
 kill(a,num);
 done;
