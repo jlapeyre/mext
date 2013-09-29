@@ -167,6 +167,10 @@ true$
 is( abs(tofloat((-7)^(1/2),50) - bfloat((-7)^(1/2))) < 1e-10);
 true$
 
+/* Test 34 */
+?complex\-number\-p(tofloat((-3+%i)^(1/3)));
+true$
+
 /* Test 35 */
 kill(a,num,discr_expr);
 done;
