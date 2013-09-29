@@ -486,7 +486,6 @@
         ((and (eq (caar e) 'mexpt)  ; GJL 2013
               ($numberp (second e)) ($numberp (third e)))
          ($float ($rectform e)))
-;         ($expand ($float ($rectform e))))
 	((member (caar e) '(mexpt mncexpt) :test #'eq)
 	 ;; avoid x^2 -> x^2.0, allow %e^%pi -> 23.14
 	 (let ((res (recur-apply #'$cfloat e)))
@@ -561,56 +560,6 @@
              res)))
 	(t (recur-apply #'$cfloat e))))
 
-;; the code that prints bfloats knows how many digits to print.
-;; this should be easily accessible to the user.
-;; eg via type_of
-;;
-;; I think the following is not worth the trouble.
-;; we if result is already a float and if so, do
-;; not promote to bigfloat. This avoids:
-;; (%i101) tofloat(1.1,30);
-;; (%o101)                1.10000000000000008881784197001b0
-;; which is not what the user wants.
-;; but, we are not able to catch the following:
-;; (%i109) tofloat(%e*1.1,30);
-;; (%o109)                2.99011001130495000032824208852b0
-;; (%i110) tofloat(%e*11/10,30);
-;; (%o110)                2.99011001130494975889631621849b0
-;; We should scan the expression for the lowest precision object
-;; as an approximation of which precision we can use.
-;; Also, we can increase the precision of a bigfloat.
-;; this should not be allowed, I think
-
-;; unused
-(defun do-one-tofloat-old (expr n &optional bfloat-flag)
-  (if (or bfloat-flag (and (> n 15) (not (floatp expr))))
-      (list t ($cbfloat expr))
-    (handler-case
-     (list nil ($cfloat expr))
-     (error ()
-            (list t ($cbfloat expr))))))
-
-;; unused
-(defun tofloat-float-p (expr)
-  (or (floatp expr) ($bfloatp expr)))
-
-;; unused predicate for float or bfloat
-(defun tofloat-complex-float-p (expr)
-  (or (tofloat-float-p expr)
-      (and (consp expr) (equalp ($op expr) "+")
-           (= (length expr) 3)
-           (tofloat-float-p (cadr expr))
-           (consp (third expr))
-           (equalp ($op (third expr)) "*")
-           (tofloat-float-p (second (caddr expr))))))
-
-;; We don't use the two preceding predicates because
-;; we would need to map them over
-;; the expression tree.
-;; instead we just use brute force
-;; and apply the minimum required to convert
-;; the most stubborn expression we have encountered.
-;;
 
 ;; If a number is too big convert to double float
 ;; try bfloat. We hope that was the problem.
