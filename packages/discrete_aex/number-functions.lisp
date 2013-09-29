@@ -424,10 +424,148 @@
 ;; This is now done by default for all functions.
 (defmfun1::set-match-form '( $aliquot_sum $divisor_function $divisor_summatory ))
 
+;; like bfloat(), see comments below for cfloat()
+(defmfun $cbfloat (x)
+  (let (y)
+    (cond ((bigfloatp x))
+	  ((or (numberp x)
+	       (member x '($%e $%pi $%gamma) :test #'eq))
+	   (bcons (intofp x)))
+	  ((or (atom x) (member 'array (cdar x) :test #'eq))
+	   (if (eq x '$%phi)
+	       ($cbfloat '((mtimes simp)
+			  ((rat simp) 1 2)
+			  ((mplus simp) 1 ((mexpt simp) 5 ((rat simp) 1 2)))))
+	       x))
+          ((eq (caar x) 'mtimes)
+           (let ((res (recur-apply #'$cbfloat x)))
+             ;; If we are multiplying complex numbers, expand result -- GJL 2013
+             (if (and (consp res) (eq (caar res) 'mtimes)
+                      (every #'(lambda (aa) (or (complex-number-p aa)
+                                               (complex-number-p aa '$bfloatp)))
+                                               (cdr res)))
+                 ($expand res)
+               res)))
+	  ((eq (caar x) 'mexpt)
+           (if (and ($numberp (second x)) ($numberp (third x))) ; GJL 2013
+               ($bfloat ($rectform x))
+             (if (equal (cadr x) '$%e)
+                 (*fpexp ($cbfloat (caddr x)))
+	       (exptbigfloat ($cbfloat (cadr x)) (caddr x)))))
+	  ((eq (caar x) 'mncexpt)
+	   (list '(mncexpt) ($cbfloat (cadr x)) (caddr x)))
+	  ((eq (caar x) 'rat)
+	   (ratbigfloat (cdr x)))
+	  ((setq y (safe-get (caar x) 'floatprog))
+	   (funcall y (mapcar #'$cbfloat (cdr x))))
+	  ((or (trigp (caar x)) (arcp (caar x)) (eq (caar x) '$entier))
+	   (setq y ($cbfloat (cadr x)))
+	   (if ($cbfloatp y)
+	       (cond ((eq (caar x) '$entier) ($entier y))
+		     ((arcp (caar x))
+		      (setq y ($cbfloat (logarc (caar x) y)))
+		      (if (free y '$%i)
+			  y (let ($ratprint) (fparcsimp ($rectform y)))))
+		     ((member (caar x) '(%cot %sec %csc) :test #'eq)
+		      (invertbigfloat
+		       ($cbfloat (list (ncons (safe-get (caar x) 'recip)) y))))
+		     (t ($cbfloat (exponentialize (caar x) y))))
+	       (subst0 (list (ncons (caar x)) y) x)))
+	  (t (recur-apply #'$cbfloat x)))))
+
+;; Same as float() except
+;; 1) do rectform on exponentials with base and exponent
+;; both numbers.
+;; 2) expand products of numbers and complex numbers
+(defmfun $cfloat (e)
+  (cond ((numberp e) (float e))
+	((and (symbolp e) (mget e '$numer)))
+	((or (atom e) (member 'array (cdar e) :test #'eq)) e)
+	((eq (caar e) 'rat) (fpcofrat e))
+	((eq (caar e) 'bigfloat) (fp2flo e))
+        ((and (eq (caar e) 'mexpt)  ; GJL 2013
+              ($numberp (second e)) ($numberp (third e)))
+         ($float ($rectform e)))
+;         ($expand ($float ($rectform e))))
+	((member (caar e) '(mexpt mncexpt) :test #'eq)
+	 ;; avoid x^2 -> x^2.0, allow %e^%pi -> 23.14
+	 (let ((res (recur-apply #'$cfloat e)))
+	   (if (floatp res)
+	       res
+	       (list (ncons (caar e)) ($cfloat (cadr e)) (caddr e)))))
+	((and (eq (caar e) '%log)
+	      (complex-number-p (second e) '$ratnump))
+	 ;; Basically we try to compute float(log(x)) as directly as
+	 ;; possible, expecting Lisp to return some error if it can't.
+	 ;; Then we do a more complicated approach to compute the
+	 ;; result.  However, gcl and ecl don't signal errors in these
+	 ;; cases, so we always use the complicated approach for these lisps.
+	 (let ((n (second e)))
+	   (cond ((integerp n)
+		  ;; float(log(int)).  First try to compute (log
+		  ;; (float n)).  If that works, we're done.
+		  ;; Otherwise we need to do more.  
+		  (to (or (try-float-computation #'(lambda ()
+						     (log (float n))))
+			  (let ((m (integer-length n)))
+			    ;; Write n as (n/2^m)*2^m where m is the number of
+			    ;; bits in n.  Then log(n) = log(2^m) + log(n/2^m).
+			    ;; n/2^m is approximately 1, so converting that to a
+			    ;; float is no problem.  log(2^m) = m * log(2).
+			    (+ (* m (log 2e0))
+			       (log (float (/ n (ash 1 m)))))))))
+		 (($ratnump n)
+		  ;; float(log(n/m)) where n and m are integers.  Try computing
+		  ;; it first.  If it fails, compute as log(n) - log(m).
+		  (let ((try (try-float-computation #'(lambda() 
+							(log (fpcofrat n))))))
+		    (if try
+			(to try)
+			(sub  ($cfloat `((%log) ,(second n)))
+			      ($cfloat `((%log) ,(third n)))))))
+		 ((complex-number-p n 'integerp)
+		  ;; float(log(n+m*%i)).
+		  (let ((re ($realpart n))
+			(im ($imagpart n)))
+		    (to (or (try-float-computation #'(lambda ()
+						       (log (complex (float re)
+								     (float im)))))
+			    (let* ((size (max (integer-length re)
+					      (integer-length im)))
+				   (scale (ash 1 size)))
+			      (+ (* size (log 2e0))
+				 (log (complex (float (/ re scale))
+					       (float (/ im scale))))))))))
+		 (t
+		  ;; log(n1/d1 + n2/d2*%i) =
+		  ;;   log(s*(n+m*%i)) = log(s) + log(n+m*%i)
+		  ;;
+		  ;; where s = lcm(d1, d2), n and m are integers
+		  ;;
+		  (let* ((s (lcm ($denom ($realpart n))
+				 ($denom ($imagpart n))))
+			 (p ($expand (mul s n))))
+		    (add ($cfloat `((%log) ,s))
+			 ($cfloat `((%log) ,p))))))))
+	((and (eq (caar e) '%erf)
+	      (eq (second e) '$%i))
+	 ;; Handle like erf(%i).  float(%i) (via recur-apply below)
+	 ;; just returns %i, so we never numerically evaluate it.
+	 (complexify (complex-erf (complex 0 1d0))))
+        ;; If we are multiplying complex numbers, expand result -- GJL 2013
+        ((eq (caar e) 'mtimes)
+         (let ((res (recur-apply #'$cfloat e)))
+           (if (and (consp res) (eq (caar res) 'mtimes)
+                    (every #'complex-number-p (cdr res)))
+                 ($expand res)
+             res)))
+	(t (recur-apply #'$cfloat e))))
+
 ;; the code that prints bfloats knows how many digits to print.
 ;; this should be easily accessible to the user.
 ;; eg via type_of
 ;;
+;; I think the following is not worth the trouble.
 ;; we if result is already a float and if so, do
 ;; not promote to bigfloat. This avoids:
 ;; (%i101) tofloat(1.1,30);
@@ -443,33 +581,20 @@
 ;; Also, we can increase the precision of a bigfloat.
 ;; this should not be allowed, I think
 
-;; MAKE THIS WORK!!!
-;; tofloat(tofloat(-3*(-1)^(2/3)/2));
-
-;; If a number is too big convert to double float
-;; try bfloat. We hope that was the problem.
-(defun do-one-tofloat (expr n &optional bfloat-flag)
+;; unused
+(defun do-one-tofloat-old (expr n &optional bfloat-flag)
   (if (or bfloat-flag (and (> n 15) (not (floatp expr))))
-      (list t ($bfloat expr))
+      (list t ($cbfloat expr))
     (handler-case
-     (list nil ($float expr))
+     (list nil ($cfloat expr))
      (error ()
-            (list t ($bfloat expr))))))
+            (list t ($cbfloat expr))))))
 
-;; (defun do-one-tofloat (expr n)
-;;   (if (and (> n 15) (not (floatp expr)))
-;;       ($bfloat expr)
-;;     (let ((res
-;;            (cdr (mfuncall '$errcatch
-;;                  ($float expr)))))
-;;       (if (consp res) res
-;;         ($bfloat expr)))))
-
-
+;; unused
 (defun tofloat-float-p (expr)
   (or (floatp expr) ($bfloatp expr)))
 
-;; predicate for float or bfloat
+;; unused predicate for float or bfloat
 (defun tofloat-complex-float-p (expr)
   (or (tofloat-float-p expr)
       (and (consp expr) (equalp ($op expr) "+")
@@ -485,7 +610,23 @@
 ;; instead we just use brute force
 ;; and apply the minimum required to convert
 ;; the most stubborn expression we have encountered.
-;; float and bfloat map over trees
+;;
+
+;; If a number is too big convert to double float
+;; try bfloat. We hope that was the problem.
+(defun do-one-tofloat (expr n)
+  (if (> n 15)
+      ($cbfloat expr)
+    (handler-case
+     #-(or gcl ecl) ($cfloat expr)
+     #+(or gcl ecl)
+     (let ((res ($cfloat expr)))
+       (if (eql res (* 1.5e308 1.5e308))
+           ($cbfloat expr)
+       res))
+     (error ()
+            ($cbfloat expr)))))
+
 (defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec old-numer bfloat-flag)
   :desc
   ("This function does not change the printed precision, " :codedot "fpprintprec")
@@ -493,22 +634,8 @@
   (setf old-numer  $numer)
   (mset '$fpprec n)
   (mset '$numer nil) ; true seems to hurt more than help
-;;  numer t causes tofloat to fail on the following
-;; block([domain:'complex], integrate(1/(1-x)^(1/3) * exp(-x), x,0,inf));
-;; The possible second do-one-tofloat is needed for some expressions
-;; when domain:complex.
-;; Note: each of float(), bfloat(), rectform() map over
-;; trees.
   (unwind-protect
-      (progn 
-             (let ((res (do-one-tofloat expr n)))
-               (setf bfloat-flag (car res) expr (second res)))
-             (setf expr ($rectform expr))
-             (setf expr (second (do-one-tofloat expr n bfloat-flag))))
-;        (when (not (tofloat-complex-float-p expr))
-;          (setf expr ($rectform expr))
-;          (when (not (tofloat-complex-float-p expr))
-;            (setf expr (do-one-tofloat expr n)))))
+      (do-one-tofloat expr n)
     (progn
       (mset '$fpprec old-fpprec)
       (mset '$numer old-numer))))
