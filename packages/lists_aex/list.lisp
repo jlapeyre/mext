@@ -698,6 +698,54 @@
                        '( :pretext "Select elements less than 3"
                           :code "select([1,2,3,4,5,6,7], lambda([x], is(x<3)))"))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; select_index
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defmacro max-list::select-index-call (call-type)
+  `(let* ((head (car expr))
+          (expr (cdr expr))
+          (res))
+     (if supplied-n-p
+         (do* ((e expr (cdr e))
+               (el (car e) (car e))
+               (count 0))
+              ((or (null e) (>= count n))  (cons head (nreverse res)))
+           (declare (fixnum count))
+           (incf count)
+           (when (,call-type test el) (push count res)))
+         (do* ((e expr (cdr e))
+               (el (car e) (car e))
+               (count 0))
+              ((null e) (cons head (nreverse res)))
+           (declare (fixnum count))
+           (incf count)
+           (when (,call-type test el) (push count res))))))
+         
+
+(defmfun-ae ($select_index :doc) (( expr :non-mapatom-list) (test :thread)
+                            &optional (n 0 supplied-n-p :pos-int) &opt ($compile t :bool))
+  :desc (
+  "Returns a list of indices of the elements of " :arg "expr" 
+  " for which " :arg "test" " is true. " :arg "expr"
+  " may have any op. If " :arg "n" " is supplied, then at most " :arg "n"
+  " elements are examined. " :mref "select" " is much faster than "
+  :emrefcomma "sublist" " but may be less generally applicable.")
+  (declare (fixnum n))
+  (option-compile-lambda test)
+  (defmfun-final-to-ae
+      (if (functionp test) (max-list::select-index-call funcall) 
+        (max-list::select-index-call mfuncall))))
+
+;(examples::clear-examples "select")
+;(examples::add-example "select"
+;                       '( :pretext "Select elements less than 3"
+;                          :code "select([1,2,3,4,5,6,7], lambda([x], is(x<3)))"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; ilistp
