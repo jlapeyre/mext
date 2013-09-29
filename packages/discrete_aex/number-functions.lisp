@@ -447,8 +447,13 @@
                  ($expand res)
                res)))
 	  ((eq (caar x) 'mexpt)
-           (if (and ($numberp (second x)) ($numberp (third x))) ; GJL 2013
-               ($bfloat ($rectform x))
+           (if 
+               (and (complex-number-p (second x) '$numberp) ; GJL 2013
+                    (complex-number-p (third x) '$numberp))
+               (let* ((base ($cfloat (second x)))
+                      (exp ($cfloat (third x)))
+                      (form (list (car x) base exp)))
+                 ($cbfloat ($rectform form)))
              (if (equal (cadr x) '$%e)
                  (*fpexp ($cbfloat (caddr x)))
 	       (exptbigfloat ($cbfloat (cadr x)) (caddr x)))))
@@ -484,8 +489,12 @@
 	((eq (caar e) 'rat) (fpcofrat e))
 	((eq (caar e) 'bigfloat) (fp2flo e))
         ((and (eq (caar e) 'mexpt)  ; GJL 2013
-              ($numberp (second e)) ($numberp (third e)))
-         ($float ($rectform e)))
+              (complex-number-p (second e) '$numberp)
+              (complex-number-p (third e) '$numberp))
+         (let* ((base ($cfloat (second e)))
+                (exp ($cfloat (third e)))
+                (form (list (car e) base exp)))
+           ($cfloat ($rectform form))))
 	((member (caar e) '(mexpt mncexpt) :test #'eq)
 	 ;; avoid x^2 -> x^2.0, allow %e^%pi -> 23.14
 	 (let ((res (recur-apply #'$cfloat e)))

@@ -151,5 +151,22 @@ bfloatp(tofloat(10^500,10));
 true$
 
 /* Test 31 */
-kill(a,num);
+is( abs(tofloat((-3)^(%i/3)) - float(rectform((-3)^(%i/3)))) < 1e-10);
+true$
+
+/* Test 32 */
+is( abs(tofloat((-3)^(%i/3),30) - float(rectform((-3)^(%i/3)))) < 1e-10);
+true$
+
+/* test removed infinite loop bug */
+/* Test 33 */
+is( abs(tofloat((-7)^(1/2)) - float((-7)^(1/2))) < 1e-10);
+true$
+
+/* Test 34 */
+is( abs(tofloat((-7)^(1/2),50) - bfloat((-7)^(1/2))) < 1e-10);
+true$
+
+/* Test 35 */
+kill(a,num,discr_expr);
 done;
