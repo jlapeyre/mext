@@ -168,11 +168,17 @@
 (max-doc:set-cur-sec 'max-doc::numerical-fandv)
 (defmfun1:set-mext-package "numerical")
 
+;; we had to call opt $domain $idomain
+;; because when two-d integrals call nintegrate
+;; they use $domain->... with $domain evaluated.
+;; this will cause a problem if the $idomain is
+;; bound.
 (defmfun1 ($nintegrate :doc :match) 
   ((expr :thread) (varspec :list)
    &rest (varspecs :list)
+   &aux old-domain
    &opt 
-   ($real :bool nil)
+   (($idomain idomain) '$real domain-supplied-p (:member '($real $complex)))
    ($find_sing :bool t) ($calls (:member '(nil t $short))) ($words t :bool) ($info :bool t) 
    ($subint 200 :non-neg-int) ($epsabs 0 :to-non-neg-float) ($epsrel 1d-8 :to-non-neg-float)
         ($points :to-float-listof))
@@ -182,23 +188,33 @@
   :arg "varspec" " as ["  :argcomma "var" :argcomma "lo" :arg "hi" "]."
   " for higher dimensional integrals, supply further " :argdot "varspecs"
   :par ""
-  " if the option " :opt "call" " is true, then calls made to quadpack are "
+  " If the option " :opt "call" " is true, then calls made to quadpack are "
   " also returned in a list. if " :opt "call" " is " :varcomma "short" " then only the "
   " name of the quadpack routine is included."
   :par ""
   "by default, information on the integration is returned with the results. "
-  "if the option " :opt "info" " is false, then only the result of the integration "
+  "If the option " :opt "info" " is false, then only the result of the integration "
   "is returned." 
   :par ""
-  "if the option " :opt "find_sing" " is false, then " :mref "nintegrate" " will not search "
+  "If the option " :opt "find_sing" " is false, then " :mref "nintegrate" " will not search "
   "for internal singularities, but user supplied singularities will still be used."
-  " If an error occurs, it may be possible to get a result by giving a value " :code "true"
-  " for option " :optcomma "real" " to force only integration of the real part."
+  :par ""
+  " If the global variable " :emref "domain" " is " :codecomma "real" " then
+   the integrand is assumed to be real. "
+  " If " :emref "domain" " is " :codecomma "complex" " then
+   the integrand may be complex. In particular roots of negative numbers may evaluate to complex numbers. "
+  "The option " :opt "idomain" " overrides the global variable " :vardot "domain."
+  :par ""
+  " If an error occurs in multi-dimensional integrals, it may be possible to get 
+  a result by giving a value " :code "real"
+  " for option " :optdot "idomain"
   :par ""
   "this function is not well tested and may give incorrect results.")
 
   (when varspecs
     ; can't handle some complex results, maybe need to do real and imag here already
+    ; also,   -> quotes lhs, but here the lhs is evaluated again somehow.
+    ; this is bug.
     (let* ((call defmfun1-func-call)
            (new-call)
            (new-integrand)
@@ -208,32 +224,38 @@
                                     (list (rule-opt '$info nil))))
       (setf new-call (append (list new-integrand new-varspec) opts))
       (return-from $nintegrate (apply '$nintegrate new-call))))
-  (let* ((vp (rest varspec)) (var (first vp)) ; multi dimensional integrals
+  (unwind-protect
+      (progn
+        (when domain-supplied-p
+          (setf old-domain $domain)
+          (mset '$domain idomain))
+    (let* ((vp (rest varspec)) (var (first vp)) ; multi dimensional integrals
          (lo (second vp)) (hi (third vp))
          (quad-ops (list (nint::mkopt $epsrel) (nint::mkopt $epsabs)
                          (nint::mkopt2 $limit $subint)))
          (more-opts (list $find_sing))
-         (r-expr ($realpart expr))
-         (i-expr ($imagpart expr)))
+         (r-expr (if (eq $domain '$real) expr ($realpart expr)))
+         (i-expr (if (eq $domain '$real) 0 ($imagpart expr))))
     (echeck-arg $nintegrate :or-symbol-subvar var)
     (echeck-arg $nintegrate :to-or-float-minf lo)
     (echeck-arg $nintegrate :to-or-float-inf  hi)
 
-; Following disallows integrate(f,[x,0,1]), when f is a function.
+; Following allows integrate(f,[x,0,1]), when f is a function.
+; but not simplifying functions, like
+; integrate(cos,[x,0,1]), but
+; integrate(cos(x),[x,0,1]) is ok
     (when (and (not (numberp ($float expr))) (freeof var expr)
                (not (fboundp expr)) (not (mfboundp expr)))
       (defmfun1-error-return '$expr_freeof_var $nintegrate 
         "the integrand is not a number or a function and does not depend on the variable of integration" :match))
-
 ;    (handler-case
 ;     (let ((f (get-integrand expr var))))
 ;       (format t "Integrand ok~%"))
 ;     (error ()
 ;            (defmfun1-error-return '$nonnumeric_integrand $nintegrate 
 ;              "The integrand does not evaluate to a number")))
-
-    (let ((r-res (if (eq 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi $points quad-ops more-opts)))
-          (i-res (if (or $real (eq 0 i-expr))
+    (let ((r-res (if (equalp 0 r-expr) nil (nint::do-quad-pack r-expr var lo hi $points quad-ops more-opts)))
+          (i-res (if (or (eq $domain '$real) (equalp 0 i-expr))
                      nil (nint::do-quad-pack i-expr var lo hi $points quad-ops more-opts))))
       (when (consp i-res)
         (setf (second i-res) `((mtimes) $%i ,(second i-res))))
@@ -251,6 +273,8 @@
                       res)
                      (t (second res))))
               (t nil))))))
+    (when domain-supplied-p
+      (mset '$domain old-domain))))
 
 (max-doc:see-also "nintegrate" '("quad_qags" "quad_qagi" "quad_qagp"))
 
@@ -264,12 +288,12 @@
   used to try to find singularities, and the results are either sent to "
   :emrefcomma "qagp" " or used to call quadpack routines on intervals. Multi-dimensional
   integrals are implemented simply by nesting calls to " :mrefcomma "nintegrate"
-  " and thus, are not efficient."
-  :par ""
-  "Things that could be added are: log, etc. singularities; to_poly_solve for
-   singularities; faster nesting for multi-dimensional integrals; better
-   routines for one and multi-dimensional integrals; symbolic manipulation of
-   integrand; use of remaining quadpack routines."))
+  " and thus, are not efficient."))
+;  :par ""
+;  "Things that could be added are: log, etc. singularities; to_poly_solve for
+;   singularities; faster nesting for multi-dimensional integrals; better
+;   routines for one and multi-dimensional integrals; symbolic manipulation of
+;   integrand; use of remaining quadpack routines."))
 
 (examples:clear-add-example 
  "nintegrate"
@@ -293,14 +317,14 @@
 ;  :ex ("nintegrate( cos(%i*x), [x,0,1])" "[1.1752, 1.30474e-14, 21, no problems]")
 ;  :ex ("sinh(1.0)" "1.1752")
   :text ("Four quadpack calls are needed to compute this example.")
-;  :ex ("nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf])" "[.424436 %i + .690194, 4.988325e-9, 300, no problems]")
-  :ex ("nintegrate(1/sqrt(1-x)*exp(-x),[x,0,inf], calls->short)"
+;  :ex ("block([domain:'complex],nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf]))" "[.424436 %i + .690194, 4.988325e-9, 300, no problems]")
+  :ex ("block([domain:'complex],nintegrate(1/sqrt(1-x)*exp(-x),[x,0,inf], calls->short))"
        "[1.07616-.652049*%i,1.87197e-10,1026,\"no problems\",
         [quad_qagi,quad_qagp,quad_qagi,quad_qagp]]")
   :text ("Return quadpack error code rather than error text.")
   :ex ("nintegrate(sin(sin(x)), [x,0,2], words->false)" "[1.24706, 1.38451e-14, 21, 0]")
   :text ("Request a relative error.")
-  :ex ("nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf], epsrel -> 1e-12)"
+  :ex ("block([domain:'complex], nintegrate(exp(%i*x) * exp(-x*x), [x,0,inf], epsrel -> 1e-12))"
        "[.424436 %i + .690194, 1.06796e-13, 480, no problems]")
   :text ("Trying to do the integral with too few sub-intervals fails.")
   :ex ("nintegrate(1/(1+x^2), [x, 0, inf], subint -> 2, epsrel -> 1e-10)"
@@ -316,5 +340,5 @@
  [quad_qagi(%e^-x/sqrt(abs(x-1)),x,1.0,inf,epsrel = 1.e-8,epsabs = 0,limit = 200),
   quad_qagp(%e^-x/sqrt(abs(x-1)),x,0,1.0,[],epsrel = 1.e-8,epsabs = 0,limit = 200)]]")
   :text ("Here we must supply the roots of " :code "sin(x)" " within the range of integration.")
-  :ex ("nintegrate(1/(sqrt(sin(x))),[x,0,10], points -> [%pi,2*%pi,3*%pi])"
+  :ex ("block([domain:'complex], nintegrate(1/(sqrt(sin(x))),[x,0,10], points -> [%pi,2*%pi,3*%pi]))"
     "[10.4882-6.76947*%i,9.597497e-8,1596,\"no problems\"]"))))
