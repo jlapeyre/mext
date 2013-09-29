@@ -11,6 +11,7 @@
   :source-extension "lisp"
   :components
    ((:file "combinatorics")
+    (:file "newfloat")
     (:file "number-functions")
     (:file "mersenne-perfect-data")
     (:file "mersenne-comp")))

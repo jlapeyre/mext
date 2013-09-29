@@ -1,6 +1,7 @@
 require("lists_aex");
 mext_provide("discrete_aex",
   [ "combinatorics",
+    "newfloat",
     "number-functions",
     "mersenne-perfect-data",
     "mersenne-comp"]);

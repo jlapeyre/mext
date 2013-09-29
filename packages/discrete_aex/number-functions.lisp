@@ -450,8 +450,8 @@
            (if 
                (and (complex-number-p (second x) '$numberp) ; GJL 2013
                     (complex-number-p (third x) '$numberp))
-               (let* ((base ($cfloat (second x)))
-                      (exp ($cfloat (third x)))
+               (let* ((base ($cbfloat (second x)))
+                      (exp ($cbfloat (third x)))
                       (form (list (car x) base exp)))
                  ($cbfloat ($rectform form)))
              (if (equal (cadr x) '$%e)
@@ -574,16 +574,16 @@
 ;; try bfloat. We hope that was the problem.
 (defun do-one-tofloat (expr n)
   (if (> n 15)
-      ($cbfloat expr)
+      ($bfloat expr)
     (handler-case
-     #-(or gcl ecl) ($cfloat expr)
+     #-(or gcl ecl) ($float expr)
      #+(or gcl ecl)
-     (let ((res ($cfloat expr)))
+     (let ((res ($float expr)))
        (if (eql res (* 1.5e308 1.5e308))
-           ($cbfloat expr)
+           ($bfloat expr)
        res))
      (error ()
-            ($cbfloat expr)))))
+            ($bfloat expr)))))
 
 (defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec old-numer bfloat-flag)
   :desc
