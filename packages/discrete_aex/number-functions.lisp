@@ -431,6 +431,13 @@
 	  ((or (numberp x)
 	       (member x '($%e $%pi $%gamma) :test #'eq))
 	   (bcons (intofp x)))
+          ((aex-p x)
+           (let* ((a (aex-copy-new-n x))
+                  (ar (aex-arr a))
+                  (arx (aex-arr x)))
+             (dotimes (i (length ar))
+               (setf (aref ar i) (cbfloat-do (aref arx i))))
+             a))
 	  ((or (atom x) (member 'array (cdar x) :test #'eq))
 	   (if (eq x '$%phi)
 	       (cbfloat-do '((mtimes simp)
@@ -482,7 +489,7 @@
   :desc
   ("Convert most numbers in " :arg "expr" " to bigfloat numbers."
    " This also converts some exponential expressions that " :emref "bfloat"
-   " leaves unconverted.")
+   " leaves unconverted. " :mref "cbfloat" " maps over aex expressions.")
   (cbfloat-do expr))
 
 ;; We have modified float to do this. So $cfloat is
@@ -602,7 +609,9 @@
    " to numbers than with standard " :emref "float" " and " :emrefdot "bfloat"
    " This function temporarily sets " :var "fpprec" " to " :argdot "n"
    " But, Maxima does floating point operations with the current value of "
-   :varcomma "fpprec" " regardless of the precision of the operands.")
+   :varcomma "fpprec" " regardless of the precision of the operands."
+   :par ""
+   :mref "tofloat" " maps over aex expressions.")
   (setf old-fpprec $fpprec)
   (setf old-numer  $numer)
   (mset '$fpprec n)

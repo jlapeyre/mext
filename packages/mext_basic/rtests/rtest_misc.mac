@@ -66,6 +66,6 @@ chop(1);
 if (lisp_type_symbol() = 'gcl) then 0 else chop(1e-17);
 0$
 
-/* Test 21 */
+/* Test 18 */
 if (lisp_type_symbol() = 'gcl) then 0 else chop(-1e-17);
 0$
