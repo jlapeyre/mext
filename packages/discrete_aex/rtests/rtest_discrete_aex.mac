@@ -143,17 +143,15 @@ is(tofloat(%e^((log(2)+2*%i*%pi)/3)) =
 true$
 */
 
-/* Test xx */
-/*
-numberp(inpart(tofloat(discr_expr,20),1,1));
-true$
-*/
-
 /* Test 29 */
+bfloatp(inpart(tofloat(discr_expr,20),1));
+true$
+
+/* Test 30 */
 tofloat(%i);
 %i$
 
-/* Test 30 */
+/* Test 31 */
 tofloat(%%%xyz%%%);
 '%%%xyz%%%$
 
@@ -162,31 +160,31 @@ tofloat(%%%xyz%%%);
    This is not fine grained, since we are letting
    float and bfloat walk the trees.
 */
-/* Test 31 */
+/* Test 32 */
 bfloatp(tofloat(10^500,10));
 true$
 
-/* Test 32 */
+/* Test 33 */
 is( abs(tofloat((-3)^(%i/3)) - float(rectform((-3)^(%i/3)))) < 1e-10);
 true$
 
-/* Test 33 */
+/* Test 34 */
 is( abs(tofloat((-3)^(%i/3),30) - float(rectform((-3)^(%i/3)))) < 1e-10);
 true$
 
 /* test removed infinite loop bug */
-/* Test 34 */
+/* Test 35 */
 is( abs(tofloat((-7)^(1/2)) - float((-7)^(1/2))) < 1e-10);
 true$
 
-/* Test 35 */
+/* Test 36 */
 is( abs(tofloat((-7)^(1/2),50) - bfloat((-7)^(1/2))) < 1e-10);
 true$
 
-/* Test 36 */
+/* Test 37 */
 ?complex\-number\-p(tofloat((-3+%i)^(1/3)));
 true$
 
-/* Test 37 */
+/* Test 38 */
 kill(a,num,discr_expr);
 done;

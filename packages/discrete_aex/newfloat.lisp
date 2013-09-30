@@ -1,6 +1,8 @@
 ;; modified to do float and bfloat on roots
 ;; All tests pass with these definitions
 
+;; We still have to use cbfloat because there is a problem
+;; with infinite recursion.
 #|
 (mext::no-warning
 (defmfun $bfloat (x)
@@ -170,5 +172,3 @@
                  ($expand res)
              res)))
 	(t (recur-apply #'$float e)))))
-
-

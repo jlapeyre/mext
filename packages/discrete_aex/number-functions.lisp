@@ -574,16 +574,16 @@
 ;; try bfloat. We hope that was the problem.
 (defun do-one-tofloat (expr n)
   (if (> n 15)
-      ($bfloat expr)
+      ($cbfloat expr)
     (handler-case
      #-(or gcl ecl) ($float expr)
      #+(or gcl ecl)
      (let ((res ($float expr)))
        (if (eql res (* 1.5e308 1.5e308))
-           ($bfloat expr)
+           ($cbfloat expr)
        res))
      (error ()
-            ($bfloat expr)))))
+            ($cbfloat expr)))))
 
 (defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec old-numer bfloat-flag)
   :desc
