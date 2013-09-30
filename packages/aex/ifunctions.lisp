@@ -68,3 +68,30 @@
    "In a function that mostly only does icons in a loop,
    icons defined with defmfun rather than defmfun1 runs almost twice as fast. So icons is
    defined with defmfun rather than defmfun1. icons does no argument checking.")
+
+(defun chop-do (x epsf epsbf)
+  (cond ((and (numberp x) (<= (abs x) epsf)) 0)
+        ((and ($bfloatp x) (fplessp (fpabs (cdr x)) epsbf)) 0)
+        (($mapatom x) x)
+        ((consp x) (cons (car x)
+                 (loop :for x1 :in (cdr x) :collect
+                       (chop-do x1 epsf epsbf))))
+        ((aex-p x)
+         (let* ((a (aex-copy-new-n x))
+                (ar (aex-arr a))
+                (arx (aex-arr x)))
+           (dotimes (i (length ar))
+             (setf (aref ar i) (chop-do (aref arx i) epsf epsbf)))
+           a))
+        (t x)))
+
+;; this should apply at all levels of an expression.
+(defmfun1 ($chop :doc) ( expr &optional (eps 1e-10 :to-non-neg-float-bfloat))
+  :desc
+  ("Replaces floating (and bigfloating) point numbers in " :arg "expr" " that are closer to zero "
+   "than " :arg "eps" " with the exact integer " :codedot "0"
+   :par ""
+   :mref "chop" " works on aex expressions.")
+  (let ((epsf  (if (floatp eps) eps ($float eps)))
+        (epsbf (cdr (if (floatp eps) ($bfloat eps) eps))))
+    (chop-do expr epsf epsbf)))

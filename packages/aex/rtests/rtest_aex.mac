@@ -415,6 +415,57 @@ true$
   is (eval_string(sconcat(a)) = a));
 true$
 
+/* Test 18 */
+is(chop(1e-9) > 0);
+true$
+
+/* Test 19 */
+is(chop(1e-9,1e-8) > 0);
+false$
+
+/*
+ Test allowing maxima ratio
+*/   
+/* Test 20 */
+is(chop(1e-9,1/10^8) > 0);
+false$
+
+/* bigfloats */
+/* Test  */
+is(chop(1b-9,1/10^8) > 0);
+false$
+
+/* Test  */
+is(chop(1b-100) > 0);
+false$
+
+/* Test  */
+is(chop(1b-3) > 0);
+true$
+
+/* Test  */
+is(chop(1b-10,1e-20) > 0);
+true$
+
+/* Test  */
+is(chop(1b-10,1e-9) > 0);
+false$
+
+/* Test  */
+is(chop(1e-10,1b-20) > 0);
+true$
+
+/* Test  */
+is(chop(1e-10,1b-9) > 0);
+false$
+
+/* Test  */
+is(chop(1e-10,1b-500) > 0);
+true$
+
+/* Test  */
+is (chop([<<1e-12,3>>, "dog"],5e-10) = [<<0,3>>, "dog"]);
+true$
 
 /* Test 76 */
 kill(e,e1,a);

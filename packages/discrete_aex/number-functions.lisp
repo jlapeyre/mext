@@ -425,7 +425,7 @@
 (defmfun1::set-match-form '( $aliquot_sum $divisor_function $divisor_summatory ))
 
 ;; like bfloat(), see comments below for cfloat()
-(defmfun $cbfloat (x)
+(defmfun cbfloat-do (x)
   (let (y)
     (cond ((bigfloatp x))
 	  ((or (numberp x)
@@ -433,12 +433,12 @@
 	   (bcons (intofp x)))
 	  ((or (atom x) (member 'array (cdar x) :test #'eq))
 	   (if (eq x '$%phi)
-	       ($cbfloat '((mtimes simp)
+	       (cbfloat-do '((mtimes simp)
 			  ((rat simp) 1 2)
 			  ((mplus simp) 1 ((mexpt simp) 5 ((rat simp) 1 2)))))
 	       x))
           ((eq (caar x) 'mtimes)
-           (let ((res (recur-apply #'$cbfloat x)))
+           (let ((res (recur-apply #'cbfloat-do x)))
              ;; If we are multiplying complex numbers, expand result -- GJL 2013
              (if (and (consp res) (eq (caar res) 'mtimes)
                       (every #'(lambda (aa) (or (complex-number-p aa)
@@ -450,34 +450,43 @@
            (if 
                (and (complex-number-p (second x) '$numberp) ; GJL 2013
                     (complex-number-p (third x) '$numberp))
-               (let* ((base ($cbfloat (second x)))
-                      (exp ($cbfloat (third x)))
+               (let* ((base (cbfloat-do (second x)))
+                      (exp (cbfloat-do (third x)))
                       (form (list (car x) base exp)))
-                 ($cbfloat ($rectform form)))
+                 (cbfloat-do ($rectform form)))
              (if (equal (cadr x) '$%e)
-                 (*fpexp ($cbfloat (caddr x)))
-	       (exptbigfloat ($cbfloat (cadr x)) (caddr x)))))
+                 (*fpexp (cbfloat-do (caddr x)))
+	       (exptbigfloat (cbfloat-do (cadr x)) (caddr x)))))
 	  ((eq (caar x) 'mncexpt)
-	   (list '(mncexpt) ($cbfloat (cadr x)) (caddr x)))
+	   (list '(mncexpt) (cbfloat-do (cadr x)) (caddr x)))
 	  ((eq (caar x) 'rat)
 	   (ratbigfloat (cdr x)))
 	  ((setq y (safe-get (caar x) 'floatprog))
-	   (funcall y (mapcar #'$cbfloat (cdr x))))
+	   (funcall y (mapcar #'cbfloat-do (cdr x))))
 	  ((or (trigp (caar x)) (arcp (caar x)) (eq (caar x) '$entier))
-	   (setq y ($cbfloat (cadr x)))
-	   (if ($cbfloatp y)
+	   (setq y (cbfloat-do (cadr x)))
+	   (if (cbfloat-do y)
 	       (cond ((eq (caar x) '$entier) ($entier y))
 		     ((arcp (caar x))
-		      (setq y ($cbfloat (logarc (caar x) y)))
+		      (setq y (cbfloat-do (logarc (caar x) y)))
 		      (if (free y '$%i)
 			  y (let ($ratprint) (fparcsimp ($rectform y)))))
 		     ((member (caar x) '(%cot %sec %csc) :test #'eq)
 		      (invertbigfloat
-		       ($cbfloat (list (ncons (safe-get (caar x) 'recip)) y))))
-		     (t ($cbfloat (exponentialize (caar x) y))))
+		       (cbfloat-do (list (ncons (safe-get (caar x) 'recip)) y))))
+		     (t (cbfloat-do (exponentialize (caar x) y))))
 	       (subst0 (list (ncons (caar x)) y) x)))
-	  (t (recur-apply #'$cbfloat x)))))
+	  (t (recur-apply #'cbfloat-do x)))))
 
+(defmfun1 ($cbfloat :doc) (expr)
+  :desc
+  ("Convert most numbers in " :arg "expr" " to bigfloat numbers."
+   " This also converts some exponential expressions that " :emref "bfloat"
+   " leaves unconverted.")
+  (cbfloat-do expr))
+
+;; We have modified float to do this. So $cfloat is
+;; not necessary.
 ;; Same as float() except
 ;; 1) do rectform on exponentials with base and exponent
 ;; both numbers.
@@ -574,20 +583,26 @@
 ;; try bfloat. We hope that was the problem.
 (defun do-one-tofloat (expr n)
   (if (> n 15)
-      ($cbfloat expr)
+      (cbfloat-do expr)
     (handler-case
      #-(or gcl ecl) ($float expr)
      #+(or gcl ecl)
      (let ((res ($float expr)))
        (if (eql res (* 1.5e308 1.5e308))
-           ($cbfloat expr)
+           (cbfloat-do expr)
        res))
      (error ()
-            ($cbfloat expr)))))
+            (cbfloat-do expr)))))
 
 (defmfun1 ($tofloat :doc) (expr &optional (n 15 :pos-int) &aux old-fpprec old-numer bfloat-flag)
   :desc
-  ("This function does not change the printed precision, " :codedot "fpprintprec")
+  ("This function does not change the printed precision, " :codedot "fpprintprec"
+   " Either " :emref "float" " or " :emref "bfloat" " is called depending on the "
+   " precision. More expressions, particularly some exponentials, are converted "
+   " to numbers than with standard " :emref "float" " and " :emrefdot "bfloat"
+   " This function temporarily sets " :var "fpprec" " to " :argdot "n"
+   " But, Maxima does floating point operations with the current value of "
+   :varcomma "fpprec" " regardless of the precision of the operands.")
   (setf old-fpprec $fpprec)
   (setf old-numer  $numer)
   (mset '$fpprec n)
@@ -602,6 +617,8 @@
  '("tofloat" ("expr") ("tries to convert numbers in ":arg "expr" " to floating point."))
  '("tofloat" ("expr" "n") ("tries to convert numbers in ":arg "expr" " to floating point "
    "with " :arg "n" "-digit precision.")))
+
+(max-doc:see-also-group '( "tofloat" "cbfloat"))
 
 (max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" 
                            "divisor_summatory" "perfect_p" "abundant_p"))

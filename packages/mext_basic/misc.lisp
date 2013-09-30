@@ -36,17 +36,6 @@
 ;;            else if ratp(x) then ?equal(0, ?cadr (x))
 ;;            else false;
 
-;; we should use recur-apply or something here.
-;; this should apply at all levels of an expression.
-(defmfun1 ($chop :doc) ((x :thread) &optional (eps 1e-10 :to-non-neg-float-bfloat))
-  :desc
-  ("Return " :code "0" " if " :arg "x" " is a float or bigfloat closer to zero than
-    the optional argument " :argdot "eps")
-  (cond ((and (numberp x)
-              (let ((eps1 (if ($bfloatp eps) ($float eps) eps)))
-                (<= (abs x) eps1))) 0)
-        ((and ($bfloatp x) (fplessp (fpabs (cdr x)) (cdr ($bfloat eps)))) 0)
-        (t x)))
 
 ;; iparse_string and ieval_string are the same as stock maxima,
 ;; but they get defmfun1 error checking and threading.
