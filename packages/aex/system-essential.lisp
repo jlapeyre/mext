@@ -65,7 +65,27 @@
            t)))
     nil))
 
+;; src/grind.lisp
+;; dont nformat if aex, because that formats as
+;; a normal maxima expression.
+;;  We only want that with display2d:true.
+;; msize is called with display2d:false and with sconcat
+;;  There is probably a better way to do this.
+(mext::no-warning
+(defun msize (x l r lop rop)
+  (when (not (aex-p x))
+    (setq x (nformat x)))
+  (cond ((atom x) (msize-atom x l r))
+        ((and (atom (car x)) (setq x (cons '(mprogn) x)) nil))
+	((or (<= (lbp (caar x)) (rbp lop)) (> (lbp rop) (rbp (caar x))))
+	 (msize-paren x l r))
+	((member 'array (cdar x) :test #'eq) (msize-array x l r))
+	((safe-get (caar x) 'grind)
+	 (the #-ecl (values t) #+ecl t (funcall (get (caar x) 'grind) x l r)))
+	(t (msize-function x l r nil)))))
+
 ;;;  It appears that msize-atom must be changed, but not msize.
+;;;  Now we do have to change msize, see above.
 
 ;; src/grind.lisp
 ;; last checked August 2013
