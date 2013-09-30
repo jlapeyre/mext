@@ -609,7 +609,14 @@ refers to the head."
 ;; see how to print a marker like /R/
 ;; if the expression or subexpression is of a
 ;; special type
-(setf (get 'aex 'formatter) #'$flex)
+
+(defun aex-choose-format (e)
+  (if $display2d
+      ($flex e)
+    e))
+
+;(setf (get 'aex 'formatter) #'$flex)
+(setf (get 'aex 'formatter) #'aex-choose-format)
 
 ;; modify checkrat from src/displa.lisp
 ;; It checks for any subexpression of type aex and
