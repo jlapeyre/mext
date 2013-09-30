@@ -34,16 +34,18 @@
 ;      ((null l))
 ;    (when (alike1 x (car l)) (return l)))))
 
-;; probably not very fast!
+; this is not quite the same because it returns an element
+; from the array, whicle memalike returns the cdr of a cons cell.
+(defun memalike-array (x a &aux el)
+  (dotimes (i (length a))
+    (when (alike1 x (setf el (aref a i))) (return-from memalike-array el)))
+  nil)
 
-;(defun memalike-array (x a)
-;  (let ((res 
-;         (dotimes (i (length a))
-;           (when (alike1 x (aref a i)) (return (aref a i))))))
-;    res))
+(mext::no-warning
+(defmfun $member (x e)
+  (if (aex-p e)
+      (if (memalike-array ($totaldisrep x) (aex-arr e)) t nil)
+    (progn
+      (atomchk (setq e ($totaldisrep e)) '$member t)
+      (if (memalike ($totaldisrep x) (margs e)) t)))))
 
-;(mext::no-warning
-;(defmfun $member (x e)
-;  ((aex-p e) (length (aex-arr e)))
-;  (atomchk (setq e ($totaldisrep e)) '$member t)
-;  (if (memalike ($totaldisrep x) (margs e)) t)))
