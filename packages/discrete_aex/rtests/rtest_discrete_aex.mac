@@ -124,8 +124,7 @@ false$
   float(rectform(float(rectform(x))))
 */
 /* Test 26 */
-(discr_expr : -%e^-1*gamma_incomplete(2/3,-1)/(-1)^(2/3)
- -(-1)^(2/3)*%e^-1*gamma(2/3)-(-1)^(1/3)*%e^-1*gamma(2/3),
+(discr_expr : -%e^-1*gamma_incomplete(2/3,-1)/(-1)^(2/3) -(-1)^(2/3)*%e^-1*gamma(2/3)-(-1)^(1/3)*%e^-1*gamma(2/3),
   numberp(inpart(tofloat(discr_expr),1)));
 true$
 
@@ -134,10 +133,27 @@ numberp(inpart(tofloat([discr_expr]),1,1));
 true$
 
 /* Test 28 */
+is(tofloat((-1)^(1/%pi)) = tofloat(%i*sin(1)+cos(1)));
+true$
+
+/* Test xx */
+/*
+is(tofloat(%e^((log(2)+2*%i*%pi)/3)) =
+  tofloat(sqrt(3)*%i*%e^(log(2)/3)/2-%e^(log(2)/3)/2));
+true$
+*/
+
+/* Test xx */
+/*
+numberp(inpart(tofloat(discr_expr,20),1,1));
+true$
+*/
+
+/* Test 29 */
 tofloat(%i);
 %i$
 
-/* Test 29 */
+/* Test 30 */
 tofloat(%%%xyz%%%);
 '%%%xyz%%%$
 
@@ -146,31 +162,31 @@ tofloat(%%%xyz%%%);
    This is not fine grained, since we are letting
    float and bfloat walk the trees.
 */
-/* Test 30 */
+/* Test 31 */
 bfloatp(tofloat(10^500,10));
 true$
 
-/* Test 31 */
+/* Test 32 */
 is( abs(tofloat((-3)^(%i/3)) - float(rectform((-3)^(%i/3)))) < 1e-10);
 true$
 
-/* Test 32 */
+/* Test 33 */
 is( abs(tofloat((-3)^(%i/3),30) - float(rectform((-3)^(%i/3)))) < 1e-10);
 true$
 
 /* test removed infinite loop bug */
-/* Test 33 */
+/* Test 34 */
 is( abs(tofloat((-7)^(1/2)) - float((-7)^(1/2))) < 1e-10);
 true$
 
-/* Test 34 */
+/* Test 35 */
 is( abs(tofloat((-7)^(1/2),50) - bfloat((-7)^(1/2))) < 1e-10);
 true$
 
-/* Test 34 */
+/* Test 36 */
 ?complex\-number\-p(tofloat((-3+%i)^(1/3)));
 true$
 
-/* Test 35 */
+/* Test 37 */
 kill(a,num,discr_expr);
 done;

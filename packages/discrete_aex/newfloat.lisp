@@ -1,6 +1,7 @@
 ;; modified to do float and bfloat on roots
 ;; All tests pass with these definitions
 
+#|
 (mext::no-warning
 (defmfun $bfloat (x)
   (let (y)
@@ -15,36 +16,32 @@
 			  ((mplus simp) 1 ((mexpt simp) 5 ((rat simp) 1 2)))))
 	       x))
 	  ((eq (caar x) 'mexpt)
-           (if 
-               (and (not (and ($numberp (second x)) ($numberp (third x))))
-                          (complex-number-p (second x) '$numberp) ; GJL 2013
-                    (complex-number-p (third x) '$numberp))
-               (let* ((base ($bfloat (second x)))
-                      (exp ($bfloat (third x)))
-                      (form (list (car x) base exp))
-                      (rform ($rectform form)))
-                 (if (eq (caar rform) 'mexpt) ; will this happen ?
-                     (exptbigfloat base exp)
-                   ($bfloat rform)))
-             (if (equal (cadr x) '$%e)
-                 (*fpexp ($bfloat (caddr x)))
-	       (exptbigfloat ($bfloat (cadr x)) (caddr x)))))
+           (format t "EXHERP ~a~%" x)
+           (if (equal (cadr x) '$%e)
+               (*fpexp ($bfloat (caddr x)))
+             (let* ((base ($bfloat (second x)))
+                    (exp ($bfloat (third x))))
+               (format t "base ~a exp ~a~%" base exp)
+               (if
+                   (and  (not (and ($numberp base) (mfuncall 'mgreaterp base 0) ($numberp exp)))
+                        (complex-number-p base '$numberp) ; GJL 2013
+                        (complex-number-p exp '$numberp))
+                   (let* 
+                       ((form (list (car x) base exp))
+                        (rform ($rectform form)))
+                     (if (eq (caar rform) 'mexpt) ; will this happen ?
+;                         (exptbigfloat base exp)
+                       ($expand ($bfloat rform))
+                       ($expand ($bfloat rform))))
+                 (exptbigfloat base (caddr x))))))
            ((eq (caar x) 'mncexpt)
 	   (list '(mncexpt) ($bfloat (cadr x)) (caddr x)))
 	  ((eq (caar x) 'rat)
 	   (ratbigfloat (cdr x)))
+;	  ((and (not (eq (caar x) 'mtimes)) (setq y (safe-get (caar x) 'floatprog)))
+;	   (funcall y (mapcar #'$bfloat (cdr x))))
 	  ((setq y (safe-get (caar x) 'floatprog))
 	   (funcall y (mapcar #'$bfloat (cdr x))))
-          ((eq (caar x) 'mtimesxx)
-           (let ((res (recur-apply #'$bfloat x)))
-             ;; If we are multiplying complex numbers, expand result -- GJL 2013
-             (if (and (consp res) (eq (caar res) 'mtimes)
-                      (every #'(lambda (aa) (complex-number-p aa '$numberp))
-                                               (cdr res)))
-;                      (not (every #'$numberp
-;                                               (cdr res))))
-                 ($expand res)
-               res)))
 	  ((or (trigp (caar x)) (arcp (caar x)) (eq (caar x) '$entier))
 	   (setq y ($bfloat (cadr x)))
 	   (if ($bfloatp y)
@@ -58,7 +55,24 @@
 		       ($bfloat (list (ncons (safe-get (caar x) 'recip)) y))))
 		     (t ($bfloat (exponentialize (caar x) y))))
 	       (subst0 (list (ncons (caar x)) y) x)))
+;          ((eq (caar x) 'mtimes)
+;           (recur-apply #'$bfloat x))
+          ((eq (caar x) 'mtimesxx)
+           (format t "GOT THIS~%")
+           (let ((res (recur-apply #'$bfloat x)))
+;           (let ((res x))
+             ;; If we are multiplying complex numbers, expand result -- GJL 2013
+             (if (and (consp res) (eq (caar res) 'mtimes)
+                      (every #'(lambda (aa) (or (complex-number-p aa)
+                                                (complex-number-p aa '$bfloatp)))
+                                               (cdr res)))
+;                      (not (every #'$numberp
+;                                               (cdr res))))
+                 (simplify res)
+               res)))
+;               (recur-apply #'$bfloat res))))
 	  (t (recur-apply #'$bfloat x))))))
+|#
 
 ;; Same as float() except
 ;; 1) do rectform on exponentials with base and exponent
@@ -71,14 +85,19 @@
 	((or (atom e) (member 'array (cdar e) :test #'eq)) e)
 	((eq (caar e) 'rat) (fpcofrat e))
 	((eq (caar e) 'bigfloat) (fp2flo e))
-        ((and (eq (caar e) 'mexpt)  ; GJL 2013
-              (complex-number-p (second e) '$numberp)
-              (complex-number-p (third e) '$numberp))
+        ((eq (caar e) 'mexpt)
          (let* ((base ($float (second e)))
                 (exp ($float (third e)))
-                (form (list (car e) base exp)))
-           ($float ($rectform form))))
-	((member (caar e) '(mexpt mncexpt) :test #'eq)
+                (nform (list (car e) base exp)))
+           (if (and
+                (complex-number-p base '$numberp)
+                (complex-number-p exp '$numberp))
+               ($float ($rectform nform))
+             (let ((res (recur-apply #'$float nform)))
+               (if (floatp res) res
+                 (list (ncons (caar e)) base (caddr e)))))))
+;	((member (caar e) '(mexpt mncexpt) :test #'eq)
+	((eq (caar e) 'mncexpt)
 	 ;; avoid x^2 -> x^2.0, allow %e^%pi -> 23.14
 	 (let ((res (recur-apply #'$float e)))
 	   (if (floatp res)
