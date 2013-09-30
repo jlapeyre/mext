@@ -844,6 +844,8 @@ refers to the head."
               (progn (atomchk (setq e (format1 e)) '$args nil)
                      (mk-mlist (margs e))))))
 
+(max-doc:see-also-group '("flex" "raex" "faex" "lex" "rlex"))
+
 ;; in progress. add list of lists which can be of mixed representation.
 ;; Avoid using the simplifer with aex expressions.
 ;; (defun iadd (argsin)
