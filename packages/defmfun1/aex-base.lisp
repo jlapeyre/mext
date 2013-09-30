@@ -18,7 +18,8 @@
 
 (defstruct (aex
             (:print-function
-             $print_aex))
+;             $print_aex))
+             display-aex))
   (head '(mlist simp) :type list)
   (arr *aex-core-dummy-vector* :type vector)
   (adjustable nil :type boolean)

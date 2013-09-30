@@ -14,6 +14,8 @@
 ; need to integrate this with mext somehow.
 ($put '$aex_package 0.1 '$version)
 
+
+
 #|
 
 Moved to defmfun1/aex-core.lisp 
@@ -601,7 +603,39 @@ refers to the head."
  :desc ("deep copy " :arg "e" " converting to lex representation at all levels.")
   (rlex1 e 1 1 '$inf))
 
-;; is used
+;; This tells how to format for 2-d display
+;; We just convert to normal maxima expression
+;; See the function checkrat in displa.lisp to
+;; see how to print a marker like /R/
+;; if the expression or subexpression is of a
+;; special type
+(setf (get 'aex 'formatter) #'$flex)
+
+;; modify checkrat from src/displa.lisp
+;; It checks for any subexpression of type aex and
+;; asks for /A/ to be printed. If you encode
+;; rat in aex or vice-versa.... who knows ?
+(mext::no-warning
+ (defun checkrat (form)
+  (cond ((atom form)
+         (if (aex-p form)
+             '(#\space #\/ #\A #\/)
+           nil))
+	((and (not (atom (car form))) (eq (caar form) 'mrat))
+	 (if (member 'trunc (cdar form) :test #'eq)
+	     '(#\space #\/ #\T #\/)
+	     '(#\space #\/ #\R #\/)))
+	((and (not (atom (car form))) (eq (caar form) 'mpois))
+	 '(#\space #\/ #\P #\/))
+	(t
+	 (do ((l (cdr form) (cdr l)))
+	     ((null l))
+	   (cond ((atom l)
+		  (merror (intl:gettext "display: not a well-formed Maxima expression: ~S") form))
+		 ((setq form (checkrat (car l)))
+		  (return form))))))))
+
+
 (defun rlex1 (x d d1 d2)
   (if (and (not (eq d2 '$inf)) (> d d2))  x
     (if ($mapatom x) x
@@ -654,6 +688,10 @@ refers to the head."
 (defmfun $print_aex (x strm depth)
   "This only marks the outermost expression with a tilde."
 ;;  (declare (ignore depth)) ;  eh ccl doesn't like this
+  (format strm "~~~a" ($sconcat ($flex x))))
+
+;; arg still dont know how to display this
+(defun display-aex (x strm depth)
   (format strm "~~~a" ($sconcat ($flex x))))
 
 ;; is used
