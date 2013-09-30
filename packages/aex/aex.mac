@@ -8,5 +8,6 @@ mext_provide("aex",
   "mext-predicates",
   "ifunctions",
   "system-essential",
+  "maxima-modified",
   "mset",
   "lisp-numeric"]);
