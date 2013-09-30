@@ -34,6 +34,14 @@
 ;      ((null l))
 ;    (when (alike1 x (car l)) (return l)))))
 
+;; probably not very fast!
+
+;(defun memalike-array (x a)
+;  (let ((res 
+;         (dotimes (i (length a))
+;           (when (alike1 x (aref a i)) (return (aref a i))))))
+;    res))
+
 ;(mext::no-warning
 ;(defmfun $member (x e)
 ;  ((aex-p e) (length (aex-arr e)))
