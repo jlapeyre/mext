@@ -71,6 +71,8 @@
 ;;  We only want that with display2d:true.
 ;; msize is called with display2d:false and with sconcat
 ;;  There is probably a better way to do this.
+;; the code that determines display and string conversion
+;; in various situations is here and in aex-core.lisp
 (mext::no-warning
 (defun msize (x l r lop rop)
   (when (not (aex-p x))
