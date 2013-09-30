@@ -83,6 +83,12 @@
                             (list (or (numberp v) (eq v 'maxima::$minf)) v)))
                      (:pp :to-non-neg-float "an expression that can be converted to a non-negative float"
                           (let ((v (maxima::$float e))) (list (and (numberp v) (> v 0)) v)))
+                     (:pp :to-non-neg-float-bfloat
+                          "an expression that is a non-negative bigfloat or can be converted to a non-negative float"
+                          (if (maxima::$bfloatp e)
+                              (list (maxima::fpgreaterp (cdr e) '(0 0))
+                                    e)
+                          (let ((v (maxima::$float e))) (list (and (numberp v) (> v 0)) v))))
                      (:complex-number  "a complex number" (complex_number_p e)) ; from ellipt.lisp
 ;; following is not used yet
                      (:lisp-complex-number  "a lisp complex number" 

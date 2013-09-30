@@ -6,6 +6,8 @@
 (max-doc:set-cur-sec 'max-doc::runtime-fandv)
 (defmfun1:set-file-and-package "misc.lisp" "mext_basic")
 
+#|
+
 (defmfun1 ($format1 :doc) (expr)
   :desc ("This calls the lisp function format1. It is mostly for testing code.")
   (format1 expr))
@@ -13,6 +15,8 @@
 (defmfun1 ($nformat :doc) (expr)
   :desc ("This calls the lisp function nformat. It is mostly for testing code.")
   (nformat expr))
+
+|#
 
 (defmfun1 ($zerop :doc) (x)
   :desc 
@@ -32,12 +36,17 @@
 ;;            else if ratp(x) then ?equal(0, ?cadr (x))
 ;;            else false;
 
-(defmfun1 ($chop :doc) ((x :thread) &optional (eps 1e-10 :to-non-neg-float))
+;; we should use recur-apply or something here.
+;; this should apply at all levels of an expression.
+(defmfun1 ($chop :doc) ((x :thread) &optional (eps 1e-10 :to-non-neg-float-bfloat))
   :desc
-  ("Return " :code "0" " if " :arg "x" " is closer to zero than
+  ("Return " :code "0" " if " :arg "x" " is a float or bigfloat closer to zero than
     the optional argument " :argdot "eps")
-  (if (and (numberp x) (<= (abs x) eps)) 0
-    x))
+  (cond ((and (numberp x)
+              (let ((eps1 (if ($bfloatp eps) ($float eps) eps)))
+                (<= (abs x) eps1))) 0)
+        ((and ($bfloatp x) (fplessp (fpabs (cdr x)) (cdr ($bfloat eps)))) 0)
+        (t x)))
 
 ;; iparse_string and ieval_string are the same as stock maxima,
 ;; but they get defmfun1 error checking and threading.
