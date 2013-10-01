@@ -81,7 +81,7 @@
 ;; but aex objects are meant for efficiency for long lists.
 ;; maybe we need a flag for this.
 (mext::no-warning
-(defmfun $member (x e)
+(defmfun1 $member (x (e :atomchk-ext))
   (if (aex-p e)
       (if (memalike-array ($totaldisrep x) (aex-arr e)) t nil)
     (progn

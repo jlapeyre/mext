@@ -162,6 +162,16 @@
                      (:or-pos-int-string ("a string" "a positive integer")
                                              (or (stringp e) (and (integerp e) (> e 0))))
 ; should compare following to $atom
+; structs are atom but not mapatom
+; subscr. vars. are  not atom but are mapatom
+; This is kind of crazy, but thats why we have this test
+; But: ratios, 1/3 are mapatoms, but they
+; work with length,part,rest, ...
+; We need to add s.t. like atomchk in comm.lisp,
+; but that allows aex expressions (or arrays, if implmented) as well
+; atomchk-ext : an extended notion of atomchk
+                     (:atomchk-ext ("a non-atomic expression")
+                       (or (maxima::aex-p e) (not (or (atom e) (eq (caar e) 'bigfloat)))))
                      (:or-non-mapatom-subvar  ("a subscripted variable" "non-mapatomic")
                       (or (not (maxima::$mapatom e)) (maxima::$subvarp e)))
                      (:or-non-mapatom-subvar-string   ("a string" "a subscripted variable" "non-mapatomic")
