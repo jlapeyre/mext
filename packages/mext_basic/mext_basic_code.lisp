@@ -323,6 +323,56 @@ This is from wxmaxima
          "it will be written in the same directory as the ouput (binary) file.")
   (mext::mext-compile-file input-file bin_file $tr_file))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Flags, set and manipulate
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defmfun1 ($set_modern_flags :doc) ()
+  :desc
+  ("Set inflag to false and domain to complex, after saving the current values to the flag stack.")
+  (mext::push-maxima-flags)
+  (mext::set-modern-maxima-flags)
+  '$done)
+
+(defmfun1 ($set_initial_flags :doc) ()
+  :desc
+  ("Set inflag and domain and maybe some other flags to their
+    values at the time the mext system was loaded, after pushing current values
+    to the flag stack.")
+  (mext::push-maxima-flags)
+  (mext::restore-initial-maxima-flags)
+  '$done)
+
+(defmfun1 ($push_flags :doc) ()
+  :desc
+  ("Push the current values of some flags to the flag stack.")
+  (mext::push-maxima-flags)
+  '$done)
+
+(defmfun1 ($pop_flags :doc) ()
+  :desc
+  ("Pop the values of some flags from the flag stack and set them.")
+  (mext::pop-maxima-flags)
+  '$done)
+
+(defmfun1 ($list_flag_stack :doc) ()
+  :desc
+  ("Return a list of lists of the flags and values in the flag stack.")
+  (mext::list-maxima-flags-stack))
+
+(defmfun1 ($clear_flag_stack :doc) ()
+  :desc
+  ("Set the flag stack to an empty list.")
+  (mext::clear-maxima-flags-stack)
+  '$done)
+
+(max-doc:see-also-group 
+ '("pop_flags" "push_flags" "set_initial_flags" 
+   "set_modern_flags" "list_flag_stack" "clear_flag_stack"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; END Flags, set and manipulate
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (max-doc:see-also-group '("mext_list_loaded" "mext_list" "mext_info" "mext_clear" 
                           "mext_list_package" "mext_find_package"))
 

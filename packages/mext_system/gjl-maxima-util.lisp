@@ -5,6 +5,7 @@
 ;(mext:mext-optimize)
 (use-package :gjl.lisp-util)
 
+
 (defun lisp-sym-to-max (s)
  "This certainly exists somewhere in the maxima source."
   (intern (concatenate 'string "$"
@@ -12,9 +13,20 @@
                                      collect (if (eq char #\-) #\_ char)) 'string)) "MAXIMA"))
 ; (symbol-name s)) "MAXIMA"))
 
-;; maybe allow string to fall through.
-(defun sym-to-string (s)
-  (maybe-invert-string-case (format nil "~s" s)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Hashes
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; should perhaps sort, but how ?
+(defun hash-to-maxima-list (hash)
+  "Convert a hash to a maxima list of lists of key val pairs."
+  (cons '(mlist simp)
+        (loop :for k :being :the :hash-keys :of hash
+              :collect `((maxima::mlist simp) ,k ,(gethash k hash)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Lists
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; multiple evaluation!
 ;; Looks like alters the input to be a lisp list (or makes a new object)
@@ -41,6 +53,14 @@
 ;; Very similar to macros in src/strmac.lisp
 ;; But this one is not there, and I want a short name.
 (defmacro mk-mlist (e) `(cons '(mlist simp) ,e))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Strings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; maybe allow string to fall through.
+(defun sym-to-string (s)
+  (maybe-invert-string-case (format nil "~s" s)))
 
 ;; Why is this a macro?,.. i guess to avoid let or setf
 ;; uh this one is probably leaky, but it should not

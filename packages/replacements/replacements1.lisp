@@ -1,4 +1,8 @@
 ;; src/comm.lisp
+;; we don't ratdisrep inside aex objects.
+;; need to consider this. maybe a flag.
+;; consider making this defmfun1 with arg checks and
+;; match_form capability
 (mext::no-warning
 (defmfun $length (e)
   (setq e (cond (($listp e) e)
@@ -16,7 +20,7 @@
 	(t (length (cdr (nformat e)))))))
 
 ;; don't use :or-non-mapatom-subvar, it excludes 1/4
-;; triggers a bug
+;; triggers a bug in maxima testsuite
 (mext::no-warning
 (defmfun-ae ($args) (e)
   (defmfun-final-to-ae
@@ -24,15 +28,42 @@
               (progn (atomchk (setq e (format1 e)) '$args nil)
                      (mk-mlist (margs e)))))))
 
-
-; This is trouble because it takes the cdr of maxima expression
-; so what do we send to it ??
-; I think we should make memalike-arrary that
-; operates on a raw array.
-;(defmfun memalike (x l)
-;  (do ((l l (cdr l)))
-;      ((null l))
-;    (when (alike1 x (car l)) (return l)))))
+#| no quite working yet
+(mext::no-warning
+(defmfun $rest (e &optional (n 1 n?))
+  (prog (m fun fun1 revp)
+     (when (and n? (equal n 0))
+       (return e))
+     (when (aex-p e)
+       (let* ((are (aex-arr e))
+              (newn (- (length are) n))
+              (a (aex-copy-new-n e newn))
+              (ar (aex-arr a)))
+         (dotimes (i (1- newn))
+           (setf (aref are i) (aref ar (+ n i))))
+         (return a)))
+     (atomchk (setq m (format1 e)) '$rest nil)
+     (cond ((and n? (not (fixnump n)))
+	    (merror (intl:gettext "rest: second argument, if present, must be an integer; found ~M") n))
+	   ((minusp n)
+	    (setq n (- n) revp t)))
+     (if (< (length (margs m)) n)
+	 (if $partswitch
+	     (return '$end)
+	     (merror (intl:gettext "rest: fell off the end."))))
+     (setq fun (car m))
+     (when (eq (car fun) 'mqapply)
+       (setq fun1 (cadr m)
+	     m (cdr m)))
+     (setq m (cdr m))
+     (when revp (setq m (reverse m)))
+     (setq m (nthcdr n m))
+     (setq m (cons (if (eq (car fun) 'mlist) fun (delsimp fun))
+		   (if revp (nreverse m) m)))
+     (when (eq (car fun) 'mqapply)
+       (return (cons (car m) (cons fun1 (cdr m)))))
+     (return m))))
+|#
 
 ; this is not quite the same because it returns an element
 ; from the array, whicle memalike returns the cdr of a cons cell.

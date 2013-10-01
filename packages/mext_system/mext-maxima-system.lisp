@@ -84,6 +84,68 @@ This was copied from maxima source init-cl.lisp.")
         (t
          'maxima::$unknown)))         
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  save and restore maxima flags
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; only have a couple of these so far!
+(defvar *maxima-flag-symbols*
+  '(maxima::$inflag maxima::$domain))
+
+;; save current values in a hash table
+(defun save-maxima-flags ()
+  (let ((h (make-hash-table :test 'equal)))
+    (dolist (e *maxima-flag-symbols*)
+      (setf (gethash e h) (eval e)))
+    h))
+
+;; save flags at the time mext is loaded
+(defvar *intial-maxima-flags*
+  (save-maxima-flags))
+
+;; set all maxima flags to the values stored in h.
+;; use mset in case something is needed there.
+(defun set-maxima-flags (h)
+  (dolist (e *maxima-flag-symbols*)
+    (maxima::mset e (gethash e h))))
+
+;(defun list-maxima-flags (h)
+;  "Return a maxima list of flags and their values."
+;  (maxima::hash-to-maxima-list h))
+
+(defvar *maxima-flags-stack* '())
+
+(defun push-maxima-flags ()
+  (push (save-maxima-flags) *maxima-flags-stack*))
+
+;; pop and set flags
+(defun pop-maxima-flags ()
+  (if (consp *maxima-flags-stack*)
+      (set-maxima-flags (pop *maxima-flags-stack*))))
+
+(defun clear-maxima-flags-stack ()
+  (setf *maxima-flags-stack* '()))
+
+(defun set-modern-maxima-flags ()
+  (maxima::mset 'maxima::$inflag t)
+  (maxima::mset 'maxima::$domain 'maxima::$complex))
+
+(defun list-maxima-flags-stack ()
+  (cons '(maxima::mlist maxima::simp)
+        (loop :for x :in *maxima-flags-stack* :collect
+              (maxima::hash-to-maxima-list x))))
+
+;; only restores to values when mext was loaded.
+;; we can't know what happened before.
+;; or we could also keep track of what stock maxima
+;; does and hard code it somewhere here.
+(defun restore-initial-maxima-flags ()
+  (set-maxima-flags *intial-maxima-flags*))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  END save and restore maxima flags
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defun maxima::$lisp_type_symbol ()
   (lisp-type-symbol))
 
