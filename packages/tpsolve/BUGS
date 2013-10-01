@@ -1,0 +1,15 @@
+These are mostly bugs in the mext package of to_poly_solve,
+not in the upstream source:
+
+With  tpsolve:
+
+(%i28) %solve(z^3 = 8*%i,z);
+(%o28) %union([z = .9999999999999998 %i - 1.732050807568877], [z = - 2.0 %i], 
+                                              [z = 1.0 %i + 1.732050807568877])
+
+With  upstream:
+(%i2) %solve(z^3 = 8*%i,z);
+                         1/6               1/6                   1/6
+(%o2) %union([z = 2 (- 1)   ], [z = - (- 1)    sqrt(3) %i - (- 1)   ], 
+                                                    1/6                   1/6
+                                          [z = (- 1)    sqrt(3) %i - (- 1)   ])
