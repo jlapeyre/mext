@@ -28,7 +28,7 @@
               (progn (atomchk (setq e (format1 e)) '$args nil)
                      (mk-mlist (margs e)))))))
 
-#| no quite working yet
+;; need to put error checking in the aex code
 (mext::no-warning
 (defmfun $rest (e &optional (n 1 n?))
   (prog (m fun fun1 revp)
@@ -36,11 +36,14 @@
        (return e))
      (when (aex-p e)
        (let* ((are (aex-arr e))
-              (newn (- (length are) n))
+              (newn (- (length are) (abs n)))
               (a (aex-copy-new-n e newn))
               (ar (aex-arr a)))
-         (dotimes (i (1- newn))
-           (setf (aref are i) (aref ar (+ n i))))
+         (if (> n 0)
+             (dotimes (i newn)
+               (setf (aref ar i) (aref are (+ n i))))
+             (dotimes (i newn)
+               (setf (aref ar i) (aref are i))))
          (return a)))
      (atomchk (setq m (format1 e)) '$rest nil)
      (cond ((and n? (not (fixnump n)))
@@ -63,7 +66,6 @@
      (when (eq (car fun) 'mqapply)
        (return (cons (car m) (cons fun1 (cdr m)))))
      (return m))))
-|#
 
 ; this is not quite the same because it returns an element
 ; from the array, whicle memalike returns the cdr of a cons cell.
