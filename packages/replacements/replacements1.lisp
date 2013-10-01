@@ -3,6 +3,9 @@
 ;; need to consider this. maybe a flag.
 ;; consider making this defmfun1 with arg checks and
 ;; match_form capability
+;; add patch so that inflag:false; length(-1/4) --> 1
+;; this passes testsuite
+;; should send this to devels
 (mext::no-warning
 (defmfun $length (e)
   (setq e (cond (($listp e) e)
@@ -14,15 +17,19 @@
 	 (if (and (not $inflag) (mnegp e))
 	     1
 	     (merror (intl:gettext "length: argument cannot be a number; found ~:M") e)))
-	((or $inflag (not (member (caar e) '(mtimes mexpt) :test #'eq))) (length (margs e)))
+;	((or $inflag (not (member (caar e) '(mtimes mexpt) :test #'eq)))
+;         (length (margs e)))
+	((or $inflag (and (not (member (caar e) '(mtimes mexpt) :test #'eq))
+              (not (and (eq 'rat (caar e)) (< (cadr e) 0))))) (length (margs e))) ; GJL 2013
 	((eq (caar e) 'mexpt)
 	 (if (and (alike1 (caddr e) '((rat simp) 1 2)) $sqrtdispflag) 1 2))
 	(t (length (cdr (nformat e)))))))
 
+;; src/comm.lisp
 ;; don't use :or-non-mapatom-subvar, it excludes 1/4
-;; triggers a bug in maxima testsuite
+;; and triggers a bug in maxima testsuite
 (mext::no-warning
-(defmfun-ae ($args) (e)
+(defmfun-ae ($args) ((e :atomchk-ext))
   (defmfun-final-to-ae
       (if-aex e (aex-mk-head-args '(mlist simp) (aex-cp-args e))
               (progn (atomchk (setq e (format1 e)) '$args nil)
@@ -67,8 +74,9 @@
        (return (cons (car m) (cons fun1 (cdr m)))))
      (return m))))
 
-; this is not quite the same because it returns an element
-; from the array, whicle memalike returns the cdr of a cons cell.
+;; similar to memalike in src/mutils.lisp
+;; this is not quite the same because it returns an element
+;; from the array, while memalike returns the cdr of a cons cell.
 (defun memalike-array (x a &aux el)
   (dotimes (i (length a))
     (when (alike1 x (setf el (aref a i))) (return-from memalike-array el)))
@@ -81,7 +89,7 @@
 ;; but aex objects are meant for efficiency for long lists.
 ;; maybe we need a flag for this.
 (mext::no-warning
-(defmfun1 $member (x (e :atomchk-ext))
+(defmfun1 $member (x (e :atomchk-ext)) ; same as atomchk, but allow aex
   (if (aex-p e)
       (if (memalike-array ($totaldisrep x) (aex-arr e)) t nil)
     (progn
