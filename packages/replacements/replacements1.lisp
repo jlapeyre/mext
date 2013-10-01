@@ -88,6 +88,7 @@
 ;; we don't yet call totaldisrep.
 ;; but aex objects are meant for efficiency for long lists.
 ;; maybe we need a flag for this.
+;; need to remove duplicate argument checks
 (mext::no-warning
 (defmfun1 $member (x (e :atomchk-ext)) ; same as atomchk, but allow aex
   (if (aex-p e)

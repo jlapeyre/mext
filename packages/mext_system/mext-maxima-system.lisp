@@ -103,11 +103,20 @@ This was copied from maxima source init-cl.lisp.")
 (defvar *intial-maxima-flags*
   (save-maxima-flags))
 
+;; need to copy in case of lists, etc.
+(defun mext-mset (var val)
+  (let ((flag) (oldval (eval var)))
+    (when (not (equal val oldval))
+      (setf flag t))
+    (maxima::mset var val)
+    (if flag (list (maxima::mk-mlist (list var oldval val))) nil)))
+
 ;; set all maxima flags to the values stored in h.
 ;; use mset in case something is needed there.
-(defun set-maxima-flags (h)
+(defun set-maxima-flags (h &aux changed)
   (dolist (e *maxima-flag-symbols*)
-    (maxima::mset e (gethash e h))))
+    (setf changed (append (mext-mset e (gethash e h)) changed)))
+  (maxima::mk-mlist changed))
 
 ;(defun list-maxima-flags (h)
 ;  "Return a maxima list of flags and their values."
@@ -126,9 +135,10 @@ This was copied from maxima source init-cl.lisp.")
 (defun clear-maxima-flags-stack ()
   (setf *maxima-flags-stack* '()))
 
-(defun set-modern-maxima-flags ()
-  (maxima::mset 'maxima::$inflag t)
-  (maxima::mset 'maxima::$domain 'maxima::$complex))
+(defun set-modern-maxima-flags ( &aux retval )
+  (setf retval (append (mext-mset 'maxima::$inflag t) retval))
+  (setf retval (append (mext-mset 'maxima::$domain 'maxima::$complex) retval))
+  (maxima::mk-mlist retval))
 
 (defun list-maxima-flags-stack ()
   (cons '(maxima::mlist maxima::simp)
@@ -556,7 +566,7 @@ This was copied from maxima source init-cl.lisp.")
 ;    (format t "Testdirs-dists ~s~%" testdirs-dists)
     (let ((testdir-list))
       (loop :for testdir-dist :in testdirs-dists :do
-            (let* ((dist (first testdir-dist))
+            (let* ( ; (dist (first testdir-dist))
                    (testdir (second testdir-dist))
                    (test-spec (third testdir-dist))
                    (inlist (list-directory testdir)))

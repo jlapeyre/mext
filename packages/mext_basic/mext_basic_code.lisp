@@ -326,21 +326,21 @@ This is from wxmaxima
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Flags, set and manipulate
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(defmfun1 ($set_modern_flags :doc) ()
+(defmfun1 ($mext_flags :doc) ()
   :desc
-  ("Set inflag to false and domain to complex, after saving the current values to the flag stack.")
+  ("Set inflag to false and domain to complex, after saving the current values to the flag stack."
+  " A list of which flags changed and their old and new values is returned.")
   (mext::push-maxima-flags)
-  (mext::set-modern-maxima-flags)
-  '$done)
+  (mext::set-modern-maxima-flags))
 
-(defmfun1 ($set_initial_flags :doc) ()
+(defmfun1 ($initial_flags :doc) ()
   :desc
   ("Set inflag and domain and maybe some other flags to their
     values at the time the mext system was loaded, after pushing current values
-    to the flag stack.")
+    to the flag stack. A list of which flags changed and their old and new values is returned.")
   (mext::push-maxima-flags)
-  (mext::restore-initial-maxima-flags)
-  '$done)
+  (mext::restore-initial-maxima-flags))
+
 
 (defmfun1 ($push_flags :doc) ()
   :desc
@@ -350,9 +350,10 @@ This is from wxmaxima
 
 (defmfun1 ($pop_flags :doc) ()
   :desc
-  ("Pop the values of some flags from the flag stack and set them.")
-  (mext::pop-maxima-flags)
-  '$done)
+  ("Pop the values of some flags from the flag stack and set them."
+   " A list of which flags changed and their old and new values is returned.")
+  (mext::pop-maxima-flags))
+
 
 (defmfun1 ($list_flag_stack :doc) ()
   :desc
@@ -366,8 +367,8 @@ This is from wxmaxima
   '$done)
 
 (max-doc:see-also-group 
- '("pop_flags" "push_flags" "set_initial_flags" 
-   "set_modern_flags" "list_flag_stack" "clear_flag_stack"))
+ '("pop_flags" "push_flags" "initial_flags" 
+   "mext_flags" "list_flag_stack" "clear_flag_stack"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; END Flags, set and manipulate
