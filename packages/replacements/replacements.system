@@ -1,0 +1,33 @@
+;;-*- Mode: Lisp -*-
+;; Template. This file must be edited
+;; System definition file for building and installing mext package replacements
+
+(in-package :mext-maxima)
+
+(create-distribution "replacements"
+  :loader "load-replacements"
+;  :install-only "replacements-rtests"
+)
+
+;; Here we list the source files to be installed.
+;; Choose "lisp" or "mac" as the default source file extension.
+;; The source extension may be overridden.
+;; All files are compiled unless overidden with :load-only
+(mk:defsystem replacements
+  :source-extension "lisp"
+  :components
+   ((:file "replacements1")))
+
+;; This file will load replacements at run time.
+(mk:defsystem load-replacements
+  :source-extension "mac"
+  :components
+   ((:file "replacements")))
+
+;; Here we list the rtest files for replacements.
+;; Put one or more files here that begin with "rtest_"
+(mk:defsystem replacements-rtests
+              :source-extension "mac"
+              :source-pathname "rtests"
+              :components
+              ((:file "rtest_replacements"))) ; for example

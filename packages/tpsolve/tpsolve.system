@@ -22,7 +22,10 @@
                                     ; incorrect syntax: %AND is not a prefix operator
     (:file "to_poly_solve_extra" :source-extension "lisp" :load-only nil)
     (:file "dont_compile1" :load-only t)
-    (:file "do_compile1" :load-only nil)
+;;  no known bugs from compiling do_compile1. But there are bugs
+;;  in the mext package and maybe they are caused by compiling.
+;;  Maybe later the following flag can be changed to nil.
+    (:file "do_compile1" :load-only t)
     (:file "dont_compile2" :load-only t)
     (:file "to_poly_clean" :source-extension "lisp" :load-only nil)))
 

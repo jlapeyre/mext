@@ -54,7 +54,7 @@ packages1="defmfun1 maxdoc mext_basic"
 
 packages2="
 test_defmfun1 runtime aex lists_aex
-discrete_aex numerical"
+discrete_aex numerical replacements"
 
 packages3="
 alt_eigen to_poly_mext fourier_elim_mext to_poly_mext 

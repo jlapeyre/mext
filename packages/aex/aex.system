@@ -16,7 +16,6 @@
     (:file "mext-predicates")
     (:file "ifunctions")
     (:file "system-essential")
-    (:file "maxima-modified")
     (:file "mset")
     (:file "lisp-numeric")
 ))

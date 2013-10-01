@@ -1,0 +1,8 @@
+/* Load this file in maxima to build mext package replacements. */
+load(mext);
+require("aex"); /* mext packages that replacements depends on */
+load_in_subdir(["replacements","system"]);
+mext_dist_clean();
+mext_dist_build();
+mext_dist_user_install();
+mext_dist_clean();

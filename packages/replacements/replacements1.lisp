@@ -41,6 +41,12 @@
     (when (alike1 x (setf el (aref a i))) (return-from memalike-array el)))
   nil)
 
+;; ($totaldisrep e) is slow on a very large list of numbers
+;; well, maybe as fast as can be expected.
+;; This will fail for some e that are aex because
+;; we don't yet call totaldisrep.
+;; but aex objects are meant for efficiency for long lists.
+;; maybe we need a flag for this.
 (mext::no-warning
 (defmfun $member (x e)
   (if (aex-p e)
@@ -48,4 +54,3 @@
     (progn
       (atomchk (setq e ($totaldisrep e)) '$member t)
       (if (memalike ($totaldisrep x) (margs e)) t)))))
-

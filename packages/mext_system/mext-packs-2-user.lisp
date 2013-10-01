@@ -14,5 +14,6 @@
 (when (not (find-package :mext-maxima-load))
   ($load "mext_load.lisp"))
 
-(loop :for mext-package :in '( "mext_basic" "lists_aex" "discrete_aex" "numerical" "runtime" ) :do 
+(loop :for mext-package :in '( "mext_basic" "lists_aex" "discrete_aex" "numerical"
+                               "runtime" "replacements" ) :do 
       ($require mext-package))
