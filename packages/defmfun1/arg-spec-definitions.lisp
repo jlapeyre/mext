@@ -35,6 +35,7 @@
                          (not (or (maxima::$numberp e) 
                                   (member e '(t nil maxima::$%e maxima::$%pi maxima::$%i) :test #'eq))))
                      (:string  "a string" (stringp e))
+                     (:non-string  "anything other than a string" (not (stringp e)))
                      (:string-or-listof ("a string" "a list of strings")
                                          (or (stringp e)
                                              (and (maxima::$listp e)

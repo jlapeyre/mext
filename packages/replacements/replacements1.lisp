@@ -1,4 +1,8 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; src/comm.lisp
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; we don't ratdisrep inside aex objects.
 ;; need to consider this. maybe a flag.
 ;; consider making this defmfun1 with arg checks and
@@ -108,3 +112,52 @@
     (progn
       (atomchk (setq e ($totaldisrep e)) '$member t)
       (if (memalike ($totaldisrep x) (margs e)) t)))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; src/rpart.lisp
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; src/rpart.lisp
+
+;; Let's try to make the behavior somewhat uniform
+
+(mext::no-warning
+(defmfun1 $rectform (xx)
+  (let ((ris (trisplit xx)))
+    (add (car ris) (mul (cdr ris) '$%i)))))
+
+;; original gave error with string.
+;; not sure what is correct
+(mext::no-warning
+(defmfun1 $polarform ((xx :non-string))
+  (cond ((and (not (atom xx)) (member (caar xx) '(mequal mlist $matrix) :test #'eq))
+	 (cons (car xx) (mapcar #'$polarform (cdr xx))))
+	(t
+	 (let ((aas (absarg xx)) ($%emode nil))
+	   (mul (car aas) (powers '$%e (mul '$%i (cdr aas)))))))))
+
+;; original: realpart of string is string. imagpart is 0
+;; this seems not useful
+;; try restricting to no string
+(mext::no-warning
+ (defmfun1 $realpart ((xx :non-string)) (car (trisplit xx))))
+
+(mext::no-warning
+(defmfun1 $imagpart ((xx :non-string)) (cdr (trisplit xx))))
+
+;; orig: cabs("cat") --> abs("cat")
+;;
+(mext::no-warning
+ (defmfun1 $cabs ((xx :non-string)) (cabs xx)))
+
+;; orig: error with string input
+(mext::no-warning
+ (defmfun1 $carg ((xx :non-string))
+  (cond ((and (not (atom xx)) 
+              (member (caar xx) '(mequal mlist $matrix) :test #'eq))
+	 (cons (car xx) (mapcar #'$carg (cdr xx))))
+	(t (cdr (absarg xx))))))
+
+
