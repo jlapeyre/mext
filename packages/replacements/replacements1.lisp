@@ -6,17 +6,28 @@
 ;; add patch so that inflag:false; length(-1/4) --> 1
 ;; this passes testsuite
 ;; should send this to devels
+;; Added a patch
+;; The current version passes tests.
+
 (mext::no-warning
-(defmfun $length (e)
+(defmfun1 ($length :doc) (e)
+  :desc
+  ("modified version of stock Maxima " :emrefdot "length"
+   " Here, " :code "length(e)" " gives " :code "0" " for
+   numbers and strings. It should probably give a non-zero
+   result for rationals, because part can access the
+   numerator and denominator. It would be better to treat
+   all numbers consistently, but it is probably too late for that.")
   (setq e (cond (($listp e) e)
 		((or $inflag (not ($ratp e))) (specrepcheck e))
 		(t ($ratdisrep e))))
-  (cond ((symbolp e) (merror (intl:gettext "length: argument cannot be a symbol; found ~:M") e))
+  (cond ((symbolp e) 0) ; (merror (intl:gettext "length: argument cannot be a symbol; found ~:M") e))
         ((aex-p e) (length (aex-arr e)))
-	((or (numberp e) (eq (caar e) 'bigfloat))
-	 (if (and (not $inflag) (mnegp e))
-	     1
-	     (merror (intl:gettext "length: argument cannot be a number; found ~:M") e)))
+        (($numberp e) (if (and (not $inflag) (mnegp e)) 1 0))
+;	((or (numberp e) (and (consp e) (eq (caar e) 'bigfloat)))
+;         (if (and (not $inflag) (mnegp e)) 1 0))
+        ((atom e) 0)
+	      ; (merror (intl:gettext "length: argument cannot be a number; found ~:M") e)))
 ;	((or $inflag (not (member (caar e) '(mtimes mexpt) :test #'eq)))
 ;         (length (margs e)))
 	((or $inflag (and (not (member (caar e) '(mtimes mexpt) :test #'eq))

@@ -468,5 +468,9 @@ is (chop([<<1e-12,3>>, "dog"],5e-10) = [<<0,3>>, "dog"]);
 true$
 
 /* Test 88 */
+chop( 1e-15 * %%%%%zzzzzzzz);
+0$
+
+/* Test 89 */
 kill(e,e1,e2,a);
 done$
