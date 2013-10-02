@@ -73,14 +73,14 @@
   (cond ((and (numberp x) (<= (abs x) epsf)) 0)
         ((and ($bfloatp x) (fplessp (fpabs (cdr x)) epsbf)) 0)
         (($mapatom x) x)
-        ((consp x) (cons (car x)
+        ((consp x) (resimplify (cons (car x) ; get rid of zeros multiplied
                  (loop :for x1 :in (cdr x) :collect
-                       (chop-do x1 epsf epsbf))))
+                       (chop-do x1 epsf epsbf))) ))
         ((aex-p x)
          (let* ((a (aex-copy-new-n x))
                 (ar (aex-arr a))
                 (arx (aex-arr x)))
-           (dotimes (i (length ar))
+           (dotimes (i (length ar)) ; don't know how to resimplify here!
              (setf (aref ar i) (chop-do (aref arx i) epsf epsbf)))
            a))
         (t x)))
