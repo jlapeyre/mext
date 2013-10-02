@@ -47,8 +47,9 @@
                      (mk-mlist (margs e)))))))
 
 ;; need to put error checking in the aex code
+;; with defmfun1, some checks are redundant
 (mext::no-warning
-(defmfun $rest (e &optional (n 1 n?))
+(defmfun1 $rest (e &optional (n :integer 1 n?))
   (prog (m fun fun1 revp)
      (when (and n? (equal n 0))
        (return e))
@@ -64,8 +65,8 @@
                (setf (aref ar i) (aref are i))))
          (return a)))
      (atomchk (setq m (format1 e)) '$rest nil)
-     (cond ((and n? (not (fixnump n)))
-	    (merror (intl:gettext "rest: second argument, if present, must be an integer; found ~M") n))
+     (cond ; ((and n? (not (fixnump n))) GJL removed because defmfun1
+	   ; (merror (intl:gettext "rest: second argument, if present, must be an integer; found ~M") n))
 	   ((minusp n)
 	    (setq n (- n) revp t)))
      (if (< (length (margs m)) n)
