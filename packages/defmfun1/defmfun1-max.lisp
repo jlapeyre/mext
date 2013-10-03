@@ -83,6 +83,10 @@
 ;; the loop, which is probably not desireable.
 ;; After checking threading with string_reverse, I see that threading is
 ;; very fast, so I won't be implementing another scheme soon.
+
+(defun mext-mbagp (x)
+  (member (car x) '(mlist $matrix $set) :test #'eq))
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
 (defun defmfun1-write-threading (name args arg-directives)
   (let ((arg-d (append (getf arg-directives :req ) (getf arg-directives :optional )))
@@ -90,17 +94,19 @@
     (dolist (req-arg-d arg-d)
       (when (member :thread req-arg-d)
         (push `(let ((ith-arg (nth ,i ,args)))
-                 (when ($listp ith-arg)
+;                 (when ($listp ith-arg)
+                 (when (and (not (atom ith-arg))
+                        (not (aex-p ith-arg)) (mext-mbagp (car ith-arg))) ; just matrices and lists
                    (let ((newargs (copy-list ,args)))
                      (return-from ,name 
-                       (cons '(mlist) (loop :for ith-arg-1 :in (cdr ith-arg) :collect
+                       (cons (car ith-arg) (loop :for ith-arg-1 :in (cdr ith-arg) :collect
                          (progn                                            
                            (setf (nth ,i newargs) ith-arg-1)                                    
                            (apply ',name newargs)))))))
-                 (when (and (aex-p ith-arg) (eq (car (aex-head ith-arg)) 'mlist))
+                 (when (and (aex-p ith-arg) (mext-mbagp (aex-head ith-arg)))
                    (let* ((newargs (copy-list ,args))
                           (n (aex-length ith-arg))
-                          (retvec (aex-make-n-head n))
+                          (retvec (aex-make-n-head n :head (aex-head ith-arg)))
                           (retarr (aex-arr retvec))
                           (argarr (aex-arr ith-arg)))
                      (dotimes (j n)
