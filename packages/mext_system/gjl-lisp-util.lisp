@@ -141,6 +141,14 @@ but the contents are not copied."
    list and (list e) otherwise."
   `(if (listp ,e) t (setf ,e (list ,e))))
 
+(defun nthcdr-check (n list)
+  "Return the nth cdr with a number consed to the front.
+   If the number is greater than zero, then list
+   was of length < n."
+  (do ((i n (1- i))
+       (result list (cdr result)))
+      ((or (null result) (not (plusp i))) (cons i result))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Strings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

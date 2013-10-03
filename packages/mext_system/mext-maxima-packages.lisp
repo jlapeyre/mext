@@ -21,6 +21,7 @@
    :length-eq 
    :length1p 
    :not-comma-separated-english
+   :nthcdr-check
    :or-comma-separated-english
    :print-hash-entry 
    :remove-terminal-substring
