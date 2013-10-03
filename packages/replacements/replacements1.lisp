@@ -223,6 +223,8 @@
 
 ;; need to put error checking in the aex code
 ;; with defmfun1, some checks are redundant
+;; GJL 2013 remove check for length of e,
+;; use nthcdr-check instead
 (mext::no-warning
 (defmfun1 $rest (e &optional (n :integer 1 n?))
   (prog (m fun fun1 revp)
@@ -244,17 +246,22 @@
 	   ; (merror (intl:gettext "rest: second argument, if present, must be an integer; found ~M") n))
 	   ((minusp n)
 	    (setq n (- n) revp t)))
-     (if (< (length (margs m)) n)
-	 (if $partswitch
-	     (return '$end)
-	     (merror (intl:gettext "rest: fell off the end."))))
+;     (if (< (length (margs m)) n)
+;	 (if $partswitch
+;	     (return '$end)
+;	     (merror (intl:gettext "rest: fell off the end."))))
      (setq fun (car m))
      (when (eq (car fun) 'mqapply)
        (setq fun1 (cadr m)
 	     m (cdr m)))
      (setq m (cdr m))
      (when revp (setq m (reverse m)))
-     (setq m (nthcdr n m))
+     (setq m (gjl::nthcdr-check n m)) ; GJL 2013
+     (when (plusp (car m))
+	 (if $partswitch
+	     (return '$end)
+           (merror (intl:gettext "rest: fell off the end."))))
+     (setq m (cdr m))
      (setq m (cons (if (eq (car fun) 'mlist) fun (delsimp fun))
 		   (if revp (nreverse m) m)))
      (when (eq (car fun) 'mqapply)
