@@ -35,7 +35,6 @@
                          (not (or (maxima::$numberp e) 
                                   (member e '(t nil maxima::$%e maxima::$%pi maxima::$%i) :test #'eq))))
                      (:string  "a string" (stringp e))
-                     (:non-string  "anything other than a string" (not (stringp e)))
                      (:string-or-listof ("a string" "a list of strings")
                                          (or (stringp e)
                                              (and (maxima::$listp e)
@@ -91,6 +90,7 @@
                                     e)
                           (let ((v (maxima::$float e))) (list (and (numberp v) (> v 0)) v))))
                      (:complex-number  "a complex number" (complex_number_p e)) ; from ellipt.lisp
+                     (:possible-complex-number  "a possible complex number" (not (stringp e)))
 ;; following is not used yet
                      (:lisp-complex-number  "a lisp complex number" 
                                             (let* ((type (type-of e))
@@ -171,8 +171,11 @@
 ; We need to add s.t. like atomchk in comm.lisp,
 ; but that allows aex expressions (or arrays, if implmented) as well
 ; atomchk-ext : an extended notion of atomchk
-                     (:atomchk-ext ("a non-atomic expression")
+                     (:atomchk-ext ("a non-atomic (including aex) expression")
                        (or (maxima::aex-p e) (not (or (atom e) (eq (caar e) 'bigfloat)))))
+;; atomchk is exactly the same test as in comm.lisp
+                     (:atomchk ("a non-atomic expression")
+                               (not (or (atom e) (eq (caar e) 'bigfloat))))
                      (:or-non-mapatom-subvar  ("a subscripted variable" "non-mapatomic")
                       (or (not (maxima::$mapatom e)) (maxima::$subvarp e)))
                      (:or-non-mapatom-subvar-string   ("a string" "a subscripted variable" "non-mapatomic")
