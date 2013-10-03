@@ -14,6 +14,7 @@
     (:file "newfloat")
     (:file "number-functions")
     (:file "mersenne-perfect-data")
+    (:file "khbf.lisp")
     (:file "mersenne-comp")))
 
 ;; neither compile nor load when building

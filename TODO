@@ -1,4 +1,46 @@
 --------------------------------------------------------------------
+Thu Oct  3 13:43:03 CEST 2013
+This only happens with ccl:
+
+--------------------------------------------------------------------
+Probably from these commits. Much more likely the second one because
+it changed core functions
+commit d40bbde86abebd9e2885bd10c83baa5e237b5076
+Author: John Lapeyre <jlapeyre@cpan.org>
+Date:   Thu Oct 3 13:34:19 2013 +0200
+
+    add defmfun1 threading over matrices and sets
+
+commit 352525beeec58cc7bfec7f645ebd209cd4b245c5
+Author: John Lapeyre <jlapeyre@cpan.org>
+Date:   Thu Oct 3 12:03:45 2013 +0200
+
+    made several changes to stock maxima functions.
+    mostly wrapping in defmfun1. sent one change upstream.
+--------------------------------------------------------------------
+
+
+Running tests in /home/jlapeyre/.maxima/mext/v5.31.0-openmcl-v1.9/tpsolve/rtests/rtest_to_poly_solve.mac: 
+********************** Problem 292 ***************
+Input:
+nicedummies(clean_poly_solve([y + x = p1 - p2, 3 y + x = p2 - p3, 
+                  3 x - y = p3 + p2 + p1], [x, y], 'parameters = [p1, p2, p3]))
+
+
+Result:
+%union(%if((p1 = %c1) %and (p2 = %c0) %and (p3 = 8 %c0 - 4 %c1), 
+                                  4 %c0 - %c1        6 %c0 - 3 %c1
+                             [x = -----------, y = - -------------], %union()))
+                                       2                   2
+
+This differed from the expected result:
+%union(%if((p1 = %c0) %and (p2 = %c1) %and (p3 = 8 %c1 - 4 %c0), 
+                                  4 %c1 - %c0        6 %c1 - 3 %c0
+                             [x = -----------, y = - -------------], %union()))
+                                       2                   2
+--------------------------------------------------------------------
+
+--------------------------------------------------------------------
 defmfun1 auto documentation does not give the default value of
 optional variables. It should!
 --------------------------------------------------------------------
