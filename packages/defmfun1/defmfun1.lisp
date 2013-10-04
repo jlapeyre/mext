@@ -246,7 +246,7 @@ in a  mext package.")
          (unless (is-nowarn name) (format t "Warning: ~a~%" mssg))
          t)  ; return true here so that the calling function knows not to exit. Umm not sure its used.
         (t
-         (maxima::merror1 mssg)
+         (maxima::merror1 (format nil "Error: ~a" mssg))
          nil)))
 
 (maxima::ddefun get-check-func (spec-name)
