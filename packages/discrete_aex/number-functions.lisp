@@ -658,6 +658,12 @@
 (set-bigfloat-hook '|$%Khintchine|
    #'(lambda () (bigfloatp |$%Khintchine_bigfloat|)))
 
+(max-doc:add-doc-entry 
+ '( :name "%Khintchine"
+    :type "Constant"
+    :contents ("The %Khintchine constant. Float and bigfloat approximations
+                can be obtained with " :mrefdot "tofloat")))
+
 ; from src/init-cl.lisp
 ;(eval-when (:load-toplevel :execute)
 ;    (let ((context '$global))
