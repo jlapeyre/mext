@@ -145,7 +145,11 @@
 ;; but this all depends on inflag
 (mext::no-warning
 (defmfun1 $op (expr)
-  ($part expr 0)))
+  (if (or (atom expr) (eq (caar expr) 'bigfloat))
+      ($type_of expr)
+    (if (and $inflag (eq (caar expr) 'rat))
+        '$ratio
+      ($part expr 0)))))
 
 (mext::no-warning
 (defmfun1 $operatorp (expr oplist)
@@ -205,7 +209,7 @@
 	     (let ((sim (intern (concatenate 'string "$" (symbol-name si)))))
 	       `(defmfun1 ,sim ((e :atomchk))
 		  (atomchk (setq e (format1 e)) ',sim nil)
-                  (handler-case
+                  (handler-case   ; GJL 2013
                    (elt (margs e) ,i)
                    (error ()
                           (defmfun1-error-return '$index_too_big
