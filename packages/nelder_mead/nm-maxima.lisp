@@ -29,7 +29,6 @@
              `((mlist simp) ,@(mapcar #'(lambda (x y) `((mequal simp) ,x ,y))
                                       (cdr vars)
                                       (loop :for i :across xk :collect i)))))
-;             `((mlist simp)  ,@(loop :for i :across xk :collect i))))
         (mk-mlist (list fk xks fv))))))
         
             

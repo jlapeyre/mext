@@ -1,6 +1,6 @@
 (in-package :neldermead)
 (mext:mext-optimize)
-(defmfun1:set-file-and-package "neldermeand.lisp" "nelder_mead")
+(defmfun1:set-file-and-package "neldermead.lisp" "nelder_mead")
 
 (defclass cached-simplex-data ()
   ((pseudopivot	:initform nil)

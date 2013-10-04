@@ -74,9 +74,8 @@
 
 ;; convert lisp symbol to maxima
 ;;  - --> _
-;; prepend $LISP_
+;; *BUT* prepend $LISP_
 (defun lisp-lisp-sym-to-max (s)
- "This certainly exists somewhere in the maxima source."
   (intern (concatenate 'string "$LISP_"
                        (coerce (loop for char across (symbol-name s)
                                      collect (if (eq char #\-) #\_ char)) 'string)) "MAXIMA"))
