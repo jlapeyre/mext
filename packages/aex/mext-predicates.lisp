@@ -248,6 +248,8 @@
   ("Return  maxima complex number " :arg "expr" " converted to a lisp complex number.")
   (let ((rp ($realpart expr))
         (ip ($imagpart expr)))
+    (when (ratnump rp) (setf rp ($lratio rp)))
+    (when (ratnump ip) (setf ip ($lratio ip)))
     (if (and (numberp rp) (numberp ip))
         (complex rp ip)
       expr)))
