@@ -1,16 +1,21 @@
 Sun Aug 25 12:34:11 CEST 2013
 
+This package is called numerical in
+the sense of numerical integration, etc.
+
 nintegrate --
+
 High-level numerical integration.
-This is only a simple front-end. It is not
-very powerful and not very featureful.
-It does put a few of the quadpack routines under
-a common interface.
+
+This is only a simple front-end. It is not very powerful and not very
+featureful.  It does put a few of the quadpack routines under a common
+interface.
 
 nintegrate does not handle:
 
 multi-dimensional integrals
 complex numbers
 arbitrary precision computation.
+
 
 ...
