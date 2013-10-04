@@ -56,6 +56,8 @@
 ;; These are only lisp numbers! Eg. Not maxima ratios or bfloats!
 ;; where is this used ?
                      (:number "a number" (maxima::$numberp e))
+                     (:number-max-lisp ("a maxima number" "a lisp number") 
+                                       (or (numberp e) (maxima::$numberp e)))
                      (:number-listof ("a list of numbers")
                                      (and (maxima::$listp e)
                                           (every #'(lambda (x) (maxima::$numberp x)) (cdr e))))
