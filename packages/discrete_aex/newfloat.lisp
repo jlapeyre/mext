@@ -1,3 +1,9 @@
+(in-package :maxima)
+(mext:mext-optimize)
+(max-doc:set-cur-sec 'max-doc::number-theory-fandv)
+
+(defmfun1:set-file-and-package "newfloat.lisp" "discrete_aex")
+
 ;; modified to do float and bfloat on roots
 ;; All tests pass with these definitions
 
@@ -249,14 +255,17 @@
           (mset '$fpprec old-$fpprec)))))))
 
 
-(defmfun1 ($precision :doc) ((num :number))
+(defmfun1 ($precision :doc) ((num :number-max-lisp))
   :desc
   ("Returns the number of digits of precision in " :argdot "num"
    :par ""
    "This does not directly correspond to the accuracy of of the
     calculation that resulted in " :argdot "num")
-  (cond ((integerp num) '$inf)
-        ((floatp num) '$machine_precision)
+  (cond ((atom num)
+         (when (complexp num) (setf num (realpart num)))
+         (cond ((integerp num) '$inf)
+               ((floatp num) '$machine_precision)
+               ((rationalp num) '$inf)))
         (($bfloatp num)
          (floor (* (car (last (car num))) (log 2.0 10.0))))
         ((eq (caar num) 'rat) '$inf)

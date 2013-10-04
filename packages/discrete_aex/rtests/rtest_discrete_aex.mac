@@ -193,6 +193,48 @@ true$
 is(lrange(1b0,10b0,1b0,ot->ar) = tofloat(lrange(1,10,1,ot->ar),16));
 true$
 
+/* Test */
+is(precision(1.23456789012345678b0) >= 18);
+true$
+
+/* Test */
+precision(1);
+'inf$
+
+/* Test */
+precision(-1);
+'inf$
+
+/* Test */
+precision(1/4);
+'inf$
+
+/* Test */
+precision(-1/4);
+'inf$
+
+/* Test */
+precision(1);
+'inf$
+
+/* Test */
+precision(1.0);
+'machine_precision$
+
+/* Test lisp-only  numbers */
+/* Test */
+precision(lratio(1/4));
+'inf$
+
+/* Test */
+precision(lcomplex(%i + 1));
+'inf$
+
+/* Test */
+precision(lcomplex(%i + 1.0));
+'machine_precision$
+
+
 /*
  TODO.
 
