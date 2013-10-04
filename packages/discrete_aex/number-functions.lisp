@@ -7,6 +7,14 @@
 
 (defmfun1:set-file-and-package "number-functions.lisp" "discrete_aex")
 
+(defvar *constant-bigfloat-table* (make-hash-table))
+
+(defun set-bigfloat-hook (symbol func)
+  (setf (gethash symbol *constant-bigfloat-table*) func))
+
+(defun get-bigfloat-hook (symbol)
+  (gethash symbol *constant-bigfloat-table*))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun from-digits2  ( digits &optional (base 10))
@@ -426,11 +434,13 @@
 
 ;; like bfloat(), see comments below for cfloat()
 (defmfun cbfloat-do (x)
-  (let (y)
-    (cond ((bigfloatp x))
+  (let (y bftest)
+    (cond ((bigfloatp x)) ; perverse. this changes the precision
 	  ((or (numberp x)
 	       (member x '($%e $%pi $%gamma) :test #'eq))
 	   (bcons (intofp x)))
+          ((setf bftest (get-bigfloat-hook x))
+           (funcall bftest x))
           ((aex-p x)
            (let* ((a (aex-copy-new-n x))
                   (ar (aex-arr a))
@@ -626,6 +636,47 @@
  '("tofloat" ("expr") ("tries to convert numbers in ":arg "expr" " to floating point."))
  '("tofloat" ("expr" "n") ("tries to convert numbers in ":arg "expr" " to floating point "
    "with " :arg "n" "-digit precision.")))
+
+;; src/mlisp.lisp
+;; This is how float(%e) gets a value. Why all the extra bits, I don't know. I
+;; think they are lost because this is a float.
+;;; Float constants, to 2048 bits of precision.
+;;; (EXP 1)
+;(mdefprop $%e     2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274274663919320030599218174135966290435729003342952605956307381323286279434907632338298807531952510190115738341879307021540891499348841675092447614606680822648001684774118537423454424371075390777449920695517027618386062613313845830007520449338265602976067371132007093287091274437470472306969772093101416928368190255151086574637721112523897844250569536967707854499699679468644549059879316368892300987931277361782154249992295763514822082698951936680331825288693984964651058209392398294887933203625094431173012381970684161404
+;	  $numer)
+
+(eval-when (:load-toplevel :execute)
+   (let ((context '$global))
+     (declare (special context))
+     (dolist (x '(|$%Khintchine|))
+	(kind x '$constant)
+	(setf (get x 'sysconst) t))))
+
+(mdefprop |$%Khintchine| 2.685452001065306445309714835481795693820382293994462953051152345557218859537152002801141174931847698
+          $numer)
+
+(set-bigfloat-hook '|$%Khintchine|
+   #'(lambda () (bigfloatp |$%Khintchine_bigfloat|)))
+
+; from src/init-cl.lisp
+;(eval-when (:load-toplevel :execute)
+;    (let ((context '$global))
+;      (declare (special context))
+;      (dolist (x '($%pi $%i $%e $%phi %i $%gamma  ;numeric constants
+;                   $inf $minf $und $ind $infinity ;pseudo-constants
+;                   t nil))                        ;logical constants (Maxima names: true, false)
+;	(kind x '$constant)
+;	(setf (get x 'sysconst) t))))
+
+;; ??? what is this all about ?
+; from  compar.lisp
+;; %initiallearnflag is only necessary so that %PI, %E, etc. can be LEARNed.
+;(defun initialize-numeric-constant (c)
+;  (setq %initiallearnflag t)
+;  (let ((context '$global))
+;    (learn `((mequal) ,c ,(mget c '$numer)) t))
+;  (setq %initiallearnflag nil))
+
 
 (max-doc:see-also-group '( "tofloat" "cbfloat"))
 
