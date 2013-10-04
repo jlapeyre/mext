@@ -179,3 +179,89 @@
                  ($expand res)
              res)))
 	(t (recur-apply #'$float e)))))
+
+;; GJL 2013 construct bf with fpprec corresponding to number of input
+;; digits
+(mext::no-warning
+(defun make-number (data)
+  (setq data (nreverse data))
+  ;; Maxima really wants to read in any number as a flonum
+  ;; (except when we have a bigfloat, of course!).  So convert exponent
+  ;; markers to the flonum-exponent-marker.
+  (let ((marker (car (nth 3 data))))
+    (unless (eql marker flonum-exponent-marker)
+      (when (member marker '(#\E #\F #\S #\D #\L #+cmu #\W))
+        (setf (nth 3 data) (list flonum-exponent-marker)))))
+  (if (not (equal (nth 3 data) '(#\B)))
+      (readlist (apply #'append data))
+      (let*
+	   ((*read-base* 10.)
+	    (int-part (readlist (or (first data) '(#\0))))
+	    (frac-part (readlist (or (third data) '(#\0))))
+	    (frac-len (length (third data)))
+	    (exp-sign (first (fifth data)))
+	    (exp (readlist (sixth data)))
+            (old-$fpprec $fpprec)
+            (trial-fpprec (+ frac-len (length (first data)))))
+;        (format t "fraclen ~a~%" frac-len)
+;        (format t "intlen ~a~%" (length (first data)))
+        (when (> trial-fpprec old-$fpprec)
+          (mset '$fpprec trial-fpprec))
+        (unwind-protect
+            (if (and $fast_bfloat_conversion
+                     (> (abs exp) $fast_bfloat_threshold))
+                   ;; Exponent is large enough that we don't want to do exact
+                   ;; rational arithmetic.  Instead we do bfloat arithmetic.
+	    ;; For example, 1.234b1000 is converted by computing
+                   ;; bfloat(1234)*10b0^(1000-3).  Extra precision is used
+	    ;; during the bfloat computations.
+                   (let* ((extra-prec (+ *fast-bfloat-extra-bits* (ceiling (log exp 2e0))))
+                          (fpprec (+ fpprec extra-prec))
+                          (mant (+ (* int-part (expt 10 frac-len)) frac-part))
+                          (bf-mant (bcons (intofp mant)))
+                          (p (power (bcons (intofp 10))
+                                    (- (if (char= exp-sign #\-)
+                                           (- exp)
+                                         exp)
+				frac-len)))
+                          ;; Compute the product using extra precision.  This
+                          ;; helps to get the last bit correct (but not
+                          ;; always).  If we didn't do this, then bf-mant and
+                          ;; p would be rounded to the target precision and
+                          ;; then the product is rounded again.  Doing it
+                          ;; this way, we still have 3 roundings, but bf-mant
+                          ;; and p aren't rounded too soon.
+                          (result (mul bf-mant p)))
+                     (let ((fpprec (- fpprec extra-prec)))
+                       ;; Now round the product back to the desired precision.
+                       (bigfloatp result)))
+	    ;; For bigfloats, turn them into rational numbers then
+                 ;; convert to bigfloat.  Fix for the 0.25b0 # 2.5b-1 bug.
+                 ;; Richard J. Fateman posted this fix to the Maxima list
+                 ;; on 10 October 2005.  Without this fix, some tests in
+	    ;; rtestrationalize will fail.  Used with permission.
+                 (let ((ratio (* (+ int-part (* frac-part (expt 10 (- frac-len))))
+                                 (expt 10 (if (char= exp-sign #\-)
+                                              (- exp)
+                                            exp)))))
+                   ($bfloat (cl-rat-to-maxima ratio))))
+        (when (> trial-fpprec old-$fpprec)
+          (mset '$fpprec old-$fpprec)))))))
+
+
+(defmfun1 ($precision :doc) ((num :number))
+  :desc
+  ("Returns the number of digits of precision in " :argdot "num"
+   :par ""
+   "This does not directly correspond to the accuracy of of the
+    calculation that resulted in " :argdot "num")
+  (cond ((integerp num) '$inf)
+        ((floatp num) '$machine_precision)
+        (($bfloatp num)
+         (floor (* (car (last (car num))) (log 2.0 10.0))))
+        ((eq (caar num) 'rat) '$inf)
+        (t (merror "Bug in precision with number ~M" num))))
+
+;; Copied from src/float.lisp
+;; Number of bits of precision in the mantissa of newly created bigfloats.
+;; FPPREC = ($FPPREC+1)*(Log base 2 of 10)
