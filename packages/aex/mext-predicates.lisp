@@ -139,14 +139,14 @@
    :varcomma "false" " otherwise.")
   (and (consp e) (eq (caar e) 'mpois)))
 
-(defmfun1 ($rationalp :doc) (e)
-  :desc
-  (
-   "Note: this is a duplicate of " :emrefcomma "ratnump" " probably. "
-   "returns " :var "true" " if " :arg "e" " is (encoded as) a rational number, and "
-   :varcomma "false" " otherwise."
-   " Rational number encoding is distinct from canonical ration encoding (CRE).")
-  (and (consp e) (eq (caar e) 'rat)))
+;; (defmfun1 ($rationalp :doc) (e)
+;;   :desc
+;;   (
+;;    "Note: this is a duplicate of " :emrefcomma "ratnump" " probably. "
+;;    "returns " :var "true" " if " :arg "e" " is (encoded as) a rational number, and "
+;;    :varcomma "false" " otherwise."
+;;    " Rational number encoding is distinct from canonical ration encoding (CRE).")
+;;   (and (consp e) (eq (caar e) 'rat)))
 
 (defun maxima-op-to-sym (h)
   (cond 
