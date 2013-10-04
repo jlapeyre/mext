@@ -186,6 +186,7 @@
              res)))
 	(t (recur-apply #'$float e)))))
 
+;; from src/nparse.lisp
 ;; GJL 2013 construct bf with fpprec corresponding to number of input
 ;; digits
 (mext::no-warning
