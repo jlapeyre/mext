@@ -864,7 +864,16 @@
      ((and (complex-number-p n 'floatp) (> ($realpart n) 0))
           (harmonic-number-float-complex n))
 ;     (t nil))))
-  (t  `(($harmonic_number) ,n)))))
+     ((ratnump n) ;; also need to test for complex rational
+      (let ((res 
+             ($integrate 
+              `((MTIMES SIMP) ((MEXPT SIMP) ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 $X)) -1)
+                ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 ((MEXPT SIMP) $X ,n))))
+              '$x 0 1)))
+        (if (and (consp res) (eq (caar res) '%integrate))
+            `(($harmonic_number) ,n)
+          res)))
+      (t  `(($harmonic_number) ,n)))))
 
 ;; Make this a simplifying function, so that
 ;; float(harmonic_number(7/2)) --> result
