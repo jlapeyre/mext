@@ -263,6 +263,11 @@ harmonic_number(2);
 harmonic_number(3/2);
 8/3-2*log(2)$
 
+/* Test simplifying */
+/* Test  */
+subst(100,n,integer_digits(n));
+[1,0,0]$
+
 /*
  TODO.
 
