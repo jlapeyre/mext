@@ -51,7 +51,8 @@
 (defun defmfun1-write-let-bindings (name nargs args all-args supplied-p-hash rest count-args)
   `(,@(when count-args `((,nargs 0))) ; count args passed when calling
    (defmfun1-func-name ',name) ; save this name for echeck-arg macro below. Wasteful as most funcs never use it.
-   (defmfun1-func-call (cons (list ',name) ,args)) ; the input form
+;; Try simp so we can avoid re-evaluating. did not help yet
+   (defmfun1-func-call (cons (list ',name 'simp) ,args)) ; the input form
    (defmfun1-func-call-args ,args)
 ;   (defmfun1-opts) don't need these yet, but maybe later
    ,@(loop for n in all-args collect ; write default bindings for req and &optional

@@ -302,7 +302,7 @@ in a  mext package.")
         (force-match-code (write-force-match-code have-match))
         (sc `((defmfun1::signal-option-arg-error
                 ',(car tst) (list maxima::val ',opt-name) ',fname ,args nil ,@force-match-code)
-              (return-from ,fname (cons (list ',fname) ,args)))))
+              (return-from ,fname (cons (list ',fname 'maxima::simp) ,args)))))
   (if (gethash (car tst) *opt-check-preprocess-table*)
       `(let ((res ,fc))
          (if (not (first res))
@@ -315,7 +315,7 @@ in a  mext package.")
   (let ((force-match-code (write-force-match-code have-match)))
     `(progn (defmfun1::narg-error-message  ',fname ,restarg
               ,nargs ,nreq ,nreqo ,(not (null rest)) ,@force-match-code)
-            (return-from ,fname (cons (list ',fname) ,args)))))
+            (return-from ,fname (cons (list ',fname 'maxima::simp) ,args)))))
 
 (maxima::ddefun format-protocol (sname req optional rest)
   "This formats the protocol (lambda list) of a defmfun1 form as a string for printing
