@@ -503,7 +503,7 @@
    " elements (counting from zero) in the aliquot sequence whose first term is " :argdot "k" 
    " The sequence is truncated at an element if it is zero or repeats the previous element.")
   (let ( (seq (list k)) (cur k) (last 0) )
-    (loop :for i :from 0 :to n :until (or (= 0 cur) (= cur last)) :do
+    (loop :for i :from 1 :to (1- n) :until (or (= 0 cur) (= cur last)) :do
           (setf last cur)
           (setf cur (- (divisor-function-1 cur) cur))
           (setf seq (cons cur seq)))
@@ -919,6 +919,10 @@
 ;; Yes it would be useful in defmfun1 for a lot. eg
 ;; a : integer_digits(n+1) --> subst(100,n,a)
 ;; we want it to resimplify
+;;
+;; Behavior of Mma is very similar to what we have here.
+;; Warning messages are printed twice if both original
+;; and substituted expressions are not valid.
 (defun simpharmonicnumber (x vestigial z)
   (declare (ignore vestigial z))
   (if (member 'simp (car x) :test #'eq)
