@@ -345,8 +345,7 @@
   :desc
   ("Lists the divisors of the integer " :argdot "n"
    " This is similar to " :emrefcomma "divisors"
-   " but it is faster and returns a list and is not
-   a simplfying function.")
+   " but it is faster and returns a list.")
   (mk-mlist (divisors-mext-new (cfactorw n))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
