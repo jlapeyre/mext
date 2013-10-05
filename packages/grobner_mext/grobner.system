@@ -9,10 +9,12 @@
 
 (in-package :cl-user)
 
+;; Need a way to load *and* compile this!
+;; I think only compiling fails
 (mk:defsystem grobner
   :source-extension "lisp"
   :components
-   ((:file "grobner")))
+   ((:file "grobner" :load-only t)))
 
 ;; The following works for building from the contrib dir, but
 ;; we want to edit the source a bit.
