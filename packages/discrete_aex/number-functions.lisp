@@ -915,6 +915,10 @@
 ;;
 ;; Once this is figured out in a systematic way,
 ;; we can add this resimplification as a feature to defmfun1.
+;;
+;; Yes it would be useful in defmfun1 for a lot. eg
+;; a : integer_digits(n+1) --> subst(100,n,a)
+;; we want it to resimplify
 (defun simpharmonicnumber (x vestigial z)
   (declare (ignore vestigial z))
   (if (member 'simp (car x) :test #'eq)
