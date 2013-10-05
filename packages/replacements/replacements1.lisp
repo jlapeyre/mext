@@ -245,7 +245,8 @@
              (dotimes (i newn)
                (setf (aref ar i) (aref are i))))
          (return a)))
-     (atomchk (setq m (format1 e)) '$rest nil)
+     (echeck-arg $rest :atomchk (setq m (format1 e)))
+;     (atomchk (setq m (format1 e)) '$rest nil)
      (cond ; ((and n? (not (fixnump n))) GJL removed because defmfun1
 	   ; (merror (intl:gettext "rest: second argument, if present, must be an integer; found ~M") n))
 	   ((minusp n)
