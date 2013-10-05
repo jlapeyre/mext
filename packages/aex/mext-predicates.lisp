@@ -192,8 +192,8 @@
                (cond (($bfloatp e) '$bfloat)
                      ((stringp e) (info-type-of e '$string info))
                      ((floatp e) (info-type-of e '$float info))
-                     ((rationalp e) (info-type-of e '$ratio info))
                      (($integerp e) (info-type-of e '$integer info))
+                     ((rationalp e) (info-type-of e '$ratio info))
                      ;; rat(2) is both integerp and numberp
                      ;; intopois(2) is neither
                      ;; in fact, I can't find any maxima function to tell whether a number
