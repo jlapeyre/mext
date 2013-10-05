@@ -1,0 +1,22 @@
+Sat Oct  5 11:45:46 CEST 2013
+
+Get glaisher.txt and convert to maxima
+bigfloat.
+
+1) Download glaisher.txt
+2) Cut and paste number into emacs file
+   as glaisher.mac
+3) set-fill-column 30000
+4) ESC-Q to re-wrap the number. It is
+   converted to 1 line because the number
+   digits is 2025 + a few other characters.
+5) replace-regexp , space nothing(carriage return)
+   This removes several spaces.
+6) Type 'b0;' at the end and 
+   '%Glaisher_bigfloat :' at the front.
+7) load("glaisher.mac");
+8) confirm precision(%Glaisher_bigfloat) --> 20025
+
+Note that this relies on my modification of the
+reading of bigfloats to set ffprec while
+reading in order to keep all digits.
