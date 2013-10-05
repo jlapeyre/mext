@@ -853,9 +853,11 @@
   (when (complex-number-p n '$numberp) 
     (let ((rp ($realpart n))
           (ip ($imagpart n)))
-      (when (and (or (floatp rp) ($bfloatp rp))
-                 (or (floatp ip) ($bfloatp ip)))
-        (setf n ($float n)))))
+      (when (or (floatp rp) ($bfloatp rp)
+                 (floatp ip) ($bfloatp ip))
+        (setf rp ($float rp))
+        (setf ip ($float (mul 1.0 '$%i ip)))
+        (setf n (list '(mplus) rp ip)))))
 ;; we should have a general error-trapping version of the following,
 ;; so we can give a reasonable message. Big exponents result
 ;; in error when trying to convert
@@ -913,7 +915,7 @@
 ;; Once this is figured out in a systematic way,
 ;; we can add this resimplification as a feature to defmfun1.
 (defun simpharmonicnumber (x vestigial z)
-  (declare (ignore vestigial))
+  (declare (ignore vestigial z))
   (if (member 'simp (car x) :test #'eq)
       x
     (apply (caar x) (cdr x))))

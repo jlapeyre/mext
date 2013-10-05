@@ -234,6 +234,11 @@ precision(lcomplex(%i + 1));
 precision(lcomplex(%i + 1.0));
 'machine_precision$
 
+/* Test that %i is converted to float 1.0 * %i */
+/* Test */
+is (abs(harmonic_number(1.0 +  %i) - (.5766740474685794*%i+1.171865985481091)) < 1e-8);
+true$
+
 
 /*
  TODO.
