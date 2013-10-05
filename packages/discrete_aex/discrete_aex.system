@@ -12,9 +12,10 @@
   :components
    ((:file "combinatorics")
     (:file "newfloat")
+    (:file "khbf")
+    (:file "glaisher" :source-extension "mac" :language :mext-maxima :load-only t)
     (:file "number-functions")
     (:file "mersenne-perfect-data")
-    (:file "khbf")
     (:file "mersenne-comp")))
 
 ;; neither compile nor load when building

@@ -5,4 +5,5 @@ mext_provide("discrete_aex",
     "number-functions",
     "mersenne-perfect-data",
     "khbf",
+    "glaisher",
     "mersenne-comp"]);

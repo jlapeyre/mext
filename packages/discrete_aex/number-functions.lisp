@@ -9,13 +9,29 @@
 
 (defvar *constant-bigfloat-table* (make-hash-table))
 
+(defvar *max-bigfloat-precision-table* (make-hash-table))
+
 (defun set-bigfloat-hook (symbol func)
   (setf (gethash symbol *constant-bigfloat-table*) func))
 
 (defun get-bigfloat-hook (symbol)
   (gethash symbol *constant-bigfloat-table*))
 
+; should use functions as above
+(defun set-max-bigfloat-precision (symbol val)
+  (setf (gethash symbol *constant-bigfloat-table*) val))
+
+; should use functions as above
+(defun get-max-bigfloat-precision (symbol)
+  (gethash symbol *constant-bigfloat-table*))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; from_digits
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun from-digits2  ( digits &optional (base 10))
   "This may be faster than from-digits3 for base <= 10"
@@ -51,6 +67,12 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; integer_digits
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun-ae ($integer_digits :doc) ((n :integer) &optional (base :radix 10) (len :non-neg-int nil))
   (setf n (abs n))
@@ -116,6 +138,12 @@
 |#
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; integer_string
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun1 ($integer_string :doc)
   ((n :integer :thread) &optional (base :or-radix-string-symbol 10 :thread) 
@@ -258,6 +286,12 @@
                '( "primes1" ("min" "max") ("returns a list of the primes between " :arg "min" " and "
                                            :arg "max" ".")))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; catalan_number
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defmfun1 ($catalan_number :doc) ((n :thread))
  :desc ("Returns the " :var "n" "th catalan number.")
   (if (numberp n) (/ ($binomial (* 2 n) n) (+ n 1))
@@ -272,6 +306,11 @@
                           :vars "[n]"
                           :code "catalan_number(n)"))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; idivisors
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; This was taken from factor.lisp with
 ;; unnecessary things removed.
@@ -310,6 +349,12 @@
    a simplfying function.")
   (mk-mlist (divisors-mext-new (cfactorw n))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; divisor_summatory
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defmfun1 ($divisor_summatory :doc) ((x :to-non-neg-float :thread) )
   :desc 
   ("Returns the divisor summatory function "
@@ -329,6 +374,12 @@
                        '( :pretext "D(n) for n from 1 through 12"
                           :code "map(divisor_summatory,lrange(12))"))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; oeis_A092143
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defmfun1 (|$oeis_A092143| :doc) ((n :pos-int))
   :desc ("Returns the cumulative product of all divisors of integers from 1 to "
          :argdot "n")
@@ -339,6 +390,11 @@
 
 (max-doc::oeis "oeis_A092143" "A092143")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; divisor_function
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun divisor-function-1 (n)
  "divisor function with x=1."
@@ -378,6 +434,13 @@
 
 (max-doc::oeis "divisor_function" '("A000005 for x=0" "A000203 for x=1"))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; perfect_p
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 (defmfun1 ($perfect_p :doc) ((n :pos-int :thread))
   :desc ("Returns true if " :arg "n" " is a perfect number. Otherwise, returns false.")
   (if (= n (- ($divisor_function n 1) n)) t nil))
@@ -385,6 +448,12 @@
 (max-doc:implementation "perfect_p"
   '("This function computes divisors. It would be far more efficient to use a table of
    known perfect numbers, as very few of them are accessible by current computer hardware."))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; abundant_p
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun1 ($abundant_p :doc) ((n :pos-int :thread))
   :desc ("Returns true if " :arg "n" " is an abundant number. Otherwise, returns false.")
@@ -394,10 +463,22 @@
                        '( :pretext "The abundant numbers between 1 and 100"
                           :code "select(lrange(100),abundant_p)"))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; aliaquot_sum
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defmfun1 ($aliquot_sum :doc) ((n :pos-int :thread))
   :desc ("Returns the aliquot sum of " :argdot "n" " The aliquot sum
  of " :arg "n" " is the sum of the proper divisors of " :argdot "n")
   (- ($divisor_function n 1) n))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; amicable_p
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun1 ($amicable_p :doc) ((n :pos-int :thread) (m :pos-int :thread))
   :desc ("Returns true if " :arg "n" " and " :arg "m" " are amicable, and false otherwise.")
@@ -407,6 +488,12 @@
  '( :pretext "The first few amicable pairs."
     :code "map(lambda([x],amicable_p(first(x),second(x))), [[220, 284], 
           [1184, 1210], [2620, 2924], [5020, 5564], [6232, 6368]])"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; aliquot_sequence
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; TODO: allow keeping only the later part of the sequence. Look for periods greater than 1
 ;;(defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) &optional (n2 0 n2-supplied-p :non-neg-int ) )
@@ -430,7 +517,13 @@
     :code "imap(lambda([x],aliquot_sequence(x,100)),[25, 95, 119, 143, 417, 445, 565, 608, 650, 652, 675, 685])"))
 
 ;; This is now done by default for all functions.
-(defmfun1::set-match-form '( $aliquot_sum $divisor_function $divisor_summatory ))
+;(defmfun1::set-match-form '( $aliquot_sum $divisor_function $divisor_summatory ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; cbfloat
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; like bfloat(), see comments below for cfloat()
 (defmfun cbfloat-do (x)
@@ -596,6 +689,12 @@
 	(t (recur-apply #'$cfloat e))))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; tofloat
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; If a number is too big convert to double float
 ;; try bfloat. We hope that was the problem.
 (defun do-one-tofloat (expr n)
@@ -637,42 +736,63 @@
  '("tofloat" ("expr" "n") ("tries to convert numbers in ":arg "expr" " to floating point "
    "with " :arg "n" "-digit precision.")))
 
-;; src/mlisp.lisp
-;; This is how float(%e) gets a value. Why all the extra bits, I don't know. I
-;; think they are lost because this is a float.
-;;; Float constants, to 2048 bits of precision.
-;;; (EXP 1)
-;(mdefprop $%e     2.7182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274274663919320030599218174135966290435729003342952605956307381323286279434907632338298807531952510190115738341879307021540891499348841675092447614606680822648001684774118537423454424371075390777449920695517027618386062613313845830007520449338265602976067371132007093287091274437470472306969772093101416928368190255151086574637721112523897844250569536967707854499699679468644549059879316368892300987931277361782154249992295763514822082698951936680331825288693984964651058209392398294887933203625094431173012381970684161404
-;	  $numer)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Khintchine and Glaisher
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-when (:load-toplevel :execute)
-   (let ((context '$global))
-     (declare (special context))
-     (dolist (x '(|$%Khintchine|))
-	(kind x '$constant)
-	(setf (get x 'sysconst) t))))
+;; need to put this somewhere to satisfy sbcl, etc.
+;; $%Glaisher_bigfloat is defined in a .mac file and
+;; it somehow is not defined for lisp.
+;; (defvar |$%Glaisher_bigfloat|)
+;; see src/init-cl.lisp
+(let ((context '$global))
+  (declare (special context))
+  (dolist (x '( |$%Khintchine| |$%Glaisher|))
+    (kind x '$constant)
+    (setf (get x 'sysconst) t)))
 
+; does not work. the hooks should be functions
+;(eval-when (:compile-toplevel :load-toplevel :execute)
+;  (set-max-bigfloat-precision '|$%Khintchine| ($precision |$%Khintchine_bigfloat|))
+;  (set-max-bigfloat-precision '|$%Glaisher| ($precision |$%Glaisher_bigfloat|)))
+
+;; see src/mlisp.lisp
 (mdefprop |$%Khintchine| 2.685452001065306445309714835481795693820382293994462953051152345557218859537152002801141174931847698
           $numer)
 
+;; careful, using \ for line continuation causes a strange result that I dont
+;; understand, but float(%Glaisher) returns all digits and result is not a float.
+(mdefprop |$%Glaisher| 1.2824271291006226368753425688697917277676889273250011920637400217404063088588264611297364919582023743942064612039900074893315779136277528040415907257386172752214334327143439787335067915257366856907877
+  $numer)
+
 (set-bigfloat-hook '|$%Khintchine|
-   #'(lambda () (bigfloatp |$%Khintchine_bigfloat|)))
+   #'(lambda () 
+       (when (> $fpprec ($precision |$%Khintchine_bigfloat|))
+         (format t "Warning: fpprec is greater than internal precision of %Khintchine.~%"))
+                 (bigfloatp |$%Khintchine_bigfloat|)))
+
+(set-bigfloat-hook '|$%Glaisher|
+   #'(lambda () 
+       (when (> $fpprec ($precision |$%Glaisher_bigfloat|))
+         (format t "Warning: fpprec is greater than internal precision of %Glaisher.~%"))
+                 (bigfloatp |$%Glaisher_bigfloat|)))
 
 (max-doc:add-doc-entry 
  '( :name "%Khintchine"
     :type "Constant"
-    :contents ("The %Khintchine constant. Float and bigfloat approximations
-                can be obtained with " :mrefdot "tofloat")))
+    :contents ("The Khintchine constant. Float and bigfloat approximations
+                can be obtained with " :mrefcomma "tofloat" " "
+                :emrefcomma "float" " and " :emrefdot "bfloat")))
 
-; from src/init-cl.lisp
-;(eval-when (:load-toplevel :execute)
-;    (let ((context '$global))
-;      (declare (special context))
-;      (dolist (x '($%pi $%i $%e $%phi %i $%gamma  ;numeric constants
-;                   $inf $minf $und $ind $infinity ;pseudo-constants
-;                   t nil))                        ;logical constants (Maxima names: true, false)
-;	(kind x '$constant)
-;	(setf (get x 'sysconst) t))))
+(max-doc:add-doc-entry 
+ '( :name "%Glaisher"
+    :type "Constant"
+    :contents ("The Glaisher constant. Float and bigfloat approximations
+                can be obtained with " :mrefcomma "tofloat" " "
+                :emrefcomma "float" " and " :emrefdot "bfloat")))
+
 
 ;; ??? what is this all about ?
 ; from  compar.lisp
@@ -682,6 +802,84 @@
 ;  (let ((context '$global))
 ;    (learn `((mequal) ,c ,(mget c '$numer)) t))
 ;  (setq %initiallearnflag nil))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; harmonic_number
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; input either real or
+;; e.g. (harmonic-number-float '((mplus) $%i 1))
+;; for real nf, must have nf>1
+(defun harmonic-number-float-complex (nf)
+  (cadr 
+   ($nintegrate 
+    `((MTIMES SIMP) ((MEXPT SIMP) ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 $X)) -1)
+      ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 ((MEXPT SIMP) $X ,nf))))
+    '((mlist simp) $x 0 1) (rule-opt '$idomain '$complex))))
+
+;; n >= 1
+;; returns exact rational result
+;; There must be a function already for the last line.., but where ?
+(defun harmonic-number-integer (n)
+  (let ((sum 0))
+    (loop :for i :from 1 :to n :do
+          (setf sum (+ sum (/ 1 i))))
+    (if (rationalp sum) 
+        (div (numerator sum) (denominator sum))
+      sum)))
+
+;; oops, only works for `integer' bfloat
+;; not sure if this is better/worse than
+;; doing rational numbers and taking ratio.
+;; This is probably useless. Not used now.
+(defun harmonic-number-bfloat (n)
+  (let ((sum '(0 0))
+        (hone (fpone))
+;        (nbf (cdr n))
+        (nlim (mfuncall '$floor n)))
+    (loop :for i :from 1 :to nlim :do
+          (setf sum (fpplus sum (fpquotient hone (intofp i)))))
+    (bcons sum)))
+
+;; We could return '$inf for negative or 0 realpart,
+;; but harmonic_number is really undefined for this
+;; case, so return form
+(defmfun1 ($harmonic_number :doc) ((n :thread))
+  :desc
+  ("Returns the harmonic number " :math "H_n" ".") ;; :mathdot not defined!!
+  ;; bfloat complex or mixed bfloat float complex --> float complex
+  (when (complex-number-p n '$numberp) 
+    (let ((rp ($realpart n))
+          (ip ($imagpart n)))
+      (when (and (or (floatp rp) ($bfloatp rp))
+                 (or (floatp ip) ($bfloatp ip)))
+        (setf n ($float n)))))
+  (let (($ratprint nil))
+    (cond 
+     ((and (integerp n) (> n 0))
+      (harmonic-number-integer n))
+     ((and (floatp n) (= n 1.0)) 1.0) ; num integral fails
+     ((and (complex-number-p n 'floatp) (> ($realpart n) 0))
+          (harmonic-number-float-complex n))
+;     (t nil))))
+  (t  `(($harmonic_number) ,n)))))
+
+;; Make this a simplifying function, so that
+;; float(harmonic_number(7/2)) --> result
+;; not really sure what I'm doing here!!, copied from simpbern
+;; This is not quite right yet. Works for most things.
+;; If too many args are given, they are thrown away on
+;; simplifying
+(defmfun simpharmonicnumber (x vestigial z)
+  (declare (ignore vestigial))
+  (let* ((u (simpcheck (cadr x) z))
+         (res ($harmonic_number u)))
+    (if res res 
+      (eqtest (list '($harmonic_number) u) x))))
+
+(setf (get '$harmonic_number 'operators) 'simpharmonicnumber)
 
 
 (max-doc:see-also-group '( "tofloat" "cbfloat"))
