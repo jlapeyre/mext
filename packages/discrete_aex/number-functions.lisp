@@ -845,7 +845,7 @@
 
 ;; We could return '$inf for negative or 0 realpart,
 ;; but harmonic_number is really undefined for this
-;; case, so return form
+;; case, so return form.
 (defmfun1 ($harmonic_number :doc) ((n :thread))
   :desc
   ("Returns the harmonic number " :math "H_n" ".") ;; :mathdot not defined!!
@@ -856,6 +856,10 @@
       (when (and (or (floatp rp) ($bfloatp rp))
                  (or (floatp ip) ($bfloatp ip)))
         (setf n ($float n)))))
+;; we should have a general error-trapping version of the following,
+;; so we can give a reasonable message. Big exponents result
+;; in error when trying to convert
+  (when ($bfloatp n) (setf n ($float n)))
   (let (($ratprint nil))
     (cond 
      ((and (integerp n) (> n 0))
@@ -863,33 +867,58 @@
      ((and (floatp n) (= n 1.0)) 1.0) ; num integral fails
      ((and (complex-number-p n 'floatp) (> ($realpart n) 0))
           (harmonic-number-float-complex n))
-;     (t nil))))
-     ((ratnump n) ;; also need to test for complex rational
+     ((complex-number-p n '$ratnump)
       (let ((res 
              ($integrate 
               `((MTIMES SIMP) ((MEXPT SIMP) ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 $X)) -1)
                 ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 ((MEXPT SIMP) $X ,n))))
               '$x 0 1)))
         (if (and (consp res) (eq (caar res) '%integrate))
-            `(($harmonic_number) ,n)
+            `(($harmonic_number simp) ,n)
           res)))
-      (t  `(($harmonic_number) ,n)))))
+      (t  `(($harmonic_number simp) ,n)))))
 
-;; Make this a simplifying function, so that
-;; float(harmonic_number(7/2)) --> result
-;; not really sure what I'm doing here!!, copied from simpbern
-;; This is not quite right yet. Works for most things.
-;; If too many args are given, they are thrown away on
-;; simplifying
-(defmfun simpharmonicnumber (x vestigial z)
+;; This looks reasonable, but it is not right!
+;; Maybe there are some circumstances when we want
+;; to simplify the args ??
+(defmfun simpharmonicnumber-unused (x vestigial z)
   (declare (ignore vestigial))
-  (let* ((u (simpcheck (cadr x) z))
-         (res ($harmonic_number u)))
-    (if res res 
-      (eqtest (list '($harmonic_number) u) x))))
+  (let* ((simpflag nil)
+         (u 
+          (loop :for e :in (cdr x) :collect
+                (let ((simpe (simpcheck e z)))
+                  (when (not (alike1 e simpe))
+                    (setf simpflag t))
+                  simpe))))
+    (if simpflag
+        (apply '$harmonic_number u)
+      x)))
+
+;; The reason for the following, so far, is
+;; so float(harmonic_number(3/11)) gives what we want
+;; 
+;; If harmonic_number can't give an answer,
+;; it returns the unevaluated form, but we stick
+;; a SIMP in the first element of the form
+;; [ changed defmfun1 to do it too, with arg checks ]
+;; we check for simp and just return unevalated form.
+;; When the args to harmonic_number have changed,
+;; eg due to float(), something strips the SIMP
+;; from the car, which is nice, then we know that
+;; we can re-evaluate.
+;; We are trying to call harmonic_number a minimum
+;; number of times and get the warning message a
+;; minimum number of times.
+;;
+;; Once this is figured out in a systematic way,
+;; we can add this resimplification as a feature to defmfun1.
+(defun simpharmonicnumber (x vestigial z)
+  (declare (ignore vestigial))
+  (if (member 'simp (car x) :test #'eq)
+      x
+    (apply (caar x) (cdr x))))
 
 (setf (get '$harmonic_number 'operators) 'simpharmonicnumber)
-
 
 (max-doc:see-also-group '( "tofloat" "cbfloat"))
 
