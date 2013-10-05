@@ -289,7 +289,15 @@
                                       name args restarg nargs nreq nreqo rest have-match))))
                 ,@(defmfun1-write-rest-assignments name args rest reqo-spec nargs have-match)
                 ,@body))))
-       (defmfun1::set-attribute ',name '$match_form))))))
+       (defmfun1::set-attribute ',name '$match_form)
+       ,@(when (not (member :nosimp directives))
+           (let ((simpname (intern (concatenate 'string "simp-mext-" (symbol-name name)))))
+           `((defun ,simpname (x v z)
+               (declare (ignore v z))
+               (if (member 'simp (car x) :test #'eq)
+                       x
+               (apply (caar x) (cdr x))))
+             (setf (get ',name 'operators) ',simpname)))))))))
 
 ;; Not using this
 ;; (defmacro dcheck-arg (spec-name arg)

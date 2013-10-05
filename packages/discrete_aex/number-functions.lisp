@@ -929,7 +929,8 @@
       x
     (apply (caar x) (cdr x))))
 
-(setf (get '$harmonic_number 'operators) 'simpharmonicnumber)
+; try doing this automatically in defmfun1
+;(setf (get '$harmonic_number 'operators) 'simpharmonicnumber)
 
 (max-doc:see-also-group '( "tofloat" "cbfloat"))
 

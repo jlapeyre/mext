@@ -243,8 +243,10 @@ refers to the head."
 
 ;; is used
 ;; Note, use as lvalue is implemented in aex/mset.lisp
-
-(defmfun1 $ipart (e &rest inds)
+;; if a simplifying function is written, then the rtest
+;; ipart(e,-1) : 7 fails.
+;; Don't know why yet. But we just disable it with :nosimp
+(defmfun1 ($ipart :nosimp) (e &rest inds)
   (let ((res (catch 'ipart-error
                (i-part e inds))))
     (if (and (consp res) (eq (car res) 'ipart-error))

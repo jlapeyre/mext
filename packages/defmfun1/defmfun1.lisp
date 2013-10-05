@@ -279,7 +279,8 @@ in a  mext package.")
   (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
          (force-match-code (write-force-match-code have-match))
          (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',fname ,args ,nargs ,@force-match-code))
-         (sa `(,sa1 (return-from ,fname (cons (list ',fname) ,args))))) ; construct and return input form.
+         (sa `(,sa1 (return-from ,fname 
+                      (cons (list ',fname 'maxima::simp) ,args))))) ; construct and return input form.
     (if (gethash test *arg-check-preprocess-table*)
         `(let ((res ,fc))
            (if (not (first res))
@@ -602,7 +603,7 @@ in a  mext package.")
 
 (defun check-directives (name directives)
   (dolist (d directives)
-    (when (not (member d '( :doc :no-nargs :fast-opt :match )))
+    (when (not (member d '( :doc :no-nargs :fast-opt :match :nosimp )))
       (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_unknown_directive
         name (format nil "Unknown directive ~a." (maxima::sym-to-string d))))))
 
