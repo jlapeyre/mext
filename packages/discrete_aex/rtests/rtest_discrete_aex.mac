@@ -193,52 +193,75 @@ true$
 is(lrange(1b0,10b0,1b0,ot->ar) = tofloat(lrange(1,10,1,ot->ar),16));
 true$
 
-/* Test */
+/* Test 40 */
 is(precision(1.23456789012345678b0) >= 18);
 true$
 
-/* Test */
+/* Test 41 */
 precision(1);
 'inf$
 
-/* Test */
+/* Test 42 */
 precision(-1);
 'inf$
 
-/* Test */
+/* Test 43 */
 precision(1/4);
 'inf$
 
-/* Test */
+/* Test 44 */
 precision(-1/4);
 'inf$
 
-/* Test */
+/* Test 45 */
 precision(1);
 'inf$
 
-/* Test */
+/* Test 46 */
 precision(1.0);
 'machine_precision$
 
 /* Test lisp-only  numbers */
-/* Test */
+/* Test 47 */
 precision(lratio(1/4));
 'inf$
 
-/* Test */
+/* Test 48 */
 precision(lcomplex(%i + 1));
 'inf$
 
-/* Test */
+/* Test 49 */
 precision(lcomplex(%i + 1.0));
 'machine_precision$
 
 /* Test that %i is converted to float 1.0 * %i */
-/* Test */
+/* Test 50 */
 is (abs(harmonic_number(1.0 +  %i) - (.5766740474685794*%i+1.171865985481091)) < 1e-8);
 true$
 
+/* Test 51 */
+harmonic_number(0);
+'harmonic_number(0)$
+
+/* Test 52 */
+harmonic_number(0.0);
+'harmonic_number(0.0)$
+
+/* Test 53 */
+harmonic_number(1);
+1$
+
+/* Test 54 */
+harmonic_number(1.0);
+1.0$
+
+/* Test 55 */
+harmonic_number(2);
+3/2$
+
+/* Test 56 */
+harmonic_number(3/2);
+8/3-2*log(2)$
 
 /*
  TODO.
@@ -266,6 +289,6 @@ true$
 
 */
 
-/* Test 40 */
+/* Test 57 */
 kill(a,num,discr_expr);
 done;
