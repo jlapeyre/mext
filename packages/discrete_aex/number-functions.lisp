@@ -819,12 +819,13 @@
 ;; for real nf, must have nf>1
 ;; If we split real and imaginary parts by hand and use
 ;; quad-qags-lisp below, we will get 2 or 3 (more ?) orders of magnitude
-;; increase in speed.
+;; increase in speed. Of course, the integral is probably not
+;; the best way to go in any case.
 (defun harmonic-number-float-complex (nf)
   (cadr 
    ($nintegrate 
-    `((MTIMES SIMP) ((MEXPT SIMP) ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 $X)) -1)
-      ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 ((MEXPT SIMP) $X ,nf))))
+    `((mtimes simp) ((mexpt simp) ((mplus simp) 1 ((mtimes simp) -1 $x)) -1)
+      ((mplus simp) 1 ((mtimes simp) -1 ((mexpt simp) $x ,nf))))
     '((mlist simp) $x 0 1) (rule-opt '$idomain '$complex))))
 
 ;; For calling from lisp, rather than maxima. This is much faster than
@@ -846,6 +847,7 @@
 
 ;; Orders of magnitude faster than harmonic-number-float-complex, but it
 ;; would work here.
+;; Faster yet is probably recursion. This would also work for bigfloats
 (defun harmonic-number-float-real (nf)
   (cadr 
    (quad-qags-lisp #'(lambda (x) (/ (- 1 (expt x nf)) (- 1 x))) 
@@ -880,6 +882,43 @@
         (div (numerator sum) (denominator sum))
       sum)))
 
+;; This is slower for n=1000 and 10000
+;; Avoids gcd, but is still slower.
+(defun harmonic-number-integer-2 (n)
+  (let ((denom (factorial n))
+        (sum 0))
+    (loop :for i :from 1 :to n :do
+          (setf sum (+ sum (/ denom i))))
+    (setf sum (/ sum denom))
+    (if (rationalp sum)
+        (div (numerator sum) (denominator sum))
+      sum)))
+
+;; Borrowed from python code online. Fredrik Johansson
+;; This is much faster than the two versions above,
+;; at least for large n
+(defun harmonic-number-integer-3 (n)
+  (let ((sum (*harmonic-number-integer-3 1 (+ n 1))))
+    (div (numerator sum) (denominator sum))))
+
+(defun *harmonic-number-integer-3 (a b)
+  (if (= (- b a) 1)
+      (/ 1 a)
+    (progn
+      (let ((m (floor (+ a b) 2)))
+        (+ (*harmonic-number-integer-3 a m) 
+           (*harmonic-number-integer-3 m b))))))
+
+;; def _harmonic4(a, b):
+;;     if b-a == 1:
+;;         return mpq(1,a)
+;;     m = (a+b)//2
+;;     return _harmonic4(a,m) + _harmonic4(m,b)
+
+;; def harmonic4(n):
+;;     return _harmonic4(1,n+1)
+
+
 ;; oops, only works for `integer' bfloat
 ;; not sure if this is better/worse than
 ;; doing rational numbers and taking ratio.
@@ -895,6 +934,8 @@
 
 ;; Logic here is kind of a mess.
 ;; We need some tests and cleaning up.
+;; quad_qags is used for small positive n, and gives
+;; errors. Better to use an expansion.
 (defmfun1 ($harmonic_number :doc) ((n :thread))
   :desc
   ("Returns the harmonic number " :math "H_n" ".") ;; :mathdot not defined!!
@@ -917,7 +958,7 @@
   (let (($ratprint nil))
     (cond 
      ((integerp n)
-      (if (> n 0) (harmonic-number-integer n)
+      (if (> n 0) (harmonic-number-integer-3 n)
         `(($harmonic_number simp) 0)))
      ((floatp n)
       (cond ((= n 1.0) 1.0) ; num integral fails for 1.0

@@ -270,6 +270,15 @@ harmonic_number(1.0);
 harmonic_number(2);
 3/2$
 
+/* Test 55 */
+harmonic_number(4);
+25/12$
+
+/* Test 55 */
+harmonic_number(100);
+14466636279520351160221518043104131447711/
+ 2788815009188499086581352357412492142272$
+
 /* Test 56 */
 harmonic_number(3/2);
 8/3-2*log(2)$
