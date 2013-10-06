@@ -67,7 +67,18 @@
               (if mset-extension-op
                   (return-from mset (funcall mset-extension-op x y)))))
            ((eq '$ipart (caar x))
-            (return-from mset (i-part-set (eval (cadr x)) y (mapcar #'meval (cddr x)))))
+            (when (not (symbolp (cadr x)))
+              (format t "ipart: Can't set part of literal expression.~%")
+              (return-from mset `((msetq simp) ,x ,y)))
+            (return-from mset
+              (let ((res
+                     (i-part-set (eval (cadr x)) y (mapcar #'meval (cddr x)))))
+;                (format t "cadr ~a~%" (cadr x))
+;                (format t "cadr val ~a~%" (eval (cadr x)))
+                (set (cadr x) (meval (eval (cadr x))))
+;                (format t "cadr after ~a~%" (cadr x))
+                (format t "cadr val after ~a~%" (eval (cadr x)))
+                res)))
 	   ((member 'array (cdar x) :test #'eq)
 	    (return (arrstore x y)))
 	   (t (merror (intl:gettext "assignment: cannot assign to ~M") x))))))
