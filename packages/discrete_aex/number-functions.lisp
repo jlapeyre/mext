@@ -856,6 +856,10 @@
 ;; We could obviously improve efficiency here!
 ;; Also, we are not taking very careful account of error
 ;; in choosing this function.
+;; It seems abs error at n=10^3 is about 10^(-21).
+;; So for double floats this is easily good enough for n<10^3.
+;; For smaller bfloats, we would need to add terms for more
+;; accuracy.
 (defun harmonic-number-asymp-real (n)
   (let ((harm-num
          (meval `((mplus simp) $%gamma
