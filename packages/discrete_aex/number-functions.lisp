@@ -808,15 +808,49 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Maybe not a good idea. Or make this selectable.
+;; ... or yet another defmfun1 feature!
+;; Problem is the table could easily take all RAM
+;; when harmonic_number is called in a loop.
+;; (defvar *harmonic-number-table* (make-hash-table :test #'equalp))
+
 ;; input either real or
 ;; e.g. (harmonic-number-float '((mplus) $%i 1))
 ;; for real nf, must have nf>1
+;; If we split real and imaginary parts by hand and use
+;; quad-qags-lisp below, we will get 2 or 3 (more ?) orders of magnitude
+;; increase in speed.
 (defun harmonic-number-float-complex (nf)
   (cadr 
    ($nintegrate 
     `((MTIMES SIMP) ((MEXPT SIMP) ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 $X)) -1)
       ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 ((MEXPT SIMP) $X ,nf))))
     '((mlist simp) $x 0 1) (rule-opt '$idomain '$complex))))
+
+;; For calling from lisp, rather than maxima. This is much faster than
+;; the maxima interface.
+;; This should be cleaned up and moved to a more generally useful place.
+(defun quad-qags-lisp (fun a b &key (limit 200) (epsabs 0.0) (epsrel 1e-10))
+  (let* ((lenw (* 4 limit))
+	 (work (make-array lenw :element-type 'flonum))
+	 (iwork (make-array limit :element-type 'f2cl-lib:integer4)))
+    (handler-case
+	(multiple-value-bind (junk z-a z-b z-epsabs z-epsrel result abserr neval ier
+				   z-limit z-lenw last)
+	    (slatec:dqags fun
+			  a b epsabs epsrel 0.0 0.0 0 0
+			  limit lenw 0 iwork work)
+	  (declare (ignore junk z-a z-b z-epsabs z-epsrel z-limit z-lenw last))
+	  (list '(mlist) result abserr neval ier))
+        (error () '$false))))
+
+;; Orders of magnitude faster than harmonic-number-float-complex, but it
+;; would work here. For smaller nf, we can ask for more precision.
+;; But, there is no logic here for that.
+(defun harmonic-number-float-real (nf)
+  (cadr 
+   (quad-qags-lisp #'(lambda (x) (/ (- 1 (expt x nf)) (- 1 x))) 
+                   0.0 1.0 :limit 5000 :epsrel 1e-9)))
 
 ;; n >= 1
 ;; returns exact rational result
@@ -842,9 +876,11 @@
           (setf sum (fpplus sum (fpquotient hone (intofp i)))))
     (bcons sum)))
 
-;; We could return '$inf for negative or 0 realpart,
-;; but harmonic_number is really undefined for this
-;; case, so return form.
+;; We should consider returning unevaluated form
+;; for harmonic_number(1/2), etc. There would
+;; then be another mechanism for expressing this
+;; in terms of better known functions, in this case,
+;; 2 - 2 log(2). This is something like what Mma does.
 (defmfun1 ($harmonic_number :doc) ((n :thread))
   :desc
   ("Returns the harmonic number " :math "H_n" ".") ;; :mathdot not defined!!
@@ -866,7 +902,11 @@
      ((integerp n)
       (if (> n 0) (harmonic-number-integer n)
         `(($harmonic_number simp) 0)))
-     ((and (floatp n) (= n 1.0)) 1.0) ; num integral fails
+     ((floatp n)
+      (cond ((= n 1.0) 1.0) ; num integral fails for 1.0
+            ;; above 3.82e12 triggers error on sbcl with chosen params
+            ((and (> n 0) (<= n 3.82e12)) (harmonic-number-float-real n))
+            (t `(($harmonic_number simp) ,n))))
      ((and (complex-number-p n 'floatp) (> ($realpart n) 0))
           (harmonic-number-float-complex n))
      ((complex-number-p n '$ratnump)
@@ -883,19 +923,21 @@
 ;; This looks reasonable, but it is not right!
 ;; Maybe there are some circumstances when we want
 ;; to simplify the args ??
-(defmfun simpharmonicnumber-unused (x vestigial z)
-  (declare (ignore vestigial))
-  (let* ((simpflag nil)
-         (u 
-          (loop :for e :in (cdr x) :collect
-                (let ((simpe (simpcheck e z)))
-                  (when (not (alike1 e simpe))
-                    (setf simpflag t))
-                  simpe))))
-    (if simpflag
-        (apply '$harmonic_number u)
-      x)))
 
+;; (defmfun simpharmonicnumber-unused (x vestigial z)
+;;   (declare (ignore vestigial))
+;;   (let* ((simpflag nil)
+;;          (u 
+;;           (loop :for e :in (cdr x) :collect
+;;                 (let ((simpe (simpcheck e z)))
+;;                   (when (not (alike1 e simpe))
+;;                     (setf simpflag t))
+;;                   simpe))))
+;;     (if simpflag
+;;         (apply '$harmonic_number u)
+;;       x)))
+
+;; Doing following automatically in defmfun1.
 ;; The reason for the following, so far, is
 ;; so float(harmonic_number(3/11)) gives what we want
 ;; 
@@ -922,13 +964,13 @@
 ;; Behavior of Mma is very similar to what we have here.
 ;; Warning messages are printed twice if both original
 ;; and substituted expressions are not valid.
-(defun simpharmonicnumber (x vestigial z)
-  (declare (ignore vestigial z))
-  (if (member 'simp (car x) :test #'eq)
-      x
-    (apply (caar x) (cdr x))))
+;; (defun simpharmonicnumber (x vestigial z)
+;;   (declare (ignore vestigial z))
+;;   (if (member 'simp (car x) :test #'eq)
+;;       x
+;;     (apply (caar x) (cdr x))))
 
-; try doing this automatically in defmfun1
+; doing this automatically in defmfun1
 ;(setf (get '$harmonic_number 'operators) 'simpharmonicnumber)
 
 (max-doc:see-also-group '( "tofloat" "cbfloat"))
