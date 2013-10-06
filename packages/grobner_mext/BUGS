@@ -1,0 +1,12 @@
+Sat Oct  5 22:16:16 CEST 2013
+
+Need to load this first then compile, I
+think. Or just load. It seems it does not
+work otherwise.
+
+I could go through the code and
+put in eval-when.
+
+I don't know of a clean way to specify load
+and then compile with defsystem.
+
