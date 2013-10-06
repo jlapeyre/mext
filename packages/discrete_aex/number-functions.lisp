@@ -921,8 +921,10 @@
         `(($harmonic_number simp) 0)))
      ((floatp n)
       (cond ((= n 1.0) 1.0) ; num integral fails for 1.0
-            ((and (> n 0) (<= n 1.0e3)) (harmonic-number-float-real n))
-            (t (harmonic-number-asymp-real n))))
+            ((> n 0)
+             (if (<= n 1.0e3) (harmonic-number-float-real n)
+               (harmonic-number-asymp-real n)))
+            (t `(($harmonic_number simp) ,n))))
      ((and (complex-number-p n 'floatp) (> ($realpart n) 0))
           (harmonic-number-float-complex n))
      ((complex-number-p n '$ratnump)

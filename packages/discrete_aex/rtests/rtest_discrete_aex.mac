@@ -274,6 +274,16 @@ harmonic_number(2);
 harmonic_number(3/2);
 8/3-2*log(2)$
 
+/* Test above and below switching from integral to asymptotic */
+
+/* Test  */
+is (abs(float(harmonic_number(1000-1))-harmonic_number(1e3-1))<1e-14);
+true$
+
+/* Test  */
+is (abs(float(harmonic_number(1000+1))-harmonic_number(1e3+1))<1e-14);
+true$
+
 /* Test simplifying */
 /* Test  */
 subst(100,n,integer_digits(n));
