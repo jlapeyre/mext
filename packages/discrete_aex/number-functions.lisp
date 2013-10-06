@@ -936,6 +936,8 @@
 ;; We need some tests and cleaning up.
 ;; quad_qags is used for small positive n, and gives
 ;; errors. Better to use an expansion.
+;; Also can use digamma function to get H_n:
+;; bfloat(%gamma) + bfpsi0(n+1,20))
 (defmfun1 ($harmonic_number :doc) ((n :thread))
   :desc
   ("Returns the harmonic number " :math "H_n" ".") ;; :mathdot not defined!!
