@@ -77,7 +77,7 @@
 ;                (format t "cadr val ~a~%" (eval (cadr x)))
                 (set (cadr x) (meval (eval (cadr x))))
 ;                (format t "cadr after ~a~%" (cadr x))
-                (format t "cadr val after ~a~%" (eval (cadr x)))
+;                (format t "cadr val after ~a~%" (eval (cadr x)))
                 res)))
 	   ((member 'array (cdar x) :test #'eq)
 	    (return (arrstore x y)))
