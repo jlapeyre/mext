@@ -286,6 +286,10 @@ true$
 
 /* Test simplifying */
 /* Test  */
+is(abs(float(harmonic_number(3/11))-harmonic_number(3.0/11))<1e-15);
+true$
+
+/* Test  */
 subst(100,n,integer_digits(n));
 [1,0,0]$
 
