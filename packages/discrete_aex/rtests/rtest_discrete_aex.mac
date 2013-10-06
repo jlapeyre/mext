@@ -276,20 +276,20 @@ harmonic_number(3/2);
 
 /* Test above and below switching from integral to asymptotic */
 
-/* Test  */
+/* Test 57 */
 is (abs(float(harmonic_number(1000-1))-harmonic_number(1e3-1))<1e-14);
 true$
 
-/* Test  */
+/* Test 58 */
 is (abs(float(harmonic_number(1000+1))-harmonic_number(1e3+1))<1e-14);
 true$
 
 /* Test simplifying */
-/* Test  */
+/* Test 59 */
 is(abs(float(harmonic_number(3/11))-harmonic_number(3.0/11))<1e-15);
 true$
 
-/* Test  */
+/* Test 60 */
 subst(100,n,integer_digits(n));
 [1,0,0]$
 
@@ -319,6 +319,6 @@ subst(100,n,integer_digits(n));
 
 */
 
-/* Test 57 */
+/* Test 61 */
 kill(a,num,discr_expr);
 done;
