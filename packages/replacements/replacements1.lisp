@@ -22,7 +22,7 @@
 
 ;; alias madness screws up error reporting and return of of form 
 (mext::no-warning
-(defmfun1 $substitute (old new &optional (expr nil three-arg?))
+(defmfun1 ($substitute) (old new &optional (expr nil three-arg?))
   (cond (three-arg? (maxima-substitute old new expr))
 	(t
 	 (let ((l old) (z new))
@@ -36,7 +36,7 @@
 
 ;; alias madness screws up error reporting and return of of form 
 (mext::no-warning
-(defmfun1 $psubstitute (old new &optional (expr nil three-arg?))
+(defmfun1 ($psubstitute) (old new &optional (expr nil three-arg?))
   (cond (three-arg? (maxima-substitute old new expr))
         (t
          (let ((l old) (z new))
@@ -78,7 +78,7 @@
 
 
 (mext::no-warning
-(defmfun1 $depends (&rest args)
+(defmfun1 ($depends) (&rest args)
   (when (oddp (length args))
     (defmfun1-error-return '$depends_odd_num_args
                         $depends "odd number of arguments given"))
@@ -104,7 +104,7 @@
 ;   (stotaldiff e)))
 
 (mext::no-warning
-(defmfun1 $trunc (e)
+(defmfun1 ($trunc) (e)
   (cond ((atom e) e)
 	((eq (caar e) 'mplus) (cons (append (car e) '(trunc)) (cdr e)))
 	((mbagp e) (cons (car e) (mapcar #'$trunc (cdr e))))
@@ -144,7 +144,7 @@
 ;; or at least wrap part in handler
 ;; but this all depends on inflag
 (mext::no-warning
-(defmfun1 $op (expr)
+(defmfun1 ($op :nosimp) (expr)
   (if (or (atom expr) (eq (caar expr) 'bigfloat))
       ($type_of expr)
     (if (and $inflag (eq (caar expr) 'rat))
@@ -152,29 +152,29 @@
       ($part expr 0)))))
 
 (mext::no-warning
-(defmfun1 $operatorp (expr oplist)
+(defmfun1 ($operatorp :nosimp) (expr oplist)
   (if ($listp oplist)
       ($member ($op expr) oplist)
       (equal ($op expr) oplist))))
 
 (mext::no-warning
-(defmfun1 $listp (x)
+(defmfun1 ($listp :nosimp) (x)
   (and (not (atom x))
        (not (atom (car x)))
        (eq (caar x) 'mlist))))
 
 (mext::no-warning
-(defmfun1 $cons (x (e :atomchk))
+(defmfun1 ($cons ) (x (e :atomchk))
   (atomchk (setq e (specrepcheck e)) '$cons t)
   (mcons-exp-args e (cons x (margs e)))))
 
 (mext::no-warning
-(defmfun1 $endcons (x (e :atomchk))
+(defmfun1 ($endcons) (x (e :atomchk))
   (atomchk (setq e (specrepcheck e)) '$endcons t)
   (mcons-exp-args e (append (margs e) (ncons x)))))
 
 (mext::no-warning
-(defmfun1 $reverse ((e :atomchk))
+(defmfun1 ($reverse ) ((e :atomchk))
   (atomchk (setq e (format1 e)) '$reverse nil)
   (mcons-exp-args e (reverse (margs e)))))
 
@@ -188,7 +188,7 @@
 ;; maybe we need a flag for this.
 ;; need to remove duplicate argument checks
 (mext::no-warning
-(defmfun1 $member (x (e :atomchk-ext)) ; same as atomchk, but allow aex
+(defmfun1 ($member ) (x (e :atomchk-ext)) ; same as atomchk, but allow aex
   (if (aex-p e)
       (if (memalike-array ($totaldisrep x) (aex-arr e)) t nil)
     (progn
@@ -196,7 +196,7 @@
       (if (memalike ($totaldisrep x) (margs e)) t)))))
 
 (mext::no-warning
- (defmfun1 $first ((e :atomchk))
+ (defmfun1 ($first) ((e :atomchk))
    (atomchk (setq e (format1 e)) '$first nil)
    (if (null (cdr e)) ; (merror (intl:gettext "first: empty argument.")))
        (defmfun1-error-return '$index_too_big
@@ -207,7 +207,7 @@
 (mext::no-warning
 (macrolet ((make-nth (si i)
 	     (let ((sim (intern (concatenate 'string "$" (symbol-name si)))))
-	       `(defmfun1 ,sim ((e :atomchk))
+	       `(defmfun1 (,sim ) ((e :atomchk))
 		  (atomchk (setq e (format1 e)) ',sim nil)
                   (handler-case   ; GJL 2013
                    (elt (margs e) ,i)
@@ -230,7 +230,7 @@
 ;; GJL 2013 remove check for length of e,
 ;; use nthcdr-check instead
 (mext::no-warning
-(defmfun1 $rest (e &optional (n :integer 1 n?))
+(defmfun1 ($rest) (e &optional (n :integer 1 n?))
   (prog (m fun fun1 revp)
      (when (and n? (equal n 0))
        (return e))
@@ -274,7 +274,7 @@
      (return m))))
 
 (mext::no-warning
-(defmfun1 $last ((e :atomchk))
+(defmfun1 ($last) ((e :atomchk))
   (atomchk (setq e (format1 e)) '$last nil)
   (when (null (cdr e))
     (defmfun1-error-return '$index_too_big
@@ -298,7 +298,7 @@
 ;;; some rewriting.
 
 (mext::no-warning
-(defmfun1 $delete (x l &optional (n :non-neg-int -1 n?))
+(defmfun1 ($delete) (x l &optional (n :non-neg-int -1 n?))
 ;  (when (and n? (or (not (fixnump n)) (minusp n))) ; if n is set, it must be a nonneg fixnum
 ;    (merror (intl:gettext "delete: third argument, if present, must be a nonnegative integer; found ~M") n))
   (atomchk (setq l (specrepcheck l)) '$delete t)
@@ -322,8 +322,12 @@
 ;; Added a patch
 ;; The current version passes tests.
 
+;; must have :nosimp else failure in
+;; eigenvalues(matrix([3,1,0,0],[-4,-1,0,0],[7,1,2,1],[-17,-6,-1,0]))
+;; eigenvalues simplfies length(mat) before mat is evaluated
+;; giving zero.
 (mext::no-warning
-(defmfun1 ($length :doc) (e)
+(defmfun1 ($length :doc :nosimp) (e)
   :desc
   ("modified version of stock Maxima " :emrefdot "length"
    " Here, " :code "length(e)" " gives " :code "0" " for
@@ -350,15 +354,15 @@
 	(t (length (cdr (nformat e)))))))
 
 (mext::no-warning
-(defmfun1 $atom (x)
+(defmfun1 ($atom :nosimp) (x)
   (setq x (specrepcheck x)) (or (atom x) (eq (caar x) 'bigfloat))))
 
 (mext::no-warning
-(defmfun1 $symbolp (x)
+(defmfun1 ($symbolp :nosimp) (x)
   (setq x (specrepcheck x)) (symbolp x)))
 
 (mext::no-warning
-(defmfun1 $num (e)
+(defmfun1 ($num :nosimp ) (e)
   (let (x)
     (cond ((atom e) e)
 	  ((eq (caar e) 'mrat) ($ratnumer e))
@@ -370,7 +374,7 @@
 	  (t e)))))
 
 (mext::no-warning
-(defmfun1 $denom (e)
+(defmfun1 ($denom :nosimp) (e)
   (cond ((atom e) 1)
 	((eq (caar e) 'mrat) ($ratdenom e))
 	((eq (caar e) 'rat) (caddr e))
@@ -476,3 +480,26 @@
               (member (caar xx) '(mequal mlist $matrix) :test #'eq))
 	 (cons (car xx) (mapcar #'$carg (cdr xx))))
 	(t (cdr (absarg xx))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; src/nset.lisp
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(mext::no-warning
+
+ (defmfun1 $every ((f :map-function) &rest (x :or-list-set-matrix))
+  (cond ((or (null x) (and (null (cdr x)) ($emptyp (first x)))) t)
+   
+ ((or ($listp (first x)) (and ($setp (first x)) (null (cdr x))))
+  (setq x (margs (simplify (apply #'map1 (cons f x)))))
+  (checked-and (mapcar #'car (mapcar #'(lambda (s) (ignore-errors-mfuncall '$maybe s)) x))))
+   
+ ((every '$matrixp x)
+  (let ((fmaplvl 2))
+    (setq x (margs (simplify (apply #'fmapl1 (cons f x)))))
+    (checked-and (mapcar #'(lambda (s) ($every '$identity s)) x))))
+ 
+ (t
+   (merror (intl:gettext "every: invalid arguments."))))))

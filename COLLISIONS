@@ -1,3 +1,22 @@
+------------------------------------------------------
+Due to commit changing defmfun1 functions to
+simplifying functions
+commit 0fb3ea5c8251281eb5a44743f2e0b7a3466ad912
+Date:   Sun Oct 6 00:49:29 2013 +0200
+
+and later putting every() in replacements1.lisp.
+
+3 failures. 2 due to typos in the rtests, one
+due to errcatch looking for error, while every
+now returns form.
+
+------------------------------------------------------
+
+problem 62 in rtest16 fails (maxima 5.31.1)
+Cause: We change fpprec when reading literal bigfloats
+ [ make-number in discrete_aex/newfloat.lisp]
+
+------------------------------------------------------
 require(tpsolve) causes stock maxima rtest_numth to exit with an
 error. Loding stock to_poly_solve does not. This is probably because
 stock to_poly_solve can be killed.

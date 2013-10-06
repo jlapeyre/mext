@@ -42,6 +42,13 @@
                      (:or-pathname-string ("a string" "a lisp pathname")
                                           (or (stringp e) (pathnamep e)))
                      (:list    "a list"   (maxima::$listp e))
+                     (:or-list-set-matrix
+                      ("a list" "a set" "a matrix")
+                      (or (maxima::$listp e) (maxima::$setp e) (maxima::$matrixp e)))
+                     (:or-list-set-matrix-subvar ; confusion, not used
+                      ("a list" "a set" "a matrix" "a subscripted variable")
+                      (or (maxima::$listp e) (maxima::$setp e) 
+                          (maxima::$matrixp e) (maxima::$subvarp e)))
                      ((:member 1)  "one of ~a"
                       arg-member-check)
                      (:ae-list "a list (lex or aex)"
