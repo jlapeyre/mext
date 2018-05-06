@@ -1,27 +1,38 @@
-mext maxima third party code installation system.
+# mext maxima third party code installation system.
 
---------
- Copyright (C) 2012,2013 John Lapeyre
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 3 of the License, or
- (at your option) any later version.
---------
+### Summary
 
 This repository contains the mext packaging system and packages for
-the Maxima computer algebra system.
+the Maxima computer algebra system. I wrote this because maxima by
+itself has no system for managing third-party packages.  Basic missing (or unused)
+features provided here are: registration, installation, namespaces,
+tests (unit or otherwise), compiling dependencies once, loading
+dependencies once, managing multiple versions, and many others.  Much
+of the `share`, `contrib`, and third-party code is packaged for
+`mext`.
 
-This folder tree contains the mext system, as well as several packages
-for which it was written: defmfun1, aex, and code that depends on
-these. In addition, there are, several 'packages' from the maxima
-third party code repository. There are a few packages made from code
-in the maxima share and contrib folders. (Currently, we refer to all
-of these as 'distributions' rather than 'packages', but we may change
-to 'package'.)
+I wrote this package manager because it is necessary to support
+several packages that I wrote: `defmfun1`, `aex`, and other packages that depend on
+these. These pacakges are included in this repository.
+
+Included here are also several "packages" from the maxima
+third party code repository adapted to use this packaging system.
+Heretofore, there has been no system to prevent symbol collisions, manage versions,
+etc. A few `mext` packages were made and are included here from code in the maxima share and contrib folders.
+(Currently, we refer to all
+of these as 'distributions' rather than 'packages')
+
+### Maxima version compatibility
+
+The last version of Maxima that has been confirmed to pass all tests in this repository is v5.30
+In particular, maxima v5.41.0 is not at present compatible, at least with the gcl implementation of CL. That is,
+gcl has changed and `mext` has not yet been updated.
+
+### Install
 
 For installation instructions, see the files
 
-  doc/INSTALL and doc/INSTALL-windows.txt
+    doc/INSTALL and doc/INSTALL-windows.txt
 
 Zipped prebuilt installations for windows can be found at
 http://www.johnlapeyre.com/mext_windows/
@@ -31,77 +42,77 @@ In linux, you can install to your .maxima directory by running
 where maxima is the name of your maxima program. Read the comments
 at the top of the file install_mext.sh
 
-For a brief introduction to using mext, see
+### Quick start
 
-   doc/USAGE
+For a brief introduction to using mext, see `doc/USAGE`.
 
 To remove the mext system and all pacakges, delete the files and
 the single folder in your home .maxima directory or maxima folder
 that begin with `mext'.
 
---------
+### Summary of features
+
 Features in Brief:
 
-mext:
-
-* System for standardized compilation, installation, loading of packages.
+#### mext, a system for standardized compilation, installation, loading of packages.
 
 * Minimizes recompilation and reloading.
+
+* Minimizes filename collision between packages.
 
 * Standardized specification of dependencies. Dependencies are
   loaded only once.
 
-* Concurrent (binary/source) installation for different Maxima and lisp versions.
+* Concurrent (binary/source) installation for different Maxima versions and lisp vendors and versions.
 
-* Functions: chdir,list_directory,pwd,popdir,updir,dir_exists, etc.
+* Basic system functions, for example: `chdir, list_directory, pwd, popdir, updir, dir_exists`, etc.
 
-* mext_list,mext_list_loaded,mext_info to see info on installed
-  packages, loaded packages, etc.
+* Package management, info on installed and loaded packages: `mext_list, mext_list_loaded, mext_info`.
 
-* mext_test(packname) to run rtests, which are installed in a
+* Run package tests (rtests) with `mext_test(packname)`. rtests are installed in a
   standard location.
 
-* Minimizes filename collision between packages.
-
-* Supports installation of stock Maxima `share' packages to mext system
+* Supports installation of stock Maxima `share` packages to mext system
   directly from the Maxima installation. This allows the packages to
   be compiled (once) and installed for multiple Maxima/lisp versions
-  and to be loaded (once) as dependencies, and to survive `kill(all)', and
-  to be tested quickly and easily. See for example `grobner'.
+  and to be loaded (once) as dependencies, and to survive `kill(all)`, and
+  to be tested quickly and easily. See for example `grobner`.
 
 * After mext is installed: Download third party mext package
-  'packname' and unzip.  Do `load("packname/ibuild.mac")' to build and
+  'packname' and unzip.  Do `load("packname/ibuild.mac")` to build and
   install software and rtests to a directory automatically named for
-  the running Maxima/lisp. Do `mext_test(packname)' to run installed tests.
+  the running Maxima/lisp. Do `mext_test(packname)` to run installed tests.
   Packager specifies which files are compiled or left as source, etc.
   Currently, all but one third party package is in mext repository.
 
-Documentation systems:
+#### Documentation systems
 
-* Multiple documentation systems accessed via `describe' and ??
+* Multiple documentation systems accessed via `describe` and `??`.  These do
+ not require one to use `texinfo`, which removes a large barrier for writing docs.
 
 * Two systems: one simple, one more full-featured for user documents.
 
 * Doc system for internal/devel documents.
 
-* Easy selection to include/exclude documentation from ??.
+* Easy mechanism to dynamically include/exclude documentation from ??.
 
-* Examples integrated into documentation system.
+* Examples are integrated into the documentation system.
 
 * Many ways to enter examples: Examples not executed before displaying;
-  or executed but with variables transparently localized.
-  (stock Maxima does not do this.)
+  or are executed but with variables transparently localized.
+  (stock Maxima does not localize variables for examples.)
 
 * Macros for user and internal functions and variables to automatically
   generate documentation that is accessible immediately with ??.
 
-defmfun1:
+#### defmfun1
 
-* lisp macro to define functions to be called from Maxima.
+`defmfun1` is a lisp macro for writing Maxima functions in lisp.
+It provides a lot of standardization and functionality:
 
 * Automatic (optional) detailed argument checking.
 
-* Standardized option passing: 'opt->val'. Automatic, standarized
+    * Standardized option passing: `opt->val`. Automatic, standarized
   extraction, of required, optional, and option arguments.
 
 * Automatically (optionally) generate documentation using
@@ -109,18 +120,18 @@ defmfun1:
 
 * Standardized, automatic, error messages. No extra coding required.
 
-* Support 'attributes': e.g. for each function to switch between raising
+* Support "attributes": e.g. for each function to switch between raising
   error or returning input form, or printing warning. Attributes also
-  control argument evaluation.
+  control argument evaluation. This is modeled on Mathematica.
 
-* Option 'compile' to automatically compile lambda functions passed
+* Option "compile" to automatically compile lambda functions passed
   as arguments. Used in many functions listed below.
 
-aex:
+#### aex
 
-* expressions stored as lisp arrays, rather than lisp lists.
+`aex` provides expressions stored as lisp arrays, rather than lisp lists.
 
-* advantage is that `random access' is O(1), rather than O(n).
+* The main advantage is that `random access` is `O(1)`, rather than `O(n)`.
 
 * Many functions included in mext packages. These usually use standard
   lisp lists for input and output, unless aex is requested. A main goal
@@ -137,7 +148,7 @@ aex:
   applicable, but much more efficient in some cases.
   icons (cons), imap (map), every1 (every).
 
-discrete:
+#### discrete
 
   Efficient routines for:
   from_digits,integer_digits,integer_string,
@@ -146,14 +157,14 @@ discrete:
   permutation_p,random_cycle,random_permutation_sym,
   signature_permutation,transpositions_to_perm.
 
-numerical:
+#### numerical
 
 * nintegrate -- currently a front end to quadpack.  Subdivides
   interval, calls quadpack routines, combines results. Finds some
   singularities and passes information to quadpack. Identifies and
   separately integrates real and imaginary parts.
  
---------
+#### Notes on lisp versions, interaction with Maxima
 
 Much of the third party software packaged here uses the maxdoc
 documentation system, with documentation embedded in the source code.
@@ -182,7 +193,7 @@ this could be included in stock Maxima without breaking the test-suite,
 but for the time being, I decided to overwrite stock Maxima only
 when essential.
 
-Features, more details:
+#### Features in detail
 
 * Only one subdirectory of the user directory is added to the maxima
 search paths. For each distribution, there is one file in this
@@ -235,25 +246,26 @@ is, I avoided '.\/'. This makes the maintainer level code, i.e. calls
 to provide and require a bit more verbose, as paths are specified as
 lists rather than strings with directory separators.
 
-Non-features:
+#### Non-features
 
  Much of the underlying code and more seems to be provided as well by
  asdf and related tools. But, the code in mext serves as a stop-gap as
- long as maxima on gcl/win32 is widely used.
+ long as maxima on gcl/win32 is widely used because asdf and gcl are incompatible.
 
- Not much documentation. But here are some examples (with some
- lines edited out.) Note that the key :maintainer below is used
+ There is not much documentation. But here are some examples (with some
+ lines edited out.) Note that the key `:maintainer` below is used
  in the sense of a linux package maintainer or asdf maintainer:
  It refers to the person who packaged the code with the packaging
  system.
 
- There is a mext package called 'mext_defmfun1'. This redefines some
+ There is a mext package called `mext_defmfun1`. This redefines some
  of the mext functions with documentation and error checking. If this
- package is installed, then online help is available via '?' for
- chdir, mext_test, mext_list, mext_info, truename, probe_file, and
- pwd. If you install 'mext_defmfun1', then '?? runtime' will give
+ package is installed, then online help is available via `?` for
+ `chdir, mext_test, mext_list, mext_info, truename, probe_file, and
+ pwd`. If you install `mext_defmfun1`, then `?? runtime` will give
  documentation for some functions.
 
+```maxima
 (%i1) showtime:true$
 Evaluation took 0.0000 seconds (0.0000 elapsed) using 0 bytes.
 (%i2) load(mext);
@@ -349,6 +361,9 @@ Examples:
 
 -------------------------------------------------------------------
 -------------------------------------------------------------------
+```
+
+### Online documentation reproduced
 
 Following is the online documentation for the mext system and
 third party packages.
@@ -4014,11 +4029,11 @@ Description:
 
 --------------------------------------------------------------
 
-LocalWords:  mext maxima defmfun aex contrib perl linux gcl sbcl ccl
-LocalWords:  clisp cmucl ecl subdirectory rtests subfolders distname
-LocalWords:  defsystem asdf pathnames pathname ansi clozure chdir pwd
-LocalWords:  truename runtime nelder pw Lapeyre GPL Mommer piecewise
-LocalWords:  expr init maxdoc texi thirdparty tex pdf html popdir dir
-LocalWords:  updir packname filename grobner devel lrange Ziga tuples
-LocalWords:  Lenarcic's nreverse imap ae sym nintegrate quadpack dont
-LocalWords:  redefinitions
+<!-- LocalWords:  mext maxima defmfun aex contrib perl linux gcl sbcl ccl -->
+<!-- LocalWords:  clisp cmucl ecl subdirectory rtests subfolders distname -->
+<!-- LocalWords:  defsystem asdf pathnames pathname ansi clozure chdir pwd -->
+<!-- LocalWords:  truename runtime nelder pw Lapeyre GPL Mommer piecewise -->
+<!-- LocalWords:  expr init maxdoc texi thirdparty tex pdf html popdir dir -->
+<!-- LocalWords:  updir packname filename grobner devel lrange Ziga tuples -->
+<!-- LocalWords:  Lenarcic's nreverse imap ae sym nintegrate quadpack dont -->
+<!-- LocalWords:  redefinitions -->
