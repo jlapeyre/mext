@@ -10,8 +10,8 @@
 # ./install_mext.sh maxima level
 # where level is 0 through 6, with each level building more packages.
 # level 0 builds only mext. If level is not supplied, then
-# packages through level 5 are built. 
-# 
+# packages through level 5 are built.
+#
 # Some of the packages in the list below, particularly the
 # latter ones, may fail to build on some systems.
 
@@ -57,7 +57,7 @@ test_defmfun1 runtime aex lists_aex
 discrete_aex numerical replacements"
 
 packages3="
-alt_eigen to_poly_mext fourier_elim_mext to_poly_mext 
+alt_eigen to_poly_mext fourier_elim_mext to_poly_mext
 tpsolve grobner_mext"
 
 packages4="
@@ -66,7 +66,7 @@ pw circuits coma finance implicit bernstein nelder_mead"
 packages5="quicklisp store"
 
 packages6="lapack"
- 
+
 for package in $packages1
 do
    build_one_package $package
