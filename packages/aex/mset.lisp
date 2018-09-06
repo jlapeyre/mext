@@ -89,7 +89,7 @@
 
 (maxima-dev-doc::add-item "msetq"
                   "def%tr msetq form"
-"msetq translates maxima mset calls to lisp. msetq is modified 
+"msetq translates maxima mset calls to lisp. msetq is modified
   for aex-maxima to translate $ipart to i-part-set. But it will probably fail when subparts
  are not translated properly. Don't know how translation works.
  For mode, I put '$any. Don't know how to compute it properly.")

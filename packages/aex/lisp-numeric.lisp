@@ -16,7 +16,7 @@
 ;;; It appears these functions are not compiled! compiling on the command
 ;;; line speeds them up!
 ;;; Arg checking works somewhat.
-;;; 
+;;;
 ;;; This could be rewritten without using eval, and
 ;;; the functions would probably be compiled
 
@@ -43,7 +43,7 @@
        (max-doc::add-doc-entry (list  :name ,max-print-name
    :contents ,`(format nil "~a calls the lisp numeric function ~a. This function
    accepts only float or integer arguments from maxima (lisp complex and rationals, as well.). ~a
-   may be considerably faster in some code, particularly untranslated code." 
+   may be considerably faster in some code, particularly untranslated code."
    ,max-print-name ,($sconcat lisp-name) ,max-print-name))))))
 
 (loop for x in '((cl::cos) (cl::sin) (cl::tan) (cl::log opt2) (cl::sqrt) (cl::expt 2)
