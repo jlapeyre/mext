@@ -1,4 +1,4 @@
-# mext 
+# mext
 
 ## Maxima third party packages and manager
 
