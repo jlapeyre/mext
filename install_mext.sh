@@ -1,4 +1,4 @@
-#
+#!/bin/sh
 
 # This script builds and installs the mext system and
 # packages to your .maxima directory on linux (and maybe unix)
