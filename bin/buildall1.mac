@@ -3,14 +3,14 @@ load(mext);
 /*
  gcl works only with load_in_dsubdir and chdir(), the other lisps
  work also with load_in_subdir and updir()... why ?
-*/ 
+*/
 
 buildall_mext (package) := (
   chdir(package),
   load_in_dsubdir(["ibuild","mac"]),
   chdir());
 
-build_several (package_list) := 
+build_several (package_list) :=
  for package in package_list do
    buildall_mext(package);
 

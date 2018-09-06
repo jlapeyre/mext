@@ -1,4 +1,4 @@
-#
+#!/bin/sh
 
 # Prefer test_mext.sh to this.
 
@@ -116,7 +116,7 @@ parse_build_logs () {
 print_max_doc () {
  for maxima in $maximas
      do
-      echo $maxima -b testdoc.mac 
+      echo $maxima -b testdoc.mac
  done
 }
 
@@ -131,4 +131,3 @@ parse_build_logs
 
 test_mext_packages
 parse_test_logs
-

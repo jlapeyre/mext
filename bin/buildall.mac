@@ -2,7 +2,7 @@ load(mext);
 
 /* Don't touch these lines */
 chdir(pathname_directory(load_pathname));
-build_several (package_list) := 
+build_several (package_list) :=
  for package in package_list do
   load_in_subdir(["ibuild","mac"],[package]);
 
@@ -30,7 +30,7 @@ build_several( [
  Both packages `discrete' and `lists_aex' have a function named
  `count'. This will cause errors if they are loaded at the same
   time.
-*/  
+*/
 /*
 build_several([ "discrete" ]);
 */
@@ -38,7 +38,7 @@ build_several([ "discrete" ]);
 /*
    Following initiate an automatic download from the internet.
    They do not work with gcl.
-*/   
+*/
 
 /*
 for package in [  "quicklisp", "store" ] do

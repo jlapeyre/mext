@@ -1,4 +1,4 @@
-#
+#!/bin/sh
 
 # build latex and pdf from maxdoc documentation
 

@@ -6,7 +6,7 @@ use Getopt::Long;
 use Pod::Usage;
 use File::Spec::Functions;
 
-=head1 NAME 
+=head1 NAME
 
 I<rtest_renumber.pl> - renumber the tests in an rtest_xxx.mac file.
 
@@ -15,7 +15,7 @@ I<rtest_renumber.pl> - renumber the tests in an rtest_xxx.mac file.
 Renumber specified files
 
   rtest_renumber.pl  /path/to/an/rtest.mac  /path/to/rtest2.mac ...
- 
+
 Renumber tests in files specified in the source I<rtest_renumber.pl>
 
   rtest_renumber.pl
@@ -36,7 +36,7 @@ A test number will be inserted in any line of this form. All other lines will
 be copied unaltered. Later, when tests are inserted/removed/moved, running
 I<rtest_renumber.pl> will rewrite the test numbers.
 
-This script rewrites the file, replacing each occurrence of 
+This script rewrites the file, replacing each occurrence of
 C</* Test */> with the correct numbers inserted.  The original file is
 backed up with a suffix `.back'
 
@@ -64,7 +64,7 @@ effect on numbering the tests.
 
 =over 4
 
-=item B<-d> | B<--dir> 
+=item B<-d> | B<--dir>
 
 Prepend the directory B<dir> to the pathname of each rtest.
 For example, the rtest files listed in this script
@@ -81,11 +81,11 @@ So, to renumber all tests from the top-level of mext, type
 Dry run. No files are written, copied, or changed. But all
 messages are printed as if they were changed.
 
-=item B<-q> | B<--quiet> 
+=item B<-q> | B<--quiet>
 
 Do not print messages while running.
 
-=item B<-v> | B<--verbose> 
+=item B<-v> | B<--verbose>
 
 Print more messages while running.
 
@@ -158,8 +158,8 @@ $Quiet = 0 if $Verbose;
 
 my @Files = @ARGV;
 
-#sub dosys { 
-#    my $c = shift; 
+#sub dosys {
+#    my $c = shift;
 #    print $c, "\n";
 #    system $c;
 #}
