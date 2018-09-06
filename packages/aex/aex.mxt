@@ -9,6 +9,3 @@
    :license "GPL"
    :description "array representation for maxima expressions"
    :long-description "array representation for maxima expressions")
-
-
- 

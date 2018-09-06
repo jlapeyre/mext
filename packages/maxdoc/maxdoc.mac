@@ -10,5 +10,3 @@ mext_provide( "maxdoc",
     "maxdoc-max",
     "simple-doc",
     "simple-doc-max"]);
-
-

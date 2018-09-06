@@ -73,7 +73,7 @@ sub parse_test_log_file {
     my ($lines) = @_;
     my $no_unexpected_flag = 0;
     my $failed_out_of_flag = 0;
-    my @tests = ( 
+    my @tests = (
         [ qr/^Running tests in/ , sub { $_[1]->{running} = $_[0]; } ],
         [ qr/No unexpected errors/ , sub { print prepend(shift); $no_unexpected_flag=1; }],
         [ qr/The following /, sub {print "\n"; print seprepend($_[1]->{running}); print seprepend(shift);}],
@@ -84,7 +84,7 @@ sub parse_test_log_file {
           , sub {print eprepend(shift)}],
 #        [ qr/Unable to find/ , sub {print eprepend(shift)}],
         [ qr/Maxima encountered a Lisp error/,
-          sub { 
+          sub {
               my $h = $_[1];
               my $i1 = $h->{line_count};
               my $i2 = $h->{line_count}+3;
@@ -92,7 +92,7 @@ sub parse_test_log_file {
           }]
         );
     parse_file($lines,\@tests);
-    print "*** $Logfile: Test suite aborted!\n" 
+    print "*** $Logfile: Test suite aborted!\n"
         unless $no_unexpected_flag or $failed_out_of_flag;
 }
 
@@ -100,9 +100,9 @@ sub parse_test_log_file {
 # the packages and parse the file.
 sub parse_build_log_file {
     my ($lines) = @_;
-    my @tests = ( 
+    my @tests = (
         [ qr/Maxima encountered a Lisp error/,
-          sub { 
+          sub {
               my $h = $_[1];
               my $i1 = $h->{line_count};
               my $i2 = $h->{line_count} + 3;

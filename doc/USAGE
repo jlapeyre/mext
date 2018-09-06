@@ -1,6 +1,6 @@
 Introduction to using mext.
 
-For installing, see 
+For installing, see
   INSTALL-windows.txt and INSTALL
 
 ---------------
@@ -10,18 +10,18 @@ For installing, see
 (%i1) load(mext3)$
 
  See which mext packages were loaded.
-  
+
 (%i2) mext_list_loaded();
-(%o2) [aex, alt_eigen, defmfun1, discrete_aex, fourier_elim, grobner, 
-lists_aex, maxdoc, mext_basic, mext_system, numerical, runtime, to_poly, 
+(%o2) [aex, alt_eigen, defmfun1, discrete_aex, fourier_elim, grobner,
+lists_aex, maxdoc, mext_basic, mext_system, numerical, runtime, to_poly,
 tpsolve]
 
  See all available mext packages.
 
 (%i3) mext_list();
-(%o3) [aex, alt_eigen, bernstein, circuits, coma, defmfun1, discrete, 
-discrete_aex, fourier_elim, grobner, implicit, lists_aex, maxdoc, 
-mext_basic, mext_system, nelder_mead, numerical, pw, runtime, 
+(%o3) [aex, alt_eigen, bernstein, circuits, coma, defmfun1, discrete,
+discrete_aex, fourier_elim, grobner, implicit, lists_aex, maxdoc,
+mext_basic, mext_system, nelder_mead, numerical, pw, runtime,
 test_defmfun1, to_poly, tpsolve]
 
  If you want to load another package, use require(packagename).
@@ -29,7 +29,7 @@ test_defmfun1, to_poly, tpsolve]
  List the functions available in package 'numerical'
 
 (%i4) mext_list_package(numerical);
-(%o4) [mquad_qag, mquad_qagi, mquad_qagp, mquad_qags, mquad_qawc, mquad_qawf, 
+(%o4) [mquad_qag, mquad_qagi, mquad_qagp, mquad_qags, mquad_qawc, mquad_qawf,
                                             mquad_qawo, mquad_qaws, nintegrate]
 
  See the documentation for 'nintegrate'
@@ -48,7 +48,7 @@ Description:
     Try a numerical integral
 
 (%i6) nintegrate(1/sqrt(1-x) * exp(-x),[x,0,inf],calls->short);
-(%o6) [1.076159013825558 - 0.65204933217299 %i, 1.8719703565039936E-10, 1026, 
+(%o6) [1.076159013825558 - 0.65204933217299 %i, 1.8719703565039936E-10, 1026,
                      no problems, [quad_qagi, quad_qagp, quad_qagi, quad_qagp]]
 
   The result shows that, in computing the integral,

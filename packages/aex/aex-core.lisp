@@ -18,7 +18,7 @@
 
 #|
 
-Moved to defmfun1/aex-core.lisp 
+Moved to defmfun1/aex-core.lisp
 
 (defvar *aex-core-dummy-vector* (make-array 0)
   "This is only here so that we can automatically check the type.")
@@ -58,7 +58,7 @@ Moved to defmfun1/aex-core.lisp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; accesors and setters
 ;; $aex_get is faster than $aexg because it does not allow getting the head
-;; same for $aex_set and $aexs 
+;; same for $aex_set and $aexs
 
 (add-doc-entry1 :e  '( :name "aexg"
                       :protocol "aexg(e,n)"
@@ -77,7 +77,7 @@ Moved to defmfun1/aex-core.lisp
 ;; not used anywhere
 (defun aeref (e n)
  "Get reference to element of array expression. n = 0
-refers to the head."   
+refers to the head."
   (if (= n 0) (aex-head e)
     (aref (aex-arr e) (1- n))))
 
@@ -100,7 +100,7 @@ refers to the head."
                       :contents
   ("Returns the " :arg "n-1" "th part of aexpr " :argdot "e"
     " A value of " :arg "n" " less than 0 is not allowed. This is more efficient than "
-    :mrefcomma "aexg" " which returns the head of the expression when " 
+    :mrefcomma "aexg" " which returns the head of the expression when "
     :arg "n" " is equal to zero.")))
 
 (defmfun $aex_get (e n)
@@ -108,7 +108,7 @@ refers to the head."
 
 (examples::clear-examples "aex_get")
 (examples::add-example "aex_get"
-                       '( 
+                       '(
                          :vars "[a]"
                          :code "a : aex([5,6,7]), aex_get(a,2)"))
 
@@ -116,7 +116,7 @@ refers to the head."
                       :protocol "aex_set(e,n,v)"
                       :contents
  ("Destructively sets the " :arg "n" "th part of aexpr " :arg "e" " to value "
-   :argdot "v" " A value of " :math "0" " for " :arg "n" " is not allowed. 
+   :argdot "v" " A value of " :math "0" " for " :arg "n" " is not allowed.
  This is more efficient than " :mrefdot "aexs" " No argument checking is done.")))
 
 (defmfun $aex_set (e n v)
@@ -156,7 +156,7 @@ refers to the head."
 ;; used in rtest
 (defmfun $aexs (e n v)
   (if (= n 0)
-      (progn 
+      (progn
       (setf (aex-head e) (list v))
       v)
   (setf (aref (aex-arr e) (1- n)) v)))
@@ -164,7 +164,7 @@ refers to the head."
 ;; This would be faster if it were not defmfun1
 (defmfun1 ($aex_unshift :doc) ( v (e :aex_adj) )
   :desc ("Destructively pushes an element " :arg "v" " onto the end
- of " :argdot "e" " The return value is " :argdot "v" 
+ of " :argdot "e" " The return value is " :argdot "v"
  " For array representation of expressions we use the words "
   " `push' and `pop' for the beginning of and expression, and "
  "`shift' and `unshift' for the end of an expression, whether the "
@@ -174,13 +174,13 @@ refers to the head."
 
 (examples::clear-examples "aex_unshift")
 (examples::add-example "aex_unshift"
-                       '( 
+                       '(
                          :vars "[a]"
                          :code "a : lrange(10,ot->ar), aex_unshift(\"dog\",a), a"))
 
 (defmfun1 ($aex_shift :doc) ( (e :aex_adj) )
    :desc ("destructively removes an element from the end
- of " :argdot "e"  
+ of " :argdot "e"
   " For array representation of expressions we use the words "
   " `push' and `pop' for the beginning of and expression, and "
  "`shift' and `unshift' for the end of an expression, whether the "
@@ -234,7 +234,7 @@ refers to the head."
                                 (throw 'ipart-error
                                        (list 'ipart-error
                                              (format nil "Index ~a into ~a out of range" i ($sconcat e))))))))))
-;                       (t 
+;                       (t
 ;                        (throw 'ipart-error
 ;                               (list 'ipart-error
 ;                                     (format nil "Can't find part ~a of ~a" i ($sconcat e))))))))
@@ -264,11 +264,11 @@ refers to the head."
   the entire list must first be traversed in order to determine it's length. If "
   :arg "e" " is in aex representation, then this inefficiency is not present.")))
 
-(max-doc:implementation "ipart" '( 
+(max-doc:implementation "ipart" '(
  "Some tests were performed with large lists of numbers. If
   we set " :codecomma "a:lrange(10^7)" " then the times required for "
  :codecomma "ipart(a,10^7)" " " :codecomma "ipart(a,-1)" " "
- :codecomma "inpart(a,10^7)" " and " :code "part(a,10^7)" 
+ :codecomma "inpart(a,10^7)" " and " :code "part(a,10^7)"
  " were " :math "30" ", " :math "60" ", " :math "90" ", and "
  :math "90" " ms."))
 
@@ -436,7 +436,7 @@ refers to the head."
 ;; non-maxima version of above
 (defun aex-to  (x &key (adjustable t) (element-type t))
 ;;  (format t "elements ~a~%"  element-type)
-  (cond 
+  (cond
     ((and (listp x) (not (lspecrepp x)))
      (make-aex :head (car x) :adjustable adjustable
         :arr (aex-copy-to-vector (cdr x)
@@ -479,7 +479,7 @@ refers to the head."
   (aex-make-n-head n :head `(,head simp) :element-type $type
                    :initial-element $init :supply-init-element init-supplied-p ))
 
-;; is used. 
+;; is used.
 (defmfun1 ($copy_aex_type :doc) ((ein :aex))
   "Create a new aex with same head,length,adjustability,etc.
    but contents of expression are not copied."
@@ -513,7 +513,7 @@ refers to the head."
 (defun canon-level-spec (s)
  "Convert level specification to a canonical form.
   Input is either nil, or a number, or an mlist.
-  If argumet is 
+  If argumet is
   nil -> (1 1) = convert at top lev
   one number -> (1 s) = convert from levels 1 through s
   a list of one number -> (s s) convert only on level s
@@ -591,7 +591,7 @@ refers to the head."
 
 ;; is used
 (defmfun1 ($rlex :doc) (e &optional spec )
-  :desc ("Deep copy, converting " :arg "e" " to lex representation at the specified levels.") 
+  :desc ("Deep copy, converting " :arg "e" " to lex representation at the specified levels.")
   (setf spec (canon-level-spec spec))
   (rlex1 e 1 (first spec) (second spec)))
 
@@ -766,7 +766,7 @@ refers to the head."
 ;; !!! It seems that CL builtin copy-tree already handles all data types,
 ;; struct's, arrays, etc. No need for all this.
 (defmfun1 ($deep_copy :doc) (expr)
-  :desc ( 
+  :desc (
     "Note: it appears that the core maxima function " :emref "copy" " acheives the same "
     "result as " :mrefcomma "deep_copy" " so that the latter is redundant. It will probably be removed. "
     :mref  "deep_copy"
@@ -837,7 +837,7 @@ refers to the head."
 
 ;; is used in rtests
 (defmfun-ae ($iargs :doc) ((e :or-non-mapatom-subvar))
-  :desc 
+  :desc
   ("returns a list of the arguments of " :argcomma "e"
    " which may be either a lex or aex expression. This works "
    " like " :emrefcomma "args" " but is more general.")
@@ -854,7 +854,7 @@ refers to the head."
 ;;   (let* ((args
 ;;          (loop for arg in argsin collect
 ;;                (if (aex-p arg) (aex-arr arg) (cdr arg))))
-;;         (n (loop for arg in args 
+;;         (n (loop for arg in args
 ;;                   (if (aex-p arg) (aex-arr arg) (cdr arg))))
 ;;     (cons '(mlist simp)
-;;           (loop 
+;;           (loop

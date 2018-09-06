@@ -1,16 +1,24 @@
-#
+#!/bin/sh
 
-# This script builds and installs the mext system and
-# packages to your .maxima directory on linux (and maybe unix)
-# systems. To use it type
-# ./install_mext.sh maxima
-# where maxima is your maxima executable.
+# NOTE!!
+# In order to build lapack with sbcl, maxima must be started with
+# something like "maxima -X '--dynamic-space-size 2048'".
 #
-# Or:
+# This script builds and installs the mext system and packages to your
+# ".maxima" directory on linux (and maybe unix) systems.
+#
+# USAGE:
+#
 # ./install_mext.sh maxima level
-# where level is 0 through 6, with each level building more packages.
-# level 0 builds only mext. If level is not supplied, then
-# packages through level 5 are built. 
+# ./install_mext.sh maxima
+# 
+# Builds and installs the mext system and packages.
+# `level`  a number from 0 through 6. This specifies how many
+#          groups of packges to install. `level` = 0 installs only the mext system.
+#          `level` = 5 installs many packages, but not lapack. `level` = 6 installs many packages
+#          and lapack as well. If `level` = 5 is the default if it is not specified.
+# `maxima` the path to the maxima executable.
+#
 # 
 # Some of the packages in the list below, particularly the
 # latter ones, may fail to build on some systems.
@@ -57,7 +65,7 @@ test_defmfun1 runtime aex lists_aex
 discrete_aex numerical replacements"
 
 packages3="
-alt_eigen to_poly_mext fourier_elim_mext to_poly_mext 
+alt_eigen to_poly_mext fourier_elim_mext to_poly_mext
 tpsolve grobner_mext"
 
 packages4="
@@ -66,7 +74,7 @@ pw circuits coma finance implicit bernstein nelder_mead"
 packages5="quicklisp store"
 
 packages6="lapack"
- 
+
 for package in $packages1
 do
    build_one_package $package

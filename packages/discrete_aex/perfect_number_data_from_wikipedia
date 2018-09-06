@@ -4,9 +4,9 @@
 # Inserted nil for year for on known to ancients
 # changed & to and.
 1 	2 	6 	1 	nil Known to the Greeks
-2 	3 	28 	2 	nil Known to the Greeks 	
-3 	5 	496 	3 	nil Known to the Greeks 	
-4 	7 	8128 	4 	nil Known to the Greeks 	
+2 	3 	28 	2 	nil Known to the Greeks
+3 	5 	496 	3 	nil Known to the Greeks
+4 	7 	8128 	4 	nil Known to the Greeks
 5 	13 	33550336 	8 	1456 	First seen in a medieval manuscript, Codex Lat. Monac.
 6 	17 	8589869056 	10 	1588 	Cataldi
 7 	19 	137438691328 	12 	1588 	Cataldi

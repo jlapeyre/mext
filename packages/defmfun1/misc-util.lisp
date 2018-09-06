@@ -27,10 +27,10 @@
 
 
 (defmfun1 ($compile_file1 :doc) ( (input-file :string) &optional bin-file translation-output-file &aux result)
-  :desc 
-  ("This is copied from maxima " :emref "compile_file" 
+  :desc
+  ("This is copied from maxima " :emref "compile_file"
    ", with changes. Sometimes a loadable binary file is apparently compiled, but"
-   " an error flag is set and " :emref "compile_file" 
+   " an error flag is set and " :emref "compile_file"
    " returns false for the output binary filename. Here we return the binary
    filename in any case.")
   (setq input-file (maxima-string input-file))
@@ -57,9 +57,9 @@
   (append result (list bin-file)))
 
 (defmfun1 ($comp_load :doc) ((fname :string) &optional (pathlist "" :string-or-listof :ensure-list ))
-  :desc 
+  :desc
  ("Compile and load a lisp file. Maxima does not load it by default with "
-  :emrefdot "compile_file" " If the input filename does not end with " :dquotecomma 
+  :emrefdot "compile_file" " If the input filename does not end with " :dquotecomma
    ".lisp" " it will be appended. If "
   :arg "pathlist" " is  specified, then " :arg "fname" " is only searched for in directories in "
   :argdot "pathlist")
@@ -92,7 +92,7 @@
 
 (max-doc::set-cur-sec 'max-doc::io-fandv)
 (defmfun1 ($pager_string :doc) ( (s :string) )
- :desc 
+ :desc
  ("Read the string " :arg "s" " in the pager given by the maxima variable " :codedot "pager_command"
   "This works at least with gcl under linux.")
   (with-open-file (*standard-output* "tmppager.dat" :direction :output

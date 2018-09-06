@@ -41,7 +41,7 @@ number_of_spanning_trees(g) :=
     determinant(minor(laplacian_matrix(g), 1, 1)))$
 
 from_degree_sequence(lst) := _from_degree_sequence_sorted(reverse(sort(lst)))$
-_from_degree_sequence_sorted(lst) := 
+_from_degree_sequence_sorted(lst) :=
   if lst=[] then empty_graph(0)
   else if lmin(lst)<0 then error("Not a graphic sequence")
   else if lmax(lst)=0 then empty_graph(length(lst))
@@ -249,7 +249,7 @@ antisymmetric_relationp(R, [A]) :=
 
 tranzitive_relationp(R) := subsetp(relation_product(R, R), R)$
 
-reflexive_relationp(R, [A]) := 
+reflexive_relationp(R, [A]) :=
   subsetp(
     if length(A)=0 then
       identity_relation(setify(tree_reduce(append, listify(R))))
@@ -440,7 +440,7 @@ multiplication_table(grp) := block(
   [s: makelist(part(grp,i)=i, i, 1, length(grp))],
   [map(reverse, s),
   subst(s,
-    genmatrix(lambda([i,j], 
+    genmatrix(lambda([i,j],
         permutation_product(part(grp, i), part(grp, j))),
       length(grp), length(grp)))])$
 
@@ -626,7 +626,7 @@ symmetric_group(n,[options]) :=
      append([2,1], makelist(i,i,3,n))}
   else permutations(makelist(i,i,1,n))$
 
-alternating_group(n,[options]) := 
+alternating_group(n,[options]) :=
   if assoc('generators, options, large_groups)=true then (
     if evenp(n) then {permutation_from_cycles([[1,2,3]], n), permutation_from_cycles([makelist(i,i,2,n)], n)}
 	else {permutation_from_cycles([[1,2,3]], n), permutation_from_cycles([makelist(i,i,1,n)], n)})
@@ -706,7 +706,7 @@ cayley_graph_symmetric(grp, [s]) := (
  *
  * An implementation of a random Schreier-Sims algorithm.
  *
- ***************************/ 
+ ***************************/
 
 _strip_generator(g, B, S, deltas) := block(
   [T:S,cont:true],
@@ -720,7 +720,7 @@ _strip_generator(g, B, S, deltas) := block(
 
 _first_moved_point(p):=block(
   [i:1,p1:p,fp],
-  while p1#[] do 
+  while p1#[] do
     if first(p1)#i then (fp:i,p1:[])
     else (i:i+1,p1:rest(p1)),
   fp)$
@@ -799,7 +799,7 @@ _random_schreier_sims(X, [maxC]) := block(
 
 _sgsp(sgs) := length(sgs)=2 and listp(first(second(sgs)))$
 
-_group_order_sgs(B, S) := 
+_group_order_sgs(B, S) :=
   if length(B)=0 or length(S)=0 then 1
   else block(
     [b1: first(B), S1, S2],
@@ -875,7 +875,7 @@ graph_automorphisms(g, [options]) := block(
  * General cycles indices
  *
  ***************************/
- 
+
 cycle_index_cyclic(n, [var]) := (
   if length(var)#1 then var:'x else var:first(var),
   1/n*lsum(totient(k)*var[k]^(n/k),k,listify(divisors(n))))$
@@ -1174,7 +1174,7 @@ _solve_lde_sub(eqn) := block(
     sol : append([best_var=subst(sol, rhs(first(solve(eqn, best_var))))], sol),
     ratsimp(sol)))$
 
-int_digits(n) := 
+int_digits(n) :=
   if not integerp(n) and n>0 then error("int_digits: the argument should be a positive integer")
   else block(
     [r:n,d, digits:[]],
@@ -1190,7 +1190,7 @@ solve_mod(eqs, vars, mod) := block(
   eqs: makelist(lhs(eq)-rhs(eq), eq, eqs),
   _solve_mod(eqs, vars, mod))$
 
-_solve_mod(eqs, vars, mod) := 
+_solve_mod(eqs, vars, mod) :=
   if length(vars)=1 then block(
     [x:first(vars), sol:[], neqs],
     for i:0 thru mod-1 do (
@@ -1258,7 +1258,7 @@ _linsolve_mod(eqs, vars, mod) :=
 
 /* gjl 2012. return to compiling, because compiling entire
    file fails for some lisps.
-*/   
+*/
 compile(
   permutation_product,
   linverse_permutation,
@@ -1283,4 +1283,3 @@ compile(
   _compute_deltas,
   _strip_generator
 )$
-

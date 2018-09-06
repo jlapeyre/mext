@@ -28,17 +28,17 @@
 
 ;;(add-doc-sec '( :tag maxima::$misc :name  "Miscellaneous Functions"))
 
-(add-doc-sec '( :tag misc-fandv 
+(add-doc-sec '( :tag misc-fandv
                 :name  "Miscellaneous Functions"
                 :shortname "fvmisc"))
 
-(add-doc-sec '( :tag lists-fandv 
+(add-doc-sec '( :tag lists-fandv
                 :name "Functions and Variables for Lists"
                 :shortname "fvlists"
   :contents
   "These functions manipulate lists. They build lists, take them apart, select elements, etc."))
 
-(add-doc-sec '( :tag aex-core 
+(add-doc-sec '( :tag aex-core
                 :name "Array Representation For Expressions"
                 :shortname "aex"
    :contents
@@ -46,7 +46,7 @@
    but they may also be represented by lisp arrays. Each representation has
    advantages."))
 
-(add-doc-sec '( :tag aex-fandv 
+(add-doc-sec '( :tag aex-fandv
                 :name "Functions and Variables for Array Represention for Expressions"
                 :shortname "fvaex"
    :contents

@@ -162,7 +162,7 @@ true$
  and output forms
 */
 
-/* This uses the old option interface. 
+/* This uses the old option interface.
 
 is( num(<<a+c>>/b, 'oml) = <<a+c>>);
 false$
@@ -256,7 +256,7 @@ true$
   ipart(e,n1,n2,...) is like inpart somewhat.
   it descends a tree of mixed ml an ar expressions.
   aex() only converts the top level.
-*/  
+*/
 aex_p( ipart( aex( [1,[2,3]]), 2));
 false$
 
@@ -425,7 +425,7 @@ false$
 
 /*
  Test allowing maxima ratio
-*/   
+*/
 /* Test 78 */
 is(chop(1e-9,1/10^8) > 0);
 false$

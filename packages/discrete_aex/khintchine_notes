@@ -24,4 +24,3 @@ khin_bf : tofloat(khin_rat,110001)$
 Then edit the top of the resulting file by hand with
 
 (defparameter |$%Khintchine_bigfloat|
-

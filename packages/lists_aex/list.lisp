@@ -123,7 +123,7 @@
                      &aux (imin 1) d lst  &opt ($et t))
   (if (null imax) (setf imax arg1) (setf imin arg1)) ; different number of args changes semantics
   (cond ((and (numberp imin) (numberp imax) (numberp incr))
-         (if (eq o-type '$ar) (make-aex :head '(mlist simp) 
+         (if (eq o-type '$ar) (make-aex :head '(mlist simp)
                                         :arr (max-list::ar-num-range adj-type $et imin imax incr)
                                         :adjustable adj-type)
              (max-list::num-range imin imax incr)))
@@ -151,7 +151,7 @@
 (examples::clear-examples "lrange")
 (examples::add-example "lrange"
                        '(:code  ("lrange(6)" "lrange(2,6)" "lrange(2,6,2)"
-                                 "lrange(6,1,-1)" "lrange(6,1,-2)" 
+                                 "lrange(6,1,-1)" "lrange(6,1,-2)"
                                     "lrange(6,ot->ar)"))
                        '(:pretext "The type of the first element and increment determine the type of the elements."
                          :code ("lrange(1.0,6)" "lrange(1.0b0,6)" "lrange(1/2,6)"
@@ -220,7 +220,7 @@
       (progn (pop list-or-lists)
              (max-list::tuples-lists o-type-p o-type (reverse list-or-lists)))))
 
-(max-doc::add-call-desc 
+(max-doc::add-call-desc
  '( "tuples" ("list" "n")
     ("Return a list of all lists of length " :arg "n" " whose elements are chosen from " :arg "list" "."))
  '( "tuples" (("list" "list1" "list2" "..."))
@@ -230,10 +230,10 @@
 
 (examples::add-example "tuples"
                        '( :pretext "Make all three letter words in the alphabet `a,b'."
-                         :vars "[a,b]"           
+                         :vars "[a,b]"
                          :code "tuples([a,b],3)")
                        '( :pretext "Take all pairs chosen from two lists."
-                         :vars "[x,y,z]"           
+                         :vars "[x,y,z]"
                          :code "tuples([ [0,1] , [x,y,z] ])")
                        '( :pretext "tuples works for expressions other than lists."
                          :vars "[f]"
@@ -254,7 +254,7 @@
   (cond ((maxima::$listp head) ; listp should fail here, not qualified!, qualified it anyway
          (if (= (1+ (length spec)) (length head)) (list t (reverse (cdr head)))
            '(nil nil)))
-        (t 
+        (t
          (let ((res (list head)))
            (dotimes (i (1- (length spec)))
              (setf res (cons head res)))
@@ -270,9 +270,9 @@
     (dotimes (i n)
       (setf res (cons (copy-tree c)  res)))
     (cons (list head 'maxima::simp) res)))
-                       
+
 (defmfun-ae ($constant_list :doc :match) (c (spec :pos-int-or-listof) &optional (head mlist))
-  :desc 
+  :desc
   ("Returns a list of " :math "n" " elements, each of which is "
    "an independent copy of expr. "
    :code "constant_list(expr,[n,m,..])" " returns a nested list of dimensions "
@@ -287,7 +287,7 @@
   (dbind (head-err head1)
          (max-list::canon-head-spec spec head)
          (unless head-err
-           (defmfun1-error-return '$nheads_neq_nlevels $constant_list 
+           (defmfun1-error-return '$nheads_neq_nlevels $constant_list
                    "Number of heads not equal to number of levels." :match))
          (let ((lev
                 (if (or (symbolp c) (numberp c))
@@ -315,7 +315,7 @@
         (dotimes (i (1- n))
           (setf res (,call-type f res)))
         res)))
-  
+
 (defmfun-ae $nest ((f :map-function :thread) (x :ensure-lex) (n :non-neg-int :thread) &opt ($compile t :bool))
   (option-compile-lambda f)
   (defmfun-final-to-ae
@@ -334,7 +334,7 @@
 (examples::add-example "nest_list"
                        '( :pretext "Find the first 10 primes after 100."
                          :code "nest_list(next_prime,100,10)"))
-                       
+
 (max-doc::see-also "nest_list" '("nest" "fold" "fold_list"))
 
 ;; try making fixnum declarations here. probably makes no difference at all.
@@ -434,7 +434,7 @@
   (option-compile-lambda test)
   (if (functionp test) (max-list::length-while funcall) (max-list::length-while mfuncall)))
 
-(examples:clear-add-example "length_while" 
+(examples:clear-add-example "length_while"
      '(:code "length_while([-3,-10,-1,3,6,7,-4], lambda([x], is(x<0)))"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -453,7 +453,7 @@
   (option-compile-lambda test)
   (if (functionp test) (max-list::every1 funcall) (max-list::every1 mfuncall)))
 
-(add-call-desc '("every1" ("expr" "test") 
+(add-call-desc '("every1" ("expr" "test")
     ("Returns true if " :arg "test" " is true for each element in " :arg "expr" "."
      " Otherwise, false is returned. This is like " :code "every" " but allow a test that "
      "takes only one argument. For some inputs, every1 is much faster than every.")))
@@ -493,7 +493,7 @@
 ;; no way from within maxima to see that the expression is not
 ;; what is printed.
 (defmfun1 ($imap :doc) (f (expr :non-mapatom) &opt ($compile t :bool))
-  :desc 
+  :desc
   ("Maps functions of a single argument. I guess that " :emref "map" " handles more
    types of input without error. But " :mref "imap" " is much faster for many inputs."
    " This is especially true if a lambda function is passed to imap, as it can be compiled.")
@@ -575,7 +575,7 @@
 (defun max-list::do-map-all-fast (f expr)
   (if (mapatom expr)
       (cons (list f) (list expr))
-    (cons (list f)    
+    (cons (list f)
           (list (cons (car expr)
                       (mapcar #'(lambda (x) (max-list::do-map-all-fast f x)) (cdr expr)))))))
 
@@ -584,7 +584,7 @@
 ;; the maxima expression, but I don't know what its worth.
 ;; ... I bet there is already some support for this.
 ;; Note that this is different than fullmap.
-; distribute_over nil  seems to disable distributing without 
+; distribute_over nil  seems to disable distributing without
 ; changing global flag, but the rtest is not working.
 
 ;; Disable this until it is improved.
@@ -597,7 +597,7 @@
          "called, but is rather applied as an op. In this case, " :mref "mapall"
          " runs much faster.")
   (let (($distribute_over nil))
-    (if $fast 
+    (if $fast
         (max-list::do-map-all-fast f expr)
       (max-list::do-map-all f expr))))
 |#
@@ -678,12 +678,12 @@
                (el (car e) (car e)))
               ((null e) (cons head (nreverse res)))
            (when (,call-type test el) (push el res))))))
-         
+
 
 (defmfun-ae ($select :doc) (( expr :non-mapatom-list) (test :thread)
                             &optional (n 0 supplied-n-p :pos-int) &opt ($compile t :bool))
   :desc (
-  "Returns a list of all elements of " :arg "expr" 
+  "Returns a list of all elements of " :arg "expr"
   " for which " :arg "test" " is true. " :arg "expr"
   " may have any op. If " :arg "n" " is supplied, then at most " :arg "n"
   " elements are examined. " :mref "select" " is much faster than "
@@ -725,12 +725,12 @@
            (declare (fixnum count))
            (incf count)
            (when (,call-type test el) (push count res))))))
-         
+
 
 (defmfun-ae ($select_index :doc) (( expr :non-mapatom-list) (test :thread)
                             &optional (n 0 supplied-n-p :pos-int) &opt ($compile t :bool))
   :desc (
-  "Returns a list of indices of the elements of " :arg "expr" 
+  "Returns a list of indices of the elements of " :arg "expr"
   " for which " :arg "test" " is true. " :arg "expr"
   " may have any op. If " :arg "n" " is supplied, then at most " :arg "n"
   " elements are examined. " :mref "select" " is much faster than "
@@ -738,7 +738,7 @@
   (declare (fixnum n))
   (option-compile-lambda test)
   (defmfun-final-to-ae
-      (if (functionp test) (max-list::select-index-call funcall) 
+      (if (functionp test) (max-list::select-index-call funcall)
         (max-list::select-index-call mfuncall))))
 
 ;(examples::clear-examples "select")
@@ -765,8 +765,8 @@
 
 (examples::clear-examples "ilistp")
 (examples::add-example "ilistp"
-                       '( 
-                          :vars "[x,y]"         
+                       '(
+                          :vars "[x,y]"
                           :code ("ilistp([1,2,3])" "ilistp( aex([1,2,3]))" "ilistp(3)" "ilistp(x)"
                                  "x:lrange(10),ilistp(x)" "ilistp(%%f(y))" "ilistp( aex( %%f(y) ))")))
 
@@ -777,7 +777,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun1  ($nreverse :doc)((e :non-mapatom))
-  :desc ("Destructively reverse the arguments of expression " :argdot "e" 
+  :desc ("Destructively reverse the arguments of expression " :argdot "e"
     " This is more efficient than using reverse.")
   (if-aex e
           (progn
@@ -789,7 +789,7 @@
 (max-doc:see-also "nreverse" "reverse")
 (examples:clear-add-example "nreverse"
  '( :pretext ("Be careful not to use " :arg "a" " after applying nreverse. Do assign the result to another variable.")
-    :vars "[a,b]"         
+    :vars "[a,b]"
     :code ("a : lrange(10), b : nreverse(a)" "a : lrange(10,ot->ar), b : nreverse(a)")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -800,8 +800,8 @@
 
 ;; This does not recognize lambda functions unless compile is t
 (defmfun1 ($count :doc) ( (expr :non-mapatom-ae-list) (item :thread)  &opt ($compile t :bool))
-  :desc 
-  ("Counts the number of items in " :arg "expr" " matching " :argdot "item" 
+  :desc
+  ("Counts the number of items in " :arg "expr" " matching " :argdot "item"
    " If " :arg "item" " is a lambda function then " :arg "compile" " must be true.")
   (setf expr (if (aex-p expr) (aex-arr expr)
                (cdr expr)))

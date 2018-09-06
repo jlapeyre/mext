@@ -76,7 +76,7 @@
 ;; Translate documentation specification from maxima to lisp.
 ;; This is only tested thus far with alt_eigen.
 ;; Some example code and description code works fine. I inadvertently
-;; changed the syntax with the new examples slot code-text. 
+;; changed the syntax with the new examples slot code-text.
 ;; `do-maxdoc' will not work with code-text. The new syntax is
 ;; probably worth keeping anyway. A short, similar routine will
 (defun do-maxdoc (x)
@@ -141,7 +141,7 @@
   '$done)
 
 (defmfun1 ($maxdoc_set_cur_sec :doc) ((shortname :string))
- :desc 
+ :desc
  ("Set the current section for maxdoc to " :argdot "shortname"
  " This section will be used by functions such as " :mrefcomma "maxdoc"
  " and " :mrefdot "maxdoc_author")
@@ -149,7 +149,7 @@
  '$done)
 
 (defmfun1 ($maxdoc_set_mext_package :doc) ((packagename :string))
- :desc 
+ :desc
  ("Set the current mext package name for maxdoc to " :argdot "packagename"
  " This name will be used by functions specifying documentation for functions
  until the name is set to another value. When documenting functions written in
@@ -159,7 +159,7 @@
 
 (defmfun1 ($mext_package_record :doc) ((docitems :or-string-symbol-or-listof) (packagename :string)
                                        &optional (source-filename nil :string))
- :desc 
+ :desc
  ("Set the mext packagename for the function or variable (or list of them) "
   :arg "docitems" " to " :argdot "packagename"
   "This name will be used when displaying documentation."

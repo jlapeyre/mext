@@ -6,7 +6,7 @@ use Getopt::Long;
 use File::Spec::Functions;
 #use Pod::Usage;
 
-=head1 NAME 
+=head1 NAME
 
 I<rtest_renumber.pl> - renumber the tests in an rtest_xxx.mac file.
 
@@ -102,7 +102,7 @@ sub make_package_system {
               :components
               ((:file "rtest_$pack"))) ; for example
 EOFS
-    
+
 }
 
 sub make_package_mxt {
@@ -134,7 +134,7 @@ sub make_package_mac {
 /* This file loads mext package $pack at run time. */
 /* Replace the following a mext package, or list of them, on which $pack depends at runtime. */
 /* Or else, remove it. */
-require(""); 
+require("");
 /* List files to be loaded: source, lisp, or binary, without extensions. */
 mext_provide("$pack",
   [ "file1",

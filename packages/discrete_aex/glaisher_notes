@@ -12,7 +12,7 @@ bigfloat.
    digits is 2025 + a few other characters.
 5) replace-regexp , space nothing(carriage return)
    This removes several spaces.
-6) Type 'b0;' at the end and 
+6) Type 'b0;' at the end and
    '%Glaisher_bigfloat :' at the front.
 7) load("glaisher.mac");
 8) confirm precision(%Glaisher_bigfloat) --> 20025

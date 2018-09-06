@@ -2,7 +2,7 @@ load(mext);
 
 /* Don't touch these lines */
 chdir(pathname_directory(load_pathname));
-build_several (package_list) := 
+build_several (package_list) :=
  for package in package_list do
   load_in_subdir(["ibuild","mac"],[package]);
 

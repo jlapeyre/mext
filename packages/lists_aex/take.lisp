@@ -2,7 +2,7 @@
 ;;;  `LICENSE' in this directory.
 
 ;(eval-when (:compile-toplevel :load-toplevel :execute)
-;  (if (find-package :maxima-take ) t (defpackage :maxima-take 
+;  (if (find-package :maxima-take ) t (defpackage :maxima-take
 ;                                       (:use :common-lisp :gjl.lisp-util :max-doc))))
 
 (in-package :maxima-take)
@@ -140,7 +140,7 @@
  :code "i2" "th stepping by " :codedot "i3" " If " :code "i1" " or " :code
  "i2" " are negative, they count from the end. If " :code "i3" " is
  negative, stepping is down and " :code "i1" " must be greater than or equal to " :codedot
- "i2" " If " :code "i3" " is omitted, it is taken to be " :math "1" 
+ "i2" " If " :code "i3" " is omitted, it is taken to be " :math "1"
  ". A sequence specifiier can also be one of 'all 'none or
  'reverse, which mean all elements, no  elements or all elements in
  reverse order respectively." )))
@@ -246,4 +246,3 @@
           '( :pretext "Take the second through third elements at the first level and  the last 2 elements at the second level."
             :vars "[a,b,c,d,e,f,g,h,i]"
             :code "take([[a,b,c], [d,e,f], [g,h,i]], [2,3],-2)" ))
-

@@ -44,7 +44,7 @@
 ;; nargs -- a symbol (via gensym) that will count the number of non-option arguments
 ;; args -- a symbol (via gensym) that contains a list of *all* args(parameters) passed at run time
 ;; all-args -- a list of all argument names for this defmfun1 function (except &rest args)
-;; supplied-p-hash -- 
+;; supplied-p-hash --
 ;; rest -- a list containing the name of the rest arg (or nil)
 ;; count-args -- a flag specifying whether the function is to verify the number of args.
 (eval-when (:compile-toplevel :load-toplevel :execute)
@@ -99,10 +99,10 @@
                  (when (and (not (atom ith-arg))
                         (not (aex-p ith-arg)) (mext-mbagp (car ith-arg))) ; just matrices and lists
                    (let ((newargs (copy-list ,args)))
-                     (return-from ,name 
+                     (return-from ,name
                        (cons (car ith-arg) (loop :for ith-arg-1 :in (cdr ith-arg) :collect
-                         (progn                                            
-                           (setf (nth ,i newargs) ith-arg-1)                                    
+                         (progn
+                           (setf (nth ,i newargs) ith-arg-1)
                            (apply ',name newargs)))))))
                  (when (and (aex-p ith-arg) (mext-mbagp (aex-head ith-arg)))
                    (let* ((newargs (copy-list ,args))
@@ -128,7 +128,7 @@
 ;; have-match -- flag for :match specified with function name in defmfun1 definition.
 ;; count-args -- a flag specifying whether the function is to verify the number of args.
 (eval-when (:compile-toplevel :load-toplevel :execute)
-(defun defmfun1-write-assignments (name args reqo restarg nargs 
+(defun defmfun1-write-assignments (name args reqo restarg nargs
                                         supplied-p-hash reqo-spec pp-spec-h
                                         have-match count-args)
  "Write code to set required and &optional args to values supplied by call."
@@ -150,7 +150,7 @@
 ;; name -- name of function (a symbol)
 ;; args -- a symbol (via gensym) that contains a list of *all* args(parameters) passed at run time
 ;; opt-args -- a symbol ... list of opt-args passed at run time
-;;   each element is a dyad: (optname val) 
+;;   each element is a dyad: (optname val)
 ;; opt -- a list of option names (symbols) each wrapped in a list
 ;; supplied-p-hash -- hash
 ;; reqo-spec -- hash
@@ -158,7 +158,7 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
 (defun defmfun1-write-opt-assignments (name args opt-args opt supplied-p-hash reqo-spec have-match)
   "Write code to set option variables to supplied values."
-  (when opt `((dolist (ospec ,opt-args) 
+  (when opt `((dolist (ospec ,opt-args)
                 (dbind (var val) ospec
                        (cond ,@(do* ( (optl opt (cdr optl))
                                       (topt (car opt) (car optl))
@@ -205,7 +205,7 @@
 ;; compile-time, and save it somehow to disk. But that seems much more complicated, and I
 ;; can't see a benefit now. Time required to load does not seem to be affected at all.
 (defmacro defmfun1 (name args &body body &aux directives have-match count-args)
-  (when (listp name) 
+  (when (listp name)
     (setf directives (cdr name)) (setf name (car name)))
   (when (or (not (symbolp name)) (null name))
     (defmfun1::defmfun1-expand-error 'maxima::$defmfun1_name_not_symbol
@@ -251,7 +251,7 @@
        (when (defmfun1::are-some-args-held name) (setf defun-type 'defmspec))
        `(progn
           ,(when (member :doc directives)
-                 `(max-doc::add-doc-entry1 :e 
+                 `(max-doc::add-doc-entry1 :e
                 '( :name ,sname :protocol ,(defmfun1::format-protocol sname req optional rest)
                          :protocol-list ,(list sname req optional rest)
                          :contents ,(if doc-content doc-content
@@ -262,14 +262,14 @@
           (defmfun1::save-arg-directives ',name ',arg-directives)
 ;          (defmfun1:record-mext-package ',name defmfun1::*mext-package*) ; move to add-doc-entry
           ; Here is the function definition.
-          (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux) 
+          (,defun-type ,name ( ,@(if (eq defun-type 'defmspec) nil `(&rest)) ,args ,@aux)
             ,@doc-string
             ,@(when (eq defun-type 'defmspec) `((setf ,args (cdr ,args))))
             (let* ,(defmfun1-write-let-bindings name nargs args all-args supplied-p-hash rest count-args)
               (declare (ignorable defmfun1-func-name defmfun1-func-call defmfun1-func-call-args ))
               ,@(when count-args `((declare (fixnum ,nargs))))
               ,@declare-form ; moved out of body, because it must occur after parameter list
-              (,@(if opt `(dbind (,opt-args ,restarg) 
+              (,@(if opt `(dbind (,opt-args ,restarg)
                                  ,(if (member :fast-opt directives)
                                       `(defmfun1::collect-opt-args-fast ,args ,nreq)
                                       `(defmfun1::collect-opt-args-slow ,args)))
@@ -285,7 +285,7 @@
                 ,(when count-args
                    `(when (< ,nargs ,nreq) ,(defmfun1::narg-error-or-message name args restarg nargs nreq nreqo rest have-match)))
                 ,@(when (and (null rest) count-args)
-                    `((if ,restarg ,(defmfun1::narg-error-or-message 
+                    `((if ,restarg ,(defmfun1::narg-error-or-message
                                       name args restarg nargs nreq nreqo rest have-match))))
                 ,@(defmfun1-write-rest-assignments name args rest reqo-spec nargs have-match)
                 ,@body))))
@@ -374,7 +374,7 @@
 ; we respect runtime opt match->true or false
 (defmacro defmfun1-error-final (err-code mssg &optional have-match)
  "used at an exit point of a defmfun1 body. does not call return-from"
-  `(progn (defmfun1::error-or-message defmfun1-func-name 
+  `(progn (defmfun1::error-or-message defmfun1-func-name
             (format nil "~a: ~a; in ~a" ($sconcat defmfun1-func-name) ,mssg
               ($sconcat defmfun1-func-call)) ,@(defmfun1::write-force-match-code have-match)
               ,err-code)
@@ -382,7 +382,7 @@
 
 (defmacro defmfun1-error-return (err-code funcname mssg &optional have-match)
  "used to return from defmfun1 body with error message and return-from"
-  `(progn (defmfun1::error-or-message defmfun1-func-name 
+  `(progn (defmfun1::error-or-message defmfun1-func-name
             (format nil "~a: ~a; in ~a" ($sconcat defmfun1-func-name) ,mssg
                     ($sconcat defmfun1-func-call))
             ,@(defmfun1::write-force-match-code have-match) ,err-code)
@@ -447,13 +447,13 @@
  (setf attribute (string-upcase attribute))
  (when (symbolp max-attribute) (setf max-attribute (symbol-name max-attribute)))
  (setf max-attribute (string-upcase max-attribute))
- (let ((set-doc-str 
+ (let ((set-doc-str
          (list (format nil "Set the `~a' attribute for function(s) " (string-downcase max-attribute))
                :arg "names" ". " doc-string))
-       (unset-doc-str 
+       (unset-doc-str
         (list (format nil "Unset the `~a' attribute for function(s) " (string-downcase max-attribute))
               :arg "names" ". " doc-string)))
-   `(progn 
+   `(progn
       (defmfun1 (,(intern (sconcat "$SET_" max-attribute)) :doc) ((names :or-string-symbol-or-listof :ensure-list))
         :desc ,set-doc-str
         (loop :for name :in names :do
@@ -466,7 +466,7 @@
               (maxima-symbol-to-string name)
               (,(find-symbol (sconcat "UNSET-" attribute) 'defmfun1) name))
         '$done))))
-      
+
 (mk-maxima-attribute match_form match-form "If the argument checks for a function call fail,
  and the attribute `match_form' is set, then rather than signaling an error, the unevaluated form
  is returned. Furthemore, if the attribute `nowarn' is not set, then a warning message is printed.
@@ -480,7 +480,7 @@
 (max-doc::see-also-group '( "unset_match_form" "set_match_form" "set_nowarn" "unset_nowarn" "attributes"))
 
 (max-doc:add-doc-entry '(:name "hold_all" :type "Attribute"
-    :contents 
+    :contents
     ("A function with the attribute " :code "hold_all"
      " evaluates none of its arguments.")))
 

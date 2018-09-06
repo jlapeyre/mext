@@ -62,10 +62,10 @@
              (setf knext (1- (the fixnum (aex-get a knext)))))
         (when (evenp L) (setf sgn (- sgn)))))
     sgn))
-             
+
 (add-call-desc '( "signature_permutation" ("list")
  ("returns the sign, or signature, of the symmetric permutation " :argcomma "list"
-  " which must be represented by a permuation the integers from " :math "1" 
+  " which must be represented by a permuation the integers from " :math "1"
   " through " :math "n" ", where " :math "n" " is  the length of the list.")))
 
 (defmfun-ae ($perm_to_cycles :doc) ( (ain :ae-list ))
@@ -110,11 +110,11 @@
     (loop for cyc in ncycles do
           (let ((ncyc (1- (aex-length cyc))))
             (declare (fixnum ncyc))
-            (setf (aex-get perm (the fixnum (1- (aex-get cyc 0)))) 
+            (setf (aex-get perm (the fixnum (1- (aex-get cyc 0))))
                   (the fixnum (aex-get cyc ncyc)))
             (loop for i fixnum from 0 to (1- ncyc) do
-                  (setf (aex-get perm 
-                                 (the fixnum (1- (the fixnum (aex-get cyc (1+ i)))))) 
+                  (setf (aex-get perm
+                                 (the fixnum (1- (the fixnum (aex-get cyc (1+ i))))))
                         (the fixnum (aex-get cyc i))))))
     (defmfun-final-to-ae perm)))
 
@@ -140,7 +140,7 @@
                         (loop for e in (cddr cyc) collect
                               (aex-to (make-mlist-simp (cadr cyc) e)))))))))))
 
-;; Need to implement routine for aex input      
+;; Need to implement routine for aex input
 (defmfun-ae ($transpositions_to_perm :doc) ((ain :ae-list ))
  :desc ("Returns the permutation specified by the list of
          transpositions " :argdot "ain")
@@ -156,7 +156,7 @@
             (setf (aex-get perm (1- two)) tmp)))
     (defmfun-final-to-ae perm)))
 
-(max-doc:implementation "transpositions_to_perm" 
+(max-doc:implementation "transpositions_to_perm"
  "Input is converted to lex on both levels. Default output is aex.")
 
 ;; testing using aex-get vs. directly using aref.
@@ -177,7 +177,7 @@
     (defmfun-final-to-ae iperm)))
 
 
-(examples::clear-add-example "inverse_permutation" 
+(examples::clear-add-example "inverse_permutation"
  '( :code ( "inverse_permutation([5,1,4,2,6,8,7,3,10,9])"
             "inverse_permutation(inverse_permutation([5,1,4,2,6,8,7,3,10,9]),ot->ml)")))
 
@@ -187,7 +187,7 @@
       (let* ((n (ilength ain))
              (visited (make-array n :element-type 'bit  :initial-element 0)))
         (declare (fixnum n))
-        (if (aex-p ain) 
+        (if (aex-p ain)
             (let ((a (aex-arr ain))  ; ugly array stuff
                   (xa 0)
                   (flag nil))
@@ -205,26 +205,26 @@
                    (= 1 (bit visited (the fixnum (1- (the fixnum x1)))))) (null x))
             (setf (bit visited (the fixnum (1- (the fixnum x1)))) 1))))
     '$false))
-    
-  
-(add-call-desc '("permutation_p" ("list") 
+
+
+(add-call-desc '("permutation_p" ("list")
  ("Returns true if the list " :arg "list" " of length "
- :math "n" " is a permutation of the integers from " :math "1" " through " 
+ :math "n" " is a permutation of the integers from " :math "1" " through "
  :math "n" ". Otherwise returns false.")))
 
-(max-doc:implementation "permutation_p" 
+(max-doc:implementation "permutation_p"
  "Separate routines for aex and lex input are used.")
 
 (defmfun1 ($permutation_p1 :doc) (ain)
- :desc 
+ :desc
   ("This is the same as " :mrefcomma "permutation_p" " but, if the input is a list,
-   it assumes all elements in the input list are fixnum integers, while " :mref "permutation_p" 
+   it assumes all elements in the input list are fixnum integers, while " :mref "permutation_p"
    " does not.")
   (if ($ae_listp ain)
       (let* ((n (ilength ain))
              (visited (make-array n :element-type 'bit  :initial-element 0)))
         (declare (fixnum n))
-        (if (aex-p ain) 
+        (if (aex-p ain)
             (let ((a (aex-arr ain))  ; ugly array stuff
                   (xa 0)
                   (flag nil))
@@ -243,8 +243,8 @@
             (declare (fixnum x1))
             (setf (bit visited (the fixnum (1- (the fixnum x1)))) 1))))
     '$false))
-  
-(max-doc:implementation "permutation_p1" 
+
+(max-doc:implementation "permutation_p1"
  '("Some variables are declared fixnum, but this does not seem to
   improve performance with respect to " :mrefdot "permutationp"))
 
@@ -274,14 +274,14 @@
 (defmfun-ae ($random_permutation_sym :doc) ((n :pos-int :thread))
   (rand-perm-sym-body nil))
 
-(add-call-desc '("random_permutation_sym" ("n") 
+(add-call-desc '("random_permutation_sym" ("n")
   ("Returns a random permutation of the integers from " :math "1" " through " :argdot "n"
    " This represents a random element of the symmetric group " :math "S_n" ".")))
 
 (defmfun-ae ($random_cycle :doc) ((n :pos-int :thread))
   (rand-perm-sym-body t))
 
-(add-call-desc '("random_cycle" ("n") 
+(add-call-desc '("random_cycle" ("n")
  ("Returns a random cycle of length " :argdot "n" " The return value is a list
    of the integers from " :math "1" " through " :argcomma "n" " representing an
    element of the symmetric group " :math "S_n" " that is a cycle.")))

@@ -146,7 +146,7 @@
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defmacro maxima::ddefvar (name &body body)
     (let* ((maybe-docstring (car (last body)))
-           (docstring (if (stringp maybe-docstring) maybe-docstring 
+           (docstring (if (stringp maybe-docstring) maybe-docstring
                         ;;                        (progn (setf body (butlast body)) maybe-docstring) ; hmm maybe don't strip it out
                         "You wrote ddefvar, but no docstring... should be an error."))
            (name-str (minv name)))
@@ -158,7 +158,7 @@
 ;(eval-when (:compile-toplevel :load-toplevel :execute)
 (defmacro maxima::ddefparameter (name &body body)
   (let* ((maybe-docstring (car (last body)))
-         (docstring (if (stringp maybe-docstring) maybe-docstring 
+         (docstring (if (stringp maybe-docstring) maybe-docstring
                       ;;                        (progn (setf body (butlast body)) maybe-docstring) ; hmm maybe don't strip it out
                       "You wrote ddefparameter, but no docstring... should be an error."))
          (name-str (minv name)))
@@ -166,4 +166,3 @@
                   (new-make-doc-var-item ,name-str ,docstring 'defparameter))
             (defparameter ,name ,@body))))
 ;)
-  

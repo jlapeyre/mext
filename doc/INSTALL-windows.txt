@@ -21,7 +21,7 @@ here, we assume you browse to your home folder,
 Click 'OK'. Click 'Extract. The files should be extracted
 to a folder called C:\Users\username\mext-master, or
 something like that.
-  
+
  Warning: if the timestamps of the extracted files are in the future
   with respect to your system, defsystem will compile in semi-infinite
   loops, repeatedly ask questions, and ignore the answers. I have not
@@ -30,17 +30,17 @@ something like that.
 3) Install the mext_system distribution (package)
 to your user maxima folder, as follows:  All other
 distributions packaged for mext depend on
-mext_system (mext). 
+mext_system (mext).
 
- * Open wxmaxima. 
- * Click the menu File-->Load Package. 
- * Browse to where you extracted the zip file and 
-   browse to the folder mext-master --> mext_system. 
+ * Open wxmaxima.
+ * Click the menu File-->Load Package.
+ * Browse to where you extracted the zip file and
+   browse to the folder mext-master --> mext_system.
  * At the bottom right of the file dialog change the filter
    from 'Maxima package (*.mac)' to
    'Lisp package (*.lisp)'.
- * Click on the LISP file `00mext-ibuild'. 
- * Click 'open'.  
+ * Click on the LISP file `00mext-ibuild'.
+ * Click 'open'.
 
 If all goes well, mext should be installed.
 
@@ -50,7 +50,7 @@ Maxima->Restart Maxima). Here we show how to
 install several distributions at once. Below we
 show how to install them one at a time.
 
-  NOTE: 
+  NOTE:
    If you build or install the mext packages
   'quicklisp' or 'store', you must have an
   internet connection so that quicklisp can
@@ -130,7 +130,7 @@ Any distribution not listed here depends only on mext_system.
   alt_eigen -> maxdoc
   nelder_mead -> maxdoc
   quicklisp -> maxdoc
-  store -> quicklisp  
+  store -> quicklisp
 
 OTHER INSTALLATION INSTRUCTIONS
 

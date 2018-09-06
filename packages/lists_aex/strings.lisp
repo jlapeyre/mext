@@ -66,7 +66,7 @@
                 (maxima::merror1 "string_drop: increments not equal to one not supported.")))))
 
 (examples::clear-examples "string_drop")
-(examples::add-example "string_drop" 
+(examples::add-example "string_drop"
                        '( :code " string_drop(\"abracadabra\",1)")
                        '( :code " string_drop(\"abracadabra\",-1)")
                        '( :code " string_drop(\"abracadabra\",[2,10])"))

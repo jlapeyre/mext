@@ -30,7 +30,7 @@
   things down a bit. So be cautious using it in a tight loop.")
 
 (defmfun1 ($length_eq :doc) ( (e :or-string-non-mapatom) (n 0 :non-neg-int)) ; 0 to quiet compiler
-  :desc ("Returns true if " :arg "e" " is of length " :argcomma "n" 
+  :desc ("Returns true if " :arg "e" " is of length " :argcomma "n"
   " false otherwise. This implementation traverses no more
  elements of " :arg "e" " than necessary to return the result.")
   (declare (fixnum n))
@@ -45,7 +45,7 @@
 
 (maxdoc:implementation "length_eq" "length_eq is implemented with defmfun1, which slows
   things down a bit. So be cautious using it in a tight loop.")
-  
+
 (defmfun1 ($length1p :doc) ( (e :or-string-non-mapatom))
   :desc ("Returns true if " :arg "e" " is of length 1, false otherwise. This implementation traverse no more
  elements of " :arg "e" " than necessary to return the result.")
@@ -92,14 +92,14 @@
 ;; we are interested in maxima constant symbols. maybe this
 ;; is not the right way.
 (defun type-of-constant-p (e)
-  (let ((res 
-         (and (not (or (numberp e) (stringp e))) (mfuncall '$errcatch 
+  (let ((res
+         (and (not (or (numberp e) (stringp e))) (mfuncall '$errcatch
                    `($constantp ,e)))))
     (if (consp res) (cadr res) res)))
 
 (defun type-of-rat-p (e)
-  (let ((res 
-         (mfuncall '$errcatch 
+  (let ((res
+         (mfuncall '$errcatch
                    `($ratp ,e))))
     (if (consp res) (cadr res) res)))
 
@@ -148,7 +148,7 @@
 ;;   (and (consp e) (eq (caar e) 'rat)))
 
 (defun maxima-op-to-sym (h)
-  (cond 
+  (cond
    ((eq h 'mlist) '$list)
    ((eq h 'mplus) '$plus)
    ((eq h 'mtimes) '$times)
@@ -159,9 +159,9 @@
    (t (lisp-sym-to-max h))))
 
 (defmfun1 ($type_of :doc) (e &opt (($info info) nil :bool))
- :desc 
+ :desc
  ("Return something like the `type' of a maxima expression. "
-  :mref "type_of" " uses the lisp function " 
+  :mref "type_of" " uses the lisp function "
  :codedot "type-of" " Currently, " :mref "type_of" " is a bit ill-defined; "
  " it may be better called `what-is-this?'."
  :par ""
@@ -171,10 +171,10 @@
  representing the type.")
 
  (let* ((add-info '())
-        (e (cond ((poisp e) 
+        (e (cond ((poisp e)
                   (push (maxima-op-to-sym 'mpois) add-info)
                   ($outofpois e))
-                 (($ratp e) 
+                 (($ratp e)
                   (push (maxima-op-to-sym 'mrat) add-info)
                   ($ratdisrep e))
                  ((aex-p e)
@@ -224,10 +224,10 @@
      (if (and info add-info)
          (mk-mlist (cons type-res add-info))
        type-res))))
-       
+
 (examples::clear-examples "type_of")
-(examples::add-example "type_of" 
-                       '( :code ("type_of(1)" "type_of(1, info->true)" "type_of(1.0)" 
+(examples::add-example "type_of"
+                       '( :code ("type_of(1)" "type_of(1, info->true)" "type_of(1.0)"
                                  "type_of(1.0b0)" "type_of(1/3)" "type_of(1/3, info->true)"
                                  "type_of(\"dog\")" "type_of([1,2,3])" "type_of(aex([1,2,3]))"
                                  "type_of(%e)"  "type_of(%i)" "type_of(%i+1)"))
@@ -244,7 +244,7 @@
     (if (and (consp re) (eq (caar re) 'rat))
         (/ (second re) (third re))
       re)))
-  
+
 (defmfun1 ($lcomplex :doc) ((expr :thread))
   :desc
   ("Return  maxima complex number " :arg "expr" " converted to a lisp complex number.")

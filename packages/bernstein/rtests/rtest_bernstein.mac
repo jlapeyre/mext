@@ -3,9 +3,9 @@
 0$
 
 /* Test */
-[errcatch(bernstein_poly()), 
- errcatch(bernstein_poly(2)), 
- errcatch(bernstein_poly(5,6)), 
+[errcatch(bernstein_poly()),
+ errcatch(bernstein_poly(2)),
+ errcatch(bernstein_poly(5,6)),
  errcatch(bernstein_poly(false,false,false,false))];
 [[],[],[],[]]$
 
@@ -64,7 +64,7 @@ map(lambda([s], is(abs(1-s) < 1.0e-10)), makelist(sum(bernstein_poly(k,n,0.4 + %
  expand(subst([k=5,n=8],q)));
 [0,0,0]$
 
-/* integrals */ 
+/* integrals */
 
 /* Test */
 (assume(k +1 > 0),0);

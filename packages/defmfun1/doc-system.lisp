@@ -52,7 +52,7 @@
               (setf (gethash  ,name ,ds-table) ,ds)
               (maxima::merror1 (intl:gettext "doc-system: item ~M to enter in doc systems table is not a doc system.")
                                     ,ds))))
-    
+
 (defstruct (doc-system)
   (name "" :type string)
   (data)

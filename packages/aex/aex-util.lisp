@@ -1,4 +1,4 @@
-;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
+;;;  Copyright (C) (2012,2018) John Lapeyre. Licensed under GPL, v3 or greater. See the file
 ;;;  `LICENSE' in this directory.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

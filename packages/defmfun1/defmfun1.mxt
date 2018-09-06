@@ -9,5 +9,3 @@
    :license "GPL"
    :description "More featureful defmfun"
    :long-description "Macro defmfun1 that provides preprocessing and checking of arguments.")
-
- 

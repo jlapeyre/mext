@@ -227,7 +227,7 @@ f(b*z)+f(a*y)+f(x)$
 /* Test 52 */
 is( imap(lambda([u],partfrac(u,x)),x+1/(x^3+4*x^2+5*x+2), compile->false)
     - (1/(x+2)-1/(x+1)+1/(x+1)^2+x) = 0);
-true$  
+true$
 
 /* Test 53 */
 /* Simplifier or formatting insanity. using map gives true, probably because it does a lot of reformatting. */
@@ -238,7 +238,7 @@ imap(ratsimp, x/(x^2+x)+(y^2+y)/y);
 /* Test 54 xx */
 /* some kind of simplifer crap. this actually works.
 is( imap(cos,lrange(0,4*%pi,%pi/2,ot->ar)) = <<1,0,-1,0,1,0,-1,0,1>>);
-true$  
+true$
 */
 
 /* no recursive call */
