@@ -85,7 +85,7 @@ two_terminal_parts : [R, C, L, VSIN]$
 three_terminal_parts : [OP_AMP]$
 one_terminal_parts : [VP]$
 
-number_of_terminals(kind) := 
+number_of_terminals(kind) :=
   if member(kind, two_terminal_parts) then 2
   elseif member(kind, three_terminal_parts) then 3
   elseif member(kind, one_terminal_parts) then 1
