@@ -35,7 +35,7 @@
 ;;; [variable, end]
 ;;; This iterator uses a step of 1 and initial value is also 1, therefore it's
 ;;; equal to iterator [variable, 1, end, 1].
-;;; 
+;;;
 ;;; [variable, Maxima list or set]
 ;;; This iterator evaluates the expression for each element of the Maxima list
 ;;; or set. Variable is sequentally set to values in the list or set during
@@ -70,7 +70,7 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; This library is free software; you can redistribute it and/or modify it
-;;; under the terms of the GNU General Public License as published by the 
+;;; under the terms of the GNU General Public License as published by the
 ;;; Free Software Foundation; either version 2 of the License, or (at
 ;;; your option) any later version.
 ;;;
@@ -79,7 +79,7 @@
 ;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 ;;; Library General Public License for more details.
 ;;;
-;;; You should have received a copy of the GNU General Public License along 
+;;; You should have received a copy of the GNU General Public License along
 ;;; with this library; if not, write to the Free Software
 ;;; Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ;;;
@@ -142,7 +142,7 @@
      ((= n 1) (table-number-iterator expr iterators (meval (first next-iterator))))
 
      ;; empty iterator [] or iterator too long
-     (t 
+     (t
       (table-non-local-exit
                 '$iter_length "Iterator must be a list of length between 1 and 4")))))
 
@@ -184,7 +184,7 @@
          (table-step-iterator-lisp-numbers-float-neg expr iterators var var-start var-end var-step)))
     ((and (numberp var-start) (numberp var-end) (numberp var-step))
      (table-step-iterator-lisp-numbers expr iterators var var-start var-end var-step))
-    (t 
+    (t
      (let ()
        (unless ($numberp ($float (sub* var-end var-start)))
          (merror1 "table: Difference of ~M and ~M is not a number." var-end var-start))
@@ -211,7 +211,7 @@
                        (declare (,type i))
                        (set  var i)
                        (push (table-general-iterator expr iterators) ans)))))))
-  
+
 (mk-table-step-iterator-lisp-numbers table-step-iterator-lisp-numbers-fixnum-pos 1 fixnum)
 (mk-table-step-iterator-lisp-numbers table-step-iterator-lisp-numbers-fixnum-neg -1 fixnum)
 (mk-table-step-iterator-lisp-numbers table-step-iterator-lisp-numbers-float-pos 1 flonum)
@@ -295,11 +295,11 @@
       (if (null iterators)
         ;; no more iterators, just evaluate expr num-times
         (dolist (i var-value-list)
-          (setf (symbol-value var) i) 
+          (setf (symbol-value var) i)
           (push (meval expr) ans))
         ;; there are more iterators, call table-general-iterator
         (dolist (i var-value-list)
-          (setf (symbol-value var) i) 
+          (setf (symbol-value var) i)
           (push (table-general-iterator expr iterators) ans)))
       ;;return
       `((mlist simp) ,@(nreverse ans)))))
@@ -320,7 +320,7 @@
 (defmfun-ae ($table) ( expr (iterator1 :list) &rest (iterators :list) )
   (push iterator1 iterators)
   (let ((res
-         (catch 'table-error 
+         (catch 'table-error
            (table-general-iterator expr (mapcar #'cdr iterators)))))
     (if (eq (car res) 'table-error)
         (defmfun1-error-final (second res) (third res))
@@ -340,13 +340,13 @@
 (add-call-desc '( "table" ("expr" ("list" "variable" "initial" "end" "step") )
     ("Returns a list of evaluated expressions where " :arg "variable" " (a symbol) is set
       to a value. The first element of the returned list is " :arg "expression" " evaluated
-      with " :arg "variable" " set to " :argdot "initial" 
-      " The " :math "i" "-th element of the returned list is " :arg "expression" " 
-      evaluated with " :arg "variable" " set to " 
+      with " :arg "variable" " set to " :argdot "initial"
+      " The " :math "i" "-th element of the returned list is " :arg "expression" "
+      evaluated with " :arg "variable" " set to "
       :arg "initial" :math " + (i-1) " :arg "step" ". The iteration stops
       once the value is greater (if " :arg "step" " is positive) or smaller (if " :arg "step" " is negative)
-      than " :argdot "end" " Requirement: The difference between " :arg "end" " and " :arg "intial" 
-      " must return a " :emref "numberp" " number. " :arg "step" 
+      than " :argdot "end" " Requirement: The difference between " :arg "end" " and " :arg "intial"
+      " must return a " :emref "numberp" " number. " :arg "step"
       " must be a nonzero " :emref "numberp" " number. This allows for iterators of
       rather general forms like " :code "[i, %i - 2, %i, 0.1b0] " :dots "." )))
 
