@@ -56,6 +56,12 @@ To remove the mext system and all pacakges, delete the files and
 the single folder in your home .maxima directory or maxima folder
 that begin with `mext`.
 
+### Testing
+
+See [bin/0README_bin.md](bin/0README_bin.md) for testing the mext system
+and packages for several versions of Maxima simultaneously. Scripts for
+building the documentation are also in the [bin/](bin/) directory.
+
 ### Usage
 
 For a brief introduction to using mext, see `doc/USAGE`.
