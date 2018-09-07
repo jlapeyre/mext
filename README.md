@@ -1,17 +1,22 @@
-# mext
+# mext: Maxima package manager and third party packages
 
-## Maxima third party packages and manager
-
-### Summary
+## Summary
 
 This repository contains the mext packaging system and packages for
 the Maxima computer algebra system. I wrote this because Maxima by
-itself has no system for managing third-party packages.  Basic missing (or unused)
-features provided here are: registration, installation, namespaces,
-tests (unit or otherwise), compiling dependencies once, loading
-dependencies once, managing multiple versions, and many others.  Much
-of the `share`, `contrib`, and third-party code is packaged for
-`mext`.
+itself has no system for managing third-party packages (or packages in share or contrib).
+Features missing in stock Maxima that are provided here include:
+
+* installation of code to canonical locations.
+* namespaces
+* canonical organization of tests
+* specifying dependencies that are loaded automatically
+* compiling dependencies only once rather than repeatedly
+* loading dependencies once rather than repeatedly
+* managing multiple versions of maxima and multiple lisp implementations
+* many others
+
+Much of the `share`, `contrib`, and third-party code is packaged for `mext`.
 
 I wrote this package manager because it is necessary to support
 several packages that I wrote: `defmfun1`, `aex`, and other packages that depend on
@@ -27,21 +32,23 @@ of these as 'distributions' rather than 'packages')
 ### Maxima version compatibility
 
 If you have any difficulty, please [file an issue](https://github.com/jlapeyre/mext/issues).
-The last version of Maxima that has been confirmed to pass all tests in this repository is v5.30.
+When first written, mext supported many lisp implementations and Maxima versions. Changes
+in both of these may cause failures. mext *does* support Maxima 5.41.0 compiled with sbcl 1.4.6.
+The latest versions of gcl are not yet supported due to changes in gcl. Other lisp implementations
+have not been tested recently.
 
-### Install
+### Installation
 
-For installation instructions, see the files
+For installation instructions, see the files [doc/INSTALL](doc/INSTALL)
+and [doc/INSTALL-windows.txt](doc/INSTALL-windows.txt)
 
-    doc/INSTALL and doc/INSTALL-windows.txt
+<!-- Zipped prebuilt installations for windows can be found at -->
+<!-- http://www.johnlapeyre.com/mext_windows/ -->
 
-Zipped prebuilt installations for windows can be found at
-http://www.johnlapeyre.com/mext_windows/
-
-In linux, you can install to your .maxima directory by running
-./install_mext.sh maxima
+In linux, you can install to your `.maxima` directory by running
+`./install_mext.sh maxima`
 where maxima is the name of your maxima program. Read the comments
-at the top of the file install_mext.sh
+at the top of the file [install_mext.sh](install_mext.sh).
 
 ### Uninstall
 
@@ -69,16 +76,16 @@ For a brief introduction to using mext, see `doc/USAGE`.
 
 * Basic system functions, for example: `chdir, list_directory, pwd, popdir, updir, dir_exists`, etc.
 
-* Package management and info on installed and loaded packages: `mext_list, mext_list_loaded, mext_info`.
+* Package management and information on installed and loaded packages: `mext_list, mext_list_loaded, mext_info`.
 
 * Run package tests (rtests) with `mext_test(packname)`. rtests are installed in a
   standard location.
 
-* Supports installation of stock Maxima `share` packages to mext system
+* Supports installation of stock Maxima `share` packages to the mext system
   directly from the Maxima installation. This allows the packages to
   be compiled (once) and installed for multiple Maxima/lisp versions
   and to be loaded (once) as dependencies, and to survive `kill(all)`, and
-  to be tested quickly and easily. See for example `grobner`.
+  to be tested quickly and easily. See for example [packages/grobner](packages/grobner).
 
 * After mext is installed: Download third party mext package
   'packname' and unzip.  Do `load("packname/ibuild.mac")` to build and
@@ -89,22 +96,22 @@ For a brief introduction to using mext, see `doc/USAGE`.
 
 #### Documentation systems
 
-* Multiple documentation systems accessed via `describe` and `??`.  These do
+* Multiple documentation systems are provided and integrated for access via `describe` and `??`.  These do
  not require one to use `texinfo`, which removes a large barrier for writing docs.
 
-* Two systems: one simple, one more full-featured for user documents.
+* Two documentation systems for user code are provided: one simple, and one more full-featured.
 
-* Doc system for internal/devel documents.
+* A documentation system for internal/devel documents is provided.
 
-* Easy mechanism to dynamically include/exclude documentation from ??.
+* Easy mechanism to dynamically include/exclude these documentation databases from ??.
 
 * Examples are integrated into the documentation system.
 
-* Many ways to enter examples: Examples not executed before displaying;
+* Many ways to enter examples: Examples are not executed before displaying;
   or are executed but with variables transparently localized.
   (stock Maxima does not localize variables for examples.)
 
-* Macros for user and internal functions and variables to automatically
+* Macros are provided for user and internal functions and variables to automatically
   generate documentation that is accessible immediately with ??.
 
 * Automatic html and pdf documents generated from documentation.
@@ -131,6 +138,16 @@ It provides a lot of standardization and functionality:
 * Option `compile` to automatically compile lambda functions passed
   as arguments. Used in many functions listed below.
 
+#### quicklisp
+
+A Maxima interface to quicklisp. This is used by other packages and is
+also available to users.
+
+#### store
+
+Provides serialization of Maxima objects via an interface to the lisp library `store`.
+The library `store` is installed via quicklisp.
+
 #### aex
 
 `aex` provides expressions stored as lisp arrays, rather than lisp lists.
@@ -142,7 +159,7 @@ It provides a lot of standardization and functionality:
   is to code for and to test for efficiency.
 
     * `lrange` -- list of range of numbers.
-    * `table` -- defmfun1 wrapper on Ziga Lenarcic's code.
+    * `table` -- defmfun1 wrapper around Ziga Lenarcic's code.
     * `constant_list, count, drop_while, fold, fold_list,
       length_while, nest, nest_list, nest_while, nreverse, partition_list
       select, take, take_while, tuples, string_drop, string_take,
@@ -152,7 +169,7 @@ It provides a lot of standardization and functionality:
   applicable, but are much more efficient in some cases:
   `icons` (`cons`), `imap` (`map`), `every1` (`every`).
 
-#### discrete
+#### discrete_aex
 
 Efficient routines for:
 
