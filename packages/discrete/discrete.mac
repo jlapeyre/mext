@@ -10,4 +10,3 @@ mext_provide("discrete",
    "discrete_code",
    "group",
    "discrete_setup"]);
- 

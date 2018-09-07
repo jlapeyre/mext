@@ -57,7 +57,7 @@
 (defun boolmin (expr)
 
   (let ((vars (cdr ($listofvars expr)))
-	(terms ()) (primitive-terms ()) 
+	(terms ()) (primitive-terms ())
 	current number-of-vars
 	(active-terms (make-hash-table :test #'equal))
 	(table (make-hash-table :test #'equal))
@@ -97,7 +97,7 @@
       (format t "~%Initial table of terms:~%")
       (maphash (lambda (key val) (format t "~%  ~a -> ~a" key val)) table)
       (format t "~%----- COMBINING TERMS -----"))
-    
+
     (setq number-of-vars (length vars))
     ;;; combine two terms if the number of anys is the same and the number
     ;;; of ts differs for 1
@@ -133,11 +133,11 @@
       (format t "~%----- COMBINING TERMS FINISHED -----")
       (format t "~%Primitive terms:~%~a~%" primitive-terms)
       (format t "~%----- REDUCING BY SINGLES HACK -----"))
-   
+
     ;;; Singles hack: based on p and (not p or A) = p or A.
     ;;; If we have a single variable in a term, use the hack to
     ;;; reduce other terms.
-    (let ((ones) (i 0) (used-ones))      
+    (let ((ones) (i 0) (used-ones))
       (dolist (v primitive-terms)
         (when (= (count 'any v) (1- (length v)))
           (push i ones))
@@ -191,7 +191,7 @@
       ;;; start with all columns/rows active
       (dotimes (i (length primitive-terms))
 	(setf (gethash i active-rows) t))
-      
+
       (when $boolean_minimize_debug
 	(format t "~%----- FINDING MINIMUM COVER -----~%~%"))
 
@@ -217,7 +217,7 @@
 		    ((null (car var))
 		     (setf curr ($apply 'mand `((mlist simp) ,curr ((mnot simp) ,(car vrs))))))))
 	    (setf expression ($apply 'mor `((mlist simp) ,expression ,curr)))))
-	
+
 	expression))))
 
 ;;;
@@ -271,7 +271,7 @@
       (format t "~% Current rows: ~a" keys)))
 
   (let (needed-rows primitive-cols rows uncovered-cols)
- 
+
     ;; find all rows which need to be added
     (dolist (pair (find-single-covered-cols table n m active-rows selected-rows))
       (push (cadr pair) primitive-cols)
@@ -282,7 +282,7 @@
 
     (when (and $boolean_minimize_debug needed-rows)
       (format t "~% Adding needed rows ~a" needed-rows))
-    
+
     ;; count how many rows we must select, find active rows
     (let ((selected-count 0))
       (dotimes (i n)
@@ -291,11 +291,11 @@
 	   (incf selected-count))
 	  ((gethash i active-rows)
 	   (push i rows))))
-      
+
       ;; can we improve the covering?
       (when (or (null *covering-rows*)
 		(< selected-count (length *covering-rows*)))
-	
+
 	;;;;;;;;;;;;;;;;;;;
 	;;
 	;; STEP 1: find the column which is covered by the minimum number of rows

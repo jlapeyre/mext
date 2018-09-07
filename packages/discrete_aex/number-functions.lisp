@@ -62,7 +62,7 @@
 (add-call-desc '( "from_digits" ("digits")
                  ("returns the integer represented by the decimal digits in the list or string " :arg "digits" "."))
                '( "from_digits" ("digits" "base")
-                 ("returns the integer represented by the base " :arg "base" " digits in the list or string" 
+                 ("returns the integer represented by the base " :arg "base" " digits in the list or string"
                   :arg "digits" ".")))
 
 
@@ -94,7 +94,7 @@
 (max-doc:see-also "integer_digits" '("from_digits" "integer_string"))
 
 (max-doc:implementation "integer_digits"
- '( 
+ '(
    "gcl is much faster than the others. " :code "integer_digits(2^(10^6))" ": typical times for lisps:"
    :par ""
    "ecl-12.12.1 0.09s, sbcl-1.1.11 0.5s, clisp-2.49 9s, ccl-1.9 62s, "
@@ -104,8 +104,8 @@
 
 
 ;; This makes too many mistakes
-;; For binary, of course, we can use integer-length 
-;; gmp library has no function to do this exactly. 
+;; For binary, of course, we can use integer-length
+;; gmp library has no function to do this exactly.
 ;; It returns the number
 ;; of digits or one more than the exact answer.
 ;; That much is easy to do.
@@ -146,10 +146,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun1 ($integer_string :doc)
-  ((n :integer :thread) &optional (base :or-radix-string-symbol 10 :thread) 
-;   (pad 0 :non-neg-int :thread)   
-   &opt ($sep nil) ($group 3 :pos-int) 
-   ($width 0 :non-neg-int) 
+  ((n :integer :thread) &optional (base :or-radix-string-symbol 10 :thread)
+;   (pad 0 :non-neg-int :thread)
+   &opt ($sep nil) ($group 3 :pos-int)
+   ($width 0 :non-neg-int)
    ($padchar "0" :string) ($lc nil :bool))
   :desc
   ("The option " :opt "sep" " returns a string with commas."
@@ -158,7 +158,7 @@
   (when (member base '("roman" "roman_old") :test #'equal)
     (echeck-arg $integer_string :roman-integer n))
   (let* ((base (if (symbolp base) ($sconcat base) base))
-         (fmt 
+         (fmt
           (cond
            ((equal base "roman") "~@R")
            ((equal base "roman_old") "~:@R")
@@ -173,7 +173,7 @@
                          ((eq $sep '$dot) "'.")
                          (t ""))))
               (format nil "~~~a,~a,'~a,~a,~a:R" base $width $padchar sc $group)))
-           (t 
+           (t
             (format nil "~~~a,~a,'~aR" base $width $padchar))))
          (str (format nil fmt n)))
     (when $lc (nstring-downcase str))
@@ -219,7 +219,7 @@
 ;; fast in sbcl. No difference in gcl.
 ;; dunno which are the important ones.
 (defmfun1 ($prime_pi_soe2 :doc)  ((n :non-neg-int))
-  :desc 
+  :desc
   ("The prime counting function. The algorithm is the sieve of Eratosthenes.
    Internally an array of " :arg "n" " bits is used. This function only
    works when " :arg "n" " is smaller than the largest fixnum.")
@@ -258,7 +258,7 @@
           (loop :for candidate :from 2 :to maximum
              when (zerop (bit sieve candidate))
              if (>= candidate minimum) collect candidate end
-             and do (loop :for composite :from (expt candidate 2) 
+             and do (loop :for composite :from (expt candidate 2)
                        :to maximum :by candidate
                        :do (setf (bit sieve composite) 1)))))))
 
@@ -278,7 +278,7 @@
           (loop :for candidate fixnum :from 2 :to maximum
              when (zerop (bit sieve candidate))
              if (>= candidate minimum) collect candidate end
-             and do (loop :for composite fixnum :from (expt candidate 2) 
+             and do (loop :for composite fixnum :from (expt candidate 2)
                        :to maximum :by candidate
                        :do (setf (bit sieve composite) 1))))))))
 
@@ -337,7 +337,7 @@
 	 (mult (cadr l) (1- mult)))
 	((zerop mult))
       (declare (integer mult factor))
-      (setq u (mapcar #'(lambda (q) (declare (integer q factor)) 
+      (setq u (mapcar #'(lambda (q) (declare (integer q factor))
                           (* (the integer factor) (the integer q))) u))
       (setq ans (nconc ans u)))))
 
@@ -355,12 +355,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmfun1 ($divisor_summatory :doc) ((x :to-non-neg-float :thread) )
-  :desc 
+  :desc
   ("Returns the divisor summatory function "
-   :math "D(x)" " for " :argdot "x"  " The " :mref "divisor_function" " " 
+   :math "D(x)" " for " :argdot "x"  " The " :mref "divisor_function" " "
    :tmath ("\\sigma_0(n)" "sigma_0(n)") " counts
    the number of unique divisors of the natural number " :math "n" ". "
-   :math "D(x)" " is the sum of " :tmath ("\\sigma_0(n)" "sigma_0(n)") 
+   :math "D(x)" " is the sum of " :tmath ("\\sigma_0(n)" "sigma_0(n)")
    " over " :tmath ("n \\le x" "n <= x") ".")
   (let ((sum 0) (u (floor (sqrt x))) (nx (floor x)))
                     (loop :for i :from 1 :to u :do
@@ -415,7 +415,7 @@
 
 ;         :tmath ( "\\sigma_{x}(n)" "sigma_x(n)")
 (defmfun1 ($divisor_function :doc) ((n :non-neg-int :thread) &optional (x :number 0 :thread))
-  :desc ("Returns the divisor function, or sum of positive divisors function " 
+  :desc ("Returns the divisor function, or sum of positive divisors function "
       :lif ((:dmath "\\sigma_{x}(n)=\\sum_{d|n} d^x," "where " :math "d|x"
           " means " :math "d" " divides " :math "n") "sigma_x(n)")
          ". If " :arg "x" " is omitted it takes the default value "
@@ -485,7 +485,7 @@
 
 (examples:clear-add-example "amicable_p"
  '( :pretext "The first few amicable pairs."
-    :code "map(lambda([x],amicable_p(first(x),second(x))), [[220, 284], 
+    :code "map(lambda([x],amicable_p(first(x),second(x))), [[220, 284],
           [1184, 1210], [2620, 2924], [5020, 5564], [6232, 6368]])"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -497,9 +497,9 @@
 ;; TODO: allow keeping only the later part of the sequence. Look for periods greater than 1
 ;;(defmfun1 ($aliquot_sequence :doc) ((k :pos-int) (n :non-neg-int) &optional (n2 0 n2-supplied-p :non-neg-int ) )
 (defmfun1 ($aliquot_sequence :doc) ((k :pos-int :thread) (n :non-neg-int :thread) )
-  :desc (" The aliquot sequence is a recursive sequence in which each term is the sum 
-    of the proper divisors of the previous term. This function returns the first " :arg "n" 
-   " elements (counting from zero) in the aliquot sequence whose first term is " :argdot "k" 
+  :desc (" The aliquot sequence is a recursive sequence in which each term is the sum
+    of the proper divisors of the previous term. This function returns the first " :arg "n"
+   " elements (counting from zero) in the aliquot sequence whose first term is " :argdot "k"
    " The sequence is truncated at an element if it is zero or repeats the previous element.")
   (let ( (seq (list k)) (cur k) (last 0) )
     (loop :for i :from 1 :to (1- n) :until (or (= 0 cur) (= cur last)) :do
@@ -556,7 +556,7 @@
                  ($expand res)
                res)))
 	  ((eq (caar x) 'mexpt)
-           (if 
+           (if
                (and (complex-number-p (second x) '$numberp) ; GJL 2013
                     (complex-number-p (third x) '$numberp))
                (let* ((base (cbfloat-do (second x)))
@@ -630,7 +630,7 @@
 	   (cond ((integerp n)
 		  ;; float(log(int)).  First try to compute (log
 		  ;; (float n)).  If that works, we're done.
-		  ;; Otherwise we need to do more.  
+		  ;; Otherwise we need to do more.
 		  (to (or (try-float-computation #'(lambda ()
 						     (log (float n))))
 			  (let ((m (integer-length n)))
@@ -643,7 +643,7 @@
 		 (($ratnump n)
 		  ;; float(log(n/m)) where n and m are integers.  Try computing
 		  ;; it first.  If it fails, compute as log(n) - log(m).
-		  (let ((try (try-float-computation #'(lambda() 
+		  (let ((try (try-float-computation #'(lambda()
 							(log (fpcofrat n))))))
 		    (if try
 			(to try)
@@ -730,7 +730,7 @@
       (mset '$fpprec old-fpprec)
       (mset '$numer old-numer))))
 
-(add-call-desc 
+(add-call-desc
  '("tofloat" ("expr") ("tries to convert numbers in ":arg "expr" " to floating point."))
  '("tofloat" ("expr" "n") ("tries to convert numbers in ":arg "expr" " to floating point "
    "with " :arg "n" "-digit precision.")))
@@ -767,25 +767,25 @@
   $numer)
 
 (set-bigfloat-hook '|$%Khintchine|
-   #'(lambda () 
+   #'(lambda ()
        (when (> $fpprec ($precision |$%Khintchine_bigfloat|))
          (format t "Warning: fpprec is greater than internal precision of %Khintchine.~%"))
                  (bigfloatp |$%Khintchine_bigfloat|)))
 
 (set-bigfloat-hook '|$%Glaisher|
-   #'(lambda () 
+   #'(lambda ()
        (when (> $fpprec ($precision |$%Glaisher_bigfloat|))
          (format t "Warning: fpprec is greater than internal precision of %Glaisher.~%"))
                  (bigfloatp |$%Glaisher_bigfloat|)))
 
-(max-doc:add-doc-entry 
+(max-doc:add-doc-entry
  '( :name "%Khintchine"
     :type "Constant"
     :contents ("The Khintchine constant. Float and bigfloat approximations
                 can be obtained with " :mrefcomma "tofloat" " "
                 :emrefcomma "float" " and " :emrefdot "bfloat")))
 
-(max-doc:add-doc-entry 
+(max-doc:add-doc-entry
  '( :name "%Glaisher"
     :type "Constant"
     :contents ("The Glaisher constant. Float and bigfloat approximations
@@ -822,8 +822,8 @@
 ;; increase in speed. Of course, the integral is probably not
 ;; the best way to go in any case.
 (defun harmonic-number-float-complex (nf)
-  (cadr 
-   ($nintegrate 
+  (cadr
+   ($nintegrate
     `((mtimes simp) ((mexpt simp) ((mplus simp) 1 ((mtimes simp) -1 $x)) -1)
       ((mplus simp) 1 ((mtimes simp) -1 ((mexpt simp) $x ,nf))))
     '((mlist simp) $x 0 1) (rule-opt '$idomain '$complex))))
@@ -849,8 +849,8 @@
 ;; would work here.
 ;; Faster yet is probably recursion. This would also work for bigfloats
 (defun harmonic-number-float-real (nf)
-  (cadr 
-   (quad-qags-lisp #'(lambda (x) (/ (- 1 (expt x nf)) (- 1 x))) 
+  (cadr
+   (quad-qags-lisp #'(lambda (x) (/ (- 1 (expt x nf)) (- 1 x)))
                    0.0 1.0 :limit 5000 :epsrel 1e-13)))
 
 ;; Good for both bigfloat and float
@@ -878,7 +878,7 @@
   (let ((sum 0))
     (loop :for i :from 1 :to n :do
           (setf sum (+ sum (/ 1 i))))
-    (if (rationalp sum) 
+    (if (rationalp sum)
         (div (numerator sum) (denominator sum))
       sum)))
 
@@ -906,7 +906,7 @@
       (/ 1 a)
     (progn
       (let ((m (floor (+ a b) 2)))
-        (+ (*harmonic-number-integer-3 a m) 
+        (+ (*harmonic-number-integer-3 a m)
            (*harmonic-number-integer-3 m b))))))
 
 ;; def _harmonic4(a, b):
@@ -946,7 +946,7 @@
     (if (fpgreaterp (cdr n) (cdr ($bfloat 1e3)))
         (return-from $harmonic_number (harmonic-number-asymp-real n))
     (setf n ($float n))))
-  (when (complex-number-p n '$numberp) 
+  (when (complex-number-p n '$numberp)
     (let ((rp ($realpart n))
           (ip ($imagpart n)))
       (when (or (floatp rp) ($bfloatp rp)
@@ -958,7 +958,7 @@
 ;; so we can give a reasonable message. Big exponents result
 ;; in error when trying to convert
   (let (($ratprint nil))
-    (cond 
+    (cond
      ((integerp n)
       (if (> n 0) (harmonic-number-integer-3 n)
         `(($harmonic_number simp) 0)))
@@ -971,8 +971,8 @@
      ((and (complex-number-p n 'floatp) (> ($realpart n) 0))
           (harmonic-number-float-complex n))
      ((complex-number-p n '$ratnump)
-      (let ((res 
-             ($integrate 
+      (let ((res
+             ($integrate
               `((MTIMES SIMP) ((MEXPT SIMP) ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 $X)) -1)
                 ((MPLUS SIMP) 1 ((MTIMES SIMP) -1 ((MEXPT SIMP) $X ,n))))
               '$x 0 1)))
@@ -988,7 +988,7 @@
 ;; (defmfun simpharmonicnumber-unused (x vestigial z)
 ;;   (declare (ignore vestigial))
 ;;   (let* ((simpflag nil)
-;;          (u 
+;;          (u
 ;;           (loop :for e :in (cdr x) :collect
 ;;                 (let ((simpe (simpcheck e z)))
 ;;                   (when (not (alike1 e simpe))
@@ -1001,7 +1001,7 @@
 ;; Doing following automatically in defmfun1.
 ;; The reason for the following, so far, is
 ;; so float(harmonic_number(3/11)) gives what we want
-;; 
+;;
 ;; If harmonic_number can't give an answer,
 ;; it returns the unevaluated form, but we stick
 ;; a SIMP in the first element of the form
@@ -1036,7 +1036,7 @@
 
 (max-doc:see-also-group '( "tofloat" "cbfloat"))
 
-(max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence" 
+(max-doc:see-also-group '( "divisor_function" "aliquot_sum" "aliquot_sequence"
                            "divisor_summatory" "perfect_p" "abundant_p"))
 
 #|

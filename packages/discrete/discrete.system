@@ -1,5 +1,5 @@
 ;;-*- Mode: Lisp -*-
-;; System definition file for building and installing 
+;; System definition file for building and installing
 ;; package 'discrete'
 
 (in-package :mext-maxima)
@@ -31,7 +31,7 @@
   :source-extension "mac"
   :components
    ((:file "discrete")))
-  
+
  ;; (mk:defsystem discrete-rtests
  ;;  :source-extension "mac"
  ;;  :source-pathname "rtests"

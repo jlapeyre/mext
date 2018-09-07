@@ -5,7 +5,7 @@ use warnings;
 
 # Make mersenne number data from file
 # mersenne_number_data_from_wikipedia
-# 
+#
 
 my (@ranks, @ps, @ndigs, @dates, @discoverers, @methods);
 
@@ -22,7 +22,7 @@ while (<>) {
     s/\[[^\]]+\]//g;  # remove footnote marks
     s/\&/and/g; # replace ampersand with and
     s/\,//g; # remove commas. Only used in numbers
-    
+
 #    my @fields = split(/\t/,$_);
 #    print scalar(@fields), "\n";
 

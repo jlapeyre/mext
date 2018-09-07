@@ -34,7 +34,7 @@
                    (and  (not (and ($numberp base) (mfuncall 'mgreaterp base 0) ($numberp exp)))
                         (complex-number-p base '$numberp) ; GJL 2013
                         (complex-number-p exp '$numberp))
-                   (let* 
+                   (let*
                        ((form (list (car x) base exp))
                         (rform ($rectform form)))
                      (if (eq (caar rform) 'mexpt) ; will this happen ?
@@ -129,7 +129,7 @@
 	   (cond ((integerp n)
 		  ;; float(log(int)).  First try to compute (log
 		  ;; (float n)).  If that works, we're done.
-		  ;; Otherwise we need to do more.  
+		  ;; Otherwise we need to do more.
 		  (to (or (try-float-computation #'(lambda ()
 						     (log (float n))))
 			  (let ((m (integer-length n)))
@@ -142,7 +142,7 @@
 		 (($ratnump n)
 		  ;; float(log(n/m)) where n and m are integers.  Try computing
 		  ;; it first.  If it fails, compute as log(n) - log(m).
-		  (let ((try (try-float-computation #'(lambda() 
+		  (let ((try (try-float-computation #'(lambda()
 							(log (fpcofrat n))))))
 		    (if try
 			(to try)
