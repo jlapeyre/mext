@@ -96,4 +96,3 @@
 (simple-doc::add-item "function_1" "-- Function 1: This is a great function")
 (simple-doc::add-item "function_2" "-- Function 2: This is also a great function")
 (simple-doc::add-item "function_3" "-- Function 3: This is also a great function")
-

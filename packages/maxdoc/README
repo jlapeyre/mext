@@ -11,7 +11,7 @@ sending a struct. The original describe command line interface calls
 the querying component. There are four examples of databases:
 
  a) the maxima info database.
- 
+
  b) simple-doc. This is available immediately. (I later saw this is
     similar to L. Butler's code.)
 

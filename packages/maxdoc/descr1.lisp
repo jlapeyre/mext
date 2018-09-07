@@ -55,7 +55,7 @@
                      (t
                       (if (member sys avail :test #'string=)
                           (push sys new1)
-                        (maxima::merror1 'maxima::$no_such_doc_system 
+                        (maxima::merror1 'maxima::$no_such_doc_system
                                          "doc_system_set: The documentation system ~a does not exist." sys)))))
              new1)))))
 
@@ -200,7 +200,7 @@
 
 ;; modified, cl-info.lisp, 5.28
 ;; caadr instead of car
-;; 
+;;
 ;; Stock function changed from 5.28 to 5.30
 (defun some-inexact (x inexact-matches)
   (some #'(lambda (y)

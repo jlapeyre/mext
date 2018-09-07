@@ -9,5 +9,3 @@
    :license "GPL"
    :description "Extension to online documentation system for maxima"
    :long-description "Extension to online documentation system for maxima")
-
- 

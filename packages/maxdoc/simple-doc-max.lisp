@@ -41,5 +41,5 @@
  :desc ("Prints the simple_doc documentation string for item " :argdot "name")
   (format t "~%~a~%~%" (simple-doc::get-item-contents name)))
 
-(max-doc::see-also-group '( "simple_doc_init" "simple_doc_add" 
+(max-doc::see-also-group '( "simple_doc_init" "simple_doc_add"
  "simple_doc_delete" "simple_doc_get" "simple_doc_print"))
