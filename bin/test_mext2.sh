@@ -1,4 +1,4 @@
-#
+#!/bin/sh
 
 # Test the mext distribution with several versions of
 # maxima/lisp.
@@ -35,8 +35,6 @@ tardist="$mext_test_top/mext-test.tar.gz"
   maxima-5.31.0-cmucl-20d
   maxima-5.31.0-ecl-12.12.1
  "
-
-#maximas="gmaxima"
 
 #################################################
 
