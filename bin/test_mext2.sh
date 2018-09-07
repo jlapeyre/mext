@@ -28,14 +28,19 @@ tardist="$mext_test_top/mext-test.tar.gz"
 
 # build and test for these
  maximas="
-  maxima-5.31.1-sbcl-1.1.11
-  maxima-5.31.1-gcl-2.6.8
-  maxima-5.31.0-ccl-1.9
-  maxima-5.31.0-clisp-2.49
-  maxima-5.31.0-cmucl-20d
-  maxima-5.31.0-ecl-12.12.1
+  maxima-5.41.0-sbcl-1.4.6
  "
 
+ # maximas="
+ #  maxima-5.31.1-sbcl-1.1.11
+ #  maxima-5.31.1-gcl-2.6.8
+ #  maxima-5.31.0-ccl-1.9
+ #  maxima-5.31.0-clisp-2.49
+ #  maxima-5.31.0-cmucl-20d
+ #  maxima-5.31.0-ecl-12.12.1
+ # "
+
+ 
 #################################################
 
 set_do_all () {
