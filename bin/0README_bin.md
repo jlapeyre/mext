@@ -21,6 +21,9 @@ This is the same as `./bin/text_mext.sh` except each
 a new maxima process is started for each package.
 Building lapack may fail otherwise.
 
+`bin/text_mext2.sh` depends on `bin/buildall1.mac`, `bin/testall1.mac`,
+`install_mext.sh`, `bin/parse_testlog.pl`
+
 ### Renumber rtests
 
 The tests in rtest files should be numbered in order. When adding or
@@ -49,4 +52,10 @@ The following is obsolete
 
 ```sh
 ./bin/all-lisps.sh
+```
+
+### Build documentation in pdf format
+
+```sh
+./bin/builddoc.sh
 ```
