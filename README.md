@@ -32,6 +32,9 @@ of these as 'distributions' rather than 'packages')
 ### Maxima version compatibility
 
 If you have any difficulty, please [file an issue](https://github.com/jlapeyre/mext/issues).
+
+* Maxima 5.41.0 compiled with sbcl 1.4.6:  230 tests failed out of 1,302 total tests.
+
 When first written, mext supported many lisp implementations and Maxima versions. Changes
 in both of these may cause failures. mext *does* support Maxima 5.41.0 compiled with sbcl 1.4.6.
 The latest versions of gcl are not yet supported due to changes in gcl. Other lisp implementations
