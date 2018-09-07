@@ -1,4 +1,4 @@
-#
+#!/bin/bash
 
 # copy all the blas source files to one source file.
 # do the same with lapack source.

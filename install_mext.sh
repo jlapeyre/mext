@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+# Safer to use bash until we know everything is working again
 
 # NOTE!!
 # In order to build lapack with sbcl, maxima must be started with

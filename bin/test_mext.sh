@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+# May need to be bash above, not sh
 
 # Test the mext distribution with several versions of
 # maxima/lisp.

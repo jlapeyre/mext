@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Prefer test_mext.sh to this.
 

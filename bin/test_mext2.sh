@@ -1,5 +1,10 @@
-#!/bin/sh
+#!/bin/bash
+# NOTE!!: This must be bash, not sh
 
+# USAGE:
+# From the mext top level directory run
+# ./bin/text_mext.sh
+#
 # Test the mext distribution with several versions of
 # maxima/lisp.
 #
@@ -14,13 +19,12 @@
 # * Finally a crude parsing script looks for errors or
 #   success messages in the build and test logs.
 
-# Run this script from the top level like this:
-# ./bin/text_mext.sh
-
 # unpack and build and test here
 mext_test_top="../mext_test_top"
 # put the archive of the master branch of the git repo here
 tardist="$mext_test_top/mext-test.tar.gz"
+
+mext_install_level="5"
 
 # errors in these
 #  maxima-5.31.0-gcl-2.6.7
@@ -84,7 +88,7 @@ perform_one_test () {
 # echo Building mext packages for $thismaxima
 # $thismaxima -b ../bin/$build_package_script &> ../../$thismaxima.mextlog
 
-./install_mext.sh $thismaxima 6 &> ../$thismaxima.mextlog
+./install_mext.sh $thismaxima $mext_install_level &> ../$thismaxima.mextlog
 
  echo Testing mext packages for $thismaxima
  $thismaxima -b ./bin/$test_package_script &> ../$thismaxima.testlog
@@ -102,6 +106,8 @@ perform_one_test () {
 
 ################################
 
+echo Building tar archive
+echo git archive -o $tardist --prefix="mext/" HEAD
 git archive -o $tardist --prefix="mext/" HEAD
 
 for maxima in $maximas
