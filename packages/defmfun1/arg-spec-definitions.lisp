@@ -22,7 +22,7 @@
 ;;; (:test var), when we should have (var :test)
 
 ;;; The keyword :pp signifies a combined test and preprocessing.
-;;;   In this case, the code snippet must return a list of two elements. 
+;;;   In this case, the code snippet must return a list of two elements.
 ;;;   The first is the result of the test, the second is the processed
 ;;;   value, which will be assigned to the input variable.
 
@@ -31,8 +31,8 @@
                                 (not (maxima::$numberp e))) ; a bit fuzzy what this would mean
                      ; a bit more precise about what we mean.
                      ; borrowed from badfunchk
-                     (:map-function "a map-able function" 
-                         (not (or (maxima::$numberp e) 
+                     (:map-function "a map-able function"
+                         (not (or (maxima::$numberp e)
                                   (member e '(t nil maxima::$%e maxima::$%pi maxima::$%i) :test #'eq))))
                      (:string  "a string" (stringp e))
                      (:string-or-listof ("a string" "a list of strings")
@@ -47,7 +47,7 @@
                       (or (maxima::$listp e) (maxima::$setp e) (maxima::$matrixp e)))
                      (:or-list-set-matrix-subvar ; confusion, not used
                       ("a list" "a set" "a matrix" "a subscripted variable")
-                      (or (maxima::$listp e) (maxima::$setp e) 
+                      (or (maxima::$listp e) (maxima::$setp e)
                           (maxima::$matrixp e) (maxima::$subvarp e)))
                      ((:member 1)  "one of ~a"
                       arg-member-check)
@@ -63,7 +63,7 @@
 ;; These are only lisp numbers! Eg. Not maxima ratios or bfloats!
 ;; where is this used ?
                      (:number "a number" (maxima::$numberp e))
-                     (:number-max-lisp ("a maxima number" "a lisp number") 
+                     (:number-max-lisp ("a maxima number" "a lisp number")
                                        (or (numberp e) (maxima::$numberp e)))
                      (:number-listof ("a list of numbers")
                                      (and (maxima::$listp e)
@@ -82,13 +82,13 @@
                                 (push v res))
                               (list (not badflag) (maxima::mk-mlist (nreverse res))))))
                      (:pp :to-or-float-inf-minf "inf, minf, or an expression that can be converted to a float"
-                          (let ((v (maxima::$float e))) 
+                          (let ((v (maxima::$float e)))
                             (list (or (numberp v) (member v '(maxima::$inf maxima::$minf))) v)))
                      (:pp :to-or-float-inf "inf or an expression that can be converted to a float"
-                          (let ((v (maxima::$float e))) 
+                          (let ((v (maxima::$float e)))
                             (list (or (numberp v) (eq v 'maxima::$inf)) v)))
                      (:pp :to-or-float-minf "minf or an expression that can be converted to a float"
-                          (let ((v (maxima::$float e))) 
+                          (let ((v (maxima::$float e)))
                             (list (or (numberp v) (eq v 'maxima::$minf)) v)))
                      (:pp :to-non-neg-float "an expression that can be converted to a non-negative float"
                           (let ((v (maxima::$float e))) (list (and (numberp v) (> v 0)) v)))
@@ -101,7 +101,7 @@
                      (:complex-number  "a complex number" (complex_number_p e)) ; from ellipt.lisp
                      (:possible-complex-number  "a possible complex number" (not (stringp e)))
 ;; following is not used yet
-                     (:lisp-complex-number  "a lisp complex number" 
+                     (:lisp-complex-number  "a lisp complex number"
                                             (let* ((type (type-of e))
                                                    (type1 (if (consp type) (car type) type)))
                                               (eq type1 'complex)))
@@ -129,7 +129,7 @@
                        int-gt-check)
                      ((:int-gte 1) "an integer greater than or equal to ~a"
                        int-gte-check)
-                     (:uint-64 ,(format nil (concatenate 'string 
+                     (:uint-64 ,(format nil (concatenate 'string
                          "equivalent to an unsigned 64 bit integer~%"
                       " (that is, an integer between 0 and 2 to the power 64)~%"
             "(We need to modify the doc system so we can use notation for powers in arg check strings.~%"))
@@ -142,7 +142,7 @@
                              (and (integerp e) (> e 1) (< e 37)))
                      (:or-radix-string ("a valid radix (an integer between 2 and 36)" "a string")
                              (or (stringp e) (and (integerp e) (> e 1) (< e 37))))
-                     (:or-radix-string-symbol 
+                     (:or-radix-string-symbol
                       ("a valid radix (an integer between 2 and 36)" "a string" "a symbol")
                              (or (stringp e) (symbolp e) (and (integerp e) (> e 1) (< e 37))))
 ;; This was present in *opt-spec-definitions*, but not here. This caused an error only when looking

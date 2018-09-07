@@ -125,7 +125,7 @@ symbols) being attribute names; and values being the value of the attribute, typ
 ;; Some of this should be separated and moved to mext package.
 
 (ddefvar *mext-functions-table* (make-hash-table :test 'equal)
-  "This hash-table stores a list of the user functions defined 
+  "This hash-table stores a list of the user functions defined
 in a  mext package.")
 
 (ddefvar *mext-package-table* (make-hash-table :test 'equal)
@@ -150,7 +150,7 @@ in a  mext package.")
    (dolist (name (maxima::ensure-lisp-list names))
      (setf name (maxima::$sconcat name))
      (setf (gethash name *mext-package-table*) package)
-     (setf (gethash name *mext-filename-table*) 
+     (setf (gethash name *mext-filename-table*)
            (if source-filename source-filename (doc-system:get-source-file-name)))
      (push name (gethash package *mext-functions-table*)))))
 
@@ -177,7 +177,7 @@ in a  mext package.")
  "Make accessor and query functions for an attribute. set- , unset- , is- ."
  (when (symbolp attribute) (setf attribute (symbol-name attribute)))
  (setf attribute (string-upcase attribute))
-  `(progn 
+  `(progn
      (defun ,(intern (concatenate 'string "SET-" attribute)) (name)
        (set-attribute name ',max-attribute))
      (defun ,(intern (concatenate 'string "UNSET-" attribute)) (name)
@@ -228,7 +228,7 @@ in a  mext package.")
 (defun format-arg-list (args)
   (format nil "~{~a~^, ~}"
           (loop for arg in args collect
-                (progn 
+                (progn
                   (when (listp arg) (setf arg (car arg)))
                   (maxima::maybe-invert-string-case (format nil "<~a>" arg))))))
 
@@ -273,13 +273,13 @@ in a  mext package.")
 ;; body of a defmfun1 function.  The code tests the value of an
 ;; argument at run-time. The test spec may also specifiy that the argument
 ;; is `preprocessed' in some way. So we check for this.
-;; check-and-error is called by: defmfun1-write-assignments, 
-;; defmfun1-write-rest-assignments, 
+;; check-and-error is called by: defmfun1-write-assignments,
+;; defmfun1-write-rest-assignments,
 (defun check-and-error (test arg fname args nargs have-match)
   (let* ((fc `(funcall ,(defmfun1::get-check-func test) ,arg))
          (force-match-code (write-force-match-code have-match))
          (sa1 `(defmfun1::signal-arg-error ',test (list ,arg) ',fname ,args ,nargs ,@force-match-code))
-         (sa `(,sa1 (return-from ,fname 
+         (sa `(,sa1 (return-from ,fname
                       (cons (list ',fname 'maxima::simp) ,args))))) ; construct and return input form.
     (if (gethash test *arg-check-preprocess-table*)
         `(let ((res ,fc))
@@ -287,7 +287,7 @@ in a  mext package.")
                (progn ,@sa)
              (setf ,arg (second res))))
       `(unless ,fc ,@sa))))
-  
+
 ;; We have to qualify val as maxima::val. Nothing I can do with macroexpand or format
 ;; will show the qualification.
 ;; get-check-func will signal an error at expansion time if the check code does not exist.
@@ -320,7 +320,7 @@ in a  mext package.")
 
 (maxima::ddefun format-protocol (sname req optional rest)
   "This formats the protocol (lambda list) of a defmfun1 form as a string for printing
-   documentation." 
+   documentation."
   (let ((sarg (format-arg-list req)))
     (when (not (null optional))
       (setf sarg (concatenate 'string sarg " :optional "
@@ -354,11 +354,11 @@ in a  mext package.")
   (let (args)
     (when (listp spec-name) (setf args (cdr spec-name)) (setf spec-name (car spec-name)))
     (let ((txt (gethash spec-name *arg-spec-to-english-table*)))
-      (unless txt 
+      (unless txt
 ;        (defmfun1-expand-error '$defmfun1_no_spec_mssg "unknown function"
 ;          (format nil "No argument message for test ~a." (keyword-etc-to-string spec-name))))
-        (maxima::merror1 'maxima::$defmfun1_no_spec_mssg 
-          "defmfun1: Error printing argument test description for test `~a'. No test description found." 
+        (maxima::merror1 'maxima::$defmfun1_no_spec_mssg
+          "defmfun1: Error printing argument test description for test `~a'. No test description found."
           (maxima::sym-to-string spec-name)))
       (if args (apply #'format (append (list nil txt) args))
           txt))))
@@ -371,12 +371,12 @@ in a  mext package.")
     (cond ((eq 'option arg-class)
            (setf (gethash spec-name *option-arg-spec-to-english-table*)
                  (or-comma-separated-english emsg))
-           (setf (gethash spec-name *option-arg-check-mssg-table*) 
+           (setf (gethash spec-name *option-arg-check-mssg-table*)
                  (list (car err-mssg-spec) (rest err-mssg-spec))))
           ( (eq 'arg arg-class)
             (setf (gethash spec-name *arg-spec-to-english-table*)
                   (or-comma-separated-english emsg))
-            (setf (gethash spec-name *arg-check-mssg-table*) 
+            (setf (gethash spec-name *arg-check-mssg-table*)
                   (list (car err-mssg-spec) (rest err-mssg-spec))))
           (t (merror "defmfun1::mk-arg-check: Unrecognized arg-class ~M" arg-class)))))
 
@@ -390,12 +390,12 @@ in a  mext package.")
            (cond ((eq 'option arg-class)
                   (setf (gethash spec-name *option-arg-spec-to-english-table*)
                         (or-comma-separated-english emsg))
-                  (setf (gethash spec-name *option-arg-check-mssg-table*) 
+                  (setf (gethash spec-name *option-arg-check-mssg-table*)
                         (list (car err-mssg-spec) (rest err-mssg-spec))))
                  ((eq 'arg arg-class)
                   (setf (gethash spec-name *arg-spec-to-english-table*)
                         (or-comma-separated-english emsg))
-                  (setf (gethash spec-name *arg-check-mssg-table*) 
+                  (setf (gethash spec-name *arg-check-mssg-table*)
                         (list (car err-mssg-spec) (rest err-mssg-spec))))
                  (t (maxima::merror "defmfun1::mk-arg-check: Unrecognized arg-class ~M" arg-class))))))
 
@@ -403,10 +403,10 @@ in a  mext package.")
 ;; eg. see :int-range
 (defun mk-arg-check (spec-name err-mssg-spec body)
   (unless (listp err-mssg-spec) (setf err-mssg-spec (list err-mssg-spec)))
-  (let* 
+  (let*
       ((rspec-name (if (consp spec-name) (car spec-name) spec-name))
        (err-mssg-spec-1 (cons "Argument '~a'" err-mssg-spec))
-       (code (intern (sconcat "$CHK_" 
+       (code (intern (sconcat "$CHK_"
            (coerce (loop for char across (symbol-name rspec-name)
                         collect (if (eq char #\-) #\_ char)) 'string)) "MAXIMA")))
     (setf (gethash rspec-name *arg-check-err-code-table*) code)
@@ -420,9 +420,9 @@ in a  mext package.")
 (defun mk-opt-check (spec-name err-mssg-spec body)
   (unless (listp err-mssg-spec) (setf err-mssg-spec (list err-mssg-spec)))
   (if (listp spec-name)
-;      (progn 
+;      (progn
         (mk-arg-check2 'option spec-name (cons "Value '~a' for option '~a'" err-mssg-spec) body)
-;      (progn 
+;      (progn
         (mk-arg-check1 'option spec-name (cons "Value '~a' for option '~a'" err-mssg-spec) body)))
 
 (defun get-pp-func (spec-name)
@@ -464,7 +464,7 @@ in a  mext package.")
 ;; idea, because ($COS %COS) becomes (cos cos)
 (defun format-arg-spec-params (fmt p)
   (apply #'format (append (list nil fmt)
-                          (mapcar 
+                          (mapcar
                            #'(lambda (x)
                                (if (and (listp x) (eq 'quote (car x)))
                                    (maxima::$sconcat (second x))
@@ -488,15 +488,15 @@ in a  mext package.")
               (specl-str (not-comma-separated-english (cadr espec)))
               (pre-name (err-prefix name))
               (spstr (if spec-args
-                         (progn 
+                         (progn
 ;                           (format t "~a~%" spec-args) ; was for debugging
                            (format-arg-spec-params specl-str spec-args))
                        specl-str))
               (call-str (format-call name call))
               (err-code (gethash spec-name *arg-check-err-code-table*)))
          ; ought to pass to merror1, but same as putting it in two calls below
-         (setf maxima::$error_code err-code) 
-         (cond 
+         (setf maxima::$error_code err-code)
+         (cond
           (call
            (if nargs
                (error-or-message name (format nil "~a ~? at position ~a is ~a in ~a.~%" pre-name (car espec)
@@ -633,10 +633,10 @@ in a  mext package.")
       (let ((argt1) (argt-spec) (pp-spec) (all-arg-directives-1))
         (dolist (arg (getf arglist argt)) ; arg is complete specification of a single argument
           (when (keyword-p (first arg))
-            (parse-args-err 'maxima::$defmfun1_malformed_argspec name 
+            (parse-args-err 'maxima::$defmfun1_malformed_argspec name
                             "First element is a keyword, variable name expected." arg))
 ;          (when (consp (first arg)) ; can't do this. gives false negatives.
-;            (parse-args-err 'maxima::$defmfun1_malformed_argspec name 
+;            (parse-args-err 'maxima::$defmfun1_malformed_argspec name
 ;                            "First element is a list, variable name expected." arg))
           (let
               ((nospecs (remove-if #'(lambda(x) (or (member x *arg-spec-keywords*) (member x *pp-spec-types*)
@@ -652,11 +652,11 @@ in a  mext package.")
                (wppspecs (cons (car arg) (remove-if #'(lambda(x) (not (member x *pp-spec-types*))) arg))))
             (let ((kres (find-if #'(lambda (e) (keyword-p e)) nospecs)))
               (when kres
-                (parse-args-err 'maxima::$defmfun1_unknown_directive name 
+                (parse-args-err 'maxima::$defmfun1_unknown_directive name
                   (format nil "Found keyword ~s in unexpected position. Probably an unknown directive."
                           (maxima::sym-to-string kres)) nospecs)))
             (when (some (lambda (e)(and (listp e) (keyword-p (car e)))) nospecs)
-              (parse-args-err 'maxima::$defmfun1_unknown_directive name 
+              (parse-args-err 'maxima::$defmfun1_unknown_directive name
               "Found list beginning with keyword in unexpected position. Probably an unknown directive." nospecs))
              ; must quote default values
             (push (if (length1p nospecs) nospecs (list (first nospecs) `(quote ,(second nospecs))) ) argt1)
@@ -712,7 +712,7 @@ in a  mext package.")
 ;; At run time, filter parameters passed to a defmfun1 definition into option
 ;;  params and non-option params. Skipping searching through required arguments
 ;;  is done with the fast version. But this will cause an error if the user
-;;  makes the error of omitting required arguments. 
+;;  makes the error of omitting required arguments.
 (macrolet ((mk-coll (fname fast-flag)
                     (let ((arg-list (if fast-flag '(rarg nmin) '(rarg))))
                       `(defun ,fname ,arg-list
@@ -802,11 +802,11 @@ in a  mext package.")
   (let ((pw *print-error-integers-as-words*)
         (are-word (if terminal-verb-p " are" "")))
     (cond (restp
-           (if terminal-verb-p 
+           (if terminal-verb-p
                (format nil "~a or more arguments are" (err-itostr nmin))
              (format nil "~a or more arguments" (err-itostr nmin))))
           ((= nmin nmax)
-           (if terminal-verb-p 
+           (if terminal-verb-p
                (format nil "~a argument~p ~:[are~;is~]" (err-itostr nmin) (if (and pw (= nmin 0)) 1 nmin)
                        (or (= 1 nmin) (and pw (= 0 nmin))))
                (format nil "~a argument~p" (err-itostr nmin) nmin )))
@@ -834,6 +834,6 @@ in a  mext package.")
           (format-nargs-expected nmin nmax restp t))
          ; maybe restore this later; done!
          (err-code (compute-narg-error-code restarg nargs nmin nmax restp)))
-    (error-or-message name (format nil "~a ~a ~a; ~a expected.~%" 
-                                   (err-prefix sname) sname str-narg str-expected) 
+    (error-or-message name (format nil "~a ~a ~a; ~a expected.~%"
+                                   (err-prefix sname) sname str-narg str-expected)
                       force-match match-val err-code)))

@@ -2,8 +2,3 @@ load(mext);
 load_in_subdir(["defmfun1","system"]);
 mext_dist_clean();
 mext_dist_build();
-
-
-
-
-

@@ -1,7 +1,7 @@
 ;;;  Copyright (C) (2012,2013) John Lapeyre. Licensed under GPL, v3 or greater. See the file
 ;;;  `LICENSE' in this directory.
 
-;;;  Database of examples for maxima. 
+;;;  Database of examples for maxima.
 
 (in-package :examples)
 (mext:mext-optimize)
@@ -20,7 +20,7 @@
 ;;;  format-examples is called. For the other methods the the output is supplied as part of the specification.
 ;;;
 ;;;  There is a line in max-doc::format-doc-entry that calls format-examples, so that they are printed with
-;;;  the documentation. 
+;;;  the documentation.
 ;;;  See example entries for maxima function "first" at the bottom of this file.
 ;;;
 ;;; This differs from the maxima examples() facility
@@ -34,9 +34,9 @@
 (defstruct (example)
   (pretext "") ; can be string or list of maxdoc formatted text. print this before the input output pair
   (posttext "" :type string)  ; print this after the input output pair. Maybe we won't use this.
-  (vars "[]" :type string)    ; list of vars that will go in "block( vars, code )" 
+  (vars "[]" :type string)    ; list of vars that will go in "block( vars, code )"
                               ;to keep example symbols separate from session.
-  (code '())  ; string or list strings of code lines for example. 
+  (code '())  ; string or list strings of code lines for example.
               ; each will be wrapped in block with vars, but block not printed.
   (code-res '()) ; code and results in a list of length two (or list of these). Code is not evaluated in this case.
   (code-text '()); new method
@@ -144,7 +144,7 @@
              (incf n (length val)))
             (:n
              (setf n val))
-            (otherwise 
+            (otherwise
              (merror (intl:gettext "max-doc:format-code-text: Unrecognized key ~a") key))))))))
 
 (mk-format-code-text format-code-text
@@ -182,7 +182,7 @@
  many examples specifications, this transparantly mimics
  typing them at the command line, with no localization of
  variables.
- 
+
  An alternative is to use a single input string with
  commands separated by commas. Another alternative is to
  use :code-res, rather than :code. In the later
@@ -191,7 +191,7 @@
  is done, the strings are simply formatted."
   (unless (example-p e)
     (merror (intl:gettext "max-doc::format-example: Not an example ~a") e))
-  (format nil "~a" (concatenate 'string 
+  (format nil "~a" (concatenate 'string
                     (form-ent example-pretext "~%~a~%~%"
                               (wrap-text :text (max-doc:format-doc-text x) :width 70 :indent 3 ))
                     (cond ((example-code-res e)
@@ -205,7 +205,7 @@
 (maxima::ddefun format-examples (name)
   "Format as a string the list of examples for topic 'name'."
   (let* ((el (gethash name *examples-hash*)))
-    (if el (concatenate 'string 
+    (if el (concatenate 'string
                         (format nil "~%Examples:~%~{~A~}~%"
                                 (loop for e in (reverse el) collect (format nil (format-example e)))))
         "")))
@@ -213,7 +213,7 @@
 (defun format-example-latex (e)
   (unless (example-p e)
     (merror (intl:gettext "max-doc::format-example: Not an example ~a") e))
-  (format nil "~a" (concatenate 'string 
+  (format nil "~a" (concatenate 'string
         (if (example-pretext e)
             (form-ent example-pretext "~%~a~%"  ; "~%\\end{Verbatim}~%~a~%\\begin{Verbatim}[frame=single]~%"
                       (wrap-text :text (max-doc:format-doc-text-latex x) :width 70 :indent 3 ))
@@ -235,7 +235,7 @@
 (maxima::ddefun format-examples-latex (name)
   "Format as a string the list of examples for topic 'name'."
   (let* ((el (gethash name *examples-hash*)))
-    (when el (concatenate 'string 
+    (when el (concatenate 'string
                         (format nil (concatenate 'string
   "\\noindent{\\bf Examples}~%~{~A~}~%")
          (loop for e in (reverse el) collect (format nil (format-example-latex e))))
@@ -266,7 +266,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Maxima functions
 
-;;; See other examples in tyep_of in misc-util.lisp 
+;;; See other examples in tyep_of in misc-util.lisp
 
 (max-doc:set-cur-sec 'max-doc::misc-fandv)
 

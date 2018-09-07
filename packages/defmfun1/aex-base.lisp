@@ -34,7 +34,7 @@
 (defun aex-make-n-head (n &key (adjustable t)  (head '(mlist simp))
                           (element-type t) (initial-element nil) (supply-init-element nil))
   (setf element-type (max-to-lisp-element-type element-type))
-  (make-aex :head head :arr 
+  (make-aex :head head :arr
             (if supply-init-element
                 (make-array n :adjustable adjustable :element-type element-type :initial-element initial-element)
               (make-array n :adjustable adjustable :element-type element-type))

@@ -47,12 +47,12 @@
                      (loop for i from 0 to (1- (length a)) do
                           (setf  (aref a i) (,inner-map (aref ea i) ,@(loop for arg in level-args collect `(cdr ,arg)))))
                      ne))
-(macrolet 
+(macrolet
     ((mk-mk-level-func (mk-name body-func)
          `(defmacro ,mk-name (name-outer inner inner-map nargs)
             (let ((level-args (loop for i below nargs collect (gensym)))
                   (body-func ',body-func))
-              `(defun ,name-outer (e ,@level-args) 
+              `(defun ,name-outer (e ,@level-args)
                  (,inner (if (gjl.lisp-util:length1p ,(first level-args)) e
                            ,(funcall body-func inner-map level-args))
                          ,@(loop for arg in level-args collect `(car ,arg))))))))

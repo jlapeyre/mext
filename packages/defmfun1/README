@@ -1,3 +1,4 @@
+
 defmfun1
 
 defmfun1 macro for writing maxima functions: (no support now for
@@ -34,7 +35,7 @@ as much as possible with &optional, &aux, &rest, with some additions.
      The first argument <x> must be a string.
      The second argument <y> must be a non-negative integer.
      The third argument <z> must be a string.
-       
+
    (%i3) f4();
 
     f4: f4 called with no arguments; either two or three arguments are expected.

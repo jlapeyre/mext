@@ -106,7 +106,7 @@
 
 (defun add-call-desc (&rest args)
   (unless (every #'listp args)
-    (maxima::merror1 'maxima::$args_not_all_lists 
+    (maxima::merror1 'maxima::$args_not_all_lists
       (intl:gettext "max-doc::add-call-desc: Arguments are not all lists. In file (no not really in this file) ~a")
      maxima::$load_pathname))
   "Enter a list of descriptions of how to call the function. Each description
@@ -134,7 +134,7 @@
 ;;      (setf *format-codes-default* *format-codes-texi*))
 ;;     ("latex"
 ;;      (setf *format-codes-default* *format-codes-latex*))
-;;     (otherwise (maxima::merror1 (intl:gettext 
+;;     (otherwise (maxima::merror1 (intl:gettext
 ;;            "max-doc:set-format-codes-table Unknown code name ~s.") code-name))))
 
 ;; (defun set-format-codes-table (code-name)
@@ -144,7 +144,7 @@
 ;;          (setf *format-codes-default* *format-codes-texi*))
 ;;         ((string= "latex" code-name)
 ;;          (setf *format-codes-default* *format-codes-latex*))
-;;         (t (maxima::merror1 (intl:gettext 
+;;         (t (maxima::merror1 (intl:gettext
 ;;            "max-doc:set-format-codes-table Unknown code name ~s.") code-name))))
 
 ;; caret escape is not working ??
@@ -158,7 +158,7 @@
 
 ;; like fill-hash-from-list, but make string from keys
 (defun fill-format-codes (hash-table element-list)
-  (mapcar (lambda (pair) 
+  (mapcar (lambda (pair)
             (setf (gethash (first pair) hash-table) (second pair))) element-list)
   hash-table)
 
@@ -170,9 +170,9 @@
 ;;; :var -- other variable
 
 ;; (fill-format-codes *format-codes-text*
-;;    '( (:code "`~a'")  (:codedot "`~a'.")  (:codecomma "`~a',") 
-;;       (:mref "`~a'")  (:mrefdot "`~a'.")  (:mrefcomma "`~a',") 
-;;       (:emref "`~a'")  (:emrefdot "`~a'.")  (:emrefcomma "`~a',") 
+;;    '( (:code "`~a'")  (:codedot "`~a'.")  (:codecomma "`~a',")
+;;       (:mref "`~a'")  (:mrefdot "`~a'.")  (:mrefcomma "`~a',")
+;;       (:emref "`~a'")  (:emrefdot "`~a'.")  (:emrefcomma "`~a',")
 ;;       (:arg "<~a>")   (:argdot "<~a>.")   (:argcomma "<~a>,")
 ;;       (:var "<~a>")   (:vardot "<~a>.")   (:varcomma "<~a>,")
 ;;       (:opt "<~a>")   (:optdot "<~a>.")   (:optcomma "<~a>,")
@@ -185,7 +185,7 @@
 ;; mref, mrefdot, mrefcomma below are not used. caught in earlier branch
 ;; emref etc. should eventually do external links
 ;; (fill-format-codes *format-codes-latex*
-;;    '( (:code "{\\tt ~a}")  (:codedot "{\\tt ~a}.")  (:codecomma "{\\tt ~a},") 
+;;    '( (:code "{\\tt ~a}")  (:codedot "{\\tt ~a}.")  (:codecomma "{\\tt ~a},")
 ;;       (:mref "{\\tt ~a}")  (:mrefdot "{\\tt ~a}.")  (:mrefcomma "{\\tt ~a},")
 ;;       (:emref "{\\tt ~a}")  (:emrefdot "{\\tt ~a}.")  (:emrefcomma "{\\tt ~a},")
 ;;       (:arg "{\\it ~a}")   (:argdot "{\\it ~a}.")   (:argcomma "{\\it ~a},")
@@ -215,7 +215,7 @@
     ""))
 ;; Following is wrong. Info only correct at compile time,
 ;; in-entry-error-str is called at run time.
-;   (defmfun1::file-package-string))) 
+;   (defmfun1::file-package-string)))
 
 (defmacro no-such-format-code-err (in-func)
   `(maxima::merror1 'maxima::$no_such_format_code
@@ -232,7 +232,7 @@
         ((null txt1) (format nil "~{~a~}" (nreverse res)))
       (if (symbolp item)
           (let ((fmt (gethash item code-table)))
-            (unless (keyword-p item) 
+            (unless (keyword-p item)
               (format t "max-doc: Markup tag `~s' is not a keyword, in ~s." item txt)
               (maxima::merror1 "An error"))
             (if fmt
@@ -242,7 +242,7 @@
                                 (if (listp txt2) (format-doc-text txt2 code-table) txt2))
                         res))
               (no-such-format-code-err "format-doc-text")))
-;              (maxima::merror1 'maxima::$no_such_format_code 
+;              (maxima::merror1 'maxima::$no_such_format_code
 ;                               "format-doc-text: Unrecognized format code: ~a." item)))
         (push item res)))))
 
@@ -259,24 +259,24 @@
       (if (symbolp item)
           (let* ((fmt (gethash item code-table))
                  (s (cadr txt1)))
-            (unless (keyword-p item) 
+            (unless (keyword-p item)
               (format t "max-doc: Format symbol not a keyword ~s, in ~s." item txt)
               (maxima::merror1 "An error"))
             (pop txt1)
             (cond ((member item '(:code :codedot :codecomma)  :test #'equal)
                    ; was a bug when default-value a number
-                   (let* ((ss (if (stringp s) s (format nil "~a" s))) 
+                   (let* ((ss (if (stringp s) s (format nil "~a" s)))
                           (delim (loop for char in '(#\# #\$ #\~ #\@ #\& #\- #\% \#^ \#?) do
                                        (when (not (find char ss)) (return char))))
                           (str (format nil "\\verb~a~a~a" delim ss delim)))
-                     (push 
+                     (push
                       (cond ((eq item :code) str)
                             ((eq item :codedot) (format nil "~a." str))
                             ((eq item :codecomma) (format nil "~a," str)))
                       res)))
                   ((member item '(:mref :mrefdot :mrefcomma)  :test #'equal)
                    (let ((str (format nil "\\hyperlink{~a}{{\\tt ~a}}" s (latex-esc s))))
-                     (push 
+                     (push
                       (cond ((eq item :mref) str)
                             ((eq item :mrefdot) (format nil "~a." str))
                             ((eq item :mrefcomma) (format nil "~a," str)))
@@ -294,7 +294,7 @@
         (push (latex-esc item) res)))))
 
 (defun format-call-desc (cd)
-  (let ((args (mapcar (lambda (x) 
+  (let ((args (mapcar (lambda (x)
         (if (listp x)
             (cond ((equal (car x) "list")
                    (let* ((fmt (gethash :arg *format-codes-default*))
@@ -307,7 +307,7 @@
           (format-doc-text (list :var x) *format-codes-default*)))
                       (call-desc-args cd))))
   (format nil "    ~a(~{~a~^, ~})~%  ~a~%~%" (call-desc-name cd) args
-          (wrap-text :text (format-doc-text (call-desc-text cd) *format-codes-default*) 
+          (wrap-text :text (format-doc-text (call-desc-text cd) *format-codes-default*)
                      :width 70 :indent *indent3* ) )))
 
 (defun format-call-desc-list (cd-list)
@@ -317,7 +317,7 @@
   (let ((code (gethash :arg *format-codes-default*)))
     (format nil "~{~a~^, ~}"
             (loop for arg in args collect
-                  (progn 
+                  (progn
                     (when (listp arg) (setf arg (car arg)))
                     (setf arg (latex-esc (maxima::maybe-invert-string-case (format nil "~a" arg))))
                     (format nil code arg))))))
@@ -336,7 +336,7 @@
       (format nil "{\\bf ~a}(~a)" (latex-esc sname) sarg))))
 
 (defun format-call-desc-latex (cd)
-  (let ((args (mapcar (lambda (x) 
+  (let ((args (mapcar (lambda (x)
         (if (listp x)
             (cond ((equal (car x) "list")
                    (let* ((fmt (gethash :arg *format-codes-latex*))
@@ -404,7 +404,7 @@
                                :default-value ,val1
                                :contents ,doc))
              (maxima::defmvar ,var ,@pass-arg)))
-      (maxima::merror1 (intl:gettext 
+      (maxima::merror1 (intl:gettext
         "max-doc:mdefmvar : ~m arguments given in definition of `~m'; three are expected.~%")
                        (+ 1 length-val-and-doc) max-varname))))
 
@@ -436,10 +436,10 @@
   (cond ((stringp distname)
          (if (gethash distname mext-maxima::*loaded-dist-table*)
              (setf *current-distribution* distname)
-           (maxima::merror1 (intl:gettext "max-doc::set-cur-dist 
+           (maxima::merror1 (intl:gettext "max-doc::set-cur-dist
  Can't set current distribution to ~m. The distribution does not exist.") distname)))
         (t
-         (maxima::merror1 (intl:gettext "max-doc::set-cur-dist 
+         (maxima::merror1 (intl:gettext "max-doc::set-cur-dist
  Can't set current distribution to ~m. Not a string.") distname))))
 
 (defun exists-section (sec-tag)
@@ -462,7 +462,7 @@
             (if (exists-section tag)
                 (if *ignore-silently* (progn (set-cur-sec new-sec) (return-from add-doc-sec t))
                     (maxima::merror1 "section ~a already exists." ))
-                (progn 
+                (progn
                   (setf (gethash tag (sections-hash *max-doc-top*)) new-sec)
                   (setf (gethash shortname (sections-shortname-hash *max-doc-top*)) new-sec) ; easier for maxima access
                   (vector-push-extend tag (sections-list *max-doc-top*))
@@ -539,7 +539,7 @@ must be keyword,value pairs for the doc entry struct."
   (if (eq section :all)
       (let ((sections (get-hash-keys max-doc::*max-doc-section-hashtable*)))
         (loop for section1 in sections do
-              (let ((item (gethash es (section-hash 
+              (let ((item (gethash es (section-hash
                                        (gethash section1 *max-doc-section-hashtable*)))))
                 (when item (return item)))))
   (gethash es (section-hash section))))
@@ -663,7 +663,7 @@ must be keyword,value pairs for the doc entry struct."
                 (let ((verb-end (if (length1p threading-arg-nums) "s" ""))
                       (pl-end (if (length1p threading-arg-nums) "" "s")))
                   (format nil "  The ~a argument~a thread~a (distribute~a) over lists."
-                          (comma-separated-english 
+                          (comma-separated-english
                            (mapcar  #'(lambda (x) (format nil "~:R" x)) threading-arg-nums))
                           pl-end verb-end verb-end)))
                          ; hmm comma-separated english inserts a leading space for more than one arg
@@ -673,15 +673,15 @@ must be keyword,value pairs for the doc entry struct."
 (defun format-one-spec-in-list (arg-count arg type)
   (format nil "    The ~:R argument ~a must be ~a.~%"
           arg-count
-;          (maxima::maybe-invert-string-case 
-           (format-doc-text (list :arg 
+;          (maxima::maybe-invert-string-case
+           (format-doc-text (list :arg
                              (maxima::maybe-invert-string-case (symbol-name arg))) *format-codes-default*)
           (defmfun1::get-arg-spec-to-english type)))
 
 (defun format-single-spec (req optional rest-args arg type)
  "rest-args is form after &rest in defmfun1 lambada list. arg is name of a single arg,
   type is a type spec from defmfun1."
-  (format nil 
+  (format nil
           (cond ((and rest-args req)
                  ". The first argument ~a must be ~a.~%") ; one or more args
                 (optional
@@ -754,14 +754,14 @@ must be keyword,value pairs for the doc entry struct."
                  (format nil "~%")
                  (if (null (entry-default-value e))  ""
                    (format nil "~a.~%"
-                           (format-doc-text 
+                           (format-doc-text
                             (list "  default value " :code (entry-default-value e)) *format-codes-default* )))
                  (if (> (length (entry-call-desc-list e)) 0)  ; doesn't this put a nil in the list ?
                      (format nil "Calling:~%~a"
                              (format-call-desc-list (entry-call-desc-list e))))
                  (if (> (length (entry-contents e)) 0)
-                     (format nil "Description:~%~a~%" (wrap-text 
-                               :text (format-doc-text (entry-contents e) *format-codes-default* ) 
+                     (format nil "Description:~%~a~%" (wrap-text
+                               :text (format-doc-text (entry-contents e) *format-codes-default* )
                                :width *text-width* :indent *indent1*)) "")
                  (let ((sspec (format-arg-specs name)))
                    (when (> (length sspec) 0) (format nil "Arguments:~%~a" sspec)))
@@ -769,8 +769,8 @@ must be keyword,value pairs for the doc entry struct."
                    (when (> (length sdirective) 0) (format nil "  ~a~%" sdirective)))
                  (let ((opts (maxima::$foptions name)))
                    (if (> (length opts) 1)
-                       (format nil "Options:  ~a takes options with default values:~%~a.~%" name 
-                               (wrap-text 
+                       (format nil "Options:  ~a takes options with default values:~%~a.~%" name
+                               (wrap-text
                                :text (format nil "~{~a~^, ~}" (cdr opts))
                                :width *text-width* :indent *indent1*))
                        ""))
@@ -781,7 +781,7 @@ must be keyword,value pairs for the doc entry struct."
                  (examples:format-examples name)
                  (form-ent entry-oeis "~%OEIS number: ~a.~%" (comma-separated-english x))
                  (form-ent entry-see-also "~%See also: ~a.~%" (comma-separated-english x))
-                 (form-ent-cond entry-implementation maxima::$print_implementation "~%Implementation:~%   ~a~%" 
+                 (form-ent-cond entry-implementation maxima::$print_implementation "~%Implementation:~%   ~a~%"
                            (wrap-text :text (format-doc-text x) :width *text-width* :indent *indent2*))
                  (form-ent-cond entry-author maxima::$print_authors
                      "~%  Author~p: ~a.~%" (length x) (comma-separated-english x))
@@ -801,7 +801,7 @@ must be keyword,value pairs for the doc entry struct."
     (flet ((skip () (format nil "~%\\vspace{5 pt}~%"))
            (sect (sec) (format nil "\\noindent{\\bf ~a}\\hspace{5pt}" sec)))
       (concatenate 'string
-                   (format nil "\\subsection{~a: ~a\\label{sec:~a}}~%\\hypertarget{~a}{}~%" 
+                   (format nil "\\subsection{~a: ~a\\label{sec:~a}}~%\\hypertarget{~a}{}~%"
                            (entry-type e) fname name name)
                    (if (null (entry-protocol-list e))
                        (format nil "~%")
@@ -814,7 +814,7 @@ must be keyword,value pairs for the doc entry struct."
                    (skip)
                    (if (null (entry-default-value e))  ""
                      (format nil "~a.~%~%"
-                             (format-doc-text-latex 
+                             (format-doc-text-latex
                               (list "  default value " :code (entry-default-value e)) *format-codes-latex* )))
                    (if (> (length (entry-call-desc-list e)) 0)
 ;;  conveters dont like this  (format nil "~a~%\\begin{itemize}\\itemsep5pt \\parskip0pt \\parsep0pt ~%~a\\end{itemize}~%"
@@ -822,27 +822,27 @@ must be keyword,value pairs for the doc entry struct."
                                (sect "Calling")
                                (format-call-desc-list-latex (entry-call-desc-list e))))
                    (if (> (length (entry-contents e)) 0)
-                       (format nil "~a~%~a~%~a~%" (sect "Description") (wrap-text 
+                       (format nil "~a~%~a~%~a~%" (sect "Description") (wrap-text
                                :text (format-doc-text-latex (entry-contents e) *format-codes-latex* )
                                :width *latex-text-width* :indent 0) (skip)) "")
                    (let ((sspec (format-arg-specs name)))
-                     (if (> (length sspec) 0) 
+                     (if (> (length sspec) 0)
                        (format nil "~a~%~a~%~a~%" (sect "Arguments") (latex-esc (format nil "~a" sspec)) (skip))
                        ""))
                    (let ((sdirective (format-arg-directives name)))
-                     (if (> (length sdirective) 0) 
+                     (if (> (length sdirective) 0)
                          (format nil "~a~a~%" (latex-esc (format nil "  ~a~%" sdirective)) (skip))
                        ""))
                    (let ((opts (maxima::$foptions name)))
                      (if (> (length opts) 1)
-                         (format nil "~a~%{\\tt ~a} takes options with default values: ~a.~a~%" 
-                                 (sect "Options") fname 
+                         (format nil "~a~%{\\tt ~a} takes options with default values: ~a.~a~%"
+                                 (sect "Options") fname
                                  (latex-esc (format nil "~{{\\tt ~a}~^, ~}" (cdr opts)))
                                  (skip))
                        ""))
                    (let ((atts (maxima::$attributes name)))
                      (if (> (length atts) 1)
-                         (format nil "~a~%~a has attributes: ~a~%~a~%" 
+                         (format nil "~a~%~a has attributes: ~a~%~a~%"
                                  (sect "Attributes") fname (latex-esc (maxima::$sconcat atts))
                                  (skip))
                        ""))
@@ -850,7 +850,7 @@ must be keyword,value pairs for the doc entry struct."
                    (form-ent entry-oeis "~%OEIS number: ~a.~%~%" (comma-separated-english x))
                    (form-ent entry-see-also "~%~a~% ~a.~%~a~%"
                              (sect "See also")
-                             (comma-separated-english 
+                             (comma-separated-english
                                          (loop for e in x collect
                                                (format nil "\\hyperlink{~a}{{\\tt ~a}}" e (latex-esc e)))) (skip))
                    (form-ent-cond entry-implementation maxima::$print_implementation "~%~a~%~a~%~a~%"
@@ -858,7 +858,7 @@ must be keyword,value pairs for the doc entry struct."
                            (wrap-text :text (format-doc-text-latex x) :width *latex-text-width* :indent 0)
                            (skip))
                    (form-ent-cond entry-author maxima::$print_authors
-                             "~%~a~%~a.~%~a~%" 
+                             "~%~a~%~a.~%~a~%"
                              (sect (format nil "Author~p" (length x)))  (comma-separated-english x)
                              (skip))
                    (form-ent-cond entry-copyright maxima::$print_copyrights
@@ -873,7 +873,7 @@ must be keyword,value pairs for the doc entry struct."
     (setf *doc-entry-being-processed* nil)
     outstring))
 
-  
+
 (defun search-key (key item)
   "we only search on the 'name' of the entry."
   (declare (ignore key))
@@ -917,4 +917,3 @@ must be keyword,value pairs for the doc entry struct."
 
 ;; move to new file
 ;;(add-doc-sec '( :tag maxima::$misc :name  "Miscellaneous Functions"))
-
