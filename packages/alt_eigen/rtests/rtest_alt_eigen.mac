@@ -4,11 +4,11 @@
 (
  reset(matrix_element_mult, matrix_element_add),
  check_eigen(m, z, es) := block([p,e, ok : true, algebraic : true, doallmxops : true],
-   if op(es) = 'assuming then es : second(es), 
+   if op(es) = 'assuming then es : second(es),
    while es # [] do (
       p : pop(es),
-      e : pop(es),    
-      for ek in e do (    
+      e : pop(es),
+      for ek in e do (
         ok : ok and zeromatrixp(ratsimp(fullratsubst(p, m . ek - z * ek))))),
    ok),
    start : elapsed_real_time(),
@@ -339,4 +339,3 @@ true$
 /* Test 81 */
 (remvalue(e,m,start), remfunction(check_eigen),0);
 0$
-

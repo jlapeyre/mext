@@ -7,7 +7,7 @@ maxdoc_set_cur_sec("fvequations");
   mext_package_record("alt_eigen","alt_eigen","alt_eigen_code.mac");
   We must specify the package in the call to maxdoc.
   If we don't use maxdoc, then record should work.
-  
+
 */
 
 /* Don't put function alt_eigen here, because it is recorded by
@@ -74,7 +74,7 @@ maxdoc_copyright("alt_eigen",[ 2011, "Barton Willis"]);
   The following works, but extending it is complicated. The examples are instead
   in alt_eigen_doc1.lisp. The problem is not maxima vs. lisp: The code in the
   lisp file will probably work immediately if translated to the form below.
- 
+
 maxdoc_examples("alt_eigen",
  [pretext(["The eigenvectors of matrix ",code("matrix([1,2],[4,5])"), " are"]),
   code("alt_eigen(matrix([1,2],[4,5]),'var=z)")],

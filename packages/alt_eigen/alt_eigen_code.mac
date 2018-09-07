@@ -25,23 +25,22 @@ dont_kill( simp_assuming, float_free_p, mygramschmidt, maybe_solve,
            alt_eigen, alt_eigen_h);
 
 simp_assuming(pred,f) := block([prederror : false, bool : is(pred)],
-  if bool = true then f 
+  if bool = true then f
   else if bool = false then 'unknown
   else simpfuncall('assuming, pred,f));
 
 simplifying('assuming,'simp_assuming)$
 
-/* Gram-Schmidt assuming that p vanishes. 
+/* Gram-Schmidt assuming that p vanishes.
 
 (1) Due to the conjugate([rat(0)]) --> error, the dot function maps conjugate.
 (2) Last I tried, doing the fullratsubst inside proj speeds some calculations. */
 
-mygramschmidt(v,p) := block([u : [], proj, dot, uk, doallmxops : true, scalarmatrixp : true],   
+mygramschmidt(v,p) := block([u : [], proj, dot, uk, doallmxops : true, scalarmatrixp : true],
    dot : lambda([a,b], map('conjugate, transpose(a)) . b),
-   proj : lambda([a,b], fullratsubst(p, apply('dot,[a,b]) * a / apply('dot, [a,a]))),    
-   for vk in v do (         
+   proj : lambda([a,b], fullratsubst(p, apply('dot,[a,b]) * a / apply('dot, [a,a]))),
+   for vk in v do (
       uk : vk - lsum(proj(s,vk), s, u),
-      uk : fullratsubst(p, ratexpand(uk)),        
-      if some(lambda([s], is(s # 0)), uk) then push(uk, u)),  
+      uk : fullratsubst(p, ratexpand(uk)),
+      if some(lambda([s], is(s # 0)), uk) then push(uk, u)),
    u)$
- 
